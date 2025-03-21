@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Messages - HealthClinic</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+        /* Animation */
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        border: "hsl(var(--border))",
+                        input: "hsl(var(--input))",
+                        ring: "hsl(var(--ring))",
+                        background: "hsl(var(--background))",
+                        foreground: "hsl(var(--foreground))",
+                        primary: {
+                            DEFAULT: "hsl(var(--primary))",
+                            foreground: "hsl(var(--primary-foreground))",
+                        },
+                        secondary: {
+                            DEFAULT: "hsl(var(--secondary))",
+                            foreground: "hsl(var(--secondary-foreground))",
+                        },
+                        destructive: {
+                            DEFAULT: "hsl(var(--destructive))",
+                            foreground: "hsl(var(--destructive-foreground))",
+                        },
+                        muted: {
+                            DEFAULT: "hsl(var(--muted))",
+                            foreground: "hsl(var(--muted-foreground))",
+                        },
+                        accent: {
+                            DEFAULT: "hsl(var(--accent))",
+                            foreground: "hsl(var(--accent-foreground))",
+                        },
+                        card: {
+                            DEFAULT: "hsl(var(--card))",
+                            foreground: "hsl(var(--card-foreground))",
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 222.2 84% 4.9%;
+            --primary: 221.2 83.2% 53.3%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96.1%;
+            --secondary-foreground: 222.2 47.4% 11.2%;
+            --muted: 210 40% 96.1%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96.1%;
+            --accent-foreground: 222.2 47.4% 11.2%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 214.3 31.8% 91.4%;
+            --input: 214.3 31.8% 91.4%;
+            --ring: 221.2 83.2% 53.3%;
+            --radius: 0.5rem;
+        }
+
+        .dark {
+            --background: 222.2 84% 4.9%;
+            --foreground: 210 40% 98%;
+            --card: 222.2 84% 4.9%;
+            --card-foreground: 210 40% 98%;
+            --popover: 222.2 84% 4.9%;
+            --popover-foreground: 210 40% 98%;
+            --primary: 217.2 91.2% 59.8%;
+            --primary-foreground: 222.2 47.4% 11.2%;
+            --secondary: 217.2 32.6% 17.5%;
+            --secondary-foreground: 210 40% 98%;
+            --muted: 217.2 32.6% 17.5%;
+            --muted-foreground: 215 20.2% 65.1%;
+            --accent: 217.2 32.6% 17.5%;
+            --accent-foreground: 210 40% 98%;
+            --destructive: 0 62.8% 30.6%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 217.2 32.6% 17.5%;
+            --input: 217.2 32.6% 17.5%;
+            --ring: 224.3 76.3% 48%;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-foreground">
+    <div class="flex min-h-screen flex-col bg-background">
+        <!-- Header -->
+        <header class="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/95 backdrop-blur px-6">
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button"
+                class="md:hidden inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                <i data-lucide="menu" class="h-5 w-5"></i>
+                <span class="sr-only">Toggle Menu</span>
+            </button>
+
+            <!-- Logo -->
+            <div class="flex items-center gap-2">
+                <i data-lucide="heart" class="h-6 w-6 text-primary"></i>
+                <span class="text-lg font-semibold">HealthClinic</span>
+            </div>
+
+            <!-- Right Side Icons -->
+            <div class="ml-auto flex items-center gap-4">
+                <!-- Notifications -->
+                <div class="relative">
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10 relative">
+                        <i data-lucide="bell" class="h-5 w-5"></i>
+                        <span class="sr-only">Notifications</span>
+                        <span
+                            class="absolute -mr-2 -mt-2 h-5 w-5 rounded-full p-0 right-0 top-0 flex items-center justify-center bg-destructive text-destructive-foreground text-xs">3</span>
+                    </button>
+                </div>
+
+                <!-- Messages -->
+                <button
+                    class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                    <i data-lucide="message-square" class="h-5 w-5"></i>
+                    <span class="sr-only">Messages</span>
+                </button>
+
+                <!-- Separator -->
+                <div class="h-8 w-px bg-border"></div>
+
+                <!-- User Profile -->
+                <div class="flex items-center gap-2">
+                    <div class="relative flex h-9 w-9 shrink-0 overflow-hidden rounded-full border-2 border-primary/10">
+                        <img class="aspect-square h-full w-full"
+                            src="https://ui.shadcn.com/placeholder.svg?height=36&width=36" alt="Patient">
+                        <span
+                            class="flex h-full w-full items-center justify-center rounded-full bg-primary/10 text-primary">JD</span>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="text-sm font-medium">John Doe</div>
+                        <div class="text-xs text-muted-foreground">Patient ID: P-12345</div>
+                    </div>
+                    <i data-lucide="chevron-down" class="h-4 w-4 text-muted-foreground hidden md:block"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="grid md:grid-cols-[300px_1fr]">
+            <!-- Left Sidebar - Conversations List -->
+            <div id="sidebar" class="hidden md:flex flex-col border-r h-[calc(100vh-4rem)]">
+                <!-- Sidebar Header -->
+                <div class="p-4 border-b">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold">Messages</h2>
+                        <button
+                            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                            <i data-lucide="plus-circle" class="h-4 w-4"></i>
+                            <span class="sr-only">New Message</span>
+                        </button>
+                    </div>
+                    <div class="relative">
+                        <i data-lucide="search" class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"></i>
+                        <input type="search" id="search-input" placeholder="Search messages..."
+                            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-8">
+                    </div>
+                </div>
+
+                <!-- Sidebar Content -->
+                <div class="flex-1 overflow-auto">
+                    <!-- Tabs -->
+                    <div class="p-1">
+                        <div
+                            class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground w-full grid grid-cols-3">
+                            <button
+                                class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+                                data-state="active" data-tab="all">All</button>
+                            <button
+                                class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+                                data-tab="unread">Unread</button>
+                            <button
+                                class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+                                data-tab="flagged">Flagged</button>
+                        </div>
+                    </div>
+
+                    <!-- Conversation List -->
+                    <div id="conversation-list" class="space-y-1 px-1 py-2">
+                        <!-- Conversations will be populated here by JavaScript -->
+                        <div class="loading-skeleton">
+                            <!-- Loading skeleton -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Footer -->
+                <div class="p-4 border-t">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <button
+                                class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">
+                                <i data-lucide="filter" class="h-4 w-4 mr-2"></i>
+                                Filter
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <button id="options-button"
+                                class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                                <i data-lucide="more-horizontal" class="h-4 w-4"></i>
+                            </button>
+                            <div id="options-dropdown"
+                                class="hidden absolute right-0 bottom-full mb-2 z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md">
+                                <div class="px-2 py-1.5 text-sm font-semibold">Options</div>
+                                <button
+                                    class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground w-full">
+                                    <i data-lucide="check" class="h-4 w-4 mr-2"></i>
+                                    Mark all as read
+                                </button>
+                                <button
+                                    class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground w-full">
+                                    <i data-lucide="settings" class="h-4 w-4 mr-2"></i>
+                                    Message settings
+                                </button>
+                                <div class="h-px bg-muted my-1"></div>
+                                <button
+                                    class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground w-full">
+                                    <i data-lucide="trash" class="h-4 w-4 mr-2"></i>
+                                    Delete conversations
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content - Conversation -->
+            <main id="conversation-view" class="flex flex-col h-[calc(100vh-4rem)]">
+                <!-- Empty state will be shown initially -->
+                <div id="empty-state" class="flex flex-col items-center justify-center h-full text-center p-4">
+                    <i data-lucide="message-circle" class="h-16 w-16 text-muted-foreground/30 mb-4"></i>
+                    <h3 class="text-xl font-medium mb-2">Your Messages</h3>
+                    <p class="text-muted-foreground max-w-md mb-6">
+                        Select a conversation from the list to view your messages or start a new conversation with your
+                        healthcare providers.
+                    </p>
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                        <i data-lucide="plus-circle" class="h-4 w-4 mr-2"></i>
+                        Start New Conversation
+                    </button>
+                </div>
+
+                <!-- Conversation content will be populated here by JavaScript -->
+                <div id="conversation-content" class="hidden flex-col h-full">
+                    <!-- Conversation Header -->
+                    <div id="conversation-header" class="flex items-center justify-between p-4 border-b">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+
+                    <!-- Messages -->
+                    <div id="messages-container" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+
+                    <!-- Message Input -->
+                    <div class="p-4 border-t">
+                        <div class="flex items-end gap-2">
+                            <textarea id="message-input" placeholder="Type your message..."
+                                class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"></textarea>
+                            <div class="flex flex-col gap-2">
+                                <button
+                                    class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                                    <i data-lucide="paperclip" class="h-4 w-4"></i>
+                                </button>
+                                <button id="send-button"
+                                    class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 w-10 disabled:opacity-50"
+                                    disabled>
+                                    <i data-lucide="send" class="h-4 w-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Mobile Sidebar -->
+        <div id="mobile-sidebar" class="fixed inset-0 z-50 hidden">
+            <div class="absolute inset-0 bg-background/80 backdrop-blur-sm" id="mobile-sidebar-backdrop"></div>
+            <div class="fixed inset-y-0 left-0 z-50 w-full max-w-xs border-r bg-background p-0 shadow-lg">
+                <div class="flex h-full flex-col overflow-y-auto bg-background">
+                    <div class="flex h-14 items-center border-b px-4">
+                        <a href="#" class="flex items-center gap-2 font-semibold">
+                            <i data-lucide="heart" class="h-6 w-6 text-primary"></i>
+                            <span>HealthClinic</span>
+                        </a>
+                        <button id="close-mobile-menu"
+                            class="ml-auto inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                            <i data-lucide="x" class="h-5 w-5"></i>
+                            <span class="sr-only">Close</span>
+                        </button>
+                    </div>
+                    <div class="flex-1 overflow-auto py-2">
+                        <nav class="grid gap-1 px-2">
+                            <a href="#"
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground">
+                                <i data-lucide="home" class="h-5 w-5"></i>
+                                <span class="text-sm font-medium">Dashboard</span>
+                            </a>
+                            <a href="#"
+                                class="flex items-center gap-3 rounded-lg bg-accent px-3 py-2 text-accent-foreground transition-all">
+                                <i data-lucide="message-square" class="h-5 w-5"></i>
+                                <span class="text-sm font-medium">Messages</span>
+                            </a>
+                            <a href="#"
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground">
+                                <i data-lucide="calendar" class="h-5 w-5"></i>
+                                <span class="text-sm font-medium">Appointments</span>
+                            </a>
+                            <a href="#"
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground">
+                                <i data-lucide="file-text" class="h-5 w-5"></i>
+                                <span class="text-sm font-medium">Medical Records</span>
+                            </a>
+                            <a href="#"
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground">
+                                <i data-lucide="tablet" class="h-5 w-5"></i>
+                                <span class="text-sm font-medium">Prescriptions</span>
+                            </a>
+                            <a href="#"
+                                class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground">
+                                <i data-lucide="activity" class="h-5 w-5"></i>
+                                <span class="text-sm font-medium">Lab Results</span>
+                            </a>
+                        </nav>
+                    </div>
+                    <div class="mt-auto p-4 border-t">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-primary/10">
+                                <img class="aspect-square h-full w-full"
+                                    src="https://ui.shadcn.com/placeholder.svg?height=40&width=40" alt="Patient">
+                                <span
+                                    class="flex h-full w-full items-center justify-center rounded-full bg-primary/10 text-primary">JD</span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">John Doe</p>
+                                <p class="text-xs text-muted-foreground">Patient ID: P-12345</p>
+                            </div>
+                            <button
+                                class="ml-auto inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                                <i data-lucide="settings" class="h-5 w-5"></i>
+                                <span class="sr-only">Settings</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+
+        // Sample data for messages
+        const conversations = [
+            {
+                id: "1",
+                contact: {
+                    name: "Dr. Sarah Smith",
+                    role: "Primary Care",
+                    avatar: "https://ui.shadcn.com/placeholder.svg?height=40&width=40",
+                    initials: "DS",
+                    online: true
+                },
+                messages: [
+                    {
+                        id: "m1",
+                        sender: "doctor",
+                        content: "Hello John, I've reviewed your recent lab results and everything looks good. Your cholesterol levels have improved since your last visit.",
+                        timestamp: "2025-03-14T10:30:00",
+                        read: true
+                    },
+                    {
+                        id: "m2",
+                        sender: "patient",
+                        content: "That's great news! I've been following the diet plan you recommended and exercising regularly.",
+                        timestamp: "2025-03-14T10:35:00",
+                        read: true
+                    },
+                    {
+                        id: "m3",
+                        sender: "doctor",
+                        content: "Excellent work! Keep it up. I'd like to schedule a follow-up appointment in 3 months to monitor your progress.",
+                        timestamp: "2025-03-14T10:40:00",
+                        read: true
+                    },
+                    {
+                        id: "m4",
+                        sender: "patient",
+                        content: "That sounds good. Should I continue with the same medication dosage?",
+                        timestamp: "2025-03-14T10:45:00",
+                        read: true
+                    },
+                    {
+                        id: "m5",
+                        sender: "doctor",
+                        content: "Yes, please continue with the current dosage. If you experience any side effects, let me know immediately.",
+                        timestamp: "2025-03-14T10:50:00",
+                        read: false
+                    }
+                ],
+                lastMessage: {
+                    content: "Yes, please continue with the current dosage. If you experience any side effects, let me know immediately.",
+                    timestamp: "2025-03-14T10:50:00",
+                    unread: true
+                }
+            },
+            {
+                id: "2",
+                contact: {
+                    name: "Dr. Robert Johnson",
+                    role: "Cardiologist",
+                    avatar: "https://ui.shadcn.com/placeholder.svg?height=40&width=40",
+                    initials: "RJ",
+                    online: false
+                },
+                messages: [
+                    {
+                        id: "m1",
+                        sender: "doctor",
+                        content: "Hello John, I wanted to follow up on your heart health. Have you been monitoring your blood pressure as we discussed?",
+                        timestamp: "2025-03-12T14:20:00",
+                        read: true
+                    },
+                    {
+                        id: "m2",
+                        sender: "patient",
+                        content: "Yes, I've been taking readings twice daily. My average is around 122/78.",
+                        timestamp: "2025-03-12T14:25:00",
+                        read: true
+                    },
+                    {
+                        id: "m3",
+                        sender: "doctor",
+                        content: "That's within the normal range, which is excellent. Keep up with the monitoring and I'll see you at your next appointment.",
+                        timestamp: "2025-03-12T14:30:00",
+                        read: true
+                    }
+                ],
+                lastMessage: {
+                    content: "That's within the normal range, which is excellent. Keep up with the monitoring and I'll see you at your next appointment.",
+                    timestamp: "2025-03-12T14:30:00",
+                    unread: false
+                }
+            },
+            {
+                id: "3",
+                contact: {
+                    name: "Dr. Lisa Chen",
+                    role: "Dentist",
+                    avatar: "https://ui.shadcn.com/placeholder.svg?height=40&width=40",
+                    initials: "LC",
+                    online: true
+                },
+                messages: [
+                    {
+                        id: "m1",
+                        sender: "doctor",
+                        content: "Hi John, this is a reminder about your upcoming dental cleaning appointment on March 20th at 2:00 PM.",
+                        timestamp: "2025-03-13T09:15:00",
+                        read: true
+                    },
+                    {
+                        id: "m2",
+                        sender: "patient",
+                        content: "Thanks for the reminder. I'll be there.",
+                        timestamp: "2025-03-13T09:20:00",
+                        read: true
+                    },
+                    {
+                        id: "m3",
+                        sender: "doctor",
+                        content: "Great! Please remember to bring your insurance card and arrive 15 minutes early to complete any necessary paperwork.",
+                        timestamp: "2025-03-13T09:25:00",
+                        read: true
+                    }
+                ],
+                lastMessage: {
+                    content: "Great! Please remember to bring your insurance card and arrive 15 minutes early to complete any necessary paperwork.",
+                    timestamp: "2025-03-13T09:25:00",
+                    unread: false
+                }
+            },
+            {
+                id: "4",
+                contact: {
+                    name: "Nurse Jennifer",
+                    role: "Primary Care Nurse",
+                    avatar: "https://ui.shadcn.com/placeholder.svg?height=40&width=40",
+                    initials: "JN",
+                    online: false
+                },
+                messages: [
+                    {
+                        id: "m1",
+                        sender: "doctor",
+                        content: "Hello John, I'm following up on your recent flu shot. Have you experienced any side effects?",
+                        timestamp: "2025-03-10T11:00:00",
+                        read: true
+                    },
+                    {
+                        id: "m2",
+                        sender: "patient",
+                        content: "Hi Jennifer, I had some mild soreness at the injection site, but it went away after a day. No other side effects.",
+                        timestamp: "2025-03-10T11:10:00",
+                        read: true
+                    },
+                    {
+                        id: "m3",
+                        sender: "doctor",
+                        content: "That's normal and nothing to worry about. Thank you for the update!",
+                        timestamp: "2025-03-10T11:15:00",
+                        read: true
+                    }
+                ],
+                lastMessage: {
+                    content: "That's normal and nothing to worry about. Thank you for the update!",
+                    timestamp: "2025-03-10T11:15:00",
+                    unread: false
+                }
+            },
+            {
+                id: "5",
+                contact: {
+                    name: "Pharmacy Services",
+                    role: "Medication Support",
+                    avatar: "https://ui.shadcn.com/placeholder.svg?height=40&width=40",
+                    initials: "PS",
+                    online: true
+                },
+                messages: [
+                    {
+                        id: "m1",
+                        sender: "doctor",
+                        content: "Your prescription for Lisinopril has been refilled and is ready for pickup at your local pharmacy.",
+                        timestamp: "2025-03-11T15:30:00",
+                        read: true
+                    },
+                    {
+                        id: "m2",
+                        sender: "patient",
+                        content: "Thank you. What are your hours today?",
+                        timestamp: "2025-03-11T15:40:00",
+                        read: true
+                    },
+                    {
+                        id: "m3",
+                        sender: "doctor",
+                        content: "We're open until 9:00 PM today. Your prescription will be held for 7 days.",
+                        timestamp: "2025-03-11T15:45:00",
+                        read: true
+                    },
+                    {
+                        id: "m4",
+                        sender: "patient",
+                        content: "Perfect, I'll pick it up this evening. Thanks!",
+                        timestamp: "2025-03-11T15:50:00",
+                        read: true
+                    }
+                ],
+                lastMessage: {
+                    content: "Perfect, I'll pick it up this evening. Thanks!",
+                    timestamp: "2025-03-11T15:50:00",
+                    unread: false
+                }
+            }
+        ];
+
+        // Format date for display
+        const formatMessageDate = (dateString) => {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 0) {
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            } else if (diffDays === 1) {
+                return 'Yesterday';
+            } else if (diffDays < 7) {
+                return date.toLocaleDateString([], { weekday: 'long' });
+            } else {
+                return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+            }
+        };
+
+        // DOM elements
+        const conversationList = document.getElementById('conversation-list');
+        const conversationContent = document.getElementById('conversation-content');
+        const emptyState = document.getElementById('empty-state');
+        const conversationHeader = document.getElementById('conversation-header');
+        const messagesContainer = document.getElementById('messages-container');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const searchInput = document.getElementById('search-input');
+        const optionsButton = document.getElementById('options-button');
+        const optionsDropdown = document.getElementById('options-dropdown');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileSidebar = document.getElementById('mobile-sidebar');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+        const mobileSidebarBackdrop = document.getElementById('mobile-sidebar-backdrop');
+        const tabButtons = document.querySelectorAll('.tab-button');
+
+        // Current active conversation
+        let activeConversation = null;
+
+        // Simulate loading state
+        window.addEventListener('load', () => {
+            // Show loading skeleton
+            conversationList.innerHTML = Array(5).fill(0).map(() => `
+        <div class="flex items-center gap-3 p-2 rounded-md animate-pulse">
+          <div class="h-10 w-10 rounded-full bg-muted"></div>
+          <div class="space-y-2 flex-1">
+            <div class="h-4 w-2/3 bg-muted rounded"></div>
+            <div class="h-3 w-full bg-muted rounded"></div>
+          </div>
+        </div>
+      `).join('');
+
+            // Simulate loading delay
+            setTimeout(() => {
+                renderConversationList(conversations);
+                // Set the first conversation as active by default
+                if (conversations.length > 0) {
+                    setActiveConversation(conversations[0]);
+                }
+            }, 800);
+        });
+
+        // Render conversation list
+        function renderConversationList(convos) {
+            if (convos.length === 0) {
+                conversationList.innerHTML = `
+          <div class="p-4 text-center text-muted-foreground">
+            No conversations found
+          </div>
+        `;
+                return;
+            }
+
+            conversationList.innerHTML = convos.map(convo => `
+        <button
+          data-conversation-id="${convo.id}"
+          class="conversation-item flex items-start gap-3 p-2 rounded-md w-full text-left transition-colors ${activeConversation?.id === convo.id
+                    ? 'bg-muted'
+                    : 'hover:bg-muted/50'
+                } ${convo.lastMessage.unread ? 'font-medium' : ''}"
+        >
+          <div class="relative">
+            <div class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-primary/10">
+              <img class="aspect-square h-full w-full" src="${convo.contact.avatar}" alt="${convo.contact.name}">
+              <span class="flex h-full w-full items-center justify-center rounded-full bg-primary/10 text-primary">${convo.contact.initials}</span>
+            </div>
+            ${convo.contact.online ? `
+              <span class="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-background"></span>
+            ` : ''}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-center">
+              <p class="text-sm font-medium truncate">${convo.contact.name}</p>
+              <span class="text-xs text-muted-foreground">
+                ${formatMessageDate(convo.lastMessage.timestamp)}
+              </span>
+            </div>
+            <p class="text-xs text-muted-foreground">${convo.contact.role}</p>
+            <p class="text-xs truncate mt-1">
+              ${convo.lastMessage.content}
+            </p>
+          </div>
+          ${convo.lastMessage.unread ? `
+            <span class="h-2 w-2 rounded-full bg-destructive self-center"></span>
+          ` : ''}
+        </button>
+      `).join('');
+
+            // Add event listeners to conversation items
+            document.querySelectorAll('.conversation-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const convoId = item.dataset.conversationId;
+                    const convo = conversations.find(c => c.id === convoId);
+                    if (convo) {
+                        setActiveConversation(convo);
+                    }
+                });
+            });
+        }
+
+        // Set active conversation
+        function setActiveConversation(convo) {
+            activeConversation = convo;
+
+            // Update UI to show conversation is active
+            document.querySelectorAll('.conversation-item').forEach(item => {
+                if (item.dataset.conversationId === convo.id) {
+                    item.classList.add('bg-muted');
+                    item.classList.remove('hover:bg-muted/50');
+                } else {
+                    item.classList.remove('bg-muted');
+                    item.classList.add('hover:bg-muted/50');
+                }
+            });
+
+            // Show conversation content and hide empty state
+            emptyState.classList.add('hidden');
+            conversationContent.classList.remove('hidden');
+            conversationContent.classList.add('flex');
+
+            // Render conversation header
+            conversationHeader.innerHTML = `
+        <div class="flex items-center gap-3">
+          <button class="md:hidden inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+            <i data-lucide="arrow-left" class="h-5 w-5"></i>
+          </button>
+          <div class="relative">
+            <div class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-primary/10">
+              <img class="aspect-square h-full w-full" src="${convo.contact.avatar}" alt="${convo.contact.name}">
+              <span class="flex h-full w-full items-center justify-center rounded-full bg-primary/10 text-primary">${convo.contact.initials}</span>
+            </div>
+            ${convo.contact.online ? `
+              <span class="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-background"></span>
+            ` : ''}
+          </div>
+          <div>
+            <h2 class="text-sm font-medium">${convo.contact.name}</h2>
+            <p class="text-xs text-muted-foreground">${convo.contact.role}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+            <i data-lucide="phone" class="h-4 w-4"></i>
+          </button>
+          <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+            <i data-lucide="user" class="h-4 w-4"></i>
+          </button>
+          <div class="relative">
+            <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+              <i data-lucide="more-horizontal" class="h-4 w-4"></i>
+            </button>
+          </div>
+        </div>
+      `;
+
+            // Render messages
+            renderMessages(convo.messages);
+
+            // Initialize Lucide icons for the new content
+            lucide.createIcons();
+
+            // Close mobile sidebar if open
+            closeMobileSidebar();
+        }
+
+        // Render messages
+        function renderMessages(messages) {
+            messagesContainer.innerHTML = messages.map(message => `
+        <div class="flex ${message.sender === 'patient' ? 'justify-end' : 'justify-start'}">
+          ${message.sender !== 'patient' ? `
+            <div class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full border-2 border-primary/10 mr-2 mt-1">
+              <img class="aspect-square h-full w-full" src="${activeConversation.contact.avatar}" alt="${activeConversation.contact.name}">
+              <span class="flex h-full w-full items-center justify-center rounded-full bg-primary/10 text-primary">${activeConversation.contact.initials}</span>
+            </div>
+          ` : ''}
+          <div class="${message.sender === 'patient' ? 'bg-primary text-primary-foreground' : 'bg-muted'} rounded-lg p-3 max-w-[75%]">
+            <p class="text-sm">${message.content}</p>
+            <p class="text-xs mt-1 opacity-70 text-right">
+              ${formatMessageDate(message.timestamp)}
+              ${message.sender === 'patient' ? `
+                <span class="ml-1">
+                  ${message.read ? `
+                    <i data-lucide="check" class="h-3 w-3 inline"></i>
+                  ` : `
+                    <i data-lucide="check" class="h-3 w-3 inline text-muted-foreground/50"></i>
+                  `}
+                </span>
+              ` : ''}
+            </p>
+          </div>
+        </div>
+      `).join('');
+
+            // Scroll to bottom of messages
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Initialize Lucide icons for the new content
+            lucide.createIcons();
+        }
+
+        // Handle sending a new message
+        function handleSendMessage() {
+            const content = messageInput.value.trim();
+            if (!content || !activeConversation) return;
+
+            // Create a new message
+            const newMessage = {
+                id: `m${activeConversation.messages.length + 1}`,
+                sender: 'patient',
+                content: content,
+                timestamp: new Date().toISOString(),
+                read: false
+            };
+
+            // Add message to conversation
+            activeConversation.messages.push(newMessage);
+
+            // Update last message
+            activeConversation.lastMessage = {
+                content: content,
+                timestamp: newMessage.timestamp,
+                unread: false
+            };
+
+            // Render updated messages
+            renderMessages(activeConversation.messages);
+
+            // Clear input
+            messageInput.value = '';
+            sendButton.disabled = true;
+
+            // In a real app, you would send this to an API
+            console.log("Sending message:", content);
+        }
+
+        // Filter conversations based on search term
+        function filterConversations(searchTerm) {
+            const filtered = conversations.filter(
+                convo => convo.contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    convo.contact.role.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            renderConversationList(filtered);
+        }
+
+        // Event listeners
+        messageInput.addEventListener('input', () => {
+            sendButton.disabled = !messageInput.value.trim();
+        });
+
+        messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+            }
+        });
+
+        sendButton.addEventListener('click', handleSendMessage);
+
+        searchInput.addEventListener('input', (e) => {
+            filterConversations(e.target.value);
+        });
+
+        // Toggle options dropdown
+        optionsButton.addEventListener('click', () => {
+            optionsDropdown.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!optionsButton.contains(e.target) && !optionsDropdown.contains(e.target)) {
+                optionsDropdown.classList.add('hidden');
+            }
+        });
+
+        // Mobile menu
+        mobileMenuButton.addEventListener('click', () => {
+            mobileSidebar.classList.remove('hidden');
+        });
+
+        function closeMobileSidebar() {
+            mobileSidebar.classList.add('hidden');
+        }
+
+        closeMobileMenu.addEventListener('click', closeMobileSidebar);
+        mobileSidebarBackdrop.addEventListener('click', closeMobileSidebar);
+
+        // Tab functionality
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active state from all tabs
+                tabButtons.forEach(btn => {
+                    btn.setAttribute('data-state', '');
+                });
+
+                // Set active state on clicked tab
+                button.setAttribute('data-state', 'active');
+
+                const tabName = button.getAttribute('data-tab');
+
+                // Filter conversations based on tab
+                if (tabName === 'all') {
+                    renderConversationList(conversations);
+                } else if (tabName === 'unread') {
+                    const unreadConversations = conversations.filter(convo => convo.lastMessage.unread);
+                    renderConversationList(unreadConversations);
+                } else if (tabName === 'flagged') {
+                    // In this example, we don't have flagged conversations
+                    conversationList.innerHTML = `
+            <div class="p-4 text-center text-muted-foreground">
+              No flagged messages
+            </div>
+          `;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

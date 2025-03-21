@@ -1,0 +1,191 @@
+{% extends "pages/patient/P_base.html" %}
+{% load static %}
+
+{% block titles %}Dashboard || Nepal's Care {% endblock titles %}
+
+{% block pageof %} Dashboard {% endblock pageof %}
+{% block linkPageof %} /patient/ {% endblock linkPageof %}
+
+{% block content %}
+<!-- Content -->
+<div class="flex-1 pt-6 px-4">
+    <div class="container mx-auto">
+        <div class="grid grid-cols-1 xl:grid-cols-1 gap-6">
+
+            <!-- Appointment Cards and Tables -->
+            <div class="xl:col-span-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <a href="/patients/appointments"
+                        class="bg-white shadow rounded-lg p-6 flex items-center justify-between no-underline">
+                        <div>
+                            <h3 class="text-sm text-gray-500">Total Appointments</h3>
+                            <p class="text-3xl font-bold">1</p>
+                        </div>
+                        <div class="bg-cyan-500 rounded-full p-4">
+                            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 384 512"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M256 0v128h128L256 0zM224 128L224 0H48C21.49 0 0 21.49 0 48v416C0 490.5 21.49 512 48 512h288c26.51 0 48-21.49 48-48V160h-127.1C238.3 160 224 145.7 224 128zM288 301.7v36.57C288 345.9 281.9 352 274.3 352L224 351.1v50.29C224 409.9 217.9 416 210.3 416H173.7C166.1 416 160 409.9 160 402.3V351.1L109.7 352C102.1 352 96 345.9 96 338.3V301.7C96 294.1 102.1 288 109.7 288H160V237.7C160 230.1 166.1 224 173.7 224h36.57C217.9 224 224 230.1 224 237.7V288h50.29C281.9 288 288 294.1 288 301.7z">
+                                </path>
+                            </svg>
+                        </div>
+                    </a>
+
+                    <a href="/patients/appointments"
+                        class="bg-white shadow rounded-lg p-6 flex items-center justify-between no-underline">
+                        <div>
+                            <h3 class="text-sm text-gray-500">Online Meeting</h3>
+                            <p class="text-3xl font-bold">1</p>
+                        </div>
+                        <div class="bg-cyan-500 rounded-full p-4">
+
+
+                            <svg id='Video_Call_24' class="w-8 h-8 text-white" fill="currentColor" viewBox='0 0 24 24'
+                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                <g transform="matrix(0.67 0 0 0.67 12 12)">
+                                    <path
+                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                        transform=" translate(-15, -15)"
+                                        d="M 2 6 C 0.895 6 0 6.895 0 8 L 0 22 C 0 23.105 0.895 24 2 24 L 19 24 C 20.105 24 21 23.105 21 22 L 21 8 C 21 6.895 20.105 6 19 6 L 2 6 z M 29 8 C 28.73956763833648 8.000004170057057 28.489411109490636 8.10160829883199 28.302734 8.2832031 L 23 13 L 23 15 L 23 17 L 28.324219 21.736328 L 28.339844 21.75 C 28.522188562526043 21.91081319167702 28.75687384995553 21.99968812708224 29 22 C 29.552284749830793 22 30 21.552284749830793 30 21 L 30 15 L 30 9 C 30 8.447715250169207 29.552284749830793 8 29 8 z"
+                                        stroke-linecap="round" />
+                                </g>
+                            </svg>
+                        </div>
+                    </a>
+
+
+                    <a href="/patients/appointments"
+                        class="bg-white shadow rounded-lg p-6 flex items-center justify-between no-underline">
+                        <div>
+                            <h3 class="text-sm text-gray-500">My Medicine</h3>
+                            <p class="text-3xl font-bold">1</p>
+                        </div>
+                        <div class="bg-cyan-500 rounded-full p-4">
+
+
+                            <svg id='Video_Call_24' class="w-8 h-8 text-white" fill="currentColor" viewBox='0 0 24 24'
+                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                                <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                    <g>
+                                        <g transform="matrix(1 0 0 1 0 0)">
+                                            <path
+                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -12)"
+                                                d="M 21.89 2.11 C 19.07163387803594 -0.7025114650946382 14.508366121964055 -0.7025114650946382 11.689999999999998 2.1100000000000034 L 2.12 11.69 C 0.0474439280449217 13.747234551642704 -0.5772421244240249 16.852575285590895 0.5386003866119182 19.55120422681928 C 1.6544428976478611 22.249833168047658 4.289785826562268 24.007200911318254 7.209999999999998 24 L 7.21 24 C 9.122437262198625 24.010238368493688 10.959265647259848 23.253897268762596 12.310000000000002 21.9 L 21.89 12.319999999999999 C 23.249468950374673 10.972193712176107 24.00984202529492 9.134325142463666 24 7.2200000000000015 C 24.00915261870678 5.302874086003562 23.249091105142316 3.4621563920156952 21.89 2.1099999999999985 Z M 20.48 10.9 L 16.75 14.620000000000001 C 16.65611670004722 14.71465632541155 16.52831876818528 14.767899162170837 16.395 14.767899162170837 C 16.26168123181472 14.767899162170837 16.133883299952778 14.71465632541155 16.04 14.620000000000001 L 9.38 8 C 9.188216709623457 7.802186323263953 9.188216709623457 7.487813676736048 9.38 7.29 L 13.110000000000001 3.57 C 15.145169303126474 1.534830696873526 18.444830696873524 1.5348306968735264 20.479999999999997 3.5699999999999994 C 22.51516930312647 5.605169303126472 22.515169303126473 8.904830696873523 20.48 10.939999999999998 Z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 4.63 -7.6)">
+                                            <path
+                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-16.63, -4.4)"
+                                                d="M 16.63 3.16 C 15.5396236211152 3.1601769104482536 14.493559993440808 3.5915433548500646 13.72 4.359999999999999 C 13.427546621942485 4.652817546773957 13.427546621942485 5.127182453226043 13.719999999999999 5.42 C 13.859287794930133 5.562947783217732 14.050412529092222 5.643569946652986 14.25 5.643569946652986 C 14.449587470907776 5.643569946652986 14.640712205069866 5.562947783217732 14.78 5.42 C 15.819502211610974 4.44212805857295 17.440497788389024 4.44212805857295 18.48 5.42 C 18.61988387622641 5.561636288162499 18.81093354502844 5.640939924269001 19.01 5.64 C 19.209752255879675 5.644507786734574 19.40215856779374 5.564641015751376 19.540000000000003 5.42 C 19.682947783217735 5.280712205069866 19.76356994665299 5.089587470907777 19.76356994665299 4.89 C 19.76356994665299 4.690412529092223 19.682947783217735 4.499287794930133 19.540000000000003 4.359999999999999 C 18.768299779097003 3.588749818046283 17.721026290943076 3.1568844621065195 16.63 3.1599999999999993 Z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                    </a>
+
+                </div>
+                <!-- Monthly Expense Card -->
+                <div class="bg-white shadow rounded-lg p-6 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Monthly Expense!</h3>
+                        <span class="text-gray-500">This Month</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="text-3xl font-bold">$ 48195</div>
+                        <div class="text-red-500">-35.54% <span class="text-gray-600">From Previous
+                                Month</span></div>
+                    </div>
+                </div>
+                <!-- Today Appointments Table -->
+                <div class="bg-white shadow rounded-lg p-6 mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Today Appointments</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full table-auto">
+                            <thead class="bg-gray-50">
+                                <tr class="text-xs uppercase text-gray-500">
+                                    <th class="px-6 py-3 text-left">Doctor</th>
+                                    <th class="px-6 py-3 text-center">Time</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <img src="https://infycare-demo.nyc3.digitaloceanspaces.com/46/doctor2.jpeg"
+                                                alt="user" class="w-10 h-10 rounded-full mr-3">
+                                            <div>
+                                                <a href="/patients/doctors/1" class="text-blue-600 hover:underline">Adam
+                                                    Diaz</a>
+                                                <p class="text-gray-600 text-sm">doctor@infycare.com</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-center text-gray-600">
+                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">09:00
+                                            AM -
+                                            09:10 AM</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Upcoming Appointments Table -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-semibold mb-4">Upcoming Appointments</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full table-auto">
+                            <thead class="bg-gray-50">
+                                <tr class="text-xs uppercase text-gray-500">
+                                    <th class="px-6 py-3 text-left">Doctor</th>
+                                    <th class="px-6 py-3 text-center">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <img src="https://infycare-demo.nyc3.digitaloceanspaces.com/46/doctor2.jpeg"
+                                                alt="user" class="w-10 h-10 rounded-full mr-3">
+                                            <div>
+                                                <a href="/patients/doctors/1" class="text-blue-600 hover:underline">Adam
+                                                    Diaz</a>
+                                                <p class="text-gray-600 text-sm">doctor@infycare.com</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-center text-gray-600">
+                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">09 Apr
+                                            2025 09:00 AM - 09:15 AM</span>
+                                    </td>
+                                </tr>
+                                <!-- Additional rows follow the same pattern -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block scripts %}
+<script>
+
+    dashboard_nav_all = document.querySelectorAll('.dashboard-nav a');
+    console.log(dashboard_nav_all);
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
+
+
+{% endblock scripts %}

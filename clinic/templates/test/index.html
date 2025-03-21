@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Schedule Management</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="min-h-screen bg-gray-50">
+    <div class="container mx-auto p-4">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Edit Your Schedule</h1>
+                <p class="text-gray-500">Configure your availability, breaks, and working hours</p>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="tooltip">
+                    <button id="stats-button"
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-info">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 16v-4" />
+                            <path d="M12 8h.01" />
+                        </svg>
+                    </button>
+                    <span class="tooltiptext">View schedule statistics</span>
+                </div>
+
+                <span class="text-sm text-gray-500">
+                    Weekly hours: <span id="total-weekly-hours" class="font-medium text-green-500">0h</span>
+                </span>
+
+                <button id="save-button"
+                    class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-save">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                        <polyline points="17 21 17 13 7 13 7 21" />
+                        <polyline points="7 3 7 8 15 8" />
+                    </svg>
+                    Save Changes
+                </button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-list grid w-full grid-cols-3 mb-6">
+                <button class="tab-trigger active" data-tab="week">Weekly Calendar</button>
+                <button class="tab-trigger" data-tab="settings">Settings & Presets</button>
+                <button class="tab-trigger" data-tab="stats">Insights & Analytics</button>
+            </div>
+
+            <div class="tab-content active" id="week-tab">
+                <div class="space-y-6">
+                    <div class="shadow-md border border-slate-200 rounded-lg">
+                        <div
+                            class="pb-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg p-4 border-b border-slate-200">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div class="bg-white p-2 rounded-full shadow-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-calendar text-indigo-600">
+                                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                                            <line x1="16" x2="16" y1="2" y2="6" />
+                                            <line x1="8" x2="8" y1="2" y2="6" />
+                                            <line x1="3" x2="21" y1="10" y2="10" />
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-indigo-900">Weekly Schedule</h3>
+                                </div>
+
+                                <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm">
+                                    <button id="prev-week"
+                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-indigo-50 text-indigo-700 h-8 w-8 p-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-chevron-left">
+                                            <path d="m15 18-6-6 6-6" />
+                                        </svg>
+                                    </button>
+                                    <span id="week-range" class="text-sm font-medium text-indigo-900 px-2"></span>
+                                    <button id="next-week"
+                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-indigo-50 text-indigo-700 h-8 w-8 p-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-chevron-right">
+                                            <path d="m9 18 6-6-6-6" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mt-2 flex flex-wrap items-center gap-2">
+                                <span class="text-slate-600">Click or drag to manage your schedule:</span>
+                                <div class="flex flex-wrap gap-1.5 mt-1">
+                                    <span
+                                        class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-emerald-100 border-emerald-300 text-emerald-700 flex items-center gap-1">
+                                        <div class="w-2 h-2 rounded-full bg-emerald-500"></div>Available
+                                    </span>
+                                    <span
+                                        class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-amber-100 border-amber-300 text-amber-700 flex items-center gap-1">
+                                        <div class="w-2 h-2 rounded-full bg-amber-500"></div>Break
+                                    </span>
+                                    <span
+                                        class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-red-100 border-red-300 text-red-700 flex items-center gap-1">
+                                        <div class="w-2 h-2 rounded-full bg-red-500"></div>Booked
+                                    </span>
+                                    <span
+                                        class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-slate-100 border-slate-300 text-slate-700 flex items-center gap-1">
+                                        <div class="w-2 h-2 rounded-full bg-slate-500"></div>Unavailable
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4">
+                            <div id="schedule-grid" class="grid grid-cols-8 gap-1.5">
+                                <!-- Time column -->
+                                <div class="text-center">
+                                    <div class="h-12 flex items-end justify-center pb-1">
+                                        <span class="text-xs font-medium text-slate-500">TIME</span>
+                                    </div>
+                                    <div class="time-slots">
+                                        <!-- Time slots will be generated by JavaScript -->
+                                    </div>
+                                </div>
+
+                                <!-- Days columns will be generated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex justify-between items-center py-4 px-4 bg-gradient-to-r from-slate-50 to-blue-50 rounded-b-lg border-t border-slate-200">
+                            <div class="text-sm text-slate-600 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-info text-blue-500">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M12 16v-4" />
+                                    <path d="M12 8h.01" />
+                                </svg>
+                                <span>Drag to select multiple slots at once</span>
+                            </div>
+                            <div class="text-sm bg-white px-3 py-1.5 rounded-full shadow-sm text-slate-700">
+                                <span class="font-medium">Weekly Hours:</span> <span id="footer-weekly-hours">0h</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="schedule-warnings"
+                        class="border-amber-300 bg-gradient-to-r from-amber-50 to-amber-100 shadow-md rounded-lg hidden">
+                        <div class="pb-2 p-4 border-b border-amber-200">
+                            <h3 class="text-lg font-semibold text-amber-800 flex items-center gap-2">
+                                <div class="bg-white p-1.5 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="lucide lucide-info text-amber-500">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path d="M12 16v-4" />
+                                        <path d="M12 8h.01" />
+                                    </svg>
+                                </div>
+                                Scheduling Warnings
+                            </h3>
+                        </div>
+                        <div class="p-4" id="warning-content">
+                            <!-- Warning content will be generated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="settings-tab">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="border rounded-lg shadow-sm bg-white">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">Quick Presets</h3>
+                            <p class="text-sm text-gray-500">Apply predefined schedules to your week</p>
+                        </div>
+                        <div class="p-4 grid grid-cols-1 gap-4">
+                            <button
+                                class="preset-button inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 justify-start"
+                                data-preset="full-day">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-clock mr-2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                Full Day (9 AM - 6 PM)
+                            </button>
+                            <button
+                                class="preset-button inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 justify-start"
+                                data-preset="morning">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-alarm-check mr-2">
+                                    <circle cx="12" cy="13" r="8" />
+                                    <path d="M5 3 2 6" />
+                                    <path d="m22 6-3-3" />
+                                    <path d="m6 19-2 2" />
+                                    <path d="m18 19 2 2" />
+                                    <path d="m9 13 2 2 4-4" />
+                                </svg>
+                                Morning Shift (8 AM - 12 PM)
+                            </button>
+                            <button
+                                class="preset-button inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 justify-start"
+                                data-preset="evening">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-moon mr-2">
+                                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                                </svg>
+                                Evening Shift (3 PM - 9 PM)
+                            </button>
+                            <button id="custom-template-btn"
+                                class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 justify-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-plus mr-2">
+                                    <path d="M5 12h14" />
+                                    <path d="M12 5v14" />
+                                </svg>
+                                Create Custom Template
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="border rounded-lg shadow-sm bg-white">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">Break Settings</h3>
+                            <p class="text-sm text-gray-500">Configure your regular breaks</p>
+                        </div>
+                        <div class="p-4 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div class="space-y-0.5">
+                                    <label for="lunch-break"
+                                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Lunch
+                                        Break</label>
+                                    <div class="text-sm text-muted-foreground">
+                                        Set a daily lunch break
+                                    </div>
+                                </div>
+                                <div class="switch-container">
+                                    <input type="checkbox" id="lunch-break" class="switch-input" checked>
+                                    <label for="lunch-break" class="switch"></label>
+                                </div>
+                            </div>
+
+                            <div id="lunch-time-container">
+                                <label for="lunch-time"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Lunch
+                                    Time</label>
+                                <select id="lunch-time" class="select-input">
+                                    <option value="11">11:00 AM</option>
+                                    <option value="12" selected>12:00 PM</option>
+                                    <option value="13">1:00 PM</option>
+                                    <option value="14">2:00 PM</option>
+                                </select>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <div class="space-y-0.5">
+                                    <label for="evening-break"
+                                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Evening
+                                        Break</label>
+                                    <div class="text-sm text-muted-foreground">
+                                        Set a daily evening break
+                                    </div>
+                                </div>
+                                <div class="switch-container">
+                                    <input type="checkbox" id="evening-break" class="switch-input">
+                                    <label for="evening-break" class="switch"></label>
+                                </div>
+                            </div>
+
+                            <div id="evening-time-container" class="hidden">
+                                <label for="evening-time"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Evening
+                                    Break Time</label>
+                                <select id="evening-time" class="select-input">
+                                    <option value="15" selected>3:00 PM</option>
+                                    <option value="16">4:00 PM</option>
+                                    <option value="17">5:00 PM</option>
+                                </select>
+                            </div>
+
+                            <button id="apply-breaks"
+                                class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">Apply
+                                Break Settings</button>
+                        </div>
+                    </div>
+
+                    <div class="border rounded-lg shadow-sm bg-white">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">Appointment Settings</h3>
+                            <p class="text-sm text-gray-500">Configure appointment duration and constraints</p>
+                        </div>
+                        <div class="p-4 space-y-4">
+                            <div>
+                                <label for="slot-duration"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Default
+                                    Appointment Duration</label>
+                                <select id="slot-duration" class="select-input">
+                                    <option value="15">15 minutes</option>
+                                    <option value="30" selected>30 minutes</option>
+                                    <option value="45">45 minutes</option>
+                                    <option value="60">60 minutes</option>
+                                </select>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <div class="space-y-0.5">
+                                    <label for="emergency-slots"
+                                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Emergency
+                                        Slots</label>
+                                    <div class="text-sm text-muted-foreground">
+                                        Reserve slots for emergency appointments
+                                    </div>
+                                </div>
+                                <div class="switch-container">
+                                    <input type="checkbox" id="emergency-slots" class="switch-input">
+                                    <label for="emergency-slots" class="switch"></label>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <div class="space-y-0.5">
+                                    <label for="auto-fill"
+                                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Auto-fill
+                                        Gaps</label>
+                                    <div class="text-sm text-muted-foreground">
+                                        Automatically fill gaps between appointments
+                                    </div>
+                                </div>
+                                <div class="switch-container">
+                                    <input type="checkbox" id="auto-fill" class="switch-input">
+                                    <label for="auto-fill" class="switch"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border rounded-lg shadow-sm bg-white">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">Working Hour Constraints</h3>
+                            <p class="text-sm text-gray-500">Set minimum and maximum working hours</p>
+                        </div>
+                        <div class="p-4 space-y-4">
+                            <div>
+                                <label for="min-hours"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Minimum
+                                    Hours Per Day</label>
+                                <select id="min-hours" class="select-input">
+                                    <option value="4">4 hours</option>
+                                    <option value="5">5 hours</option>
+                                    <option value="6" selected>6 hours</option>
+                                    <option value="7">7 hours</option>
+                                    <option value="8">8 hours</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="max-hours"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Maximum
+                                    Hours Per Day</label>
+                                <select id="max-hours" class="select-input">
+                                    <option value="8">8 hours</option>
+                                    <option value="9">9 hours</option>
+                                    <option value="10" selected>10 hours</option>
+                                    <option value="11">11 hours</option>
+                                    <option value="12">12 hours</option>
+                                </select>
+                            </div>
+
+                            <div class="border p-3 rounded-md bg-amber-50 border-amber-200">
+                                <p class="text-sm text-amber-800">
+                                    <span class="font-medium">Note:</span> These limits are for guidance only. You will
+                                    receive a warning when they are exceeded but can still save your schedule.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="stats-tab">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="border rounded-lg shadow-sm bg-white">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">Weekly Summary</h3>
+                        </div>
+                        <div class="p-4">
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm">Total Working Hours</span>
+                                    <span id="stats-total-hours" class="font-medium">0 hours</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm">Average Per Day</span>
+                                    <span id="stats-avg-hours" class="font-medium">0 hours</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm">Working Days</span>
+                                    <span id="stats-working-days" class="font-medium">0 days</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm">Scheduled Breaks</span>
+                                    <span id="stats-breaks" class="font-medium">0 slots</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border rounded-lg shadow-sm bg-white">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">Workload Distribution</h3>
+                        </div>
+                        <div class="p-4">
+                            <div id="workload-stats" class="space-y-3">
+                                <!-- Workload stats will be generated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border rounded-lg shadow-sm bg-white">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">Recommendations</h3>
+                        </div>
+                        <div class="p-4">
+                            <div id="recommendations" class="space-y-3">
+                                <!-- Recommendations will be generated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border rounded-lg shadow-sm bg-white mt-6">
+                    <div class="p-4 border-b">
+                        <h3 class="text-lg font-semibold">Patient Booking Patterns</h3>
+                        <p class="text-sm text-gray-500">Historical analysis of appointment bookings</p>
+                    </div>
+                    <div class="p-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <h3 class="text-sm font-medium mb-4">Peak Booking Times</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm">Morning (8 AM - 12 PM)</span>
+                                            <span class="text-sm font-medium">42%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-100 rounded-full h-2">
+                                            <div class="bg-blue-500 h-2 rounded-full" style="width: 42%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm">Afternoon (12 PM - 4 PM)</span>
+                                            <span class="text-sm font-medium">35%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-100 rounded-full h-2">
+                                            <div class="bg-blue-500 h-2 rounded-full" style="width: 35%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm">Evening (4 PM - 8 PM)</span>
+                                            <span class="text-sm font-medium">23%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-100 rounded-full h-2">
+                                            <div class="bg-blue-500 h-2 rounded-full" style="width: 23%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-sm font-medium mb-4">No-Show Analysis</h3>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-sm">Monday morning</span>
+                                        <span
+                                            class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-red-100 text-red-800 border-red-200">High
+                                            (12%)</span>
+                                    </div>
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-sm">Friday evening</span>
+                                        <span
+                                            class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-red-100 text-red-800 border-red-200">High
+                                            (15%)</span>
+                                    </div>
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-sm">Wednesday afternoon</span>
+                                        <span
+                                            class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-emerald-50 text-emerald-700 border-emerald-200">Low
+                                            (3%)</span>
+                                    </div>
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-sm">Overall no-show rate</span>
+                                        <span class="font-medium">7%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Template Dialog -->
+    <div id="custom-template-dialog" class="dialog-overlay hidden">
+        <div class="dialog-content">
+            <div class="dialog-header">
+                <h3 class="text-lg font-semibold">Create Custom Template</h3>
+                <p class="text-sm text-gray-500">Design a template schedule that you can apply anytime</p>
+            </div>
+            <div class="dialog-body">
+                <div class="grid gap-4 py-4">
+                    <div>
+                        <label for="template-name" class="text-sm font-medium">Template Name</label>
+                        <input type="text" id="template-name" placeholder="e.g., Summer Hours" class="text-input">
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium">Working Hours</label>
+                        <div class="grid grid-cols-2 gap-2 mt-2">
+                            <div>
+                                <label for="start-time" class="text-xs font-medium">Start Time</label>
+                                <select id="start-time" class="select-input">
+                                    <option value="8">8:00 AM</option>
+                                    <option value="9" selected>9:00 AM</option>
+                                    <option value="10">10:00 AM</option>
+                                    <option value="11">11:00 AM</option>
+                                    <option value="12">12:00 PM</option>
+                                    <option value="13">1:00 PM</option>
+                                    <option value="14">2:00 PM</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="end-time" class="text-xs font-medium">End Time</label>
+                                <select id="end-time" class="select-input">
+                                    <option value="14">2:00 PM</option>
+                                    <option value="15">3:00 PM</option>
+                                    <option value="16">4:00 PM</option>
+                                    <option value="17" selected>5:00 PM</option>
+                                    <option value="18">6:00 PM</option>
+                                    <option value="19">7:00 PM</option>
+                                    <option value="20">8:00 PM</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium">Apply to Days</label>
+                        <div class="grid grid-cols-7 gap-1 mt-2">
+                            <button
+                                class="day-select inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8"
+                                data-day="Monday">M</button>
+                            <button
+                                class="day-select inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8"
+                                data-day="Tuesday">T</button>
+                            <button
+                                class="day-select inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8"
+                                data-day="Wednesday">W</button>
+                            <button
+                                class="day-select inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8"
+                                data-day="Thursday">T</button>
+                            <button
+                                class="day-select inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8"
+                                data-day="Friday">F</button>
+                            <button
+                                class="day-select inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8"
+                                data-day="Saturday">S</button>
+                            <button
+                                class="day-select inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8"
+                                data-day="Sunday">S</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-footer">
+                <button id="cancel-template"
+                    class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">Cancel</button>
+                <button id="save-template"
+                    class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">Save
+                    Template</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day Actions Menu -->
+    <div id="day-actions-menu" class="dropdown-menu hidden">
+        <div class="dropdown-header">Day Actions</div>
+        <div class="dropdown-divider"></div>
+        <button id="clear-day" class="dropdown-item text-red-600">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-trash-2 mr-2">
+                <path d="M3 6h18" />
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                <line x1="10" x2="10" y1="11" y2="17" />
+                <line x1="14" x2="14" y1="11" y2="17" />
+            </svg>
+            Clear All Slots
+        </button>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-header">Copy Schedule To</div>
+        <div id="copy-day-options" class="max-h-40 overflow-y-auto">
+            <!-- Copy options will be generated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Tooltip -->
+    <div id="tooltip" class="tooltip-box hidden">
+        <div id="tooltip-content"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

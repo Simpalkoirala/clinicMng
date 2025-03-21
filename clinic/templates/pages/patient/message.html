@@ -1,0 +1,904 @@
+{% extends "pages/patient/P_base.html" %}
+{% load static %}
+
+{% block titles %}Message || Nepal's Care {% endblock titles %}
+
+{% block styles %}
+<!-- <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script> -->
+
+{% endblock styles %}
+
+
+{% block pageof %} Message {% endblock pageof %}
+{% block linkPageof %} /message/ {% endblock linkPageof %}
+
+{% block content %}
+
+<section>
+    <!-- Main Content -->
+    <div class="grid md:grid-cols-[300px_1fr]">
+
+        <!-- overlay backround -->
+        <div id="overlaySidebar" class="hidden fixed inset-0 bg-black bg-opacity-50 z-10"></div>
+
+
+        <!-- Left Sidebar - Conversations List -->
+        <div id="sidebarConvList"
+            class="hidden md:flex flex-col border-r h-[calc(100vh-4rem)] w-3/4 md:w-auto  absolute md:relative bg-white z-20">
+            <!-- Sidebar Header -->
+            <div class="p-4 border-b">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold">Messages</h2>
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                        <svg id='Add_Circle_24' class="w-5 h-5" fill="currentColor" viewBox='0 0 24 24'
+                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                            <g transform="matrix(1.43 0 0 1.43 12 12)">
+                                <g style="">
+                                    <g transform="matrix(1 0 0 1 0 0)">
+                                        <circle
+                                            style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                            cx="0" cy="0" r="6.25" />
+                                    </g>
+                                    <g transform="matrix(1 0 0 1 0 0)">
+                                        <path
+                                            style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-7, -7)" d="M 7 4.5 L 7 9.5" stroke-linecap="round" />
+                                    </g>
+                                    <g transform="matrix(1 0 0 1 0 0)">
+                                        <path
+                                            style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-7, -7)" d="M 9.5 7 L 4.5 7" stroke-linecap="round" />
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                        <span class="sr-only">New Message</span>
+                    </button>
+                </div>
+                <div class="relative">
+                    <span class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </span>
+
+
+                    <input type="search" id="search-input" placeholder="Search messages..."
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-8">
+                </div>
+            </div>
+
+            <!-- Sidebar Content -->
+            <div class="flex-1 overflow-auto">
+                <!-- Tabs -->
+                <div class="p-1">
+                    <div
+                        class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground w-full grid grid-cols-3">
+                        <button
+                            class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+                            data-state="active" data-tab="all">All</button>
+                        <button
+                            class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+                            data-tab="unread">Unread</button>
+                        <button
+                            class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+                            data-tab="flagged">Flagged</button>
+                    </div>
+                </div>
+
+                <!-- Conversation List -->
+                <div id="conversation-list" class="space-y-1 px-1 py-2">
+                    <!-- Conversations will be populated here by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Sidebar Footer -->
+            <div class="p-4 border-t">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <button
+                            class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">
+                            <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Filter
+                        </button>
+                    </div>
+                    <div class="relative">
+                        <button id="options-button"
+                            class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                            <svg class="h-4 w-4" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                                xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                <g transform="matrix(1.43 0 0 1.43 12 12)">
+                                    <g style="">
+                                        <g transform="matrix(1 0 0 1 5 0)">
+                                            <circle
+                                                style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                cx="0" cy="0" r="1.5" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 0)">
+                                            <circle
+                                                style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                cx="0" cy="0" r="1.5" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 -5 0)">
+                                            <circle
+                                                style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                cx="0" cy="0" r="1.5" />
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                        <div id="options-dropdown"
+                            class="hidden absolute right-0 bottom-full mb-2 z-50 min-w-[8rem] overflow-hidden rounded-md border bg-white p-1 text-popover-foreground shadow-md">
+                            <div class="px-2 py-1.5 text-sm font-semibold">Options</div>
+                            <button
+                                class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground w-full">
+                                <svg id='Checkmark_24' class="h-4 w-4 mr-2" viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(1.15 0 0 1.15 12 12)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-12, -11.84)"
+                                            d="M 19.28125 5.28125 L 9 15.5625 L 4.71875 11.28125 L 3.28125 12.71875 L 8.28125 17.71875 L 9 18.40625 L 9.71875 17.71875 L 20.71875 6.71875 Z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+                                Mark all as read
+                            </button>
+                            <button
+                                class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground w-full">
+                                <svg id='Settings_24' class="h-4 w-4 mr-2" viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(0.77 0 0 0.77 12 12)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-16, -16)"
+                                            d="M 13.1875 3 L 13.03125 3.8125 L 12.4375 6.78125 C 11.484375 7.15625 10.625 7.683594 9.84375 8.3125 L 6.9375 7.3125 L 6.15625 7.0625 L 5.75 7.78125 L 3.75 11.21875 L 3.34375 11.9375 L 3.9375 12.46875 L 6.1875 14.4375 C 6.105469 14.949219 6 15.460938 6 16 C 6 16.539063 6.105469 17.050781 6.1875 17.5625 L 3.9375 19.53125 L 3.34375 20.0625 L 3.75 20.78125 L 5.75 24.21875 L 6.15625 24.9375 L 6.9375 24.6875 L 9.84375 23.6875 C 10.625 24.316406 11.484375 24.84375 12.4375 25.21875 L 13.03125 28.1875 L 13.1875 29 L 18.8125 29 L 18.96875 28.1875 L 19.5625 25.21875 C 20.515625 24.84375 21.375 24.316406 22.15625 23.6875 L 25.0625 24.6875 L 25.84375 24.9375 L 26.25 24.21875 L 28.25 20.78125 L 28.65625 20.0625 L 28.0625 19.53125 L 25.8125 17.5625 C 25.894531 17.050781 26 16.539063 26 16 C 26 15.460938 25.894531 14.949219 25.8125 14.4375 L 28.0625 12.46875 L 28.65625 11.9375 L 28.25 11.21875 L 26.25 7.78125 L 25.84375 7.0625 L 25.0625 7.3125 L 22.15625 8.3125 C 21.375 7.683594 20.515625 7.15625 19.5625 6.78125 L 18.96875 3.8125 L 18.8125 3 Z M 14.8125 5 L 17.1875 5 L 17.6875 7.59375 L 17.8125 8.1875 L 18.375 8.375 C 19.511719 8.730469 20.542969 9.332031 21.40625 10.125 L 21.84375 10.53125 L 22.40625 10.34375 L 24.9375 9.46875 L 26.125 11.5 L 24.125 13.28125 L 23.65625 13.65625 L 23.8125 14.25 C 23.941406 14.820313 24 15.402344 24 16 C 24 16.597656 23.941406 17.179688 23.8125 17.75 L 23.6875 18.34375 L 24.125 18.71875 L 26.125 20.5 L 24.9375 22.53125 L 22.40625 21.65625 L 21.84375 21.46875 L 21.40625 21.875 C 20.542969 22.667969 19.511719 23.269531 18.375 23.625 L 17.8125 23.8125 L 17.6875 24.40625 L 17.1875 27 L 14.8125 27 L 14.3125 24.40625 L 14.1875 23.8125 L 13.625 23.625 C 12.488281 23.269531 11.457031 22.667969 10.59375 21.875 L 10.15625 21.46875 L 9.59375 21.65625 L 7.0625 22.53125 L 5.875 20.5 L 7.875 18.71875 L 8.34375 18.34375 L 8.1875 17.75 C 8.058594 17.179688 8 16.597656 8 16 C 8 15.402344 8.058594 14.820313 8.1875 14.25 L 8.34375 13.65625 L 7.875 13.28125 L 5.875 11.5 L 7.0625 9.46875 L 9.59375 10.34375 L 10.15625 10.53125 L 10.59375 10.125 C 11.457031 9.332031 12.488281 8.730469 13.625 8.375 L 14.1875 8.1875 L 14.3125 7.59375 Z M 16 11 C 13.25 11 11 13.25 11 16 C 11 18.75 13.25 21 16 21 C 18.75 21 21 18.75 21 16 C 21 13.25 18.75 11 16 11 Z M 16 13 C 17.667969 13 19 14.332031 19 16 C 19 17.667969 17.667969 19 16 19 C 14.332031 19 13 17.667969 13 16 C 13 14.332031 14.332031 13 16 13 Z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+                                Message settings
+                            </button>
+                            <div class="h-px bg-muted my-1"></div>
+                            <button
+                                class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground w-full">
+                                <svg id='trash_24' class="h-5 w-5  mr-2" viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(1 0 0 1 12 12)">
+                                        <g style="">
+                                            <g transform="matrix(1 0 0 1 0 0)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                            <g transform="matrix(1 0 0 1 0 -5)">
+                                                <line
+                                                    style="stroke: rgb(33,33,33); stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                    x1="-8" y1="0" x2="8" y2="0" />
+                                            </g>
+                                            <g transform="matrix(1 0 0 1 -2 2)">
+                                                <line
+                                                    style="stroke: rgb(33,33,33); stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                    x1="0" y1="-3" x2="0" y2="3" />
+                                            </g>
+                                            <g transform="matrix(1 0 0 1 2 2)">
+                                                <line
+                                                    style="stroke: rgb(33,33,33); stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                    x1="0" y1="-3" x2="0" y2="3" />
+                                            </g>
+                                            <g transform="matrix(1 0 0 1 0 2)">
+                                                <path
+                                                    style="stroke: rgb(33,33,33); stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-12, -14)"
+                                                    d="M 5 7 L 6 19 C 6 20.104569499661586 6.8954305003384135 21 8 21 L 16 21 C 17.104569499661586 21 18 20.104569499661586 18 19 L 19 7"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                            <g transform="matrix(1 0 0 1 0 -7)">
+                                                <path
+                                                    style="stroke: rgb(33,33,33); stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-12, -5)"
+                                                    d="M 9 7 L 9 4 C 9 3.4477152501692068 9.447715250169207 3 10 3 L 14 3 C 14.552284749830793 3 15 3.4477152501692063 15 4 L 15 7"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                                Delete conversations
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content - Conversation -->
+        <section id="conversation-view" class=" flex flex-col h-[calc(100vh-4rem)]">
+            <!-- Empty state will be shown initially -->
+            <div id="empty-state" class="flex flex-col items-center justify-center h-full text-center p-4">
+                <svg class="h-16 w-16 text-muted-foreground/30 mb-4" fill="currentColor" stroke="currentColor"
+                    viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                    <g transform="matrix(1 0 0 1 12 12)">
+                        <g style="">
+                            <g transform="matrix(1 0 0 1 0 0)">
+                                <path
+                                    style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                    transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z"
+                                    stroke-linecap="round" />
+                            </g>
+                            <g transform="matrix(1 0 0 1 0.01 -0.01)">
+                                <path
+                                    style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                    transform=" translate(-12.01, -11.99)"
+                                    d="M 3 20 L 4.3 16.1 C 1.9761174147637677 12.663009706393852 2.8738762839310747 8.227707321782525 6.399767548460441 5.726274565848396 C 9.92565881298981 3.224841809914267 14.990227941838622 3.430188862125 18.245284500640466 6.206560632867749 C 21.50034105944231 8.982932403610498 21.940114917829877 13.472466134630796 19.273871249507618 16.70712772262393 C 16.607627581185362 19.94178931061706 11.65920099345933 20.92211040586947 7.700000000000003 19 L 2.999999999999999 20"
+                                    stroke-linecap="round" />
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+                <h3 class="text-xl font-medium mb-2">Your Messages</h3>
+                <p class="text-muted-foreground max-w-md mb-6">
+                    Select a conversation from the list to view your messages or start a new conversation with your
+                    healthcare providers.
+                </p>
+                <button
+                    class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                    <svg id='Add_Circle_24' class="w-4 h-4 mr-2" fill="currentColor" viewBox='0 0 24 24'
+                        xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                        <g transform="matrix(1.43 0 0 1.43 12 12)">
+                            <g style="">
+                                <g transform="matrix(1 0 0 1 0 0)">
+                                    <circle
+                                        style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                        cx="0" cy="0" r="6.25" />
+                                </g>
+                                <g transform="matrix(1 0 0 1 0 0)">
+                                    <path
+                                        style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                        transform=" translate(-7, -7)" d="M 7 4.5 L 7 9.5" stroke-linecap="round" />
+                                </g>
+                                <g transform="matrix(1 0 0 1 0 0)">
+                                    <path
+                                        style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                        transform=" translate(-7, -7)" d="M 9.5 7 L 4.5 7" stroke-linecap="round" />
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                    Start New Conversation
+                </button>
+            </div>
+
+            <!-- Conversation content will be populated here by JavaScript -->
+            <div id="conversation-content" class="hidden flex-col h-full">
+                <!-- Conversation Header -->
+                <div id="conversation-header" class="flex items-center justify-between p-4 border-b">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+
+                <!-- Messages -->
+                <div id="messages-container" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+
+                <!-- Message Input -->
+                <div class="p-4 border-t">
+                    <div class="flex items-end gap-2">
+                        <textarea id="message-input" placeholder="Type your message..."
+                            class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"></textarea>
+                        <div class="flex flex-col gap-2">
+                            <button
+                                class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                                <svg class="h-4 w-4" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                                    xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
+
+
+                                    <g transform="matrix(1 0 0 1 12 12)">
+                                        <g style="">
+                                            <g transform="matrix(1 0 0 1 0 0)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                            <g transform="matrix(1 0 0 1 0.32 0.06)">
+                                                <path
+                                                    style="stroke: rgb(33,33,33); stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-12.32, -12.06)"
+                                                    d="M 15 7 L 8.5 13.5 C 7.67157287525381 14.32842712474619 7.67157287525381 15.67157287525381 8.5 16.5 C 9.32842712474619 17.32842712474619 10.67157287525381 17.32842712474619 11.5 16.5 L 18 10 C 19.65685424949238 8.34314575050762 19.65685424949238 5.656854249492381 18 4 C 16.34314575050762 2.3431457505076194 13.65685424949238 2.3431457505076194 12 4 L 5.5 10.5 C 3.0147186257614296 12.985281374238571 3.014718625761429 17.01471862576143 5.5 19.5 C 7.985281374238571 21.98528137423857 12.014718625761429 21.98528137423857 14.5 19.5 L 21 13"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </button>
+                            <button id="send-button"
+                                class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 w-10 disabled:opacity-50"
+                                disabled>
+                                <svg class="h-5 w-5" fill="currentColor" stroke="currentColor" viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                                    <g transform="matrix(1 0 0 1 12 12)">
+                                        <g style="">
+                                            <g transform="matrix(1 0 0 1 0 0)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                            <g transform="matrix(1 0 0 1 3.5 -3.5)">
+                                                <line
+                                                    style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                    x1="-5.5" y1="5.5" x2="5.5" y2="-5.5" />
+                                            </g>
+                                            <g transform="matrix(1 0 0 1 -0.16 0.16)">
+                                                <path
+                                                    style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-11.84, -12.16)"
+                                                    d="M 21 3 L 14.5 21 C 14.410403519289869 21.195515549931347 14.215067104924483 21.320871215252208 14 21.320871215252208 C 13.784932895075517 21.320871215252208 13.589596480710131 21.195515549931347 13.5 21 L 10 14 L 3 10.5 C 2.804484450068652 10.410403519289869 2.679128784747792 10.215067104924483 2.679128784747792 10 C 2.679128784747792 9.784932895075517 2.8044844500686517 9.589596480710131 2.9999999999999996 9.5 L 21 3"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+
+{% endblock content %}
+
+
+{% block scripts %}
+
+<script>
+
+
+    // Sample data for messages (unchanged)
+    const conversations = [
+        {
+            id: "1",
+            contact: {
+                name: "Dr. Sarah Smith",
+                role: "Primary Care",
+                avatar: "https://ui.shadcn.com/placeholder.svg?height=40&width=40",
+                initials: "DS",
+                online: true
+            },
+            messages: [
+                {
+                    id: "m1",
+                    sender: "doctor",
+                    content: "Hello John, I've reviewed your recent lab results and everything looks good. Your cholesterol levels have improved since your last visit.",
+                    timestamp: "2025-03-14T10:30:00",
+                    read: true
+                },
+                {
+                    id: "m2",
+                    sender: "patient",
+                    content: "That's great news! I've been following the diet plan you recommended and exercising regularly.",
+                    timestamp: "2025-03-14T10:35:00",
+                    read: true
+                },
+                {
+                    id: "m3",
+                    sender: "doctor",
+                    content: "Excellent work! Keep it up. I'd like to schedule a follow-up appointment in 3 months to monitor your progress.",
+                    timestamp: "2025-03-14T10:40:00",
+                    read: true
+                },
+                {
+                    id: "m4",
+                    sender: "patient",
+                    content: "That sounds good. Should I continue with the same medication dosage?",
+                    timestamp: "2025-03-14T10:45:00",
+                    read: true
+                },
+                {
+                    id: "m5",
+                    sender: "doctor",
+                    content: "Yes, please continue with the current dosage. If you experience any side effects, let me know immediately.",
+                    timestamp: "2025-03-14T10:50:00",
+                    read: false
+                }
+            ],
+            lastMessage: {
+                content: "Yes, please continue with the current dosage. If you experience any side effects, let me know immediately.",
+                timestamp: "2025-03-14T10:50:00",
+                unread: true
+            }
+        },
+        {
+            id: "2",
+            contact: {
+                name: "Dr. Robert Johnson",
+                role: "Cardiologist",
+                avatar: "https://ui.shadcn.com/placeholder.svg?height=40&width=40",
+                initials: "RJ",
+                online: false
+            },
+            messages: [
+                {
+                    id: "m1",
+                    sender: "doctor",
+                    content: "Hello John, I wanted to follow up on your heart health. Have you been monitoring your blood pressure as we discussed?",
+                    timestamp: "2025-03-12T14:20:00",
+                    read: true
+                },
+                {
+                    id: "m2",
+                    sender: "patient",
+                    content: "Yes, I've been taking readings twice daily. My average is around 122/78.",
+                    timestamp: "2025-03-12T14:25:00",
+                    read: true
+                },
+                {
+                    id: "m3",
+                    sender: "doctor",
+                    content: "That's within the normal range, which is excellent. Keep up with the monitoring and I'll see you at your next appointment.",
+                    timestamp: "2025-03-12T14:30:00",
+                    read: true
+                }
+            ],
+            lastMessage: {
+                content: "That's within the normal range, which is excellent. Keep up with the monitoring and I'll see you at your next appointment.",
+                timestamp: "2025-03-12T14:30:00",
+                unread: false
+            }
+        },
+        {
+            id: "3",
+            contact: {
+                name: "Dr. Lisa Chen",
+                role: "Dentist",
+                avatar: "https://ui.shadcn.com/placeholder.svg?height=40&width=40",
+                initials: "LC",
+                online: true
+            },
+            messages: [
+                {
+                    id: "m1",
+                    sender: "doctor",
+                    content: "Hi John, this is a reminder about your upcoming dental cleaning appointment on March 20th at 2:00 PM.",
+                    timestamp: "2025-03-13T09:15:00",
+                    read: true
+                },
+                {
+                    id: "m2",
+                    sender: "patient",
+                    content: "Thanks for the reminder. I'll be there.",
+                    timestamp: "2025-03-13T09:20:00",
+                    read: true
+                },
+                {
+                    id: "m3",
+                    sender: "doctor",
+                    content: "Great! Please remember to bring your insurance card and arrive 15 minutes early to complete any necessary paperwork.",
+                    timestamp: "2025-03-13T09:25:00",
+                    read: true
+                }
+            ],
+            lastMessage: {
+                content: "Great! Please remember to bring your insurance card and arrive 15 minutes early to complete any necessary paperwork.",
+                timestamp: "2025-03-13T09:25:00",
+                unread: false
+            }
+        },
+        {
+            id: "4",
+            contact: {
+                name: "Nurse Jennifer",
+                role: "Primary Care Nurse",
+                avatar: "https://ui.shadcn.com/placeholder.svg?height=40&width=40",
+                initials: "JN",
+                online: false
+            },
+            messages: [
+                {
+                    id: "m1",
+                    sender: "doctor",
+                    content: "Hello John, I'm following up on your recent flu shot. Have you experienced any side effects?",
+                    timestamp: "2025-03-10T11:00:00",
+                    read: true
+                },
+                {
+                    id: "m2",
+                    sender: "patient",
+                    content: "Hi Jennifer, I had some mild soreness at the injection site, but it went away after a day. No other side effects.",
+                    timestamp: "2025-03-10T11:10:00",
+                    read: true
+                },
+                {
+                    id: "m3",
+                    sender: "doctor",
+                    content: "That's normal and nothing to worry about. Thank you for the update!",
+                    timestamp: "2025-03-10T11:15:00",
+                    read: true
+                }
+            ],
+            lastMessage: {
+                content: "That's normal and nothing to worry about. Thank you for the update!",
+                timestamp: "2025-03-10T11:15:00",
+                unread: false
+            }
+        },
+        {
+            id: "5",
+            contact: {
+                name: "Pharmacy Services",
+                role: "Medication Support",
+                avatar: "https://ui.shadcn.com/placeholder.svg?height=40&width=40",
+                initials: "PS",
+                online: true
+            },
+            messages: [
+                {
+                    id: "m1",
+                    sender: "doctor",
+                    content: "Your prescription for Lisinopril has been refilled and is ready for pickup at your local pharmacy.",
+                    timestamp: "2025-03-11T15:30:00",
+                    read: true
+                },
+                {
+                    id: "m2",
+                    sender: "patient",
+                    content: "Thank you. What are your hours today?",
+                    timestamp: "2025-03-11T15:40:00",
+                    read: true
+                },
+                {
+                    id: "m3",
+                    sender: "doctor",
+                    content: "We're open until 9:00 PM today. Your prescription will be held for 7 days.",
+                    timestamp: "2025-03-11T15:45:00",
+                    read: true
+                },
+                {
+                    id: "m4",
+                    sender: "patient",
+                    content: "Perfect, I'll pick it up this evening. Thanks!",
+                    timestamp: "2025-03-11T15:50:00",
+                    read: true
+                }
+            ],
+            lastMessage: {
+                content: "Perfect, I'll pick it up this evening. Thanks!",
+                timestamp: "2025-03-11T15:50:00",
+                unread: false
+            }
+        }
+    ];
+
+
+    // Format date for display (unchanged)
+    const formatMessageDate = (dateString) => {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+        if (diffDays === 0) return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        if (diffDays === 1) return 'Yesterday';
+        if (diffDays < 7) return date.toLocaleDateString([], { weekday: 'long' });
+        return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    };
+
+    // DOM elements
+    const conversationList = document.getElementById('conversation-list');
+    const conversationContent = document.getElementById('conversation-content');
+    const emptyState = document.getElementById('empty-state');
+    const conversationHeader = document.getElementById('conversation-header');
+    const messagesContainer = document.getElementById('messages-container');
+    const messageInput = document.getElementById('message-input');
+    const sendButton = document.getElementById('send-button');
+    const searchInput = document.getElementById('search-input');
+    const optionsButton = document.getElementById('options-button');
+    const optionsDropdown = document.getElementById('options-dropdown');
+    const sidebarConvList = document.getElementById('sidebarConvList');
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const overlaySidebar = document.getElementById('overlaySidebar');
+
+
+    // Current active conversation
+    let activeConversation = null;
+
+    // Simulate loading state, skeleton UI
+    window.addEventListener('load', () => {
+        conversationList.innerHTML = Array(5).fill(0).map(() => `
+            <div class="flex items-center gap-3 p-2 rounded-md animate-pulse">
+                <div class="h-10 w-10 rounded-full bg-muted"></div>
+                <div class="space-y-2 flex-1">
+                    <div class="h-4 w-2/3 bg-muted rounded"></div>
+                    <div class="h-3 w-full bg-muted rounded"></div>
+                </div>
+            </div>
+        `).join('');
+
+        setTimeout(() => {
+            renderConversationList(conversations);
+            if (conversations.length > 0) {
+                setActiveConversation(conversations[0]);
+            }
+        }, 800);
+    });
+
+    // Render conversation list (unchanged)
+    function renderConversationList(convos) {
+        if (convos.length === 0) {
+            conversationList.innerHTML = `<div class="p-4 text-center text-muted-foreground">No conversations found</div>`;
+            return;
+        }
+
+        conversationList.innerHTML = convos.map(convo => `
+            <button data-conversation-id="${convo.id}" class="conversation-item flex items-start gap-3 p-2 rounded-md w-full text-left transition-colors ${activeConversation?.id === convo.id ? 'bg-muted' : 'hover:bg-muted/50'} ${convo.lastMessage.unread ? 'font-medium' : ''}">
+                <div class="relative">
+                    <div class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-primary/10">
+                        <img class="aspect-square h-full w-full" src="${convo.contact.avatar}" alt="${convo.contact.name}">
+                        <span class="flex h-full w-full items-center justify-center rounded-full bg-primary/10 text-primary">${convo.contact.initials}</span>
+                    </div>
+                    ${convo.contact.online ? `<span class="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-background"></span>` : ''}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex justify-between items-center">
+                        <p class="text-sm font-medium truncate">${convo.contact.name}</p>
+                        <span class="text-xs text-muted-foreground">${formatMessageDate(convo.lastMessage.timestamp)}</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground">${convo.contact.role}</p>
+                    <p class="text-xs truncate mt-1">${convo.lastMessage.content}</p>
+                </div>
+                ${convo.lastMessage.unread ? `<span class="h-2 w-2 rounded-full bg-destructive self-center"></span>` : ''}
+            </button>
+        `).join('');
+
+        document.querySelectorAll('.conversation-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const convoId = item.dataset.conversationId;
+                const convo = conversations.find(c => c.id === convoId);
+                if (convo) {
+                    setActiveConversation(convo);
+                }
+            });
+        });
+    }
+
+    // Set active conversation
+    function setActiveConversation(convo) {
+        activeConversation = convo;
+
+        document.querySelectorAll('.conversation-item').forEach(item => {
+            if (item.dataset.conversationId === convo.id) {
+                item.classList.add('bg-muted');
+                item.classList.remove('hover:bg-muted/50');
+            } else {
+                item.classList.remove('bg-muted');
+                item.classList.add('hover:bg-muted/50');
+            }
+        });
+
+        // Show conversation content and hide empty state
+        emptyState.classList.add('hidden');
+        conversationContent.classList.remove('hidden');
+        conversationContent.classList.add('flex');
+
+        // Hide sidebar on mobile when a conversation is selected
+        sidebarConvList.classList.add('hidden');
+
+        // Render conversation header
+        conversationHeader.innerHTML = `
+            <div class="flex items-center gap-3">
+                <button id="mobile-menu-button" class="md:hidden inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                    <svg class="h-5 w-5" fill="currentColor" stroke="currentColor" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                        <g transform="matrix(1 0 0 1 12 12)" >
+                            <g style="" >
+                                <g transform="matrix(1 0 0 1 0 0)" >
+                                <path style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z" stroke-linecap="round" />
+                                </g>
+                                <g transform="matrix(1 0 0 1 0 0)" >
+                                <line style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" x1="-7" y1="0" x2="7" y2="0" />
+                                </g>
+                                <g transform="matrix(1 0 0 1 -4 3)" >
+                                <line style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" x1="-3" y1="-3" x2="3" y2="3" />
+                                </g>
+                                <g transform="matrix(1 0 0 1 -4 -3)" >
+                                <line style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" x1="-3" y1="3" x2="3" y2="-3" />
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                </button>
+                <div class="relative">
+                    <div class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-primary/10">
+                        <img class="aspect-square h-full w-full" src="${convo.contact.avatar}" alt="${convo.contact.name}">
+                        <span class="flex h-full w-full items-center justify-center rounded-full bg-primary/10 text-primary">${convo.contact.initials}</span>
+                    </div>
+                    ${convo.contact.online ? `<span class="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-background"></span>` : ''}
+                </div>
+                <div>
+                    <h2 class="text-sm font-medium">${convo.contact.name}</h2>
+                    <p class="text-xs text-muted-foreground">${convo.contact.role}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                    <svg class="h-5 w-5" fill="currentColor" stroke="currentColor" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                        <g transform="matrix(0.77 0 0 0.77 12 12)" >
+                        <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" translate(-16, -16.01)" d="M 8.65625 3 C 8.132813 3 7.617188 3.1875 7.1875 3.53125 L 7.125 3.5625 L 7.09375 3.59375 L 3.96875 6.8125 L 4 6.84375 C 3.035156 7.734375 2.738281 9.066406 3.15625 10.21875 C 3.160156 10.226563 3.152344 10.242188 3.15625 10.25 C 4.003906 12.675781 6.171875 17.359375 10.40625 21.59375 C 14.65625 25.84375 19.402344 27.925781 21.75 28.84375 L 21.78125 28.84375 C 22.996094 29.25 24.3125 28.960938 25.25 28.15625 L 28.40625 25 C 29.234375 24.171875 29.234375 22.734375 28.40625 21.90625 L 24.34375 17.84375 L 24.3125 17.78125 C 23.484375 16.953125 22.015625 16.953125 21.1875 17.78125 L 19.1875 19.78125 C 18.464844 19.433594 16.742188 18.542969 15.09375 16.96875 C 13.457031 15.40625 12.621094 13.609375 12.3125 12.90625 L 14.3125 10.90625 C 15.152344 10.066406 15.167969 8.667969 14.28125 7.84375 L 14.3125 7.8125 L 14.21875 7.71875 L 10.21875 3.59375 L 10.1875 3.5625 L 10.125 3.53125 C 9.695313 3.1875 9.179688 3 8.65625 3 Z M 8.65625 5 C 8.730469 5 8.804688 5.035156 8.875 5.09375 L 12.875 9.1875 L 12.96875 9.28125 C 12.960938 9.273438 13.027344 9.378906 12.90625 9.5 L 10.40625 12 L 9.9375 12.4375 L 10.15625 13.0625 C 10.15625 13.0625 11.304688 16.136719 13.71875 18.4375 L 13.9375 18.625 C 16.261719 20.746094 19 21.90625 19 21.90625 L 19.625 22.1875 L 22.59375 19.21875 C 22.765625 19.046875 22.734375 19.046875 22.90625 19.21875 L 27 23.3125 C 27.171875 23.484375 27.171875 23.421875 27 23.59375 L 23.9375 26.65625 C 23.476563 27.050781 22.988281 27.132813 22.40625 26.9375 C 20.140625 26.046875 15.738281 24.113281 11.8125 20.1875 C 7.855469 16.230469 5.789063 11.742188 5.03125 9.5625 C 4.878906 9.15625 4.988281 8.554688 5.34375 8.25 L 5.40625 8.1875 L 8.4375 5.09375 C 8.507813 5.035156 8.582031 5 8.65625 5 Z" stroke-linecap="round" />
+                        </g>
+                    </svg>
+                </button>
+             
+                <div class="relative">
+                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                        <svg  class="h-4 w-4" fill="currentColor" stroke="currentColor" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                            <g transform="matrix(1.43 0 0 1.43 12 12)" >
+                                <g style="" >
+                                    <g transform="matrix(1 0 0 1 5 0)" >
+                                    <circle style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" cx="0" cy="0" r="1.5" />
+                                    </g>
+                                    <g transform="matrix(1 0 0 1 0 0)" >
+                                    <circle style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" cx="0" cy="0" r="1.5" />
+                                    </g>
+                                    <g transform="matrix(1 0 0 1 -5 0)" >
+                                    <circle style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" cx="0" cy="0" r="1.5" />
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        renderMessages(convo.messages);
+
+        // Attach event listener to mobile-menu-button to show sidebar
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', close_open_SidebarConvList);
+        }
+        overlaySidebar.addEventListener('click', close_open_SidebarConvList);
+    }
+
+
+    function close_open_SidebarConvList() {
+        sidebarConvList.classList.toggle('hidden');
+        overlaySidebar.classList.toggle('hidden');
+    }
+
+    // Render messages (unchanged)
+    function renderMessages(messages) {
+        messagesContainer.innerHTML = messages.map(message => `
+            <div class="flex ${message.sender === 'patient' ? 'justify-end' : 'justify-start'}">
+                ${message.sender !== 'patient' ? `
+                    <div class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full border-2 border-primary/10 mr-2 mt-1">
+                        <img class="aspect-square h-full w-full" src="${activeConversation.contact.avatar}" alt="${activeConversation.contact.name}">
+                        <span class="flex h-full w-full items-center justify-center rounded-full bg-primary/10 text-primary">${activeConversation.contact.initials}</span>
+                    </div>
+                ` : ''}
+                <div class="${message.sender === 'patient' ? 'bg-primary text-primary-foreground' : 'bg-muted'} rounded-lg p-3 max-w-[75%]">
+                    <p class="text-sm">${message.content}</p>
+                    <p class="text-xs mt-1 opacity-70 text-right">
+                        ${formatMessageDate(message.timestamp)}
+                        ${message.sender === 'patient' ? `
+                            <span class="ml-1">
+                                ${message.read ? `
+                                 <svg id='Checkmark_24' class="h-4 w-4 inline" fill="currentColor" stroke="currentColor" viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(1.15 0 0 1.15 12 12)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-12, -11.84)"
+                                            d="M 19.28125 5.28125 L 9 15.5625 L 4.71875 11.28125 L 3.28125 12.71875 L 8.28125 17.71875 L 9 18.40625 L 9.71875 17.71875 L 20.71875 6.71875 Z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+                                
+                                ` : `
+                                 <svg id='Checkmark_24' class="h-3 w-3 inline text-muted-foreground/50" fill="currentColor" stroke="currentColor" viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(1.15 0 0 1.15 12 12)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-12, -11.84)"
+                                            d="M 19.28125 5.28125 L 9 15.5625 L 4.71875 11.28125 L 3.28125 12.71875 L 8.28125 17.71875 L 9 18.40625 L 9.71875 17.71875 L 20.71875 6.71875 Z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>`}
+                            </span>
+                        ` : ''}
+                    </p>
+                </div>
+            </div>
+        `).join('');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Handle sending a new message (unchanged)
+    function handleSendMessage() {
+        const content = messageInput.value.trim();
+        if (!content || !activeConversation) return;
+        const newMessage = {
+            id: `m${activeConversation.messages.length + 1}`,
+            sender: 'patient',
+            content: content,
+            timestamp: new Date().toISOString(),
+            read: false
+        };
+        activeConversation.messages.push(newMessage);
+        activeConversation.lastMessage = { content, timestamp: newMessage.timestamp, unread: false };
+        renderMessages(activeConversation.messages);
+        messageInput.value = '';
+        sendButton.disabled = true;
+        console.log("Sending message:", content);
+    }
+
+    // Filter conversations (unchanged)
+    function filterConversations(searchTerm) {
+        const filtered = conversations.filter(
+            convo => convo.contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                convo.contact.role.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        renderConversationList(filtered);
+    }
+
+    // Event listeners
+    messageInput.addEventListener('input', () => {
+        sendButton.disabled = !messageInput.value.trim();
+    });
+    messageInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+        }
+    });
+    sendButton.addEventListener('click', handleSendMessage);
+    searchInput.addEventListener('input', (e) => filterConversations(e.target.value));
+    optionsButton.addEventListener('click', () => optionsDropdown.classList.toggle('hidden'));
+
+    // Tab functionality (unchanged)
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            tabButtons.forEach(btn => btn.setAttribute('data-state', ''));
+            button.setAttribute('data-state', 'active');
+            const tabName = button.getAttribute('data-tab');
+            if (tabName === 'all') {
+                renderConversationList(conversations);
+            } else if (tabName === 'unread') {
+                const unreadConversations = conversations.filter(convo => convo.lastMessage.unread);
+                renderConversationList(unreadConversations);
+            } else if (tabName === 'flagged') {
+                conversationList.innerHTML = `<div class="p-4 text-center text-muted-foreground">No flagged messages</div>`;
+            }
+        });
+    });
+
+
+
+</script>
+
+
+
+
+<script>
+    dashboard_nav_all = document.querySelectorAll('.message-nav a');
+    console.log(dashboard_nav_all);
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
+
+
+{% endblock scripts %}

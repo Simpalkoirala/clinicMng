@@ -1,0 +1,522 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titles %}Nepal's Care || Clinic For Powering Healthcare, optimizing Experiences{% endblock titles %}
+    </title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+
+    <meta name="google-site-verification" content="r2c7M748axvrDabOkAYO4cTYho-D9-OruPGhVBC6TJE" />
+
+    <!-- Fab icon -->
+    <link rel="icon" href="{% static 'icon-64.png' %}" type="image/png">
+
+    {% block styles %}
+    {% endblock styles %}
+
+
+
+</head>
+
+
+<body class="min-h-screen bg-gradient-to-r from-blue-50 via-white to-blue-50 font-sans ">
+    <!-- Nav bar -->
+    <nav class="container mx-auto px-4 py-3 text-black">
+        <div class="flex justify-between items-center bg-white rounded-lg p-3 shadow-sm">
+            <!-- Logo and Brand -->
+            <a href="/" class="flex items-center space-x-2">
+                <svg id='Heart_Health_24' width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                    xmlns:xlink='http://www.w3.org/1999/xlink'>
+                    <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
+                    <g transform="matrix(0.25 0 0 0.25 12 12)">
+                        <g>
+                            <g transform="matrix(1 0 0 1 0 -0.06)">
+                                <path
+                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(247,143,143); fill-rule: nonzero; opacity: 1;"
+                                    transform=" translate(-40, -39.94)"
+                                    d="M 40.023 72.378 C 36.576 69.601 3.5 42.542 3.5 27.087 C 3.5 16.287 12.213 7.5 22.923 7.5 C 29.793 7.5 36.016999999999996 11.065 39.56999999999999 17.036 L 40 17.758 L 40.43 17.035999999999998 C 43.983 11.065 50.207 7.5 57.077 7.5 C 67.787 7.5 76.5 16.287 76.5 27.087 C 76.5 46.655 43.55 69.943 40.023 72.378 z"
+                                    stroke-linecap="round" />
+                            </g>
+                            <g transform="matrix(1 0 0 1 0 0)">
+                                <path
+                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(199,67,67); fill-rule: nonzero; opacity: 1;"
+                                    transform=" translate(-40, -40)"
+                                    d="M 57.078 8 C 67.511 8 76 16.562 76 27.087 C 76 45.931 44.809 68.43 40.046 71.754 C 35.38 67.969 4 41.955 4 27.087 C 4 16.562 12.489 8 22.922 8 C 29.615000000000002 8 35.678 11.474 39.14 17.292 L 40 18.736 L 40.859 17.292 C 44.322 11.474 50.385 8 57.078 8 M 57.078 7 C 49.817 7 43.482 10.929 40 16.78 C 36.518 10.929 30.183 7 22.922 7 C 11.919 7 3 15.992 3 27.087 C 3 43.741 40 73 40 73 C 40 73 77 48.161 77 27.087000000000003 C 77 15.992 68.081 7 57.078 7 L 57.078 7 z"
+                                    stroke-linecap="round" />
+                            </g>
+                            <g transform="matrix(1 0 0 1 7.5 -6.99)">
+                                <path
+                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;"
+                                    transform=" translate(-47.5, -33.01)"
+                                    d="M 74 18.598 C 72.764 16.102 71.012 13.913999999999998 68.87 12.186 L 39.955 42.388 L 27.838 30.182 C 26.283 28.616 23.752000000000002 28.604999999999997 22.182000000000002 30.160999999999998 C 20.614 31.717999999999996 20.606 34.25 22.162000000000003 35.818 L 40.045 53.834999999999994 L 74 18.598 z"
+                                    stroke-linecap="round" />
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+                <span class="font-semibold text-xl text-gray-800">Nepalscare</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="/p/book-appoinment/"
+                    class="group relative px-6 py-3 rounded-full text-gray-700 bg-white border-2 border-blue-200 hover:border-blue-400 shadow-sm hover:shadow-lg hover:shadow-blue-100 transition-all duration-300 overflow-hidden">
+
+                    <!-- Pulsing background effect -->
+                    <span
+                        class="absolute inset-0 bg-gradient-to-r from-blue-100 via-indigo-50 to-purple-100 opacity-0 group-hover:opacity-70 transition-all duration-500"></span>
+
+
+                    <div class="flex items-center justify-between relative z-10">
+                        <span class="font-medium mr-3">Book Appointment</span>
+                        <!-- Animated SVG calendar with heartbeat effect -->
+                        <div class="relative">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-6 w-6 text-blue-500 transition-transform group-hover:scale-110 animate-heartbeat"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Auth Buttons -->
+                <div class="flex space-x-3 ml-4">
+                    <a href="/login/"
+                        class="px-4 py-2 rounded-full text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">Log
+                        in</a>
+                    <a href="/register/"
+                        class="px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200 shadow-sm">Register</a>
+                </div>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobileMenuButton" class="md:hidden focus:outline-none text-gray-600 hover:text-gray-900">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    class="w-7 h-7">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                    </path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Overlay for mobile menu (hidden by default) -->
+        <div id="menuOverlay"
+            class="fixed inset-0 bg-black bg-opacity-80 z-40 hidden transition-opacity duration-300 opacity-0"></div>
+
+        <!-- Mobile Sidebar Menu (hidden by default) -->
+        <div id="mobileSidebar"
+            class="fixed top-0 right-0 w-64 h-full bg-gradient-to-b from-white to-gray-50 shadow-md z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
+            <div class="flex justify-between items-center p-4 border-b border-gray-50">
+                <a href="/" class="flex items-center space-x-2">
+                    <svg id='Heart_Health_24' width='24' height='24' viewBox='0 0 24 24'
+                        xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                        <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
+                        <g transform="matrix(0.25 0 0 0.25 12 12)">
+                            <g>
+                                <g transform="matrix(1 0 0 1 0 -0.06)">
+                                    <path
+                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(247,143,143); fill-rule: nonzero; opacity: 1;"
+                                        transform=" translate(-40, -39.94)"
+                                        d="M 40.023 72.378 C 36.576 69.601 3.5 42.542 3.5 27.087 C 3.5 16.287 12.213 7.5 22.923 7.5 C 29.793 7.5 36.016999999999996 11.065 39.56999999999999 17.036 L 40 17.758 L 40.43 17.035999999999998 C 43.983 11.065 50.207 7.5 57.077 7.5 C 67.787 7.5 76.5 16.287 76.5 27.087 C 76.5 46.655 43.55 69.943 40.023 72.378 z"
+                                        stroke-linecap="round" />
+                                </g>
+                                <g transform="matrix(1 0 0 1 0 0)">
+                                    <path
+                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(199,67,67); fill-rule: nonzero; opacity: 1;"
+                                        transform=" translate(-40, -40)"
+                                        d="M 57.078 8 C 67.511 8 76 16.562 76 27.087 C 76 45.931 44.809 68.43 40.046 71.754 C 35.38 67.969 4 41.955 4 27.087 C 4 16.562 12.489 8 22.922 8 C 29.615000000000002 8 35.678 11.474 39.14 17.292 L 40 18.736 L 40.859 17.292 C 44.322 11.474 50.385 8 57.078 8 M 57.078 7 C 49.817 7 43.482 10.929 40 16.78 C 36.518 10.929 30.183 7 22.922 7 C 11.919 7 3 15.992 3 27.087 C 3 43.741 40 73 40 73 C 40 73 77 48.161 77 27.087000000000003 C 77 15.992 68.081 7 57.078 7 L 57.078 7 z"
+                                        stroke-linecap="round" />
+                                </g>
+                                <g transform="matrix(1 0 0 1 7.5 -6.99)">
+                                    <path
+                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;"
+                                        transform=" translate(-47.5, -33.01)"
+                                        d="M 74 18.598 C 72.764 16.102 71.012 13.913999999999998 68.87 12.186 L 39.955 42.388 L 27.838 30.182 C 26.283 28.616 23.752000000000002 28.604999999999997 22.182000000000002 30.160999999999998 C 20.614 31.717999999999996 20.606 34.25 22.162000000000003 35.818 L 40.045 53.834999999999994 L 74 18.598 z"
+                                        stroke-linecap="round" />
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                    <span class="font-semibold text-xl text-gray-800 tracking-wide">Nepalscare</span>
+                </a>
+                <button id="closeMobileMenu"
+                    class="focus:outline-none text-gray-600 hover:text-gray-900 p-2 rounded-full hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <div class="px-4 py-6 space-y-4">
+                <a href="/p/book-appoinment/"
+                    class="flex items-center space-x-3 py-3 border-b border-gray-50 text-gray-600 hover:text-blue-500 hover:bg-gray-50 hover:shadow-sm transition-all duration-300 font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6 text-blue-500 transition-transform group-hover:scale-110 animate-heartbeat"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>Book Appointment</span>
+
+
+                </a>
+
+                <!-- Auth Buttons -->
+                <div class="pt-6 space-y-3">
+                    <a href="/login/"
+                        class="flex items-center justify-center space-x-2 w-full px-4 py-2 rounded-full text-gray-700 hover:text-blue-500 hover:bg-blue-50 transition-all duration-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        <span>Log in</span>
+                    </a>
+                    <a href="/register/"
+                        class="flex items-center justify-center space-x-2 w-full px-4 py-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 hover:shadow-md transition-all duration-300 shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
+                            </path>
+                        </svg>
+                        <span>Register</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Notification Section -->
+    <div id="notifications-container" class="fixed right-0 top-5 z-50 flex flex-col space-y-2"></div>
+
+
+    {% block content %} {% endblock content %}
+
+
+
+    <!-- footer  -->
+    <footer class="px-6 py-12 bg-gradient-to-r from-gray-50 to-gray-100 text-gray-700">
+        <div class="container mx-auto max-w-6xl">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Logo and company info -->
+                <div class="flex flex-col space-y-4">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-lg mr-3">
+                            <svg id='Heart_Health_24' width='24' height='24' viewBox='0 0 24 24'
+                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
+                                <g transform="matrix(0.25 0 0 0.25 12 12)">
+                                    <g>
+                                        <g transform="matrix(1 0 0 1 0 -0.06)">
+                                            <path
+                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(247,143,143); fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-40, -39.94)"
+                                                d="M 40.023 72.378 C 36.576 69.601 3.5 42.542 3.5 27.087 C 3.5 16.287 12.213 7.5 22.923 7.5 C 29.793 7.5 36.016999999999996 11.065 39.56999999999999 17.036 L 40 17.758 L 40.43 17.035999999999998 C 43.983 11.065 50.207 7.5 57.077 7.5 C 67.787 7.5 76.5 16.287 76.5 27.087 C 76.5 46.655 43.55 69.943 40.023 72.378 z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 0)">
+                                            <path
+                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(199,67,67); fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-40, -40)"
+                                                d="M 57.078 8 C 67.511 8 76 16.562 76 27.087 C 76 45.931 44.809 68.43 40.046 71.754 C 35.38 67.969 4 41.955 4 27.087 C 4 16.562 12.489 8 22.922 8 C 29.615000000000002 8 35.678 11.474 39.14 17.292 L 40 18.736 L 40.859 17.292 C 44.322 11.474 50.385 8 57.078 8 M 57.078 7 C 49.817 7 43.482 10.929 40 16.78 C 36.518 10.929 30.183 7 22.922 7 C 11.919 7 3 15.992 3 27.087 C 3 43.741 40 73 40 73 C 40 73 77 48.161 77 27.087000000000003 C 77 15.992 68.081 7 57.078 7 L 57.078 7 z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 7.5 -6.99)">
+                                            <path
+                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-47.5, -33.01)"
+                                                d="M 74 18.598 C 72.764 16.102 71.012 13.913999999999998 68.87 12.186 L 39.955 42.388 L 27.838 30.182 C 26.283 28.616 23.752000000000002 28.604999999999997 22.182000000000002 30.160999999999998 C 20.614 31.717999999999996 20.606 34.25 22.162000000000003 35.818 L 40.045 53.834999999999994 L 74 18.598 z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold">Nepal's Care</span>
+                    </div>
+                    <p class="text-sm text-gray-600">
+                        Providing exceptional services and products since 2010. We're committed to excellence in
+                        everything
+                        we do.
+                    </p>
+                    <p class="text-sm text-gray-500">© 2025 Nepal's Care. All rights reserved.</p>
+                </div>
+
+                <!-- Quick links -->
+                <div class="flex flex-col space-y-4">
+                    <h3 class="text-lg font-semibold">Quick Links</h3>
+                    <ul class="flex flex-col space-y-2">
+                        <li>
+                            <a href="#"
+                                class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                About Us
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Services
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Contact
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Terms of Use
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Privacy Policy
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Social and contact -->
+                <div class="flex flex-col space-y-4">
+                    <h3 class="text-lg font-semibold">Connect With Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 hover:bg-indigo-600 hover:text-white transition-all duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-instagram" viewBox="0 0 16 16">
+                                <path
+                                    d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z" />
+                            </svg>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 hover:bg-indigo-600 hover:text-white transition-all duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-facebook" viewBox="0 0 16 16">
+                                <path
+                                    d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
+                            </svg>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 hover:bg-indigo-600 hover:text-white transition-all duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-twitter-x" viewBox="0 0 16 16">
+                                <path
+                                    d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
+                            </svg>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 hover:bg-indigo-600 hover:text-white transition-all duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-linkedin" viewBox="0 0 16 16">
+                                <path
+                                    d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z" />
+                            </svg>
+                        </a>
+                    </div>
+
+                    <h3 class="text-lg font-semibold mt-2">Contact Us</h3>
+                    <div class="space-y-2">
+                        <p class="flex items-center text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-indigo-600" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            simple@gmail.com
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+    <!-- notification script  -->
+    <script>
+        function showNotification({
+            color = "bg-green-500",
+            time = 3500,
+            message = "This is a notification message.",
+            title = "Notification",
+        } = {}) {
+            const notificationId = `notification-${Date.now()}`;
+
+            const notification = document.createElement("div");
+            notification.id = notificationId;
+            notification.className = `flex items-center sm:max-w-sm max-w-72 p-4 mb-4 text-white rounded-lg shadow-lg transition-all duration-500 ease-out transform translate-x-full scale-90 opacity-0 z-50 ${color}`;
+
+            notification.innerHTML = `
+          <div class="flex-shrink-0 mr-3">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 19.978a7 7 0 100-14 7 7 0 000 14z"></path>
+            </svg>
+          </div>
+          <div>
+            <span class="font-serif font-bold text-xs sm:text-base">${title}</span>
+            <p class="text-xs sm:text-sm font-mono">${message}</p>
+          </div>
+          <button onclick="closeNotification('${notificationId}', 100)" class="ml-auto text-white focus:outline-none pl-3 hover:text-black">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        `;
+
+            document.getElementById("notifications-container").appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.remove("translate-x-full", "scale-90", "opacity-0");
+                notification.classList.add("translate-x-0", "scale-100", "opacity-100");
+            }, 100);
+
+            let timeoutId = setTimeout(() => {
+                closeNotification(notificationId);
+            }, time);
+
+            notification.dataset.timeoutId = timeoutId; // Store the timeout ID for future reference
+
+            // Pause timeout on hover or touch
+            const pauseTimeout = () => clearTimeout(timeoutId);
+            const resumeTimeout = () => {
+                timeoutId = setTimeout(() => {
+                    closeNotification(notificationId);
+                }, time);
+                notification.dataset.timeoutId = timeoutId;
+            };
+
+            // callers
+            notification.addEventListener("mouseenter", pauseTimeout);
+            notification.addEventListener("mouseleave", resumeTimeout);
+            notification.addEventListener("touchstart", pauseTimeout);
+            notification.addEventListener("touchend", resumeTimeout);
+
+
+        }
+
+        function closeNotification(notificationId, time = 500) {
+            const notification = document.getElementById(notificationId);
+            if (notification) {
+                clearTimeout(notification.dataset.timeoutId); // Clear existing timeout if it exists
+                notification.classList.add("translate-x-full", "scale-90", "opacity-0");
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, time);
+            }
+        }
+    </script>
+
+    {% if messages %}
+    {% for message in messages %}
+    <script type="text/javascript">
+        showNotification({
+            color: "{% if message.tags == 'success' %}bg-green-500{% elif message.tags == 'info' %}bg-blue-500{% elif message.tags == 'warning' %}bg-yellow-500{% else %}bg-red-500{% endif %}",
+            title: "{{ message.title }}",
+            message: "{{ message.message }}",
+            time:
+                {% if message.tags == 'success' %} 3000
+          {% elif message.tags == 'info' %} 5000
+          {% elif message.tags == 'warning' %} 3500
+          {% else %} 6000
+          {% endif %}
+    
+        });
+    </script>
+    {% endfor %}
+    {% endif %}
+
+
+
+    <!-- JavaScript for Mobile Menu Toggle -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const closeMobileMenu = document.getElementById('closeMobileMenu');
+            const mobileSidebar = document.getElementById('mobileSidebar');
+            const menuOverlay = document.getElementById('menuOverlay');
+
+            // Function to open sidebar
+            function openSidebar() {
+                // Show overlay with fade-in effect
+                menuOverlay.classList.remove('hidden');
+                setTimeout(() => {
+                    menuOverlay.classList.remove('opacity-0');
+                }, 10);
+
+                // Slide in sidebar from right
+                mobileSidebar.classList.remove('translate-x-full');
+
+                // Prevent body scrolling when sidebar is open
+                document.body.style.overflow = 'hidden';
+            }
+
+            // Function to close sidebar
+            function closeSidebar() {
+                // Fade out overlay
+                menuOverlay.classList.add('opacity-0');
+
+                // Slide out sidebar to right
+                mobileSidebar.classList.add('translate-x-full');
+
+                // Re-enable body scrolling
+                document.body.style.overflow = '';
+
+                // Hide overlay after transition completes
+                setTimeout(() => {
+                    menuOverlay.classList.add('hidden');
+                }, 300);
+            }
+
+            // Event listeners
+            mobileMenuButton.addEventListener('click', openSidebar);
+            closeMobileMenu.addEventListener('click', closeSidebar);
+            menuOverlay.addEventListener('click', closeSidebar);
+        });
+    </script>
+
+
+
+    {% block scripts %} {% endblock scripts %}
+
+</body>
+
+</html>

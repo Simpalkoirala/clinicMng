@@ -1,0 +1,1440 @@
+{% extends "pages/patient/P_base.html" %}
+{% load static %}
+
+{% block titles %}View Documents || Nepal's Care {% endblock titles %}
+
+{% block styles %}
+
+<style>
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+{% endblock styles %}
+
+
+{% block pageof %} View Documents {% endblock pageof %}
+{% block linkPageof %} /p/document/ {% endblock linkPageof %}
+
+{% block content %}
+
+
+
+
+<section>
+    <!-- Hidden Inputs -->
+    <div class="hidden">
+        <input id="indexDocumentsCreateUrl" value="https://hms.infyom.com/documents">
+        <input id="indexDocumentsUrl" value="https://hms.infyom.com/documents">
+        <input id="indexDefaultDocumentImageUrl" value="https://hms.infyom.com/assets/img/default_image.jpg">
+        <input id="indexDownloadDocumentUrl" value="https://hms.infyom.com/document-download">
+        <input id="indexPatientUrl" value="https://hms.infyom.com/patients">
+        <input id="Documents" value="Document">
+    </div>
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <!-- Header Section -->
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
+            <div class="mb-4 sm:mb-0">
+                <h1 class="text-3xl font-bold text-gray-800">Document Management</h1>
+                <p class="text-gray-600 mt-1">Add, Organize & access Your documents here..</p>
+            </div>
+            <div>
+                <button id="addDocumentBtn"
+                    class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-md flex items-center">
+                    <svg id='Add_Circle_24' viewBox='0 0 24 24' fill="currentColor" class="w-6 h-6 mr-2"
+                        xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                        <g transform="matrix(0.83 0 0 0.83 12 12)">
+                            <path
+                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                transform=" translate(-12, -12)"
+                                d="M 12 24 C 18.627416997969522 24 24 18.627416997969522 24 12 C 24 5.372583002030478 18.627416997969522 0 12 0 C 5.372583002030479 0 0 5.372583002030478 0 11.999999999999998 C 0 18.627416997969522 5.372583002030479 24 12 24 Z M 6 11 L 10.75 11 C 10.8880711874577 11 11 10.8880711874577 11 10.75 L 11 6 C 11 5.447715250169207 11.447715250169207 5 12 5 C 12.552284749830793 5 13 5.447715250169207 13 6 L 13 10.75 C 13 10.8880711874577 13.1119288125423 11 13.25 11 L 18 11 C 18.552284749830793 11 19 11.447715250169207 19 12 C 19 12.552284749830793 18.552284749830793 13 18 13 L 13.25 13 C 13.1119288125423 13 13 13.1119288125423 13 13.25 L 13 18 C 13 18.552284749830793 12.552284749830793 19 12 19 C 11.447715250169207 19 11 18.552284749830793 11 18 L 11 13.25 C 11 13.1119288125423 10.8880711874577 13 10.75 13 L 6 13 C 5.447715250169207 13 5 12.552284749830793 5 12 C 5 11.447715250169207 5.447715250169207 11 6 11 Z"
+                                stroke-linecap="round" />
+                        </g>
+                    </svg>
+
+                    New Document
+                </button>
+            </div>
+        </div>
+
+
+
+        <!-- Search and Filters Section -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8 fade-in">
+            <div class="flex flex-col lg:flex-row gap-4">
+                <div class="w-full lg:w-1/3">
+                    <div class="relative">
+                        <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                            viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <input id="searchInput"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            type="search" placeholder="Search documents..." aria-label="Search">
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/3">
+                    <select id="documentTypeFilter"
+                        class="w-full py-3 pl-4 pr-8 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">All Document Types</option>
+                        <option value="MRI">MRI</option>
+                        <option value="Prescription">Prescription</option>
+                        <option value="Lab Report">Lab Report</option>
+                        <option value="X-Ray">X-Ray</option>
+                    </select>
+                </div>
+                <div class="w-full lg:w-1/3">
+                    <select id="sortOrder"
+                        class="w-full py-3 pl-4 pr-8 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="name-asc">Name (A-Z)</option>
+                        <option value="name-desc">Name (Z-A)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Selector -->
+        <div class="flex justify-end mb-4 fade-in">
+            <div class="bg-white rounded-lg shadow-sm inline-flex">
+                <button id="gridViewBtn" class="px-4 py-2 rounded-l-lg bg-blue-600 text-white">
+                    <svg class="w-4 h-4" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                        xmlns:xlink='http://www.w3.org/1999/xlink' fill=" currentColor">
+                        <g transform="matrix(1.11 0 0 1.11 12 12)">
+                            <path
+                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                transform=" translate(-12, -12)"
+                                d="M 5 3 C 3.897 3 3 3.897 3 5 L 3 9 C 3 10.103 3.897 11 5 11 L 9 11 C 10.103 11 11 10.103 11 9 L 11 5 C 11 3.897 10.103 3 9 3 L 5 3 z M 15 3 C 13.897 3 13 3.897 13 5 L 13 9 C 13 10.103 13.897 11 15 11 L 19 11 C 20.103 11 21 10.103 21 9 L 21 5 C 21 3.897 20.103 3 19 3 L 15 3 z M 5 13 C 3.897 13 3 13.897 3 15 L 3 19 C 3 20.103 3.897 21 5 21 L 9 21 C 10.103 21 11 20.103 11 19 L 11 15 C 11 13.897 10.103 13 9 13 L 5 13 z M 15 13 C 13.897 13 13 13.897 13 15 L 13 19 C 13 20.103 13.897 21 15 21 L 19 21 C 20.103 21 21 20.103 21 19 L 21 15 C 21 13.897 20.103 13 19 13 L 15 13 z"
+                                stroke-linecap="round" />
+                        </g>
+                    </svg>
+                </button>
+                <button id="listViewBtn" class="px-4 py-2 rounded-r-lg  text-gray-600 ">
+                    <svg id='Features_List_24' class="w-4 h-4" viewBox='0 0 24 24' fill=" currentColor"
+                        xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                        <g transform="matrix(1 0 0 1 12 12)">
+                            <path
+                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                transform=" translate(-12, -12)"
+                                d="M 4.5 3.7265625 L 3.7929688 5.2988281 L 2 5.4628906 L 3.3320312 6.578125 L 2.9570312 8.2734375 L 4.5 7.3632812 L 6.0820312 8.2734375 L 5.625 6.578125 L 7 5.4628906 L 5.2070312 5.296875 L 4.5 3.7265625 z M 10 5 L 10 7 L 22 7 L 22 5 L 10 5 z M 4.5 9.7265625 L 3.7929688 11.298828 L 2 11.462891 L 3.3320312 12.578125 L 2.9570312 14.273438 L 4.5 13.363281 L 6.0820312 14.273438 L 5.625 12.578125 L 7 11.462891 L 5.2070312 11.296875 L 4.5 9.7265625 z M 10 11 L 10 13 L 22 13 L 22 11 L 10 11 z M 4.5 15.726562 L 3.7929688 17.298828 L 2 17.462891 L 3.3320312 18.578125 L 2.9570312 20.273438 L 4.5 19.363281 L 6.0820312 20.273438 L 5.625 18.578125 L 7 17.462891 L 5.2070312 17.296875 L 4.5 15.726562 z M 10 17 L 10 19 L 22 19 L 22 17 L 10 17 z"
+                                stroke-linecap="round" />
+                        </g>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Documents Grid View -->
+        <div id="gridView" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8 fade-in">
+            <!-- Document Card Example 1 -->
+            <div class="document-card bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="h-48 bg-blue-100 flex items-center justify-center">
+                    <svg id='Documents_24' class="w-6 h-6  text-6xl text-blue-500" fill="currentColor"
+                        viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                        xmlns:xlink='http://www.w3.org/1999/xlink'>
+                        <g transform="matrix(0.91 0 0 0.91 12 12)">
+                            <path
+                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                transform=" translate(-12.5, -12)"
+                                d="M 5 1 C 3.9 1 3 1.9 3 3 L 3 17 L 5 17 L 5 3 L 17 3 L 17 1 L 5 1 z M 9 5 C 7.9 5 7 5.9 7 7 L 7 21 C 7 22.1 7.9 23 9 23 L 20 23 C 21.1 23 22 22.1 22 21 L 22 10 L 17 5 L 9 5 z M 11 13 L 18 13 L 18 15 L 11 15 L 11 13 z M 11 17 L 18 17 L 18 19 L 11 19 L 11 17 z"
+                                stroke-linecap="round" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="p-4">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-semibold text-gray-800 truncate">image_picker8669721463104410176.jpg</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">MRI</span>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <img src="https://ui-avatars.com/api/?name=Trith+Shah&size=100&rounded=true&color=fff&background=7d68f0"
+                            alt="Patient" class="w-8 h-8 rounded-full mr-2">
+                        <div>
+                            <a href="https://hms.infyom.com/patients/1383"
+                                class="text-blue-600 hover:underline text-sm">Trith Shah</a>
+                            <p class="text-xs text-gray-500">tirth@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="border-t pt-3 flex justify-between">
+                        <span class="text-xs text-gray-500">
+
+
+                            <svg id='Calendar_24' class="w-4 h-4 mr-2" fill="currentColor" viewBox='0 0 24 24'
+                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
+
+
+                                <g transform="matrix(1 0 0 1 12 12)">
+                                    <path
+                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                        transform=" translate(-12, -11)"
+                                        d="M 6 1 L 6 3 L 5 3 C 3.9 3 3 3.9 3 5 L 3 19 C 3 20.1 3.9 21 5 21 L 19 21 C 20.1 21 21 20.1 21 19 L 21 5 C 21 3.9 20.1 3 19 3 L 18 3 L 18 1 L 16 1 L 16 3 L 8 3 L 8 1 L 6 1 z M 5 8 L 19 8 L 19 19 L 5 19 L 5 8 z"
+                                        stroke-linecap="round" />
+                                </g>
+                            </svg>
+
+
+
+
+                            Mar 10, 2025</span>
+                        <div class="flex space-x-2">
+                            <a href="#" class="text-blue-500 hover:text-blue-700" title="Download">
+                                <svg id='Download_from_the_Cloud_24' viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' class="w-6 h-6" fill="currentColor"
+                                    xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-12, -12)"
+                                            d="M 19.355 10.036 C 18.674 6.595 15.641 4 12 4 C 9.108 4 6.603 5.639 5.352 8.036 C 2.343 8.36 0 10.906 0 14 C 0 17.314 2.686 20 6 20 L 19 20 C 21.761 20 24 17.761 24 15 C 24 12.36 21.948 10.221 19.355 10.036 z M 12 18 L 7 13 L 10 13 L 10 9 L 14 9 L 14 13 L 17 13 L 12 18 z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+                            </a>
+                            <a href="#" class="text-blue-500 hover:text-blue-700" title="Edit">
+                                <svg id='Edit_Folder_24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                                    class="w-6 h-6" fill="currentColor" xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                                    <g transform="matrix(0.91 0 0 0.91 12 12)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-13, -14)"
+                                            d="M 4 4 C 2.9 4 2 4.9 2 6 L 2 18 C 2 19.1 2.9 20 4 20 L 14.171875 20 L 22 12.171875 L 22 8 C 22 6.9 21.1 6 20 6 L 12.828125 6 C 12.298125 6 11.789062 5.7890625 11.414062 5.4140625 L 10.585938 4.5859375 C 10.210938 4.2109375 9.701875 4 9.171875 4 L 4 4 z M 22.207031 15 C 22.079156 15 21.951016 15.048984 21.853516 15.146484 L 20.853516 16.146484 L 22.853516 18.146484 L 23.853516 17.146484 C 24.048516 16.951484 24.048516 16.634453 23.853516 16.439453 L 22.560547 15.146484 C 22.462547 15.048984 22.334906 15 22.207031 15 z M 20.146484 16.853516 L 15.146484 21.853516 C 15.053484 21.947516 15 22.074031 15 22.207031 L 15 23.5 C 15 23.776 15.224 24 15.5 24 L 16.792969 24 C 16.925969 24 17.053484 23.946516 17.146484 23.853516 L 22.146484 18.853516 L 20.146484 16.853516 z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+
+                            </a>
+                            <a href="#" class="text-red-500 hover:text-red-700" title="Delete">
+                                <svg id='trash_24' class="w-5 h-5" fill="currentColor" viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(1 0 0 1 12 12)">
+                                        <g transform="matrix(1 0 0 1 0 0)">
+                                            <path
+                                                style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 -5)">
+                                            <line
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                x1="-8" y1="0" x2="8" y2="0" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 -2 2)">
+                                            <line
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                x1="0" y1="-3" x2="0" y2="3" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 2 2)">
+                                            <line
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                x1="0" y1="-3" x2="0" y2="3" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 2)">
+                                            <path
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -14)"
+                                                d="M 5 7 L 6 19 C 6 20.104569499661586 6.8954305003384135 21 8 21 L 16 21 C 17.104569499661586 21 18 20.104569499661586 18 19 L 19 7"
+                                                stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 -7)">
+                                            <path
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -5)"
+                                                d="M 9 7 L 9 4 C 9 3.4477152501692068 9.447715250169207 3 10 3 L 14 3 C 14.552284749830793 3 15 3.4477152501692063 15 4 L 15 7"
+                                                stroke-linecap="round" />
+                                        </g>
+                                    </g>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Document Card Example 2 -->
+            <div class="document-card bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="h-48 bg-green-100 flex items-center justify-center">
+                    <svg id='Documents_24' class="w-6 h-6  text-6xl text-green-500" fill="currentColor"
+                        viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                        xmlns:xlink='http://www.w3.org/1999/xlink'>
+                        <g transform="matrix(0.91 0 0 0.91 12 12)">
+                            <path
+                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                transform=" translate(-12.5, -12)"
+                                d="M 5 1 C 3.9 1 3 1.9 3 3 L 3 17 L 5 17 L 5 3 L 17 3 L 17 1 L 5 1 z M 9 5 C 7.9 5 7 5.9 7 7 L 7 21 C 7 22.1 7.9 23 9 23 L 20 23 C 21.1 23 22 22.1 22 21 L 22 10 L 17 5 L 9 5 z M 11 13 L 18 13 L 18 15 L 11 15 L 11 13 z M 11 17 L 18 17 L 18 19 L 11 19 L 11 17 z"
+                                stroke-linecap="round" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="p-4">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-semibold text-gray-800 truncate">prescription_march_2025.pdf</h3>
+                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Prescription</span>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <img src="https://ui-avatars.com/api/?name=Trith+Shah&size=100&rounded=true&color=fff&background=7d68f0"
+                            alt="Patient" class="w-8 h-8 rounded-full mr-2">
+                        <div>
+                            <a href="https://hms.infyom.com/patients/1383"
+                                class="text-blue-600 hover:underline text-sm">Trith Shah</a>
+                            <p class="text-xs text-gray-500">tirth@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="border-t pt-3 flex justify-between">
+                        <span class="text-xs text-gray-500">
+
+
+                            <svg id='Calendar_24' class="w-4 h-4 mr-2" fill="currentColor" viewBox='0 0 24 24'
+                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
+
+
+                                <g transform="matrix(1 0 0 1 12 12)">
+                                    <path
+                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                        transform=" translate(-12, -11)"
+                                        d="M 6 1 L 6 3 L 5 3 C 3.9 3 3 3.9 3 5 L 3 19 C 3 20.1 3.9 21 5 21 L 19 21 C 20.1 21 21 20.1 21 19 L 21 5 C 21 3.9 20.1 3 19 3 L 18 3 L 18 1 L 16 1 L 16 3 L 8 3 L 8 1 L 6 1 z M 5 8 L 19 8 L 19 19 L 5 19 L 5 8 z"
+                                        stroke-linecap="round" />
+                                </g>
+                            </svg>
+
+
+
+
+                            Mar 7, 2025</span>
+                        <div class="flex space-x-2">
+                            <a href="#" class="text-blue-500 hover:text-blue-700" title="Download">
+                                <svg id='Download_from_the_Cloud_24' width='24' height='24' viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' class="w-6 h-6" fill="currentColor"
+                                    xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-12, -12)"
+                                            d="M 19.355 10.036 C 18.674 6.595 15.641 4 12 4 C 9.108 4 6.603 5.639 5.352 8.036 C 2.343 8.36 0 10.906 0 14 C 0 17.314 2.686 20 6 20 L 19 20 C 21.761 20 24 17.761 24 15 C 24 12.36 21.948 10.221 19.355 10.036 z M 12 18 L 7 13 L 10 13 L 10 9 L 14 9 L 14 13 L 17 13 L 12 18 z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+                            </a>
+                            <a href="#" class="text-blue-500 hover:text-blue-700" title="Edit">
+                                <svg id='Edit_Folder_24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                                    class="w-6 h-6" fill="currentColor" xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                                    <g transform="matrix(0.91 0 0 0.91 12 12)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-13, -14)"
+                                            d="M 4 4 C 2.9 4 2 4.9 2 6 L 2 18 C 2 19.1 2.9 20 4 20 L 14.171875 20 L 22 12.171875 L 22 8 C 22 6.9 21.1 6 20 6 L 12.828125 6 C 12.298125 6 11.789062 5.7890625 11.414062 5.4140625 L 10.585938 4.5859375 C 10.210938 4.2109375 9.701875 4 9.171875 4 L 4 4 z M 22.207031 15 C 22.079156 15 21.951016 15.048984 21.853516 15.146484 L 20.853516 16.146484 L 22.853516 18.146484 L 23.853516 17.146484 C 24.048516 16.951484 24.048516 16.634453 23.853516 16.439453 L 22.560547 15.146484 C 22.462547 15.048984 22.334906 15 22.207031 15 z M 20.146484 16.853516 L 15.146484 21.853516 C 15.053484 21.947516 15 22.074031 15 22.207031 L 15 23.5 C 15 23.776 15.224 24 15.5 24 L 16.792969 24 C 16.925969 24 17.053484 23.946516 17.146484 23.853516 L 22.146484 18.853516 L 20.146484 16.853516 z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+
+                            </a>
+                            <a href="#" class="text-red-500 hover:text-red-700" title="Delete">
+                                <svg id='trash_24' class="w-5 h-5" fill="currentColor" viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(1 0 0 1 12 12)">
+                                        <g transform="matrix(1 0 0 1 0 0)">
+                                            <path
+                                                style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 -5)">
+                                            <line
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                x1="-8" y1="0" x2="8" y2="0" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 -2 2)">
+                                            <line
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                x1="0" y1="-3" x2="0" y2="3" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 2 2)">
+                                            <line
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                x1="0" y1="-3" x2="0" y2="3" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 2)">
+                                            <path
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -14)"
+                                                d="M 5 7 L 6 19 C 6 20.104569499661586 6.8954305003384135 21 8 21 L 16 21 C 17.104569499661586 21 18 20.104569499661586 18 19 L 19 7"
+                                                stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 -7)">
+                                            <path
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -5)"
+                                                d="M 9 7 L 9 4 C 9 3.4477152501692068 9.447715250169207 3 10 3 L 14 3 C 14.552284749830793 3 15 3.4477152501692063 15 4 L 15 7"
+                                                stroke-linecap="round" />
+                                        </g>
+                                    </g>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Document Card Example 3 -->
+            <div class="document-card bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="h-48 bg-purple-100 flex items-center justify-center">
+                    <svg id='Documents_24' class="w-6 h-6  text-6xl text-purple-500" fill="currentColor"
+                        viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                        xmlns:xlink='http://www.w3.org/1999/xlink'>
+                        <g transform="matrix(0.91 0 0 0.91 12 12)">
+                            <path
+                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                transform=" translate(-12.5, -12)"
+                                d="M 5 1 C 3.9 1 3 1.9 3 3 L 3 17 L 5 17 L 5 3 L 17 3 L 17 1 L 5 1 z M 9 5 C 7.9 5 7 5.9 7 7 L 7 21 C 7 22.1 7.9 23 9 23 L 20 23 C 21.1 23 22 22.1 22 21 L 22 10 L 17 5 L 9 5 z M 11 13 L 18 13 L 18 15 L 11 15 L 11 13 z M 11 17 L 18 17 L 18 19 L 11 19 L 11 17 z"
+                                stroke-linecap="round" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="p-4">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-semibold text-gray-800 truncate">blood_test_results.pdf</h3>
+                        <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Lab Report</span>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <img src="https://ui-avatars.com/api/?name=Trith+Shah&size=100&rounded=true&color=fff&background=7d68f0"
+                            alt="Patient" class="w-8 h-8 rounded-full mr-2">
+                        <div>
+                            <a href="https://hms.infyom.com/patients/1383"
+                                class="text-blue-600 hover:underline text-sm">Trith Shah</a>
+                            <p class="text-xs text-gray-500">tirth@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="border-t pt-3 flex justify-between">
+                        <span class="text-xs text-gray-500">
+                            <svg id='Calendar_24' class="w-4 h-4 mr-2 " fill="currentColor" viewBox='0 0 24 24'
+                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
+
+
+                                <g transform="matrix(1 0 0 1 12 12)">
+                                    <path
+                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                        transform=" translate(-12, -11)"
+                                        d="M 6 1 L 6 3 L 5 3 C 3.9 3 3 3.9 3 5 L 3 19 C 3 20.1 3.9 21 5 21 L 19 21 C 20.1 21 21 20.1 21 19 L 21 5 C 21 3.9 20.1 3 19 3 L 18 3 L 18 1 L 16 1 L 16 3 L 8 3 L 8 1 L 6 1 z M 5 8 L 19 8 L 19 19 L 5 19 L 5 8 z"
+                                        stroke-linecap="round" />
+                                </g>
+                            </svg>
+
+
+
+
+                            Mar 5, 2025</span>
+                        <div class="flex space-x-2">
+                            <a href="#" class="text-blue-500 hover:text-blue-700" title="Download">
+                                <svg id='Download_from_the_Cloud_24' width='24' height='24' viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' class="w-6 h-6" fill="currentColor"
+                                    xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-12, -12)"
+                                            d="M 19.355 10.036 C 18.674 6.595 15.641 4 12 4 C 9.108 4 6.603 5.639 5.352 8.036 C 2.343 8.36 0 10.906 0 14 C 0 17.314 2.686 20 6 20 L 19 20 C 21.761 20 24 17.761 24 15 C 24 12.36 21.948 10.221 19.355 10.036 z M 12 18 L 7 13 L 10 13 L 10 9 L 14 9 L 14 13 L 17 13 L 12 18 z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+                            </a>
+                            <a href="#" class="text-blue-500 hover:text-blue-700" title="Edit">
+                                <svg id='Edit_Folder_24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                                    class="w-6 h-6" fill="currentColor" xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                                    <g transform="matrix(0.91 0 0 0.91 12 12)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-13, -14)"
+                                            d="M 4 4 C 2.9 4 2 4.9 2 6 L 2 18 C 2 19.1 2.9 20 4 20 L 14.171875 20 L 22 12.171875 L 22 8 C 22 6.9 21.1 6 20 6 L 12.828125 6 C 12.298125 6 11.789062 5.7890625 11.414062 5.4140625 L 10.585938 4.5859375 C 10.210938 4.2109375 9.701875 4 9.171875 4 L 4 4 z M 22.207031 15 C 22.079156 15 21.951016 15.048984 21.853516 15.146484 L 20.853516 16.146484 L 22.853516 18.146484 L 23.853516 17.146484 C 24.048516 16.951484 24.048516 16.634453 23.853516 16.439453 L 22.560547 15.146484 C 22.462547 15.048984 22.334906 15 22.207031 15 z M 20.146484 16.853516 L 15.146484 21.853516 C 15.053484 21.947516 15 22.074031 15 22.207031 L 15 23.5 C 15 23.776 15.224 24 15.5 24 L 16.792969 24 C 16.925969 24 17.053484 23.946516 17.146484 23.853516 L 22.146484 18.853516 L 20.146484 16.853516 z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+
+                            </a>
+                            <a href="#" class="text-red-500 hover:text-red-700" title="Delete">
+                                <svg id='trash_24' class="w-5 h-5" fill="currentColor" viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(1 0 0 1 12 12)">
+                                        <g transform="matrix(1 0 0 1 0 0)">
+                                            <path
+                                                style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 -5)">
+                                            <line
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                x1="-8" y1="0" x2="8" y2="0" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 -2 2)">
+                                            <line
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                x1="0" y1="-3" x2="0" y2="3" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 2 2)">
+                                            <line
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                x1="0" y1="-3" x2="0" y2="3" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 2)">
+                                            <path
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -14)"
+                                                d="M 5 7 L 6 19 C 6 20.104569499661586 6.8954305003384135 21 8 21 L 16 21 C 17.104569499661586 21 18 20.104569499661586 18 19 L 19 7"
+                                                stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 -7)">
+                                            <path
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -5)"
+                                                d="M 9 7 L 9 4 C 9 3.4477152501692068 9.447715250169207 3 10 3 L 14 3 C 14.552284749830793 3 15 3.4477152501692063 15 4 L 15 7"
+                                                stroke-linecap="round" />
+                                        </g>
+                                    </g>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Document Card Example 4 -->
+            <div class="document-card bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="h-48 bg-yellow-100 flex items-center justify-center">
+                    <svg id='Documents_24' class="w-6 h-6  text-6xl text-yellow-500" fill="currentColor"
+                        viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                        xmlns:xlink='http://www.w3.org/1999/xlink'>
+                        <g transform="matrix(0.91 0 0 0.91 12 12)">
+                            <path
+                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                transform=" translate(-12.5, -12)"
+                                d="M 5 1 C 3.9 1 3 1.9 3 3 L 3 17 L 5 17 L 5 3 L 17 3 L 17 1 L 5 1 z M 9 5 C 7.9 5 7 5.9 7 7 L 7 21 C 7 22.1 7.9 23 9 23 L 20 23 C 21.1 23 22 22.1 22 21 L 22 10 L 17 5 L 9 5 z M 11 13 L 18 13 L 18 15 L 11 15 L 11 13 z M 11 17 L 18 17 L 18 19 L 11 19 L 11 17 z"
+                                stroke-linecap="round" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="p-4">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-semibold text-gray-800 truncate">chest_xray_frontal.jpg</h3>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">X-Ray</span>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <img src="https://ui-avatars.com/api/?name=Trith+Shah&size=100&rounded=true&color=fff&background=7d68f0"
+                            alt="Patient" class="w-8 h-8 rounded-full mr-2">
+                        <div>
+                            <a href="https://hms.infyom.com/patients/1383"
+                                class="text-blue-600 hover:underline text-sm">Trith Shah</a>
+                            <p class="text-xs text-gray-500">tirth@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="border-t pt-3 flex justify-between">
+                        <span class="text-xs text-gray-500">
+
+
+                            <svg id='Calendar_24' class="w-4 h-4 mr-2" fill="currentColor" viewBox='0 0 24 24'
+                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
+
+
+                                <g transform="matrix(1 0 0 1 12 12)">
+                                    <path
+                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                        transform=" translate(-12, -11)"
+                                        d="M 6 1 L 6 3 L 5 3 C 3.9 3 3 3.9 3 5 L 3 19 C 3 20.1 3.9 21 5 21 L 19 21 C 20.1 21 21 20.1 21 19 L 21 5 C 21 3.9 20.1 3 19 3 L 18 3 L 18 1 L 16 1 L 16 3 L 8 3 L 8 1 L 6 1 z M 5 8 L 19 8 L 19 19 L 5 19 L 5 8 z"
+                                        stroke-linecap="round" />
+                                </g>
+                            </svg>
+
+
+
+
+                            Mar 1, 2025</span>
+                        <div class="flex space-x-2">
+                            <a href="#" class="text-blue-500 hover:text-blue-700" title="Download">
+                                <svg id='Download_from_the_Cloud_24' width='24' height='24' viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' class="w-6 h-6" fill="currentColor"
+                                    xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-12, -12)"
+                                            d="M 19.355 10.036 C 18.674 6.595 15.641 4 12 4 C 9.108 4 6.603 5.639 5.352 8.036 C 2.343 8.36 0 10.906 0 14 C 0 17.314 2.686 20 6 20 L 19 20 C 21.761 20 24 17.761 24 15 C 24 12.36 21.948 10.221 19.355 10.036 z M 12 18 L 7 13 L 10 13 L 10 9 L 14 9 L 14 13 L 17 13 L 12 18 z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+                            </a>
+                            <a href="#" class="text-blue-500 hover:text-blue-700" title="Edit">
+                                <svg id='Edit_Folder_24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                                    class="w-6 h-6" fill="currentColor" xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                                    <g transform="matrix(0.91 0 0 0.91 12 12)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-13, -14)"
+                                            d="M 4 4 C 2.9 4 2 4.9 2 6 L 2 18 C 2 19.1 2.9 20 4 20 L 14.171875 20 L 22 12.171875 L 22 8 C 22 6.9 21.1 6 20 6 L 12.828125 6 C 12.298125 6 11.789062 5.7890625 11.414062 5.4140625 L 10.585938 4.5859375 C 10.210938 4.2109375 9.701875 4 9.171875 4 L 4 4 z M 22.207031 15 C 22.079156 15 21.951016 15.048984 21.853516 15.146484 L 20.853516 16.146484 L 22.853516 18.146484 L 23.853516 17.146484 C 24.048516 16.951484 24.048516 16.634453 23.853516 16.439453 L 22.560547 15.146484 C 22.462547 15.048984 22.334906 15 22.207031 15 z M 20.146484 16.853516 L 15.146484 21.853516 C 15.053484 21.947516 15 22.074031 15 22.207031 L 15 23.5 C 15 23.776 15.224 24 15.5 24 L 16.792969 24 C 16.925969 24 17.053484 23.946516 17.146484 23.853516 L 22.146484 18.853516 L 20.146484 16.853516 z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+
+                            </a>
+                            <a href="#" class="text-red-500 hover:text-red-700" title="Delete">
+                                <svg id='trash_24' class="w-5 h-5" fill="currentColor" viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(1 0 0 1 12 12)">
+                                        <g transform="matrix(1 0 0 1 0 0)">
+                                            <path
+                                                style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 -5)">
+                                            <line
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                x1="-8" y1="0" x2="8" y2="0" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 -2 2)">
+                                            <line
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                x1="0" y1="-3" x2="0" y2="3" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 2 2)">
+                                            <line
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                x1="0" y1="-3" x2="0" y2="3" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 2)">
+                                            <path
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -14)"
+                                                d="M 5 7 L 6 19 C 6 20.104569499661586 6.8954305003384135 21 8 21 L 16 21 C 17.104569499661586 21 18 20.104569499661586 18 19 L 19 7"
+                                                stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 -7)">
+                                            <path
+                                                style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -5)"
+                                                d="M 9 7 L 9 4 C 9 3.4477152501692068 9.447715250169207 3 10 3 L 14 3 C 14.552284749830793 3 15 3.4477152501692063 15 4 L 15 7"
+                                                stroke-linecap="round" />
+                                        </g>
+                                    </g>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents List View (Hidden by default) -->
+        <div id="listView" class="hidden bg-white rounded-xl shadow-md overflow-hidden mb-8 fade-in">
+            <div class="overflow-x-auto">
+                <table class="w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                File Name</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Document Type</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Patient</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Date Added</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50 transition duration-150">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fas fa-file-image text-blue-500 mr-3"></i>
+                                    <span>image_picker8669721463104410176.jpg</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">MRI</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <img src="https://ui-avatars.com/api/?name=Trith+Shah&size=100&rounded=true&color=fff&background=7d68f0"
+                                        alt="Patient" class="w-8 h-8 rounded-full mr-3">
+                                    <div>
+                                        <a href="https://hms.infyom.com/patients/1383"
+                                            class="text-blue-600 hover:underline">Trith Shah</a>
+                                        <p class="text-sm text-gray-500">tirth@gmail.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">Mar 10, 2025</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex space-x-3">
+                                    <a href="#" class="text-blue-500 hover:text-blue-700" title="Download">
+                                        <svg id='Download_from_the_Cloud_24' width='24' height='24' viewBox='0 0 24 24'
+                                            xmlns='http://www.w3.org/2000/svg' class="w-6 h-6" fill="currentColor"
+                                            xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                            <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-12, -12)"
+                                                    d="M 19.355 10.036 C 18.674 6.595 15.641 4 12 4 C 9.108 4 6.603 5.639 5.352 8.036 C 2.343 8.36 0 10.906 0 14 C 0 17.314 2.686 20 6 20 L 19 20 C 21.761 20 24 17.761 24 15 C 24 12.36 21.948 10.221 19.355 10.036 z M 12 18 L 7 13 L 10 13 L 10 9 L 14 9 L 14 13 L 17 13 L 12 18 z"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-blue-500 hover:text-blue-700" title="Edit">
+
+                                        <svg id='Edit_Folder_24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                                            class="w-6 h-6" fill="currentColor"
+                                            xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                                            <g transform="matrix(0.91 0 0 0.91 12 12)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-13, -14)"
+                                                    d="M 4 4 C 2.9 4 2 4.9 2 6 L 2 18 C 2 19.1 2.9 20 4 20 L 14.171875 20 L 22 12.171875 L 22 8 C 22 6.9 21.1 6 20 6 L 12.828125 6 C 12.298125 6 11.789062 5.7890625 11.414062 5.4140625 L 10.585938 4.5859375 C 10.210938 4.2109375 9.701875 4 9.171875 4 L 4 4 z M 22.207031 15 C 22.079156 15 21.951016 15.048984 21.853516 15.146484 L 20.853516 16.146484 L 22.853516 18.146484 L 23.853516 17.146484 C 24.048516 16.951484 24.048516 16.634453 23.853516 16.439453 L 22.560547 15.146484 C 22.462547 15.048984 22.334906 15 22.207031 15 z M 20.146484 16.853516 L 15.146484 21.853516 C 15.053484 21.947516 15 22.074031 15 22.207031 L 15 23.5 C 15 23.776 15.224 24 15.5 24 L 16.792969 24 C 16.925969 24 17.053484 23.946516 17.146484 23.853516 L 22.146484 18.853516 L 20.146484 16.853516 z"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                        </svg>
+
+
+                                    </a>
+                                    <a href="#" class="text-red-500 hover:text-red-700" title="Delete">
+
+                                        <svg id='trash_24' class="w-5 h-5" fill="currentColor" viewBox='0 0 24 24'
+                                            xmlns='http://www.w3.org/2000/svg'
+                                            xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                            <g transform="matrix(1 0 0 1 12 12)">
+                                                <g transform="matrix(1 0 0 1 0 0)">
+                                                    <path
+                                                        style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-12, -12)"
+                                                        d="M 0 0 L 24 0 L 24 24 L 0 24 z" stroke-linecap="round" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 0 -5)">
+                                                    <line
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="-8" y1="0" x2="8" y2="0" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 -2 2)">
+                                                    <line
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="0" y1="-3" x2="0" y2="3" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 2 2)">
+                                                    <line
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="0" y1="-3" x2="0" y2="3" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 0 2)">
+                                                    <path
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-12, -14)"
+                                                        d="M 5 7 L 6 19 C 6 20.104569499661586 6.8954305003384135 21 8 21 L 16 21 C 17.104569499661586 21 18 20.104569499661586 18 19 L 19 7"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 0 -7)">
+                                                    <path
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-12, -5)"
+                                                        d="M 9 7 L 9 4 C 9 3.4477152501692068 9.447715250169207 3 10 3 L 14 3 C 14.552284749830793 3 15 3.4477152501692063 15 4 L 15 7"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition duration-150">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fas fa-file-medical text-green-500 mr-3"></i>
+                                    <span>prescription_march_2025.pdf</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span
+                                    class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Prescription</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <img src="https://ui-avatars.com/api/?name=Trith+Shah&size=100&rounded=true&color=fff&background=7d68f0"
+                                        alt="Patient" class="w-8 h-8 rounded-full mr-3">
+                                    <div>
+                                        <a href="https://hms.infyom.com/patients/1383"
+                                            class="text-blue-600 hover:underline">Trith Shah</a>
+                                        <p class="text-sm text-gray-500">tirth@gmail.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">Mar 7, 2025</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex space-x-3">
+                                    <a href="#" class="text-blue-500 hover:text-blue-700" title="Download">
+                                        <svg id='Download_from_the_Cloud_24' width='24' height='24' viewBox='0 0 24 24'
+                                            xmlns='http://www.w3.org/2000/svg' class="w-6 h-6" fill="currentColor"
+                                            xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                            <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-12, -12)"
+                                                    d="M 19.355 10.036 C 18.674 6.595 15.641 4 12 4 C 9.108 4 6.603 5.639 5.352 8.036 C 2.343 8.36 0 10.906 0 14 C 0 17.314 2.686 20 6 20 L 19 20 C 21.761 20 24 17.761 24 15 C 24 12.36 21.948 10.221 19.355 10.036 z M 12 18 L 7 13 L 10 13 L 10 9 L 14 9 L 14 13 L 17 13 L 12 18 z"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-blue-500 hover:text-blue-700" title="Edit">
+
+                                        <svg id='Edit_Folder_24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                                            class="w-6 h-6" fill="currentColor"
+                                            xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                                            <g transform="matrix(0.91 0 0 0.91 12 12)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-13, -14)"
+                                                    d="M 4 4 C 2.9 4 2 4.9 2 6 L 2 18 C 2 19.1 2.9 20 4 20 L 14.171875 20 L 22 12.171875 L 22 8 C 22 6.9 21.1 6 20 6 L 12.828125 6 C 12.298125 6 11.789062 5.7890625 11.414062 5.4140625 L 10.585938 4.5859375 C 10.210938 4.2109375 9.701875 4 9.171875 4 L 4 4 z M 22.207031 15 C 22.079156 15 21.951016 15.048984 21.853516 15.146484 L 20.853516 16.146484 L 22.853516 18.146484 L 23.853516 17.146484 C 24.048516 16.951484 24.048516 16.634453 23.853516 16.439453 L 22.560547 15.146484 C 22.462547 15.048984 22.334906 15 22.207031 15 z M 20.146484 16.853516 L 15.146484 21.853516 C 15.053484 21.947516 15 22.074031 15 22.207031 L 15 23.5 C 15 23.776 15.224 24 15.5 24 L 16.792969 24 C 16.925969 24 17.053484 23.946516 17.146484 23.853516 L 22.146484 18.853516 L 20.146484 16.853516 z"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                        </svg>
+
+
+                                    </a>
+                                    <a href="#" class="text-red-500 hover:text-red-700" title="Delete">
+
+                                        <svg id='trash_24' class="w-5 h-5" fill="currentColor" viewBox='0 0 24 24'
+                                            xmlns='http://www.w3.org/2000/svg'
+                                            xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                            <g transform="matrix(1 0 0 1 12 12)">
+                                                <g transform="matrix(1 0 0 1 0 0)">
+                                                    <path
+                                                        style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-12, -12)"
+                                                        d="M 0 0 L 24 0 L 24 24 L 0 24 z" stroke-linecap="round" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 0 -5)">
+                                                    <line
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="-8" y1="0" x2="8" y2="0" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 -2 2)">
+                                                    <line
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="0" y1="-3" x2="0" y2="3" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 2 2)">
+                                                    <line
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="0" y1="-3" x2="0" y2="3" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 0 2)">
+                                                    <path
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-12, -14)"
+                                                        d="M 5 7 L 6 19 C 6 20.104569499661586 6.8954305003384135 21 8 21 L 16 21 C 17.104569499661586 21 18 20.104569499661586 18 19 L 19 7"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 0 -7)">
+                                                    <path
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-12, -5)"
+                                                        d="M 9 7 L 9 4 C 9 3.4477152501692068 9.447715250169207 3 10 3 L 14 3 C 14.552284749830793 3 15 3.4477152501692063 15 4 L 15 7"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition duration-150">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fas fa-file-alt text-purple-500 mr-3"></i>
+                                    <span>blood_test_results.pdf</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Lab
+                                    Report</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <img src="https://ui-avatars.com/api/?name=Trith+Shah&size=100&rounded=true&color=fff&background=7d68f0"
+                                        alt="Patient" class="w-8 h-8 rounded-full mr-3">
+                                    <div>
+                                        <a href="https://hms.infyom.com/patients/1383"
+                                            class="text-blue-600 hover:underline">Trith Shah</a>
+                                        <p class="text-sm text-gray-500">tirth@gmail.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">Mar 5, 2025</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex space-x-3">
+                                    <a href="#" class="text-blue-500 hover:text-blue-700" title="Download">
+                                        <svg id='Download_from_the_Cloud_24' width='24' height='24' viewBox='0 0 24 24'
+                                            xmlns='http://www.w3.org/2000/svg' class="w-6 h-6" fill="currentColor"
+                                            xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                            <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-12, -12)"
+                                                    d="M 19.355 10.036 C 18.674 6.595 15.641 4 12 4 C 9.108 4 6.603 5.639 5.352 8.036 C 2.343 8.36 0 10.906 0 14 C 0 17.314 2.686 20 6 20 L 19 20 C 21.761 20 24 17.761 24 15 C 24 12.36 21.948 10.221 19.355 10.036 z M 12 18 L 7 13 L 10 13 L 10 9 L 14 9 L 14 13 L 17 13 L 12 18 z"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-blue-500 hover:text-blue-700" title="Edit">
+
+                                        <svg id='Edit_Folder_24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                                            class="w-6 h-6" fill="currentColor"
+                                            xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                                            <g transform="matrix(0.91 0 0 0.91 12 12)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-13, -14)"
+                                                    d="M 4 4 C 2.9 4 2 4.9 2 6 L 2 18 C 2 19.1 2.9 20 4 20 L 14.171875 20 L 22 12.171875 L 22 8 C 22 6.9 21.1 6 20 6 L 12.828125 6 C 12.298125 6 11.789062 5.7890625 11.414062 5.4140625 L 10.585938 4.5859375 C 10.210938 4.2109375 9.701875 4 9.171875 4 L 4 4 z M 22.207031 15 C 22.079156 15 21.951016 15.048984 21.853516 15.146484 L 20.853516 16.146484 L 22.853516 18.146484 L 23.853516 17.146484 C 24.048516 16.951484 24.048516 16.634453 23.853516 16.439453 L 22.560547 15.146484 C 22.462547 15.048984 22.334906 15 22.207031 15 z M 20.146484 16.853516 L 15.146484 21.853516 C 15.053484 21.947516 15 22.074031 15 22.207031 L 15 23.5 C 15 23.776 15.224 24 15.5 24 L 16.792969 24 C 16.925969 24 17.053484 23.946516 17.146484 23.853516 L 22.146484 18.853516 L 20.146484 16.853516 z"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                        </svg>
+
+
+                                    </a>
+                                    <a href="#" class="text-red-500 hover:text-red-700" title="Delete">
+
+                                        <svg id='trash_24' class="w-5 h-5" fill="currentColor" viewBox='0 0 24 24'
+                                            xmlns='http://www.w3.org/2000/svg'
+                                            xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                            <g transform="matrix(1 0 0 1 12 12)">
+                                                <g transform="matrix(1 0 0 1 0 0)">
+                                                    <path
+                                                        style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-12, -12)"
+                                                        d="M 0 0 L 24 0 L 24 24 L 0 24 z" stroke-linecap="round" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 0 -5)">
+                                                    <line
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="-8" y1="0" x2="8" y2="0" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 -2 2)">
+                                                    <line
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="0" y1="-3" x2="0" y2="3" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 2 2)">
+                                                    <line
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="0" y1="-3" x2="0" y2="3" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 0 2)">
+                                                    <path
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-12, -14)"
+                                                        d="M 5 7 L 6 19 C 6 20.104569499661586 6.8954305003384135 21 8 21 L 16 21 C 17.104569499661586 21 18 20.104569499661586 18 19 L 19 7"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 0 -7)">
+                                                    <path
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-12, -5)"
+                                                        d="M 9 7 L 9 4 C 9 3.4477152501692068 9.447715250169207 3 10 3 L 14 3 C 14.552284749830793 3 15 3.4477152501692063 15 4 L 15 7"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition duration-150">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fas fa-x-ray text-yellow-500 mr-3"></i>
+                                    <span>chest_xray_frontal.jpg</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">X-Ray</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <img src="https://ui-avatars.com/api/?name=Trith+Shah&size=100&rounded=true&color=fff&background=7d68f0"
+                                        alt="Patient" class="w-8 h-8 rounded-full mr-3">
+                                    <div>
+                                        <a href="https://hms.infyom.com/patients/1383"
+                                            class="text-blue-600 hover:underline">Trith Shah</a>
+                                        <p class="text-sm text-gray-500">tirth@gmail.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">Mar 1, 2025</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex space-x-3">
+                                    <a href="#" class="text-blue-500 hover:text-blue-700" title="Download">
+                                        <svg id='Download_from_the_Cloud_24' width='24' height='24' viewBox='0 0 24 24'
+                                            xmlns='http://www.w3.org/2000/svg' class="w-6 h-6" fill="currentColor"
+                                            xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                            <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-12, -12)"
+                                                    d="M 19.355 10.036 C 18.674 6.595 15.641 4 12 4 C 9.108 4 6.603 5.639 5.352 8.036 C 2.343 8.36 0 10.906 0 14 C 0 17.314 2.686 20 6 20 L 19 20 C 21.761 20 24 17.761 24 15 C 24 12.36 21.948 10.221 19.355 10.036 z M 12 18 L 7 13 L 10 13 L 10 9 L 14 9 L 14 13 L 17 13 L 12 18 z"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-blue-500 hover:text-blue-700" title="Edit">
+
+                                        <svg id='Edit_Folder_24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                                            class="w-6 h-6" fill="currentColor"
+                                            xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                                            <g transform="matrix(0.91 0 0 0.91 12 12)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-13, -14)"
+                                                    d="M 4 4 C 2.9 4 2 4.9 2 6 L 2 18 C 2 19.1 2.9 20 4 20 L 14.171875 20 L 22 12.171875 L 22 8 C 22 6.9 21.1 6 20 6 L 12.828125 6 C 12.298125 6 11.789062 5.7890625 11.414062 5.4140625 L 10.585938 4.5859375 C 10.210938 4.2109375 9.701875 4 9.171875 4 L 4 4 z M 22.207031 15 C 22.079156 15 21.951016 15.048984 21.853516 15.146484 L 20.853516 16.146484 L 22.853516 18.146484 L 23.853516 17.146484 C 24.048516 16.951484 24.048516 16.634453 23.853516 16.439453 L 22.560547 15.146484 C 22.462547 15.048984 22.334906 15 22.207031 15 z M 20.146484 16.853516 L 15.146484 21.853516 C 15.053484 21.947516 15 22.074031 15 22.207031 L 15 23.5 C 15 23.776 15.224 24 15.5 24 L 16.792969 24 C 16.925969 24 17.053484 23.946516 17.146484 23.853516 L 22.146484 18.853516 L 20.146484 16.853516 z"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                        </svg>
+
+
+                                    </a>
+                                    <a href="#" class="text-red-500 hover:text-red-700" title="Delete">
+
+                                        <svg id='trash_24' class="w-5 h-5" fill="currentColor" viewBox='0 0 24 24'
+                                            xmlns='http://www.w3.org/2000/svg'
+                                            xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                            <g transform="matrix(1 0 0 1 12 12)">
+                                                <g transform="matrix(1 0 0 1 0 0)">
+                                                    <path
+                                                        style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-12, -12)"
+                                                        d="M 0 0 L 24 0 L 24 24 L 0 24 z" stroke-linecap="round" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 0 -5)">
+                                                    <line
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="-8" y1="0" x2="8" y2="0" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 -2 2)">
+                                                    <line
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="0" y1="-3" x2="0" y2="3" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 2 2)">
+                                                    <line
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="0" y1="-3" x2="0" y2="3" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 0 2)">
+                                                    <path
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-12, -14)"
+                                                        d="M 5 7 L 6 19 C 6 20.104569499661586 6.8954305003384135 21 8 21 L 16 21 C 17.104569499661586 21 18 20.104569499661586 18 19 L 19 7"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 0 -7)">
+                                                    <path
+                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-12, -5)"
+                                                        d="M 9 7 L 9 4 C 9 3.4477152501692068 9.447715250169207 3 10 3 L 14 3 C 14.552284749830793 3 15 3.4477152501692063 15 4 L 15 7"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <!-- Add Document Modal -->
+    <div id="addDocumentModal" class="modal fixed inset-0 
+             bg-gray-800/80 backdrop-blur-sm hidden z-50 flex 
+             items-center justify-center transition-all duration-100 ease-in-out">
+        <div class="modal-content bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl mx-4 transform
+             transition-transform duration-100 scale-95 top-12 relative" id="modalInner">
+            <!-- Header -->
+            <div class="flex justify-between items-center p-6 border-b dark:border-gray-700">
+                <h3 class="text-2xl font-bold text-gray-800 dark:text-white">New Document</h3>
+                <button id="closeModalBtn"
+                    class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="p-6 top-32">
+                <!-- Error Alert -->
+                <div id="documentErrorsBox"
+                    class="hidden bg-red-100 dark:bg-red-900/30 border-l-4 border-red-500 text-red-700 dark:text-red-400 p-4 rounded mb-6 animate-fadeIn">
+                    <div class="flex">
+                        <svg class="h-5 w-5 text-red-500 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span id="errorMessage"></span>
+                    </div>
+                </div>
+
+                <form id="addDocumentForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Title Field -->
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nick Name
+                                <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <input
+                                    class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white pl-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-3 transition-colors"
+                                    required placeholder="Enter document title" name="title" type="text">
+                            </div>
+                        </div>
+
+                        <!-- Document Type -->
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Document Type
+                                <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                                        <path fill-rule="evenodd"
+                                            d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <select
+                                    class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white pl-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-3 appearance-none transition-colors"
+                                    required name="document_type_id">
+                                    <option value="">Select Document Type</option>
+                                    <option value="1">MRI</option>
+                                    <option value="2">Prescription</option>
+                                    <option value="3">Lab Report</option>
+                                    <option value="4">X-Ray</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="patient_id" value="1383">
+
+                        <!-- File Upload Area - Takes full width -->
+                        <div class="col-span-1 md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Attachment
+                                <span class="text-red-500">*</span></label>
+                            <div class="mt-1 flex flex-col">
+                                <div class="w-full h-40 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-gray-700/30 mb-3 transition-all hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/10 group cursor-pointer"
+                                    id="dropZone">
+                                    <div class="text-center p-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="mx-auto h-12 w-12 text-gray-400 group-hover:text-blue-500 transition-colors duration-300"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                        </svg>
+                                        <p
+                                            class="mt-2 text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-300">
+                                            Drag and drop your file here or</p>
+                                        <button type="button" id="browseFilesBtn"
+                                            class="mt-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors duration-300">Browse
+                                            files</button>
+                                        <input type="file" class="hidden" id="fileInput" />
+                                    </div>
+                                </div>
+                                <!-- Selected File Preview -->
+                                <div id="selectedFile"
+                                    class="hidden animate-fadeIn flex items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-3"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="text-sm text-gray-800 dark:text-gray-200 flex-grow font-medium"
+                                        id="fileName">image_picker8669721463104410176.jpg</span>
+                                    <button type="button" id="removeFileBtn"
+                                        class="text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors p-1 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                            fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-end pt-4">
+                        <button type="submit"
+                            class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 flex items-center shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Save Document
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- Add initialization script -->
+
+
+
+
+
+
+
+
+{% endblock content %}
+
+
+{% block scripts %}
+
+<!-- script of view document page, search -->
+<script>
+
+    // Search and filter functionality
+    function filterDocuments() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const selectedCategory = document.getElementById('documentTypeFilter').value;
+
+        // Get all document cards and rows
+        const gridCards = document.querySelectorAll('#gridView .document-card');
+        const listRows = document.querySelectorAll('#listView tbody tr');
+
+        // Filter grid view
+        gridCards.forEach(card => {
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const category = card.querySelector('span.rounded-full').textContent;
+
+            const matchesSearch = title.includes(searchTerm);
+            const matchesCategory = selectedCategory === '' || category === selectedCategory;
+
+            card.style.display = matchesSearch && matchesCategory ? 'block' : 'none';
+        });
+
+        // Filter list view
+        listRows.forEach(row => {
+            const title = row.querySelector('td:first-child span').textContent.toLowerCase();
+            const category = row.querySelector('td:nth-child(2) span').textContent;
+
+            const matchesSearch = title.includes(searchTerm);
+            const matchesCategory = selectedCategory === '' || category === selectedCategory;
+
+            row.style.display = matchesSearch && matchesCategory ? 'table-row' : 'none';
+        });
+    }
+
+    // Add event listeners for search and filter
+    document.getElementById('searchInput').addEventListener('input', filterDocuments);
+    document.getElementById('documentTypeFilter').addEventListener('change', filterDocuments);
+
+
+
+    // View toggle functionality
+    document.getElementById('gridViewBtn').addEventListener('click', function () {
+        document.getElementById('gridView').classList.remove('hidden');
+        document.getElementById('listView').classList.add('hidden');
+        this.classList.add('bg-blue-600', 'text-white');
+        document.getElementById('listViewBtn').classList.remove('bg-blue-600', 'text-white');
+    });
+
+    document.getElementById('listViewBtn').addEventListener('click', function () {
+        document.getElementById('listView').classList.remove('hidden');
+        document.getElementById('gridView').classList.add('hidden');
+        this.classList.remove('bg-white');
+        this.classList.add('bg-blue-600', 'text-white');
+        document.getElementById('gridViewBtn').classList.remove('bg-blue-600', 'text-white');
+    });
+
+
+</script>
+
+
+
+<!-- script of add documnet model popup -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('addDocumentModal');
+        const modalInner = document.getElementById('modalInner');
+        const closeBtn = document.getElementById('closeModalBtn');
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const selectedFile = document.getElementById('selectedFile');
+        const removeFileBtn = document.getElementById('removeFileBtn');
+        const fileName = document.getElementById('fileName');
+
+        // Function to open modal with animation
+        function openDocumentModal() {
+            modal.classList.remove('hidden');
+        };
+
+        // Open modal when clicking the button
+        document.getElementById('addDocumentBtn').addEventListener('click', openDocumentModal);
+
+        // Function to close modal with animation
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+
+        // Close modal when clicking the close button
+        closeBtn.addEventListener('click', closeModal);
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // ---------------------------------------------------------------
+
+        // File handling functions
+        dropZone.addEventListener('click', function () {
+            fileInput.click();
+        });
+
+        modal.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            dropZone.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/10');
+        });
+
+        modal.addEventListener('dragleave', function () {
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/10');
+        });
+
+        modal.addEventListener('drop', function (e) {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/10');
+
+            if (e.dataTransfer.files.length) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', function () {
+            if (fileInput.files.length) {
+                handleFile(fileInput.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            fileName.textContent = file.name;
+            selectedFile.classList.remove('hidden');
+            dropZone.classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-900/10');
+        }
+
+        removeFileBtn.addEventListener('click', function () {
+            selectedFile.classList.add('hidden');
+            fileInput.value = '';
+            dropZone.classList.remove('border-green-500', 'bg-green-50', 'dark:bg-green-900/10');
+        });
+
+        // Form submission
+        document.getElementById('addDocumentForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Add your form submission logic here
+
+            // Show success notification
+            // This is just an example - implement as needed
+            const successNotification = document.createElement('div');
+            successNotification.className = 'fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg transform transition-transform duration-500 translate-y-0 opacity-100';
+            successNotification.innerHTML = `
+        <div class="flex items-center">
+          <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Document uploaded successfully!
+        </div>
+      `;
+            document.body.appendChild(successNotification);
+
+            setTimeout(() => {
+                successNotification.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => {
+                    document.body.removeChild(successNotification);
+                }, 500);
+            }, 3000);
+
+            closeModal();
+        });
+    });
+</script>
+
+
+<script>
+
+    dashboard_nav_all = document.querySelectorAll('.documnet-nav a');
+    console.log(dashboard_nav_all);
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
+
+{% endblock scripts %}

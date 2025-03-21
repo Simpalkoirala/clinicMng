@@ -1,0 +1,48 @@
+Powering Healthcare, optimizing Experiences
+
+Nepalscare
+
+
+
+<div class="absolute xl:left-28 lg:left-6 left-1 top-22rem sm:top-64 md:top-56 lg:top-20">
+    <!-- h-28 sm:h-36 md:h-52 sm:w-32 md:w-44 w-24-->
+    <div id="practiceDiv"
+      class="hover:border-2 -rotate-12 border-blue-300 sm:text-base text-sm cursor-pointer font-mono rounded h-28 w-24 sm:h-36 sm:w-32 lg:h-52 lg:w-44 sm:left-5 left-3 sm:top-36 top-8 shadow absolute bg-green-100 text-center sm:p-2 p-1 transform select-none animate-card-1">
+      Practice
+    </div>
+    <div id="testDiv"
+      class="hover:border-2 -rotate-12 border-blue-300 sm:text-base text-sm cursor-pointer font-serif rounded h-28 w-24 sm:h-36 sm:w-32 lg:h-52 lg:w-44 sm:left-9 left-8 sm:top-44 top-14 shadow absolute bg-orange-100 text-center sm:p-2 p-1 transform select-none animate-card-2">
+      Take Test
+    </div>
+    <div id="learnDiv"
+      class="hover:border-2 -rotate-12 border-blue-300 sm:text-base text-sm lg:text-xl p-6 lg:px-14 md:px-11 cursor-pointer font-mono rounded h-28 w-24 sm:h-36 sm:w-32 lg:h-52 lg:w-44 left-14 sm:top-52 top-20 shadow absolute bg-yellow-200 flex justify-center items-center text-center transform select-none animate-card-3">
+      Learn & Enjoy
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    git config user.name "Simpalkoirala"
+git config user.email "koiralasimpal51@gmail.com"
+
+
+git config --global user.name "Simpalkoirala"
+git config --global user.email "koiralasimpal51@gmail.com"
+
+
+
+
+    git config user.name "0luv69"
+git config user.email "baniyarujal@gmail.com"
+
+
+git config --global user.name "0luv69"
+git config --global user.email "baniyarujal@gmail.com"
+
