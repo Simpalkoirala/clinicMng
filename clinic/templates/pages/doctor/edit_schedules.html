@@ -139,9 +139,6 @@
         right: 0;
         bottom: 0;
         background-color: rgba(0, 0, 0, 0.5);
-        display: flex;
-        display: none;
-
         align-items: center;
         justify-content: center;
         z-index: 50;
@@ -583,7 +580,7 @@
                                 Evening Shift (3 PM - 9 PM)
                             </button>
                             <button id="custom-template-btn"
-                                class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 justify-start">
+                                class="inline-flex hidden items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 justify-start">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="lucide lucide-plus mr-2">
@@ -1150,7 +1147,7 @@
         }
 
         // Render time slots in the first column
-        function renderTimeSlots(defaultTimeformat = "12") {
+        function renderTimeSlots(defaultTimeformat = "24") {
             const timeColumn = document.querySelector(".time-slots");
             timeColumn.innerHTML = "";
             HOURS.forEach((hour) => {
@@ -1418,8 +1415,6 @@
                 renderTimeSlots(document.getElementById('timeToggle').checked ? "24" : "12")
             })
 
-
-
             document.getElementById("clear-day").addEventListener("click", () => {
                 if (selectedDate) {
                     clearDay(selectedDate);
@@ -1427,8 +1422,62 @@
                 }
             });
 
+
+
+            // Preset buttons for predefined schedules to week
+            const presetButtons = document.querySelectorAll(".preset-button")
+            presetButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    presetButtons.forEach((btn) => btn.classList.remove("bg-blue-400", "hover:bg-blue-500"));
+                    button.classList.add('bg-blue-400', "hover:bg-blue-500");
+                    applyPreset(button)
+                })
+            })
+
+
+
+            // Break settings
+            document.getElementById("lunch-break").addEventListener("change", (event) => {
+                breakSettings.lunchBreak = event.target.checked
+                document.getElementById("lunch-time-container").style.display = event.target.checked ? "block" : "none"
+            })
+
+            document.getElementById("evening-break").addEventListener("change", (event) => {
+                breakSettings.eveningBreak = event.target.checked
+                document.getElementById("evening-time-container").style.display = event.target.checked ? "block" : "none"
+            })
+
+            document.getElementById("lunch-time").addEventListener("change", (event) => {
+                breakSettings.lunchTime = event.target.value
+            })
+
+            document.getElementById("evening-time").addEventListener("change", (event) => {
+                breakSettings.eveningTime = event.target.value
+            })
+            document.getElementById("apply-breaks").addEventListener("click", applyBreakSettings)
+
+
+            // Custom template dialog
+            document.getElementById("custom-template-btn").addEventListener("click", showCustomTemplateDialog)
+            document.getElementById("cancel-template").addEventListener("click", hideCustomTemplateDialog)
+            document.getElementById("save-template").addEventListener("click", saveCustomTemplate)
+
+
+            // Day selection in custom template
+            const daySelectButtons = document.querySelectorAll(".day-select")
+            daySelectButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    button.classList.toggle("day-selected")
+                })
+            })
+
+
             document.getElementById("save-button").addEventListener("click", saveSchedule);
         }
+
+
+
+
 
         // Handle slot click (called from mouseup if no drag)
         function handleSlotClick(dateString, hourIndex) {
@@ -1585,15 +1634,7 @@
         }
 
 
-        // Preset buttons
-        const presetButtons = document.querySelectorAll(".preset-button")
-        presetButtons.forEach((button) => {
-            button.addEventListener("click", () => {
-                presetButtons.forEach((btn) => btn.classList.remove("bg-blue-400", "hover:bg-blue-500"));
-                button.classList.add('bg-blue-400', "hover:bg-blue-500");
-                applyPreset(button)
-            })
-        })
+
 
 
         // Apply preset
@@ -1629,25 +1670,6 @@
         }
 
 
-        // Break settings
-        document.getElementById("lunch-break").addEventListener("change", (event) => {
-            breakSettings.lunchBreak = event.target.checked
-            document.getElementById("lunch-time-container").style.display = event.target.checked ? "block" : "none"
-        })
-
-        document.getElementById("evening-break").addEventListener("change", (event) => {
-            breakSettings.eveningBreak = event.target.checked
-            document.getElementById("evening-time-container").style.display = event.target.checked ? "block" : "none"
-        })
-
-        document.getElementById("lunch-time").addEventListener("change", (event) => {
-            breakSettings.lunchTime = event.target.value
-        })
-
-        document.getElementById("evening-time").addEventListener("change", (event) => {
-            breakSettings.eveningTime = event.target.value
-        })
-        document.getElementById("apply-breaks").addEventListener("click", applyBreakSettings)
 
 
         // Apply break settings
@@ -1676,6 +1698,79 @@
         }
 
 
+
+        // Show custom template dialog
+        function showCustomTemplateDialog() {
+            document.getElementById("custom-template-dialog").classList.remove("hidden")
+            document.getElementById("custom-template-dialog").classList.add("flex")
+        }
+
+        // Hide custom template dialog
+        function hideCustomTemplateDialog() {
+            document.getElementById("custom-template-dialog").classList.remove("flex")
+            document.getElementById("custom-template-dialog").classList.add("hidden")
+        }
+
+
+        // Helper functions
+        function getStartOfWeek(date) {
+            const day = date.getDay()
+            const diff = date.getDate() - day + (day === 0 ? -6 : 1) // Adjust when day is Sunday
+            return new Date(date.setDate(diff))
+        }
+
+        function addDays(date, days) {
+            const result = new Date(date)
+            result.setDate(result.getDate() + days)
+            return result
+        }
+
+        // Save custom template
+        function saveCustomTemplate() {
+            const templateName = document.getElementById("template-name").value
+            const startTime = Number.parseInt(document.getElementById("start-time").value)
+            const endTime = Number.parseInt(document.getElementById("end-time").value)
+
+            const selectedDays = []
+            document.querySelectorAll(".day-select.day-selected").forEach((button) => {
+                selectedDays.push(button.dataset.day)
+            })
+
+            if (templateName && selectedDays.length > 0) {
+                Object.keys(scheduleData)
+                    .forEach((date) => {
+                        scheduleData[date] = scheduleData[date].map((slot, index) => {
+                            if (slot.status === "booked") return slot // Don't modify booked slots
+
+                            const hour = index + 8
+                            const newStatus = hour >= startTime && hour < endTime ? "available" : "unavailable"
+
+                            return {
+                                ...slot,
+                                status: newStatus,
+                            }
+                        })
+                    })
+
+                renderDayColumns()
+                updateStats()
+                hideCustomTemplateDialog()
+
+                // Reset form
+                document.getElementById("template-name").value = ""
+                document.querySelectorAll(".day-select").forEach((button) => {
+                    button.classList.remove("day-selected")
+                })
+            } else {
+                alert("Please enter a template name and select at least one day.")
+            }
+        }
+
+        // Save schedule
+        function saveSchedule() {
+            alert("Schedule saved successfully!")
+            // In a real application, this would send the data to a server
+        }
 
         // Clear day
         function clearDay(dateString) {
