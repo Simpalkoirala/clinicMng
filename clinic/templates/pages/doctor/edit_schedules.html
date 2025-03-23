@@ -391,10 +391,10 @@
 
         <div class="tabs">
             <!-- tabs list  -->
-            <div class="tab-list grid w-full grid-cols-3 mb-6">
+            <div class="tab-list grid w-full grid-cols-2 mb-6">
                 <button class="tab-trigger active" data-tab="week">Weekly Calendar</button>
                 <button class="tab-trigger" data-tab="settings">Settings & Presets</button>
-                <button class="tab-trigger" data-tab="stats">Insights & Analytics</button>
+                <!-- <button class="tab-trigger" data-tab="stats">Insights & Analytics</button> -->
             </div>
 
             <!-- week calender tab  -->
@@ -660,7 +660,7 @@
                         </div>
                     </div>
 
-                    <div class="border rounded-lg shadow-sm bg-white">
+                    <!-- <div class="border rounded-lg shadow-sm bg-white">
                         <div class="p-4 border-b">
                             <h3 class="text-lg font-semibold">Appointment Settings</h3>
                             <p class="text-sm text-gray-500">Configure appointment duration and constraints</p>
@@ -708,9 +708,9 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
-                    <div class="border rounded-lg shadow-sm bg-white">
+                    <!-- <div class="border rounded-lg shadow-sm bg-white">
                         <div class="p-4 border-b">
                             <h3 class="text-lg font-semibold">Working Hour Constraints</h3>
                             <p class="text-sm text-gray-500">Set minimum and maximum working hours</p>
@@ -749,7 +749,7 @@
                                 </p>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -1021,7 +1021,7 @@
             "2025-03-24": [
                 { hour: 8, status: "unavailable", duration: 30 },
                 { hour: 9, status: "available", duration: 30 },
-                { hour: 10, status: "available", duration: 30 },
+                { hour: 10, status: "break", duration: 30 },
                 { hour: 11, status: "available", duration: 30 },
                 { hour: 12, status: "available", duration: 30 },
                 { hour: 13, status: "break", duration: 30 },
@@ -1122,6 +1122,12 @@
         let dragStatus = null;
         let dragOccurred = false;
         const workHourLimits = { min: 6, max: 10 };
+        const breakSettings = {
+            lunchBreak: true,
+            lunchTime: "12",
+            eveningBreak: false,
+            eveningTime: "15",
+        }
         let selectedDate = null;
 
         // Helper Functions
@@ -1583,7 +1589,8 @@
         const presetButtons = document.querySelectorAll(".preset-button")
         presetButtons.forEach((button) => {
             button.addEventListener("click", () => {
-                button.classList.add('bg-blue-400')
+                presetButtons.forEach((btn) => btn.classList.remove("bg-blue-400", "hover:bg-blue-500"));
+                button.classList.add('bg-blue-400', "hover:bg-blue-500");
                 applyPreset(button)
             })
         })
@@ -1620,6 +1627,55 @@
             renderDayColumns()
             updateStats()
         }
+
+
+        // Break settings
+        document.getElementById("lunch-break").addEventListener("change", (event) => {
+            breakSettings.lunchBreak = event.target.checked
+            document.getElementById("lunch-time-container").style.display = event.target.checked ? "block" : "none"
+        })
+
+        document.getElementById("evening-break").addEventListener("change", (event) => {
+            breakSettings.eveningBreak = event.target.checked
+            document.getElementById("evening-time-container").style.display = event.target.checked ? "block" : "none"
+        })
+
+        document.getElementById("lunch-time").addEventListener("change", (event) => {
+            breakSettings.lunchTime = event.target.value
+        })
+
+        document.getElementById("evening-time").addEventListener("change", (event) => {
+            breakSettings.eveningTime = event.target.value
+        })
+        document.getElementById("apply-breaks").addEventListener("click", applyBreakSettings)
+
+
+        // Apply break settings
+        function applyBreakSettings() {
+            Object.keys(scheduleData)
+                .forEach((date) => {
+                    // Apply lunch break
+                    if (breakSettings.lunchBreak) {
+                        const lunchHour = Number.parseInt(breakSettings.lunchTime) - 8 // Convert to array index
+                        if (lunchHour >= 0 && lunchHour < scheduleData[date].length) {
+                            scheduleData[date][lunchHour].status = "break"
+                        }
+                    }
+
+                    // Apply evening break
+                    if (breakSettings.eveningBreak) {
+                        const eveningHour = Number.parseInt(breakSettings.eveningTime) - 8 // Convert to array index
+                        if (eveningHour >= 0 && eveningHour < scheduleData[date].length) {
+                            scheduleData[date][eveningHour].status = "break"
+                        }
+                    }
+                })
+
+            renderDayColumns()
+            updateStats()
+        }
+
+
 
         // Clear day
         function clearDay(dateString) {
