@@ -1,0 +1,36 @@
+{% extends "pages/doctor/D_base.html" %}
+{% load static %}
+
+{% block titles %}View Patients|| Nepal's Care {% endblock titles %}
+
+{% block pageof %} View Patients{% endblock pageof %}
+{% block linkPageof %} /d/view-patients/ {% endblock linkPageof %}
+
+{% block styles %}
+
+
+
+
+{% endblock styles %}
+
+{% block content %}
+
+
+
+
+{% endblock content %}
+
+
+{% block scripts %}
+
+<script>
+
+    dashboard_nav_all = document.querySelectorAll('.ViewPatients-nav a');
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
+
+
+{% endblock scripts %}
