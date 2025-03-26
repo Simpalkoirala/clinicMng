@@ -1,0 +1,236 @@
+{% extends "pages/patient/P_base.html" %}
+{% load static %}
+
+{% block titles %}Join Video Call || Nepal's Care {% endblock titles %}
+
+{% block styles %}
+
+{% endblock styles %}
+
+
+{% block pageof %} Join Video Call {% endblock pageof %}
+{% block linkPageof %} /p/join-v-call/ {% endblock linkPageof %}
+
+{% block content %}
+
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+        <!-- Header -->
+        <div class="gradient-header text-white px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-semibold tracking-tight">Video Consultation</h1>
+            <div class="flex items-center space-x-4">
+                <span id="current-time" class="text-sm font-medium opacity-90"></span>
+                <button id="user-profile" class="hover:bg-white/10 p-2 rounded-full smooth-transition">
+                    <!-- fa-user-circle SVG -->
+                    <svg class="text-2xl opacity-90 w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path fill="currentColor"
+                            d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0zm0 128c39.8 0 72 32.2 72 72s-32.2 72-72 72-72-32.2-72-72 32.2-72 72-72zm0 384c-88.4 0-160-71.6-160-160 0-26.5 6.4-51.6 17.8-73.7 11-21.3 27.5-39.2 47.8-51.9 20.3-12.7 43.3-19.4 68.4-19.4s48.1 6.7 68.4 19.4c20.3 12.7 36.8 30.6 47.8 51.9 11.4 22.1 17.8 47.2 17.8 73.7 0 88.4-71.6 160-160 160z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="grid grid-cols-12 gap-6 p-6">
+            <!-- Video Consultation Area -->
+            <div class="col-span-12 lg:col-span-8">
+                <div class="bg-gray-100 rounded-xl overflow-hidden aspect-video relative shadow-inner">
+                    <!-- Local Video -->
+                    <div
+                        class="absolute bottom-4 right-4 w-[30%] rounded-lg overflow-hidden shadow-lg border-2 border-white/20">
+                        <video id="local-video" class="w-full h-full object-cover" autoplay muted></video>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 p-2">
+                            <span class="text-sm font-medium text-white">You</span>
+                        </div>
+                    </div>
+
+                    <!-- Remote Video -->
+                    <div class="w-full h-full bg-black">
+                        <video id="remote-video" class="w-full h-full object-cover" autoplay></video>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 p-4">
+                            <span class="text-lg font-semibold text-white">Dr. Emily Smith</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Call Controls -->
+                <div class="mt-6 flex justify-center space-x-4">
+                    <button id="mute-audio"
+                        class="bg-white hover:bg-gray-50 text-gray-700 shadow-md rounded-full p-4 smooth-transition hover:shadow-lg hover:-translate-y-0.5 border border-gray-100">
+                        <!-- fa-microphone SVG -->
+                        <svg class="text-xl w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512">
+                            <path fill="currentColor"
+                                d="M176 352c53 0 96-43 96-96V96c0-53-43-96-96-96S80 43 80 96v160c0 53 43 96 96 96zm160-96h-16c-8.8 0-16 7.2-16 16v48c0 74.8-64.5 134.8-138.7 127.9C103.2 445.5 64 399.8 64 336v-48c0-8.8-7.2-16-16-16H32c-8.8 0-16 7.2-16 16v48c0 92.6 75.1 167.9 167.9 167.9 5.5 0 10.9-.3 16.3-.8V512h-64c-8.8 0-16 7.2-16 16v16c0 8.8 7.2 16 16 16h160c8.8 0 16-7.2 16-16v-16c0-8.8-7.2-16-16-16h-64v-32.2c5.4.5 10.8.8 16.3.8C260.9 479.9 336 404.6 336 312v-48c0-8.8-7.2-16-16-16z" />
+                        </svg>
+                    </button>
+                    <button id="stop-video"
+                        class="bg-white hover:bg-gray-50 text-gray-700 shadow-md rounded-full p-4 smooth-transition hover:shadow-lg hover:-translate-y-0.5 border border-gray-100">
+                        <!-- fa-video SVG -->
+                        <svg class="text-xl w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                            <path fill="currentColor"
+                                d="M336 0H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V48c0-26.5-21.5-48-48-48zm-32 256H80c-8.8 0-16-7.2-16-16s7.2-16 16-16h224c8.8 0 16 7.2 16 16s-7.2 16-16 16zm272 28.5l-144 84c-5.1 3-11.4.7-14.5-4.5l-.1-.2V148.4c0-5.8 4.8-10.5 10.5-10.5 2 .1 3.9.8 5.5 2l144 84c3.2 1.9 5.1 5.3 5.1 8.9s-1.9 7-5 8.7z" />
+                        </svg>
+                    </button>
+                    <button id="end-call"
+                        class="bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-full shadow-md smooth-transition hover:shadow-lg hover:-translate-y-0.5 font-semibold">
+                        End Call
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-span-12 lg:col-span-4 space-y-6 mt-6 lg:mt-0">
+                <!-- Consultation Details -->
+                <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 shadow-sm">
+                    <h2 class="text-lg font-semibold mb-3 text-gray-700">Consultation Details</h2>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 text-sm">Patient:</span>
+                            <span class="font-medium text-gray-800">John Doe</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 text-sm">Doctor:</span>
+                            <span class="font-medium text-gray-800">Dr. Emily Smith</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 text-sm">Date:</span>
+                            <span class="font-medium text-gray-800" id="consultation-date"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Section -->
+                <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 shadow-sm">
+                    <h3 class="font-semibold mb-3 text-gray-700">Chat</h3>
+                    <div id="chat-messages" class="h-48 overflow-y-auto space-y-2 pr-2 mb-3">
+                        <!-- Chat messages will be dynamically added here -->
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="chat-input" placeholder="Type a message..."
+                            class="flex-grow px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent smooth-transition">
+                        <button id="send-chat"
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg smooth-transition focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            Send
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Medical Notes -->
+                <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 shadow-sm">
+                    <h3 class="font-semibold mb-3 text-gray-700">Quick Notes</h3>
+                    <textarea id="medical-notes"
+                        class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent smooth-transition"
+                        placeholder="Write quick consultation notes..." rows="4"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // JavaScript with improved interactions
+    document.addEventListener('DOMContentLoaded', () => {
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('consultation-date').textContent = now.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // Audio Mute Toggle
+        const muteAudioBtn = document.getElementById('mute-audio');
+        muteAudioBtn.addEventListener('click', () => {
+            muteAudioBtn.classList.toggle('bg-red-500');
+            muteAudioBtn.classList.toggle('text-white');
+            muteAudioBtn.querySelector('i').classList.toggle('fa-microphone-slash');
+        });
+
+        // Video Stop Toggle
+        const stopVideoBtn = document.getElementById('stop-video');
+        stopVideoBtn.addEventListener('click', () => {
+            stopVideoBtn.classList.toggle('bg-red-500');
+            stopVideoBtn.classList.toggle('text-white');
+            stopVideoBtn.querySelector('i').classList.toggle('fa-video-slash');
+        });
+
+        // Chat Functionality
+        const chatInput = document.getElementById('chat-input');
+        const sendChatBtn = document.getElementById('send-chat');
+        const chatMessages = document.getElementById('chat-messages');
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (message) {
+                const messageElement = document.createElement('div');
+                messageElement.className = 'bg-white p-3 rounded-lg shadow-sm text-sm border border-gray-100';
+                messageElement.innerHTML = `
+                        <div class="font-medium text-blue-600">You:</div>
+                        <div class="text-gray-700 mt-1">${message}</div>
+                        <div class="text-xs text-gray-400 text-right mt-2">${new Date().toLocaleTimeString()}</div>
+                    `;
+                chatMessages.appendChild(messageElement);
+                chatInput.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+        sendChatBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // End Call Confirmation
+        const endCallBtn = document.getElementById('end-call');
+        endCallBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to end the call?')) {
+                // Add call termination logic here
+                alert('Call ended');
+            }
+        });
+
+        // Media Stream Handling
+        async function startVideoStream() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: 1280, height: 720 },
+                    audio: true
+                });
+                const localVideo = document.getElementById('local-video');
+                localVideo.srcObject = stream;
+            } catch (error) {
+                console.error('Error accessing media devices:', error);
+                alert('Could not access camera or microphone');
+            }
+        }
+
+        startVideoStream();
+    });
+</script>
+
+{% endblock content %}
+
+
+{% block scripts %}
+
+
+<script>
+    dashboard_nav_all = document.querySelectorAll('.joinVCall-nav a');
+    console.log(dashboard_nav_all);
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
+
+
+{% endblock scripts %}
