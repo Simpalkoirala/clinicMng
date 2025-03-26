@@ -5,6 +5,13 @@
 
 {% block styles %}
 
+<style>
+    .smooth-transition {
+        transition: all 0.3s ease;
+    }
+</style>
+
+
 {% endblock styles %}
 
 
@@ -16,17 +23,10 @@
 <div class="container mx-auto px-4 py-8">
     <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
         <!-- Header -->
-        <div class="gradient-header text-white px-6 py-4 flex justify-between items-center">
+        <div class=" text-black px-6 py-4 flex justify-between items-center bg-violet-50">
             <h1 class="text-2xl font-semibold tracking-tight">Video Consultation</h1>
             <div class="flex items-center space-x-4">
                 <span id="current-time" class="text-sm font-medium opacity-90"></span>
-                <button id="user-profile" class="hover:bg-white/10 p-2 rounded-full smooth-transition">
-                    <!-- fa-user-circle SVG -->
-                    <svg class="text-2xl opacity-90 w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                        <path fill="currentColor"
-                            d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0zm0 128c39.8 0 72 32.2 72 72s-32.2 72-72 72-72-32.2-72-72 32.2-72 72-72zm0 384c-88.4 0-160-71.6-160-160 0-26.5 6.4-51.6 17.8-73.7 11-21.3 27.5-39.2 47.8-51.9 20.3-12.7 43.3-19.4 68.4-19.4s48.1 6.7 68.4 19.4c20.3 12.7 36.8 30.6 47.8 51.9 11.4 22.1 17.8 47.2 17.8 73.7 0 88.4-71.6 160-160 160z" />
-                    </svg>
-                </button>
             </div>
         </div>
 
@@ -57,18 +57,59 @@
                 <div class="mt-6 flex justify-center space-x-4">
                     <button id="mute-audio"
                         class="bg-white hover:bg-gray-50 text-gray-700 shadow-md rounded-full p-4 smooth-transition hover:shadow-lg hover:-translate-y-0.5 border border-gray-100">
-                        <!-- fa-microphone SVG -->
-                        <svg class="text-xl w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512">
-                            <path fill="currentColor"
-                                d="M176 352c53 0 96-43 96-96V96c0-53-43-96-96-96S80 43 80 96v160c0 53 43 96 96 96zm160-96h-16c-8.8 0-16 7.2-16 16v48c0 74.8-64.5 134.8-138.7 127.9C103.2 445.5 64 399.8 64 336v-48c0-8.8-7.2-16-16-16H32c-8.8 0-16 7.2-16 16v48c0 92.6 75.1 167.9 167.9 167.9 5.5 0 10.9-.3 16.3-.8V512h-64c-8.8 0-16 7.2-16 16v16c0 8.8 7.2 16 16 16h160c8.8 0 16-7.2 16-16v-16c0-8.8-7.2-16-16-16h-64v-32.2c5.4.5 10.8.8 16.3.8C260.9 479.9 336 404.6 336 312v-48c0-8.8-7.2-16-16-16z" />
+                        <svg id="mic_on" class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 352 512">
+                            <path
+                                d="M176 352c53.02 0 96-42.98 96-96V96c0-53.02-42.98-96-96-96S80 42.98 80 96v160c0 53.02 42.98 96 96 96zm160-160h-16c-8.84 0-16 7.16-16 16v48c0 74.8-64.49 134.82-140.79 127.38C96.71 376.89 48 317.11 48 250.3V208c0-8.84-7.16-16-16-16H16c-8.84 0-16 7.16-16 16v40.16c0 89.64 63.97 169.55 152 181.69V464H96c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h160c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16h-56v-33.77C285.71 418.47 352 344.9 352 256v-48c0-8.84-7.16-16-16-16z" />
+                        </svg>
+
+
+                        <svg id='mic_off' class="w-6 h-6 fill-current hidden" viewBox='0 0 24 24'
+                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                            <g transform="matrix(0.44 0 0 0.44 12 12)">
+                                <path
+                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                    transform=" translate(-24, -24.51)"
+                                    d="M 24 2 C 19.04 2 15 6.04 15 11 L 15 26 C 15 26.21 15.009531 26.419141 15.019531 26.619141 L 16.5 25.140625 L 16.5 25.138672 L 17.75 23.890625 L 30 11.640625 L 30 11.638672 L 31.449219 10.189453 L 32.75 8.890625 C 31.8 4.940625 28.23 2 24 2 z M 42.470703 3.9863281 C 42.08114430440711 3.9976814130264517 41.71129431177108 4.160191258275617 41.439453 4.4394531 L 4.4394531 41.439453 C 4.047605120321112 41.81568084296037 3.8897630292485115 42.374350062606034 4.026800011395891 42.900004982226285 C 4.163836993543271 43.425659901846544 4.574339972165357 43.83616291917535 5.09999487886426 43.97319995088724 C 5.625649785563164 44.11023698259913 6.184319020091907 43.952394944203995 6.5605469 43.560547 L 13.466797 36.654297 C 15.840795 39.006844 18.995617 40.563363 22.5 40.914062 L 22.5 45.5 C 22.492349565681767 46.040953874866354 22.776562944253993 46.54412204685742 23.243809274571493 46.81683158222979 C 23.711055604888994 47.08954111760215 24.28894439511101 47.08954111760215 24.756190725428507 46.81683158222978 C 25.223437055746007 46.54412204685742 25.507650434318233 46.040953874866354 25.5 45.5 L 25.5 40.923828 C 33.068393 40.168472 39 33.76368 39 26 L 39 22.5 C 39 21.67 38.33 21 37.5 21 C 36.67 21 36 21.67 36 22.5 L 36 26 C 36 32.560034 30.71517 37.893986 24.177734 37.990234 C 24.1608415053972 37.98799272552868 24.143912048260187 37.986039442029615 24.126953 37.984375 C 24.076952273637417 37.97990694096038 24.02675878780815 37.97795148063713 23.976562 37.978516 C 23.92630005712189 37.97924929685335 23.876106735529145 37.98250840839901 23.826172 37.988281 C 23.823565923942468 37.9889250082718 23.820961581227102 37.98957601061701 23.818359 37.990234 C 23.817703 37.990224 23.817062 37.990244 23.816406 37.990234 C 20.609982 37.941414 17.70768 36.633843 15.585938 34.535156 L 17.712891 32.408203 C 19.337761 34.002776 21.549803 35 24 35 C 28.96 35 33 30.96 33 26 L 33 17.121094 L 43.560547 6.5605469 C 44.00344840446228 6.129198831143676 44.1363672525846 5.47031658654525 43.89533460846605 4.9009958728434135 C 43.65430196434751 4.331675159141576 43.08868846012146 3.96852973886156 42.470703 3.9863281000000006 z M 10.5 21 C 9.67 21 9 21.67 9 22.5 L 9 26 C 9 27.97 9.3803125 29.850313 10.070312 31.570312 L 12.439453 29.199219 C 12.149453 28.179219 12 27.11 12 26 L 12 22.5 C 12 21.67 11.33 21 10.5 21 z"
+                                    stroke-linecap="round" />
+                            </g>
                         </svg>
                     </button>
                     <button id="stop-video"
                         class="bg-white hover:bg-gray-50 text-gray-700 shadow-md rounded-full p-4 smooth-transition hover:shadow-lg hover:-translate-y-0.5 border border-gray-100">
-                        <!-- fa-video SVG -->
-                        <svg class="text-xl w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
-                            <path fill="currentColor"
-                                d="M336 0H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V48c0-26.5-21.5-48-48-48zm-32 256H80c-8.8 0-16-7.2-16-16s7.2-16 16-16h224c8.8 0 16 7.2 16 16s-7.2 16-16 16zm272 28.5l-144 84c-5.1 3-11.4.7-14.5-4.5l-.1-.2V148.4c0-5.8 4.8-10.5 10.5-10.5 2 .1 3.9.8 5.5 2l144 84c3.2 1.9 5.1 5.3 5.1 8.9s-1.9 7-5 8.7z" />
+                        <svg id="video_on" class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 576 512">
+                            <path
+                                d="M336.2 64H47.8C21.4 64 0 85.4 0 111.8v288.4C0 426.6 21.4 448 47.8 448h288.4c26.4 0 47.8-21.4 47.8-47.8V111.8c0-26.4-21.4-47.8-47.8-47.8zm189.4 37.7L416 177.3v157.4l109.6 75.5c21.2 14.6 50.4-.3 50.4-25.8V127.5c0-25.4-29.1-40.4-50.4-25.8z" />
+                        </svg>
+
+                        <svg id="video_off" class="w-6 h-6 fill-current hidden" viewBox='0 0 24 24'
+                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                            <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                <g style="">
+                                    <g transform="matrix(1 0 0 1 -3.67 0.32)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-8.33, -12.32)"
+                                            d="M 3.17 6.43 C 3.083958662330266 6.377823903483072 2.9760413376697334 6.377823903483072 2.8899999999999997 6.43 C 2.365049886773978 6.663280729100022 2.0194343296487363 7.17587908348802 2 7.749999999999999 L 2 16.75 C 2 17.57842712474619 2.6715728752538097 18.25 3.5 18.25 L 14.38 18.25 C 14.479721612614107 18.250347254196022 14.570111717719584 18.19139718564897 14.610000000000001 18.1 C 14.66454796933058 18.014636704947264 14.66454796933058 17.905363295052737 14.610000000000001 17.82 Z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                    <g transform="matrix(1 0 0 1 9 0.25)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-21, -12.25)"
+                                            d="M 21.74 7.45 L 18.74 9.16 C 18.285848998389287 9.412612912055163 18.003040631139445 9.890329748625847 18 10.41 L 18 14.09 C 18.003040631139445 14.609670251374151 18.285848998389287 15.087387087944835 18.74 15.34 L 21.74 17.05 C 22.19718754717847 17.318972913093837 22.762437906791607 17.326482547622348 23.226609709958623 17.069750355605194 C 23.69078151312564 16.81301816358804 23.984846012125423 16.330223762127602 24 15.8 L 24 8.7 C 23.984846012125423 8.169776237872396 23.690781513125636 7.6869818364119595 23.226609709958623 7.430249644394806 C 22.762437906791607 7.173517452377652 22.197187547178466 7.1810270869061625 21.739999999999995 7.450000000000001 Z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                    <g transform="matrix(1 0 0 1 0 0)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-12, -12)"
+                                            d="M 17.07 15.66 C 17.026786005208926 15.609760232041317 17.002081965034968 15.54623555730828 17 15.48 L 17 7.75 C 17 6.92157287525381 16.32842712474619 6.25 15.5 6.25 L 7.77 6.25 C 7.703764442691719 6.247918034965032 7.6402397679586835 6.223213994791074 7.59 6.18 L 1.71 0.29 C 1.3704533264228007 -0.0498766096865903 0.8371976576818188 -0.100262972087313 0.4399999999999993 0.17000000000000054 L 0.29 0.29 C 0.10068734917690358 0.47776659990555614 -0.0057983243416699914 0.7333624636294416 -0.0057983243416699914 1 C -0.0057983243416699914 1.2666375363705582 0.10068734917690356 1.522233400094444 0.29 1.71 L 22.29 23.71 C 22.682122172379863 24.102122172379865 23.317877827620137 24.102122172379865 23.71 23.71 C 24.102122172379865 23.317877827620137 24.102122172379865 22.682122172379863 23.71 22.29 Z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </g>
+                            </g>
                         </svg>
                     </button>
                     <button id="end-call"
@@ -102,17 +143,27 @@
                 <!-- Chat Section -->
                 <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 shadow-sm">
                     <h3 class="font-semibold mb-3 text-gray-700">Chat</h3>
-                    <div id="chat-messages" class="h-48 overflow-y-auto space-y-2 pr-2 mb-3">
+                    <div id="chat-messages" class="h-48 overflow-y-auto space-y-2 pr-2 mb-3 custom-scrollbar">
                         <!-- Chat messages will be dynamically added here -->
                     </div>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 flex-wrap items-center">
                         <input type="text" id="chat-input" placeholder="Type a message..."
-                            class="flex-grow px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent smooth-transition">
+                            class="flex-grow min-w-0 px-2 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent smooth-transition">
+
                         <button id="send-chat"
-                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg smooth-transition focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                            Send
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg smooth-transition focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-between flex-shrink-0">
+                            <span class="hidden sm:inline pr-1">Send</span>
+                            <svg class="w-5 h-5" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                                xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                    <path style="stroke: none; fill: currentColor;" transform=" translate(-15, -15)"
+                                        d="M 26 3 C 25.904026142042714 3.0006583581949826 25.80864687942315 3.0151297178191654 25.716797 3.0429688 C 25.68976046237127 3.050306917202327 25.663044228078622 3.0587779232018644 25.636719 3.0683594000000003 L 3.6503906 10.060547 L 3.6503906 10.064453 C 3.2597585643776337 10.210219758159939 3.0005624088856773 10.583057535461814 3 11 C 3.0007408225869683 11.349224834461092 3.1836114229399137 11.672765252777186 3.4824218999999994 11.853516 L 10.164062 17.154297 L 23.373047 6.6269531 L 12.845703 19.835938 L 18.142578 26.513672 C 18.323084316844625 26.815171933439384 18.648596100047126 26.99980154931267 19 27 C 19.416942566116045 26.999437528711955 19.789780373159353 26.740241193134263 19.935547 26.349609 L 19.939453 26.349609 L 26.9375 4.34375 C 26.94465083777267 4.323779951047257 26.951164466503297 4.303587435180673 26.957031 4.2832031 C 26.984870159411347 4.191353198395892 26.999341586528 4.095973901208165 27 4 C 27 3.4477152501692068 26.552284749830793 3 26 3 z"
+                                        stroke-linecap="round" />
+                                </g>
+                            </svg>
                         </button>
                     </div>
+
                 </div>
 
                 <!-- Medical Notes -->
@@ -127,9 +178,7 @@
     </div>
 </div>
 
-
 <script>
-    // JavaScript with improved interactions
     document.addEventListener('DOMContentLoaded', () => {
         // Update current time
         function updateTime() {
@@ -149,18 +198,20 @@
 
         // Audio Mute Toggle
         const muteAudioBtn = document.getElementById('mute-audio');
+        const mic_off = document.getElementById('mic_off');
+        const mic_on = document.getElementById('mic_on');
         muteAudioBtn.addEventListener('click', () => {
-            muteAudioBtn.classList.toggle('bg-red-500');
-            muteAudioBtn.classList.toggle('text-white');
-            muteAudioBtn.querySelector('i').classList.toggle('fa-microphone-slash');
+            mic_off.classList.toggle('hidden');
+            mic_on.classList.toggle('hidden');
         });
 
         // Video Stop Toggle
         const stopVideoBtn = document.getElementById('stop-video');
+        const video_off = document.getElementById('video_off');
+        const video_on = document.getElementById('video_on');
         stopVideoBtn.addEventListener('click', () => {
-            stopVideoBtn.classList.toggle('bg-red-500');
-            stopVideoBtn.classList.toggle('text-white');
-            stopVideoBtn.querySelector('i').classList.toggle('fa-video-slash');
+            video_off.classList.toggle('hidden');
+            video_on.classList.toggle('hidden');
         });
 
         // Chat Functionality
@@ -174,10 +225,10 @@
                 const messageElement = document.createElement('div');
                 messageElement.className = 'bg-white p-3 rounded-lg shadow-sm text-sm border border-gray-100';
                 messageElement.innerHTML = `
-                        <div class="font-medium text-blue-600">You:</div>
-                        <div class="text-gray-700 mt-1">${message}</div>
-                        <div class="text-xs text-gray-400 text-right mt-2">${new Date().toLocaleTimeString()}</div>
-                    `;
+                    <div class="font-medium text-blue-600">You:</div>
+                    <div class="text-gray-700 mt-1">${message}</div>
+                    <div class="text-xs text-gray-400 text-right mt-2">${new Date().toLocaleTimeString()}</div>
+                `;
                 chatMessages.appendChild(messageElement);
                 chatInput.value = '';
                 chatMessages.scrollTop = chatMessages.scrollHeight;
