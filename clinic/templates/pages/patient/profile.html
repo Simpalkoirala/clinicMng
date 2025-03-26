@@ -1,10 +1,10 @@
-{% extends "pages/doctor/D_base.html" %}
+{% extends "pages/patient/P_base.html" %}
 {% load static %}
 
-{% block titles %}View Patients|| Nepal's Care {% endblock titles %}
+{% block titles %}Profile|| Nepal's Care {% endblock titles %}
 
-{% block pageof %} View Patients{% endblock pageof %}
-{% block linkPageof %} /d/view-patients/ {% endblock linkPageof %}
+{% block pageof %} Profile{% endblock pageof %}
+{% block linkPageof %} /p/profile/ {% endblock linkPageof %}
 
 {% block styles %}
 
@@ -38,9 +38,9 @@
 
                 <div class="flex flex-col sm:flex-row gap-8 mb-8 items-center sm:items-start">
                     <div class="relative">
-                        <img class="h-32 w-32 rounded-full border-2 border-blue-500"
+                        <img id="pp_image" class="h-32 w-32 rounded-full border-2 border-blue-500"
                             src="/placeholder.svg?height=100&width=100" alt="Profile picture">
-                        <button
+                        <button id="imageUploadButton"
                             class="absolute bottom-0 right-0 h-10 w-10 rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300">
                             <svg class="h-5 w-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
@@ -49,7 +49,27 @@
                                 <circle cx="12" cy="13" r="3" />
                             </svg>
                         </button>
+
+
+                        <div id="imageUploadModal"
+                            class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                            <div class="bg-white rounded-lg p-6 w-full max-w-md">
+                                <h3 class="text-lg font-semibold mb-4">Update Profile Picture</h3>
+                                <div id="imagePreview" class="mb-4 max-h-96 overflow-hidden"></div>
+                                <div class="flex gap-2 justify-end">
+                                    <button onclick="closeModal()"
+                                        class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancel</button>
+                                    <button onclick="saveImage()"
+                                        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
+
+
+
                     <div class="text-center sm:text-left">
                         <h2 class="text-2xl font-bold">John Doe</h2>
                         <p class="text-gray-600 mb-2">Patient ID: PAT-20240325-001</p>
@@ -329,9 +349,113 @@ Appendectomy, 2010</textarea>
 
 
 
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+<script>
+    let cropper;
+    let selectedFile;
+
+    document.querySelector('#imageUploadButton').addEventListener('click', function () {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+
+        input.onchange = e => {
+            selectedFile = e.target.files[0];
+            if (selectedFile) {
+                if (!selectedFile.type.startsWith('image/')) {
+                    alert('Please select an image file');
+                    return;
+                }
+
+                // Check file size (e.g., 5MB limit)
+                if (selectedFile.size > 5 * 1024 * 1024) {
+                    alert('File size should be less than 5MB');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = event => {
+                    openModal(event.target.result);
+                };
+                reader.readAsDataURL(selectedFile);
+            }
+        };
+
+        input.click();
+    });
+
+    function openModal(imageSrc) {
+        const modal = document.getElementById('imageUploadModal');
+        const preview = document.getElementById('imagePreview');
+
+        preview.innerHTML = `<img id="cropperImage" src="${imageSrc}" class="w-full">`;
+        modal.classList.remove('hidden');
+
+        // Initialize cropper
+        const image = document.getElementById('cropperImage');
+        cropper = new Cropper(image, {
+            aspectRatio: 1,
+            viewMode: 1,
+            autoCropArea: 1,
+            responsive: true,
+            checkCrossOrigin: false
+        });
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('imageUploadModal');
+        modal.classList.add('hidden');
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+    }
+
+    function saveImage() {
+        if (cropper) {
+            // Get cropped image data
+            const canvas = cropper.getCroppedCanvas({
+                width: 256,
+                height: 256
+            });
+
+            // Convert to Blob and update profile picture
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                document.querySelector('#pp_image').src = url;
+
+                // Here you would typically upload the blob to your server
+                // Example using FormData:
+                const formData = new FormData();
+                formData.append('profileImage', blob, 'profile.jpg');
+
+                // fetch('/upload', {
+                //     method: 'POST',
+                //     body: formData
+                // });
+
+                closeModal();
+            });
+        }
+    }
+</script>
+
 {% endblock content %}
 
 
 {% block scripts %}
+
+<script>
+
+    dashboard_nav_all = document.querySelectorAll('.profile-nav a');
+    console.log(dashboard_nav_all);
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
 
 {% endblock scripts %}
