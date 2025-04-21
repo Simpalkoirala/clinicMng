@@ -121,9 +121,10 @@ def BookAppoinment(request: HttpRequest):
                     all_selected_types = list(each_time_slot.appointment_type)
 
                     if not each_time_slot.is_booked:
-                        date_json[date_str] = {
-                            time_str: [each_time_slot.id, each_time_slot.duration, all_selected_types]
-                        }
+                        if date_str not in date_json:
+                            date_json[date_str] = {}
+                        date_json[date_str][time_str] = [each_time_slot.id, each_time_slot.duration, all_selected_types]
+
             doctor_data.append({
                 'id': doc.id,
                 'name': f"Dr. {doc.profile.user.first_name}",
@@ -135,6 +136,7 @@ def BookAppoinment(request: HttpRequest):
                 'image': doc.profile.profile_pic.url,
                 'availability': date_json,
             })
+
 
         context = {
             'profile': profile,
@@ -178,7 +180,7 @@ def BookAppoinment(request: HttpRequest):
                 appointment_time_str=appointment_time,
 
                 reason = appointment_reason,
-                status='Pending',
+                status='pending'
             )
 
             if appointment_file:
@@ -273,7 +275,49 @@ def labReport(request: HttpRequest):
     return render(request, 'pages/patient/lab_report.html')
 
 def prescriptions(request: HttpRequest):
-    return render(request, 'pages/patient/prescriptions.html')
+    if request.method == 'GET':
+        """Prescription page view."""
+        profile = request.user.profile
+        prescriptions = Prescription.objects.select_related('medicine', 'prescribing_doctor').filter(profile=profile)
+
+        active_data = []
+        history_data = []
+
+        for pres in prescriptions:
+            data = {
+                "id": pres.id,
+                "name": pres.medicine.name,
+                "dosage": pres.update_dosage,
+                "frequency": pres.update_frequency,
+                "doctor": f"Dr. {pres.prescribing_doctor.profile.user.first_name}",
+                "specialty": pres.prescribing_doctor.specialization,
+                "startDate": pres.start_date.strftime('%Y-%m-%d'),
+                "endDate": pres.end_date.strftime('%Y-%m-%d'),
+                "status": pres.status.capitalize(),
+            }
+
+            if pres.status == "active":
+                data.update({
+                    "refillStatus": "Available",  # placeholder: can add logic here
+                    "instructions": pres.medicine.instructions,
+                    "sideEffects": pres.medicine.side_effects,
+                })
+                active_data.append(data)
+            else:
+                data["reason"] = pres.notes or "Course ended"
+                history_data.append(data)
+
+        merged_json_data = {
+           'active_data' : json.dumps( active_data, cls=DjangoJSONEncoder),
+           'history_data' : json.dumps(history_data, cls=DjangoJSONEncoder)
+        }
+
+        context = {
+            'profile': profile,
+            'prescriptions': prescriptions,
+            'merged_json_data':merged_json_data,
+        }
+        return render(request, 'pages/patient/prescriptions.html', context)
 
 @login_required_with_message(login_url='account:login', message="You need to log in to access Profile page.")
 def p_profile(request: HttpRequest):
@@ -349,4 +393,3 @@ def p_profile(request: HttpRequest):
 
 
 # --------------------------------------- Adding Logic on each pages ------------------------------------------------------------
-

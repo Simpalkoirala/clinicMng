@@ -255,26 +255,51 @@
         </div>
     </div>
 
-    <!-- Confirmation Dialog -->
-    <div id="confirmation-dialog" class="fixed inset-0 z-50 hidden bg-black/50 flex items-center justify-center">
-        <div class="bg-white rounded-lg max-w-md w-full mx-4 p-6">
-            <div class="text-center">
-                <h3 class="text-lg font-semibold">Last Click to Book</h3>
-                <p class="mt-2 text-muted-foreground" id="confirmation-message">
-                </p>
-                
-                <button id="confirm-no-button" onclick="document.getElementById('confirmation-dialog').classList.add('hidden')"
-                    class="mt-4 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-red-500 text-primary-foreground hover:bg-red-600 h-10 px-4 py-2">
-                    Cancel
-                </button>
+    <!-- Dialog Box-->
+    <div id="dialogBOX" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40">
+        <div class="m-5 bg-white rounded-xl shadow-lg w-full max-w-md p-6 text-center">
+            <!-- Warning Icon -->
+            <div class="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full bg-yellow-100">
+                <svg id='Help_Question_Circle_24' class="w-12 h-12 text-yellow-500" fill="none" stroke="currentColor" stroke-width="3" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' >
 
-                <button id="confirm-ok-button"
-                    class="mt-4 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
-                    OK
-                </button>
+
+                    <g transform="matrix(0.42 0 0 0.42 12 12)" >
+                        <g style="" >
+                            <g transform="matrix(1 0 0 1 0 0)" >
+                                <path style=" stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-24, -24)" d="M 24 3 C 12.402 3 3 12.402 3 24 C 3 35.598 12.402 45 24 45 C 35.598 45 45 35.598 45 24 C 45 12.402 35.598 3 24 3 Z" stroke-linecap="round" />
+                            </g>
+                            <g transform="matrix(1 0 0 1 -1 10.42)" >
+                                <circle style=" stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" cx="0" cy="0" r="4.083" />
+                            </g>
+                            <g transform="matrix(1 0 0 1 1.33 -3.58)" >
+                                <path style=" stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-25.33, -20.42)" d="M 25.9938 10.5 C 21.3586 10.5 17.4322 13.2533 16.6607 16.3333 C 15.9536 19.1559 17.6466 21.5867 20.4316 21.4352 C 21.0524 21.4014 21.628 21.1308 22.1624 20.8133 C 23.1135 20.2482 24.7274 19.3081 25.9938 18.6667 C 23.6208 19.9795 19.3799 21.9295 19.3799 24.8111 L 19.3757 27.8293 C 19.3737 29.2114 20.4936 30.3328 21.8757 30.3328 L 23.9964 30.3328 C 25.3771 30.3328 26.4964 29.2135 26.4964 27.8328 L 26.4964 27.4167 C 30.7899 25.112 34.1604 23.1484 34.1604 18.6667 C 34.1604 14.5833 31.6967 10.5 25.9938 10.5 Z" stroke-linecap="round" />
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- Title -->
+            <h2 id="title_field" class="text-xl font-semibold text-gray-800 mb-2">Are You Sure You Want to Book !!</h2>
+
+            <!-- Message -->
+            <p id="message_field" class="text-gray-600 mb-6">Are you sure you want to Book the appointment?</p>
+
+            <!-- Buttons -->
+            <div class="flex justify-center gap-4">
+                <button class="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition"
+                    onclick="document.getElementById('dialogBOX').classList.add('hidden')"
+                    id="confirm-no-button"
+                        >No</button>
+
+                <button class="bg-green-500 text-gray-800 px-5 py-2 rounded-lg hover:bg-green-300 transition"
+                    id="confirm-yes-button">    
+                        Yes</button>
             </div>
         </div>
     </div>
+
+    
 </div>
 
 
@@ -422,8 +447,15 @@
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabContents = document.querySelectorAll('.tab-content');
         const timeSlots = document.querySelectorAll('.time-slot');
-        const confirmationDialog = document.getElementById('confirmation-dialog');
-        const confirmOkButton = document.getElementById('confirm-ok-button');
+        const confirmationDialog = document.getElementById('dialogBOX');
+        const confirmOkButton = document.getElementById('confirm-yes-button');
+
+        // Function to go to remove dilog box on clicking outer area
+        confirmationDialog.addEventListener('click', function (event) {
+            if (event.target === confirmationDialog) {
+                confirmationDialog.classList.add('hidden');
+            }
+        });
 
         const reason_text = document.getElementById('reason');
 
@@ -760,7 +792,7 @@
 
                 // Update button text
                 if (currentStep === 4) {
-                    confirmation_message = document.getElementById('confirmation-message');
+                    confirmation_message = document.getElementById('message_field');
                     confirmation_message.textContent =
                         `Your appointment with ${selectedDoctorName} on ${selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} at ${selectedTime} will be booked.`;
                     nextButton.textContent = 'Confirm Booking';
@@ -807,7 +839,7 @@
             formData.append('appointment_reason', reason_text.value.trim());
             formData.append('appointment_file', fileInput.files[0]); // Append the file if selected    
 
-  fetch("{% url 'patient:BookAppoinment' %}", {
+            fetch("{% url 'patient:BookAppoinment' %}", {
                 method: 'POST',
                 body: formData,
                 headers: {
