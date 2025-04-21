@@ -1,0 +1,471 @@
+I am building a website for automation of clinic management. I have named it Nepals care. 
+
+So I know following tech stack to do this project:
+1) Django, DRF ..... other Django framework
+2) Tailwind CSS
+3) Java script
+4) good with Python and could adapt with any new library and framework coming on way
+
+Yet i have completed 60-70% of frontend work where i have just made UI using Html tailwind & JS, and used array to store dummy data and made the page info render from js dynamically. Also made the project & app in Django with configuring the views, url that takes to particular page. I know Django well.
+
+So my main or must to have work or plan on this project is to do following:
+1) Appointment booking get time, ticket etc..
+2) Video Consulting or so called online session
+3) Medicine Management system
+4) Doctor, Patient & Admin management system
+
+
+The main problem with this project is i just went with flow of coding, never planed to add this or not to add or any other this made me harder. so I dont want to repeat same thing while doing backend so i want to make it all clear and make the project work go smooth
+
+
+So I want to do all head-burn, brainstorming and other in this step, so i want your help to do so. Like logic building and other. Also IF some of frontend need to be changed updated or removed or added Plz make a proper analysis
+
+---------------------------- starts the Website frontend descriptions ----------------
+
+Let me tell you what are the thing that i made already yet in frontend that will be huge help for use to make backend logic building smooth.
+
+
+
+A) Home page:
+In static data, listed how should our system works
+	1) Create Account and Set Up Prescription Settings
+	2) Accept Bookings and Manage Your Schedule
+	3) Automate Payments and Manage Your Practice
+
+
+Listed Doctor with image their name and their spesilities
+
+Listed Patient's Feedback, with their profile pic, name , rating they gave, their review message
+
+
+B) Login/ Signup page:
+
+In Register: Fields of FullName, Email, Password Confirm Password & agree or wont agree 
+
+In Login : Fields of Email & Password & remember me or not
+
+
+
+C) Patient Section:
+
+patient nav bar, [it gets repeted in each page]
+it has:
+- notifications : appointment approved, cancled...
+- user banner : user profile, name, email, edit profile btn, change password btn, logout btn.
+- user id card: 
+	{ user profile pic, name, patient id, dob, blood group, phnum, email, address, emergency contact, medical info [allergies list, current medication list]
+
+- last updated date, card id
+
+
+C.a) Patient Dashboard:
+
+C.a.1)We have 4 summery div as in ui we have info like 
+ 1st summery div: Upcoming Appointment
+	Date,Time, what kind of appointment and button to view all appointment
+
+ 2nd summery Div: Recent Lab Results
+	it has List of last 2 lab test results
+    	Cholesterol--Normal
+    	BloodPressure--Elevated
+	button to view all results
+
+
+ 3rd summery Div: Prescription Alerts
+	Lisinopril Refill Due
+	3 days remaining---25% left
+	with process bar of 25 percentage
+	button to view all Prescriptions
+
+
+ 4th summery Div: No idea what to keep in this section so i kept: Health Reminders
+	Flu Shot---Due Soon
+	Dental Check-up--Upcoming
+	button to view all Reminders
+
+C.a.2) Scroll section with 4 dive to show total appointments, Total Online meeting, My medicine
+
+
+C.a.3) Overview & Health TimeLine section
+
+	In Overview section
+	- I have Appointments Summary, 
+	we show 3 latest about appointment like past appointment & Upcoming Appointment its date time with what doc, on what Appointment type like annual checkup or general or follow-up, with past appointment. with button to view all appointment
+
+	- In Recent Activity:
+	We show 3 resent activities like appointment scheduled, lab results requested, Messaged to dr or message came from doc and with view all activity btn
+
+
+	In Health TimeLine Section: we have time graph in vertical order, like 
+
+	a. Annual check-up
+	   Date
+	   Small description
+	   Point of what was done mentioned like Physical exam, blood work etc.. 
+	   with button to view full report
+	b. Dental Cleaning
+	   Date
+	   Small description
+           Point of what was done, Dental checkup, Whitebody removed, X-ray
+
+....... and load more history
+
+
+
+C.b) View Appoinment:
+	
+	filter header section with search, choose Consultation Type, Appointment Status pending, completed not completed..., Time Range today, last 30 days .....
+	 
+
+	list section:
+
+table with following info:
+	- patient info name-email
+	- Doctor info name-email
+	- Doctor specialties/ department
+	- date & time
+	- status confirmend, completed, cancled, pending
+	- Actions Btns: view this particular appointment, cancel the appointment,
+	
+
+down we have entries filter, like how many entries to show default 10, page of entries.
+
+
+
+C.c) Book an Appointment Page:
+
+here we have process step to book an appointment:
+1st select Doc, 
+
+	we have list of doc and need to select them, each has name, their department/specialties, their review star 4.7, 3.4 etc, and num of review count 124 reviews, experienced yrs 1 yrs 10 yrs 12 yrs. 
+
+	2 to 4 short info like today available, online consult, can message or not kind off
+
+2nd Select date and Appointment type:
+
+Date will be displayed with available and need to select with what kind of appointment to do like 
+General Consultation, Follow-up Visit, Specialist Consultation, Online Consultation..
+
+3rd select Time slot like 9:00 am, 10 am etc, 
+
+
+4th step is to describe the reason or upload the file for what is reason of visiting doc, or voice clip, it just nee to files
+
+and do confirm booking, the consultation fee will be displayed as per doc, till yet no online payment is made
+
+the json format used here:
+   const doctors = [
+        {
+            id: "dr-smith",
+            name: "Dr. Emily Smith",
+            specialty: "General Medicine",
+            experience: 12,
+            rating: 4.9,
+            reviews: 124,
+            fees: 150,
+            image: "{% static 'doc-2.png' %}",
+            availability: {
+                consultation: {
+
+                    "2025-06-07": ["09:00 AM", "10:00 AM", "11:00 AM"],
+                    "2025-04-08": ["09:00 AM", "10:00 AM", "11:00 AM"],
+                    "2025-04-11": ["09:00 AM", "10:00 AM", "11:00 AM"]
+
+                },
+                followup: {
+
+                    "2025-04-07": ["09:00 AM", "10:00 AM", "11:00 AM"],
+                    "2025-04-11": ["02:00 PM", "10:00 AM", "11:00 AM"]
+
+                },
+                online: {
+
+                    "2025-04-07": ["09:00 AM", "10:00 AM", "11:00 AM", "02:00 PM"],
+                    "2025-04-08": ["09:00 AM", "10:00 AM", "11:00 AM", "02:00 PM"],
+                    "2025-04-10": ["09:00 AM", "10:00 AM", "11:00 AM", "02:00 PM"]
+
+
+
+                }
+            },
+            appointmentTypes: ["consultation", "followup", "online"]
+        }]
+
+
+C.d) Document Management
+
+1st filter section: Search the name; filter doc type like (MRI, blood report, national id, x-ray, prescription, lab report other..); filter list of doc wise: New first, old first a-z z-a
+
+
+Document list:
+thumnails,
+name, type
+user name
+date,
+download
+edit
+delete
+
+
+Add new document:
+
+
+File name
+Document type
+attachment
+and save btn
+
+
+C.e) Prescriptions Management
+
+ 1) first 4 different div of summery:
+	1, Active Prescriptions
+	2, Pending Refills
+ 	3, Recent orders
+	4, Alerts
+
+
+ 2) list prescriptions in two section:
+	1st section: Active prescriptions listing
+table: 
+Medication name; Dosage 10mg 2 times evening; Presented by doc name and his specialties; Status (available, pending, Expiring);   Details btn to show detail {it shows info as dropdown}
+and in dropdown it contains
+
+Instruction to use, action buttons to [refill, Report issues btn]
+
+ 	2nd Section: Prescription History
+table:
+Medication name; Dosage; presented by; Period of date from-to of use; Status of [completed, discontinued], reason of the medication done [full courcce completed, or side effect so left or discontinued]
+
+ 3) Today's Medications list:
+name of medicine and it time
+
+   // Sample data
+    const activePrescriptions = [
+        { id: 1, name: 'Amlodipine', dosage: '10mg', frequency: 'Once daily', doctor: 'Dr. Sarah Johnson', specialty: 'Cardiology', startDate: '2025-01-15', endDate: '2025-04-15', status: 'Active', refillStatus: 'Available', instructions: 'Take with or without food, at the same time each day. Avoid grapefruit products.', sideEffects: 'May cause dizziness, swelling in ankles, or headache.' },
+        { id: 2, name: 'Metformin', dosage: '500mg', frequency: 'Twice daily', doctor: 'Dr. Michael Chen', specialty: 'Endocrinology', startDate: '2025-02-10', endDate: '2025-05-10', status: 'Active', refillStatus: 'Pending', instructions: 'Take with meals to reduce stomach upset. Monitor blood sugar regularly.', sideEffects: 'May cause nausea, diarrhea, or decreased vitamin B12 levels with long-term use.' },
+        { id: 3, name: 'Atorvastatin', dosage: '20mg', frequency: 'Once daily', doctor: 'Dr. Sarah Johnson', specialty: 'Cardiology', startDate: '2025-01-15', endDate: '2025-07-15', status: 'Active', refillStatus: 'Expiring Soon', instructions: 'Take in the evening. Avoid consuming large amounts of grapefruit juice.', sideEffects: 'May cause muscle pain, weakness, or liver problems.' }
+    ];
+
+    const historyPrescriptions = [
+        { id: 4, name: 'Amoxicillin', dosage: '500mg', frequency: 'Three times daily', doctor: 'Dr. James Wilson', specialty: 'General Practice', startDate: '2024-12-05', endDate: '2024-12-15', status: 'Completed', reason: 'Full course completed' },
+        { id: 5, name: 'Prednisone', dosage: '20mg tapering', frequency: 'Per schedule', doctor: 'Dr. Emily Roberts', specialty: 'Rheumatology', startDate: '2024-11-10', endDate: '2024-12-22', status: 'Discontinued', reason: 'Side effects (insomnia, mood changes)' }
+    ];
+
+    // Today's medications
+    const todayMedications = [
+        { name: 'Amlodipine', time: '8:00 AM', taken: true },
+        { name: 'Metformin', time: '8:00 AM', taken: true },
+        { name: 'Metformin', time: '8:00 PM', taken: false },
+        { name: 'Atorvastatin', time: '8:00 PM', taken: false },
+    ];
+
+
+C.d) Lab Report Management
+
+3 summary button: recent lab report; abnormal Findings; Pending Lab Orders
+
+list the report section:
+Filter header: search, [newes first, oldest first], Status of report [All report, Abnormal only, Pending only] 
+
+
+list table:
+
+report type name like [blood test, urinalysis], date, by doc ?
+status abnormal normal or other
+
+dropdown list info 
+where we get 
+description
+table of list: 
+  - Parameters [gulcose,white blood cells]
+  - Results [10.2 g/dL.....]
+  - Reference Range [12.0-15.5]
+  - status [low, high, normal]
+  const labReports = [
+            {
+                id: 1,
+                date: '2025-03-10',
+                type: 'Blood Test',
+                status: 'abnormal',
+                doctor: 'Dr. Sarah Johnson',
+                parameters: [
+                    { name: 'Hemoglobin', value: '10.2', unit: 'g/dL', reference: '12.0-15.5', status: 'low' },
+                    { name: 'White Blood Cells', value: '11.3', unit: '10³/µL', reference: '4.5-11.0', status: 'high' },
+                    { name: 'Glucose', value: '98', unit: 'mg/dL', reference: '70-100', status: 'normal' },
+                ],
+                notes: 'Patient shows signs of mild anemia. Recommend iron supplements and follow-up in 4 weeks.'
+            },
+            {
+                id: 2,
+                date: '2025-02-25',
+                type: 'Lipid Panel',
+                status: 'normal',
+                doctor: 'Dr. Robert Chen',
+                parameters: [
+                    { name: 'Total Cholesterol', value: '185', unit: 'mg/dL', reference: '<200', status: 'normal' },
+                    { name: 'HDL Cholesterol', value: '55', unit: 'mg/dL', reference: '>40', status: 'normal' },
+                    { name: 'LDL Cholesterol', value: '110', unit: 'mg/dL', reference: '<130', status: 'normal' },
+                    { name: 'Triglycerides', value: '120', unit: 'mg/dL', reference: '<150', status: 'normal' },
+                ],
+                notes: 'All lipid levels within normal range. Continue current diet and exercise regimen.'
+            }]
+
+
+
+
+D) Doctor Page/ part:
+
+repetend nav bar with 
+- notification
+- doctor card as of patient
+
+D.a) Dashboard
+
+
+in hearder it contains
+ - current status to choose among [Busy, available, away, ofline ] {i have no idea to keep this or not just liked the concept so kept it}
+
+
+ - 4 summary div:
+   total patient: number
+   todays appointment: number, 3 pending to confirm 
+   unread messages: 7, 2 urgent
+   pending lab results: 5 , 1 critical results
+
+In Appoinemnt schedule
+
+ -filter header: choose date on calendar; choose among [all appointment, completed, upcomming, urgents]; search bar; reset button
+
+
+slider of clander to show the appoinemnt schedule
+9:00 : ...
+10:00: ...
+eg of json:
+const appointmentsData = [
+
+                {
+                    id: 1,
+                    patientName: "James Wilson",
+                    time: "09:00 - 09:30",
+                    date: "2025-03-24",
+                    type: "Check-up",
+                    status: "upcoming",
+                    notes: "New patient",
+                    icon: "user"
+                },
+                {
+                    id: 2,
+                    patientName: "Emma Thompson",
+                    time: "10:00 - 10:45",
+                    date: "2025-03-24",
+                    type: "Consult",
+                    status: "upcoming",
+                    notes: "Insurance verified",
+                    icon: "shield"
+                },
+                {
+                    id: 3,
+                    patientName: "Michael Brown",
+                    time: "11:00 - 11:30",
+                    date: "2025-03-24",
+                    type: "Follow-up",
+                    status: "completed",
+                    notes: "Test results ready",
+                    icon: "file"
+                },
+                {
+                    id: 4,
+                    patientName: "Olivia Parker",
+                    time: "14:00 - 14:30",
+                    date: "2025-03-24",
+                    type: "Urgent",
+                    status: "urgent",
+                    notes: "High priority",
+                    icon: "activity"
+                }]
+
+D.b) Patient Management
+
+Filter header: search, filter among [upcoming, completed, cancled], 
+
+
+list the table: 
+  - patient
+  - appointment date/ time
+  - status: upcoming, completed
+  - issue: annual checkup, migraine follow-up etc
+  - action: view, approve, decline
+  on view we see the patient details
+
+patient img, name , age, phn, gender, email
+appointment details: date, status, issue, description/ patient notes
+
+action btns to : approve, disapprove, view medical records.
+
+
+D.c) Edit Your Schedule
+This page allows a doctor to configure their weekly schedule, including available time slots, breaks, and unavailable/free periods. The interface includes a weekly calendar view, settings for presets and breaks, and interactive features like drag-and-drop for slot management.
+
+
+1) Header Section: Weekly Hours: Displays total hours worked, Save Button: Triggers saving the schedule, Stats Button: Displays schedule statistics (via tooltip).
+
+2) Tabs: 'Weekly Calendar' and 'Settings & Presets'
+  2.a) Weekly Calendar Tab
+    in header: navigation buttons ("Previous" and "Next").
+
+	
+	-Schedule Grid:
+	The Schedule Grid is the main part of the "Weekly Calendar" tab where the doctor sees and edits their schedule. It’s like a table:
+	Rows represent time slots/ vertical list of times (e.g., 8:00 AM, 8:30 AM, etc.).
+	Columns represent days of the week (e.g., Monday, Tuesday, etc.).
+     	Each "cell" in this table is a slot that shows the doctor’s status for that time and day (e.g., Free, Available, Break, or Booked)..
+
+ 
+	and doctor can change the slot status and save with save btn, as we change the json data gets changed, the json data looks like:
+let scheduleData = {
+            "2025-03-23": [
+                { hour: 8, status: "unavailable", duration: 30 },
+                { hour: 9, status: "unavailable", duration: 30 },
+                { hour: 10, status: "available", duration: 30 },
+                { hour: 11, status: "available", duration: 30 },
+                { hour: 12, status: "break", duration: 30 },
+                { hour: 13, status: "available", duration: 30 },
+                { hour: 14, status: "available", duration: 30 },
+                { hour: 15, status: "available", duration: 30 },
+                { hour: 16, status: "available", duration: 30 },
+                { hour: 17, status: "booked", duration: 30 },
+                { hour: 18, status: "unavailable", duration: 30 },
+                { hour: 19, status: "unavailable", duration: 30 },
+                { hour: 20, status: "unavailable", duration: 30 },
+                { hour: 21, status: "unavailable", duration: 30 }
+            ],
+            "2025-03-24": [
+                { hour: 8, status: "unavailable", duration: 30 },
+                { hour: 9, status: "available", duration: 30 },
+                { hour: 10, status: "break", duration: 30 },
+                { hour: 11, status: "available", duration: 30 },
+                { hour: 12, status: "available", duration: 30 },
+                { hour: 13, status: "break", duration: 30 },
+                { hour: 14, status: "available", duration: 30 },
+                { hour: 15, status: "available", duration: 30 },
+                { hour: 16, status: "available", duration: 30 },
+                { hour: 17, status: "available", duration: 30 },
+                { hour: 18, status: "unavailable", duration: 30 },
+                { hour: 19, status: "unavailable", duration: 30 },
+                { hour: 20, status: "unavailable", duration: 30 },
+                { hour: 21, status: "unavailable", duration: 30 }
+            ]}
+
+
+	2.b) Settings & Presets
+Quick Presets: Buttons to apply predefined schedules (e.g., Full Day, Morning Shift). that sets the slot status available in morning time 8 to 12
+
+Break Settings: Options to configure lunch and evening breaks with time selectors. that makes the break at particular time of date choosed
+
+--------------------------------------------------
+
+Message, video call section are not added yet, need to analysis and will add the frontend accordingly
+
+
+  

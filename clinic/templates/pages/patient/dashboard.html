@@ -1,0 +1,938 @@
+{% extends "pages/patient/P_base.html" %}
+{% load static %}
+
+{% block titles %}Dashboard || Nepal's Care {% endblock titles %}
+
+{% block pageof %} Dashboard of Patients {% endblock pageof %}
+{% block linkPageof %} /patient/adv {% endblock linkPageof %}
+
+{% block content %}
+
+<section class="flex flex-1 flex-col p-4 md:p-8 bg-gradient-to-br from-white to-blue-50">
+    <!-- Header with improved spacing and visual hierarchy -->
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight">Patient Dashboard</h1>
+            <p class="text-muted-foreground">Welcome back, John! Here's your health overview.</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="{% url 'patient:BookAppoinment' %}"
+                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-circle-plus mr-2 h-4 w-4">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M8 12h8"></path>
+                    <path d="M12 8v8"></path>
+                </svg>
+                Book Appointment
+            </a>
+        </div>
+    </div>
+
+    <!-- Cards with improved visuals and animations -->
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-4 mb-8">
+        <!-- Appointment Card -->
+        <div
+            class="rounded-xl border bg-white text-card-foreground shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+            <div class="flex items-center space-x-4 p-6 pb-2 border-b border-blue-50">
+                <div class="bg-blue-100 p-2 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-calendar h-5 w-5 text-blue-600">
+                        <path d="M8 2v4"></path>
+                        <path d="M16 2v4"></path>
+                        <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                        <path d="M3 10h18"></path>
+                    </svg>
+                </div>
+                <h3 class="tracking-tight text-base font-semibold ">Upcoming Appointment</h3>
+            </div>
+            <div class="p-6 pt-4">
+                <div class="space-y-4">
+                    <div class="flex flex-col">
+                        <span class="text-xl font-bold text-gray-900">March 18, 2025</span>
+                        <div class="flex items-center gap-2 mt-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-clock h-4 w-4 text-blue-500">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span class="text-sm text-gray-600">10:30 AM - Dr. Smith</span>
+                        </div>
+                    </div>
+                    <div
+                        class="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
+                        Annual Check-up
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center p-6 pt-0">
+                <a href="{% url 'patient:viewAppoinment' %}"
+                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-50 text-blue-700 hover:bg-blue-100 h-10 rounded-lg px-4 w-full">
+                    View All Appointments
+                </a>
+            </div>
+        </div>
+
+        <!-- Lab Results Card -->
+        <div
+            class="rounded-xl border bg-white text-card-foreground shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+            <div class="flex items-center space-x-4 p-6 pb-2 border-b border-green-50">
+                <div class="bg-green-100 p-2 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-flask-conical h-5 w-5 text-green-600">
+                        <path
+                            d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2">
+                        </path>
+                        <path d="M8.5 2h7"></path>
+                        <path d="M7 16h10"></path>
+                    </svg>
+                </div>
+                <h3 class="tracking-tight text-lg font-semibold ">Recent Lab Results</h3>
+            </div>
+            <div class="p-6 pt-4">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm font-medium">Cholesterol</span>
+                        <div
+                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-green-100 text-green-700 border-green-200">
+                            Normal
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm font-medium">Blood Pressure</span>
+                        <div
+                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-yellow-100 text-yellow-700 border-yellow-200">
+                            Elevated
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center p-6 pt-0">
+                <button
+                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-green-50 text-green-700 hover:bg-green-100 h-10 rounded-lg px-4 w-full">
+                    View All Results
+                </button>
+            </div>
+        </div>
+
+        <!-- Prescription Card -->
+        <div
+            class="rounded-xl border bg-white text-card-foreground shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+            <div class="flex items-center space-x-4 p-6 pb-2 border-b border-red-50">
+                <div class="bg-red-100 p-2 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-pill h-5 w-5 text-red-600">
+                        <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
+                        <path d="m8.5 8.5 7 7"></path>
+                    </svg>
+                </div>
+                <h3 class="tracking-tight text-lg font-semibold ">Prescription Alerts</h3>
+            </div>
+            <div class="p-6 pt-4">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-circle-alert h-5 w-5 text-red-500">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" x2="12" y1="8" y2="12"></line>
+                            <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                        </svg>
+                        <span class="text-base font-semibold">Lisinopril Refill Due</span>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between">
+                            <p class="text-sm text-gray-600">3 days remaining</p>
+                            <p class="text-sm font-medium text-red-600">25% left</p>
+                        </div>
+                        <div class="relative w-full overflow-hidden rounded-full bg-gray-200 h-3">
+                            <div class="h-full w-1/4 bg-red-500 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center p-6 pt-0">
+                <button
+                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-red-50 text-red-700 hover:bg-red-100 h-10 rounded-lg px-4 w-full">
+                    Manage Prescriptions
+                </button>
+            </div>
+        </div>
+
+        <!-- Health Reminders Card -->
+        <div
+            class="rounded-xl border bg-white text-card-foreground shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+            <div class="flex items-center space-x-4 p-6 pb-2 border-b border-purple-50">
+                <div class="bg-purple-100 p-2 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-bell h-5 w-5 text-purple-600">
+                        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+                        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+                    </svg>
+                </div>
+                <h3 class="tracking-tight text-lg font-semibold ">Health Reminders</h3>
+            </div>
+            <div class="p-6 pt-4">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm font-medium">Flu Shot</span>
+                        <div
+                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-100 text-blue-700 border-blue-200">
+                            Due Soon
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm font-medium">Dental Check-up</span>
+                        <div
+                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-gray-100 text-gray-700 border-gray-200">
+                            Upcoming
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center p-6 pt-0">
+                <button
+                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-purple-50 text-purple-700 hover:bg-purple-100 h-10 rounded-lg px-4 w-full">
+                    View All Reminders
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Scollable shortcut tabs -->
+    <div class="flex items-center justify-between  gap-6 pb-4 overflow-x-scroll custom-scrollbar">
+        <a href="#" class="bg-white shadow rounded-lg p-6 flex items-center justify-between min-w-72 ">
+            <div>
+                <h3 class="text-sm text-gray-500">Total Appointments</h3>
+                <p class="text-3xl font-bold">1</p>
+            </div>
+            <div class="bg-cyan-500 rounded-full p-2">
+
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox='0 0 24 24'
+                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                    <g transform="matrix(0.83 0 0 0.83 12 12)">
+                        <g style="">
+                            <g transform="matrix(1 0 0 1 0 3.5)">
+                                <path
+                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                    transform=" translate(-12, -15.5)"
+                                    d="M 16.5 14.5 C 16.5 14.223857625084603 16.2761423749154 14 16 14 L 13.5 14 L 13.5 11.5 C 13.5 11.223857625084603 13.276142374915397 11 13 11 L 11 11 C 10.723857625084603 11 10.5 11.223857625084603 10.5 11.5 L 10.5 14 L 8 14 C 7.723857625084603 14 7.5 14.223857625084603 7.5 14.5 L 7.5 16.5 C 7.5 16.7761423749154 7.723857625084603 17 8 17 L 10.5 17 L 10.5 19.5 C 10.5 19.7761423749154 10.723857625084603 20 11 20 L 13 20 C 13.276142374915397 20 13.5 19.7761423749154 13.5 19.5 L 13.5 17 L 16 17 C 16.2761423749154 17 16.5 16.7761423749154 16.5 16.5 Z"
+                                    stroke-linecap="round" />
+                            </g>
+                            <g transform="matrix(1 0 0 1 0 0)">
+                                <path
+                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                    transform=" translate(-12, -12)"
+                                    d="M 22 3 L 19 3 C 18.7238576250846 3 18.5 2.7761423749153966 18.5 2.5 L 18.5 1 C 18.5 0.44771525016920655 18.052284749830793 0 17.5 0 C 16.947715250169207 0 16.5 0.44771525016920644 16.5 0.9999999999999999 L 16.5 5.75 C 16.5 6.164213562373095 16.164213562373096 6.5 15.75 6.5 C 15.335786437626904 6.5 15 6.164213562373095 15 5.75 L 15 3.5 C 15 3.2238576250846034 14.776142374915397 3 14.5 3 L 8.5 3 C 8.223857625084603 3 8 2.7761423749153966 8 2.5 L 8 1 C 8 0.44771525016920655 7.552284749830793 0 7 0 C 6.447715250169207 0 6 0.44771525016920644 6 0.9999999999999999 L 6 5.75 C 6 6.164213562373095 5.664213562373095 6.5 5.25 6.5 C 4.835786437626905 6.5 4.5 6.164213562373095 4.5 5.75 L 4.5 3.5 C 4.5 3.2238576250846034 4.276142374915397 3 4 3 L 2 3 C 0.8954305003384131 3 0 3.895430500338413 0 5 L 0 22 C 0 23.104569499661586 0.8954305003384131 24 2 24 L 22 24 C 23.104569499661586 24 24 23.104569499661586 24 22 L 24 5 C 24 3.895430500338413 23.104569499661586 3 22 3 Z M 22 21.5 C 22 21.7761423749154 21.7761423749154 22 21.5 22 L 2.5 22 C 2.2238576250846034 22 2 21.7761423749154 2 21.5 L 2 9.5 C 2 9.223857625084603 2.2238576250846034 9 2.5 9 L 21.5 9 C 21.7761423749154 9 22 9.223857625084603 22 9.5 Z"
+                                    stroke-linecap="round" />
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+        </a>
+
+        <a href="#" class="bg-white shadow rounded-lg p-6 flex items-center justify-between min-w-72 ">
+            <div>
+                <h3 class="text-sm text-gray-500">Online Meeting</h3>
+                <p class="text-3xl font-bold">1</p>
+            </div>
+            <div class="bg-cyan-500 rounded-full p-2">
+
+
+                <svg id='Video_Call_24' class="w-8 h-8 text-white" fill="currentColor" viewBox='0 0 24 24'
+                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                    <g transform="matrix(0.67 0 0 0.67 12 12)">
+                        <path
+                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                            transform=" translate(-15, -15)"
+                            d="M 2 6 C 0.895 6 0 6.895 0 8 L 0 22 C 0 23.105 0.895 24 2 24 L 19 24 C 20.105 24 21 23.105 21 22 L 21 8 C 21 6.895 20.105 6 19 6 L 2 6 z M 29 8 C 28.73956763833648 8.000004170057057 28.489411109490636 8.10160829883199 28.302734 8.2832031 L 23 13 L 23 15 L 23 17 L 28.324219 21.736328 L 28.339844 21.75 C 28.522188562526043 21.91081319167702 28.75687384995553 21.99968812708224 29 22 C 29.552284749830793 22 30 21.552284749830793 30 21 L 30 15 L 30 9 C 30 8.447715250169207 29.552284749830793 8 29 8 z"
+                            stroke-linecap="round" />
+                    </g>
+                </svg>
+            </div>
+        </a>
+
+
+        <a href="#" class="bg-white shadow rounded-lg p-6 flex items-center justify-between min-w-72 ">
+            <div>
+                <h3 class="text-sm text-gray-500">My Medicine</h3>
+                <p class="text-3xl font-bold">1</p>
+            </div>
+            <div class="bg-cyan-500 rounded-full p-2">
+
+
+                <svg id='Video_Call_24' class="w-8 h-8 text-white" fill="currentColor" viewBox='0 0 24 24'
+                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                    <g transform="matrix(0.83 0 0 0.83 12 12)">
+                        <g>
+                            <g transform="matrix(1 0 0 1 0 0)">
+                                <path
+                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                    transform=" translate(-12, -12)"
+                                    d="M 21.89 2.11 C 19.07163387803594 -0.7025114650946382 14.508366121964055 -0.7025114650946382 11.689999999999998 2.1100000000000034 L 2.12 11.69 C 0.0474439280449217 13.747234551642704 -0.5772421244240249 16.852575285590895 0.5386003866119182 19.55120422681928 C 1.6544428976478611 22.249833168047658 4.289785826562268 24.007200911318254 7.209999999999998 24 L 7.21 24 C 9.122437262198625 24.010238368493688 10.959265647259848 23.253897268762596 12.310000000000002 21.9 L 21.89 12.319999999999999 C 23.249468950374673 10.972193712176107 24.00984202529492 9.134325142463666 24 7.2200000000000015 C 24.00915261870678 5.302874086003562 23.249091105142316 3.4621563920156952 21.89 2.1099999999999985 Z M 20.48 10.9 L 16.75 14.620000000000001 C 16.65611670004722 14.71465632541155 16.52831876818528 14.767899162170837 16.395 14.767899162170837 C 16.26168123181472 14.767899162170837 16.133883299952778 14.71465632541155 16.04 14.620000000000001 L 9.38 8 C 9.188216709623457 7.802186323263953 9.188216709623457 7.487813676736048 9.38 7.29 L 13.110000000000001 3.57 C 15.145169303126474 1.534830696873526 18.444830696873524 1.5348306968735264 20.479999999999997 3.5699999999999994 C 22.51516930312647 5.605169303126472 22.515169303126473 8.904830696873523 20.48 10.939999999999998 Z"
+                                    stroke-linecap="round" />
+                            </g>
+                            <g transform="matrix(1 0 0 1 4.63 -7.6)">
+                                <path
+                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                    transform=" translate(-16.63, -4.4)"
+                                    d="M 16.63 3.16 C 15.5396236211152 3.1601769104482536 14.493559993440808 3.5915433548500646 13.72 4.359999999999999 C 13.427546621942485 4.652817546773957 13.427546621942485 5.127182453226043 13.719999999999999 5.42 C 13.859287794930133 5.562947783217732 14.050412529092222 5.643569946652986 14.25 5.643569946652986 C 14.449587470907776 5.643569946652986 14.640712205069866 5.562947783217732 14.78 5.42 C 15.819502211610974 4.44212805857295 17.440497788389024 4.44212805857295 18.48 5.42 C 18.61988387622641 5.561636288162499 18.81093354502844 5.640939924269001 19.01 5.64 C 19.209752255879675 5.644507786734574 19.40215856779374 5.564641015751376 19.540000000000003 5.42 C 19.682947783217735 5.280712205069866 19.76356994665299 5.089587470907777 19.76356994665299 4.89 C 19.76356994665299 4.690412529092223 19.682947783217735 4.499287794930133 19.540000000000003 4.359999999999999 C 18.768299779097003 3.588749818046283 17.721026290943076 3.1568844621065195 16.63 3.1599999999999993 Z"
+                                    stroke-linecap="round" />
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+        </a>
+
+        <a href="#" class="bg-white shadow rounded-lg p-6 flex items-center justify-between min-w-72 ">
+            <div>
+                <h3 class="text-sm text-gray-500">My Medicine</h3>
+                <p class="text-3xl font-bold">1</p>
+            </div>
+            <div class="bg-cyan-500 rounded-full p-2">
+
+
+                <svg id='Video_Call_24' class="w-8 h-8 text-white" fill="currentColor" viewBox='0 0 24 24'
+                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                    <g transform="matrix(0.83 0 0 0.83 12 12)">
+                        <g>
+                            <g transform="matrix(1 0 0 1 0 0)">
+                                <path
+                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                    transform=" translate(-12, -12)"
+                                    d="M 21.89 2.11 C 19.07163387803594 -0.7025114650946382 14.508366121964055 -0.7025114650946382 11.689999999999998 2.1100000000000034 L 2.12 11.69 C 0.0474439280449217 13.747234551642704 -0.5772421244240249 16.852575285590895 0.5386003866119182 19.55120422681928 C 1.6544428976478611 22.249833168047658 4.289785826562268 24.007200911318254 7.209999999999998 24 L 7.21 24 C 9.122437262198625 24.010238368493688 10.959265647259848 23.253897268762596 12.310000000000002 21.9 L 21.89 12.319999999999999 C 23.249468950374673 10.972193712176107 24.00984202529492 9.134325142463666 24 7.2200000000000015 C 24.00915261870678 5.302874086003562 23.249091105142316 3.4621563920156952 21.89 2.1099999999999985 Z M 20.48 10.9 L 16.75 14.620000000000001 C 16.65611670004722 14.71465632541155 16.52831876818528 14.767899162170837 16.395 14.767899162170837 C 16.26168123181472 14.767899162170837 16.133883299952778 14.71465632541155 16.04 14.620000000000001 L 9.38 8 C 9.188216709623457 7.802186323263953 9.188216709623457 7.487813676736048 9.38 7.29 L 13.110000000000001 3.57 C 15.145169303126474 1.534830696873526 18.444830696873524 1.5348306968735264 20.479999999999997 3.5699999999999994 C 22.51516930312647 5.605169303126472 22.515169303126473 8.904830696873523 20.48 10.939999999999998 Z"
+                                    stroke-linecap="round" />
+                            </g>
+                            <g transform="matrix(1 0 0 1 4.63 -7.6)">
+                                <path
+                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                    transform=" translate(-16.63, -4.4)"
+                                    d="M 16.63 3.16 C 15.5396236211152 3.1601769104482536 14.493559993440808 3.5915433548500646 13.72 4.359999999999999 C 13.427546621942485 4.652817546773957 13.427546621942485 5.127182453226043 13.719999999999999 5.42 C 13.859287794930133 5.562947783217732 14.050412529092222 5.643569946652986 14.25 5.643569946652986 C 14.449587470907776 5.643569946652986 14.640712205069866 5.562947783217732 14.78 5.42 C 15.819502211610974 4.44212805857295 17.440497788389024 4.44212805857295 18.48 5.42 C 18.61988387622641 5.561636288162499 18.81093354502844 5.640939924269001 19.01 5.64 C 19.209752255879675 5.644507786734574 19.40215856779374 5.564641015751376 19.540000000000003 5.42 C 19.682947783217735 5.280712205069866 19.76356994665299 5.089587470907777 19.76356994665299 4.89 C 19.76356994665299 4.690412529092223 19.682947783217735 4.499287794930133 19.540000000000003 4.359999999999999 C 18.768299779097003 3.588749818046283 17.721026290943076 3.1568844621065195 16.63 3.1599999999999993 Z"
+                                    stroke-linecap="round" />
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+        </a>
+
+    </div>
+
+
+
+    <!-- Overview, Time line other section -->
+    <section class="flex flex-1 flex-col p-4 md:p-6 mt-8 
+    bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div>
+                <h1 id="tabName" class="text-2xl font-bold tracking-tight">Overview</h1>
+                <p id="tabDesp" class="text-gray-500">Your health summary and recent activitiess</p>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <div class="w-full max-w-4xl mx-auto">
+                <div class="bg-gray-100 rounded-md p-1">
+                    <!-- Tab container with flexible layout -->
+                    <div class="grid grid-cols-2 gap-1">
+                        <!-- Individual tabs with consistent sizing -->
+                        <button id="overviewTabButton"
+                            class="flex items-center justify-center px-3 py-1.5 text-sm font-medium rounded-sm text-gray-500 transition-all border border-gray-100 hover:border-black hover:bg-white bg-white shadow-sm"
+                            data-state="active">
+                            <svg class="w-4 h-4 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M22 12A10 10 0 0 0 12 2v10z">
+                                </path>
+                            </svg>
+                            <span class="truncate">Overview</span>
+                        </button>
+                        <button id="timelineTabButton"
+                            class="flex items-center justify-center px-3 py-1.5 text-sm font-medium rounded-sm text-gray-500 transition-all border border-gray-100 hover:border-black hover:bg-white ">
+                            <svg class="w-4 h-4 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2">
+                                </path>
+                            </svg>
+                            <span class="truncate sm:block hidden">Health Timeline</span>
+                            <span class="truncate sm:hidden">Timeline</span>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="overviewTab" class="mt-4">
+                <div class="grid gap-4 md:grid-cols-2">
+
+                    <!-- Appoinment Summary -->
+                    <div id="appoinment_summary_crd"
+                        class="rounded-lg border bg-white shadow-sm border-gray-200 hover:shadow-md transition-all">
+                        <div class="flex flex-col space-y-1.5 p-6">
+                            <h3 class="font-semibold flex items-center text-lg">
+                                <svg class="w-5 h-5 mr-2 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                Appointments Summary
+                            </h3>
+                            <p class="text-sm text-gray-500">Your upcoming and past appointments</p>
+                        </div>
+                        <div class="p-6 pt-0 space-y-4">
+                            <div class="flex items-start gap-4">
+                                <div class="rounded-full bg-green-100 p-2">
+                                    <svg class="w-4 h-4 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium">Upcoming Appointment</p>
+                                    <p class="text-xs text-gray-600 font-semibold">March 18, 2025 • 10:30 AM</p>
+                                    <div class="flex items-center mt-1">
+                                        <span class="text-xs text-gray-500 flex items-center">
+                                            <svg class="w-3 h-3 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                                </path>
+                                            </svg>
+                                            Dr. Smith
+                                        </span>
+                                        <span class="mx-2 text-gray-300">•</span>
+                                        <span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">Annual
+                                            Check-up</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="h-px w-full bg-gray-100 my-4"></div>
+                            <div class="flex items-start gap-4">
+                                <div class="rounded-full bg-gray-100 p-2">
+                                    <svg class="w-4 h-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium">Past Appointment</p>
+                                    <p class="text-xs text-gray-600 font-semibold">February 15, 2025 • 11:00 AM</p>
+                                    <div class="flex items-center mt-1">
+                                        <span class="text-xs text-gray-500 flex items-center">
+                                            <svg class="w-3 h-3 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                                </path>
+                                            </svg>
+                                            Dr. Johnson
+                                        </span>
+                                        <span class="mx-2 text-gray-300">•</span>
+                                        <span
+                                            class="text-xs bg-gray-50 text-gray-700 px-2 py-0.5 rounded-full">Follow-up</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="h-px w-full bg-gray-100 my-4"></div>
+                            <div class="flex items-start gap-4">
+                                <div class="rounded-full bg-gray-100 p-2">
+                                    <svg class="w-4 h-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium">Past Appointment</p>
+                                    <p class="text-xs text-gray-600 font-semibold">January 10, 2025 • 9:15 AM</p>
+                                    <div class="flex items-center mt-1">
+                                        <span class="text-xs text-gray-500 flex items-center">
+                                            <svg class="w-3 h-3 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                                </path>
+                                            </svg>
+                                            Dr. Williams
+                                        </span>
+                                        <span class="mx-2 text-gray-300">•</span>
+                                        <span class="text-xs bg-gray-50 text-gray-700 px-2 py-0.5 rounded-full">Dental
+                                            Check-up</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0 mt-4">
+                            <a href="#"
+                                class="w-full h-9 px-3 flex items-center justify-center gap-1 rounded-md border border-gray-200 bg-white hover:bg-gray-100 transition-colors text-sm font-medium">
+                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                                View All Appointments
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <!-- Recent Activity Card -->
+                    <div id="recentActi_summary_crd"
+                        class="rounded-lg border bg-white shadow-sm border-gray-200 hover:shadow-md transition-all">
+                        <div class="flex flex-col space-y-1.5 p-6">
+                            <h3 class="font-semibold flex items-center text-lg">
+                                <svg class="w-5 h-5 mr-2 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                Recent Activity
+                            </h3>
+                            <p class="text-sm text-gray-500">Your recent health-related activities</p>
+                        </div>
+                        <div class="p-6 pt-0 space-y-4">
+                            <div class="flex items-start gap-4">
+                                <div class="rounded-full bg-blue-50 p-2">
+                                    <svg class="w-4 h-4 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 2v4 M16 2v4">
+                                        </path>
+                                        <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium">Appointment Scheduled</p>
+                                    <p class="text-xs text-gray-500">Annual check-up with Dr. Smith</p>
+                                    <p class="text-xs text-gray-500 mt-1">March 10, 2025</p>
+                                </div>
+                            </div>
+                            <div class="h-px w-full bg-gray-200"></div>
+                            <div class="flex items-start gap-4">
+                                <div class="rounded-full bg-blue-50 p-2">
+                                    <svg class="w-4 h-4 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z M14 2v4a2 2 0 0 0 2 2h4 M10 9H8 M16 13H8 M16 17H8">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium">Lab Results Available</p>
+                                    <p class="text-xs text-gray-500">Blood work results from your recent visit</p>
+                                    <p class="text-xs text-gray-500 mt-1">March 8, 2025</p>
+                                </div>
+                            </div>
+                            <div class="h-px w-full bg-gray-200"></div>
+                            <div class="flex items-start gap-4">
+                                <div class="rounded-full bg-blue-50 p-2">
+                                    <svg class="w-4 h-4 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium">Message from Dr. Smith</p>
+                                    <p class="text-xs text-gray-500">Regarding your recent lab results</p>
+                                    <p class="text-xs text-gray-500 mt-1">March 7, 2025</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <button
+                                class="w-full h-9 px-3 rounded-md border border-gray-200 bg-white hover:bg-gray-100 transition-colors text-sm font-medium">View
+                                All Activity</button>
+                        </div>
+                    </div>
+
+                    <!-- Expences Summary Card -->
+                    <div id="expences_summary_crd"
+                        class="hidden rounded-lg border bg-white shadow-sm border-gray-200 hover:shadow-md transition-all">
+                        <div class="flex flex-col space-y-1.5 p-6">
+                            <h3 class="font-semibold flex items-center text-lg">
+                                <svg class="w-5 h-5 mr-2 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z">
+                                    </path>
+                                </svg>
+                                Expenses Summary
+                            </h3>
+                            <p class="text-sm text-gray-500">Your recent health-related expenses</p>
+                        </div>
+                        <div class="p-6 pt-0 space-y-4">
+                            <div class="flex flex-col gap-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div
+                                            class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-green-600" xmlns="http://www.w3.org/2000/svg"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium">Total Expenses</p>
+                                            <p class="text-lg font-bold">$1,250.00</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-xs text-green-600 flex items-center">
+                                        <svg class="w-3 h-3 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                                        </svg>
+                                        5.2% from last month
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                                <svg class="w-4 h-4 text-blue-600" xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-medium">Annual Check-up</p>
+                                                <p class="text-xs text-gray-500">March 15, 2025</p>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm font-semibold">$350.00</p>
+                                    </div>
+
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                                                <svg class="w-4 h-4 text-purple-600" xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-medium">Prescription Refill</p>
+                                                <p class="text-xs text-gray-500">February 28, 2025</p>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm font-semibold">$75.50</p>
+                                    </div>
+
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+                                                <svg class="w-4 h-4 text-yellow-600" xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-medium">Lab Tests</p>
+                                                <p class="text-xs text-gray-500">February 15, 2025</p>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm font-semibold">$235.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center p-6 pt-4">
+                                <button
+                                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-green-50 text-green-700 hover:bg-green-100 h-10 rounded-lg px-4 w-full">
+                                    View All Expenses
+                                </button>
+                            </div>
+
+
+
+                            <!-- Health Trends Card -->
+                            <div
+                                class="hidden rounded-lg border bg-white shadow-sm border-gray-200 hover:shadow-md transition-all">
+                                <div class="flex flex-col space-y-1.5 p-6">
+                                    <h3 class="font-semibold flex items-center text-lg">
+                                        <svg class="w-5 h-5 mr-2 text-blue-500" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                                            <polyline points="16 7 22 7 22 13"></polyline>
+                                        </svg>
+                                        Health Trends
+                                    </h3>
+                                    <p class="text-sm text-gray-500">Your health metrics over time</p>
+                                </div>
+                                <div class="p-6 pt-0 pb-2">
+                                    <div class="h-[200px]">
+                                        <!-- Simplified chart placeholder (you'd typically use a library like Chart.js here) -->
+                                        <div
+                                            class="w-full h-full bg-gray-50 rounded-md flex items-center justify-center text-gray-500 text-sm">
+                                            Health Trends Chart Placeholder
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-center gap-4 py-2">
+                                        <div class="flex items-center gap-1">
+                                            <div class="h-3 w-3 rounded-full bg-blue-500"></div>
+                                            <span class="text-xs text-gray-500">Glucose</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-6 pt-0">
+                                    <button
+                                        class="w-full h-9 px-3 rounded-md border border-gray-200 bg-white hover:bg-gray-100 transition-colors text-sm font-medium">View
+                                        Detailed Reports</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div id="timelineTab" class="mt-4 hidden">
+                <div>
+                    <div class="rounded-lg border bg-white shadow-sm border-gray-200 hover:shadow-md transition-all">
+                        <div class="flex flex-col space-y-1.5 p-6">
+                            <h3 class="font-semibold flex items-center text-lg">
+                                <svg class="w-5 h-5 mr-2 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2">
+                                    </path>
+                                </svg>
+                                Interactive Health Timeline
+                            </h3>
+                            <p class="text-sm text-gray-500">Your medical history and past appointments</p>
+                        </div>
+
+                        <div class="p-6 pt-0 space-y-8">
+                            <div class="relative pl-6 border-l border-gray-300">
+                                <div class="absolute left-0 top-0 -translate-x-1/2 h-4 w-4 rounded-full bg-blue-500">
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex items-center">
+                                        <h4 class="text-sm font-medium">Annual Check-up</h4>
+                                        <button
+                                            class="ml-auto flex items-center gap-1 h-6 px-3 rounded-md text-xs font-medium hover:bg-gray-100 transition-colors">
+                                            <svg class="w-3.5 h-3.5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z M14 2v4a2 2 0 0 0 2 2h4 M10 9H8 M16 13H8 M16 17H8">
+                                                </path>
+                                            </svg>
+                                            View Report
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500">February 15, 2025</p>
+                                    <p class="text-sm">Routine physical examination with Dr. Smith. All vitals
+                                        normal.
+                                    </p>
+                                    <div class="flex flex-wrap gap-1 mt-1">
+                                        <span
+                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-gray-800 border-gray-300">Blood
+                                            Work</span>
+                                        <span
+                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-gray-800 border-gray-300">Physical
+                                            Exam</span>
+                                        <span
+                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-gray-800 border-gray-300">Vaccination</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="relative pl-6 border-l border-gray-300">
+                                <div class="absolute left-0 top-0 -translate-x-1/2 h-4 w-4 rounded-full bg-blue-500">
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex items-center">
+                                        <h4 class="text-sm font-medium">Dental Cleaning</h4>
+                                        <button
+                                            class="ml-auto flex items-center gap-1 h-6 px-3 rounded-md text-xs font-medium hover:bg-gray-100 transition-colors">
+                                            <svg class="w-3.5 h-3.5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z M14 2v4a2 2 0 0 0 2 2h4 M10 9H8 M16 13H8 M16 17H8">
+                                                </path>
+                                            </svg>
+                                            View Report
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500">January 10, 2025</p>
+                                    <p class="text-sm">Regular dental cleaning and check-up. No cavities found.
+                                    </p>
+                                    <div class="flex flex-wrap gap-1 mt-1">
+                                        <span
+                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-gray-800 border-gray-300">Dental</span>
+                                        <span
+                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-gray-800 border-gray-300">X-Ray</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="relative pl-6 border-l border-gray-300">
+                                <div class="absolute left-0 top-0 -translate-x-1/2 h-4 w-4 rounded-full bg-blue-500">
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex items-center">
+                                        <h4 class="text-sm font-medium">Flu Vaccination</h4>
+                                        <button
+                                            class="ml-auto flex items-center gap-1 h-6 px-3 rounded-md text-xs font-medium hover:bg-gray-100 transition-colors">
+                                            <svg class="w-3.5 h-3.5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z M14 2v4a2 2 0 0 0 2 2h4 M10 9H8 M16 13H8 M16 17H8">
+                                                </path>
+                                            </svg>
+                                            View Record
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500">November 5, 2024</p>
+                                    <p class="text-sm">Received annual flu vaccination. No adverse reactions.
+                                    </p>
+                                    <div class="flex flex-wrap gap-1 mt-1">
+                                        <span
+                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-gray-800 border-gray-300">Vaccination</span>
+                                        <span
+                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-gray-800 border-gray-300">Preventive
+                                            Care</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="relative pl-6 border-l border-gray-300">
+                                <div class="absolute left-0 top-0 -translate-x-1/2 h-4 w-4 rounded-full bg-blue-500">
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex items-center">
+                                        <h4 class="text-sm font-medium">Blood Work</h4>
+                                        <button
+                                            class="ml-auto flex items-center gap-1 h-6 px-3 rounded-md text-xs font-medium hover:bg-gray-100 transition-colors">
+                                            <svg class="w-3.5 h-3.5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z M14 2v4a2 2 0 0 0 2 2h4 M10 9H8 M16 13H8 M16 17H8">
+                                                </path>
+                                            </svg>
+                                            View Results
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500">October 20, 2024</p>
+                                    <p class="text-sm">Comprehensive blood panel. Slightly elevated cholesterol
+                                        noted.
+                                    </p>
+                                    <div class="flex flex-wrap gap-1 mt-1">
+                                        <span
+                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-gray-800 border-gray-300">Lab
+                                            Work</span>
+                                        <span
+                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-gray-800 border-gray-300">Cholesterol</span>
+                                        <span
+                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-gray-800 border-gray-300">Blood
+                                            Test</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6 pt-0">
+                            <button
+                                class="w-full h-9 px-3 rounded-md border border-gray-200 bg-white hover:bg-gray-100 transition-colors text-sm font-medium">Load
+                                More History</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <script>
+            const overviewTabButton = document.getElementById('overviewTabButton');
+            const timelineTabButton = document.getElementById('timelineTabButton');
+
+            const tabName = document.getElementById('tabName');
+            const tabDesp = document.getElementById('tabDesp');
+
+            const overviewTab = document.getElementById('overviewTab');
+            const timelineTab = document.getElementById('timelineTab');
+
+            overviewTabButton.addEventListener('click', () => {
+                overviewTabButton.classList.add('bg-white', 'shadow-sm');
+                timelineTabButton.classList.remove('bg-white', 'shadow-sm');
+
+                tabName.innerHTML = 'Overview';
+                tabDesp.innerHTML = 'Your health summary and recent activities';
+
+                overviewTab.style.display = 'block';
+                timelineTab.style.display = 'none';
+            });
+
+            timelineTabButton.addEventListener('click', () => {
+                overviewTabButton.classList.remove('bg-white', 'shadow-sm');
+                timelineTabButton.classList.add('bg-white', 'shadow-sm');
+
+                tabName.innerHTML = 'Timeline';
+                tabDesp.innerHTML = 'Your medical history and past appointments';
+
+                overviewTab.style.display = 'none';
+                timelineTab.style.display = 'block';
+            });
+
+
+
+        </script>
+    </section>
+
+
+
+
+
+</section>
+
+{% endblock content %}
+
+
+{% block scripts %}
+<script>
+
+    dashboard_nav_all = document.querySelectorAll('.dashboard-nav a');
+    console.log(dashboard_nav_all);
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
+
+
+{% endblock scripts %}

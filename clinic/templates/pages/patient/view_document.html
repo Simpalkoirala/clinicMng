@@ -1,0 +1,774 @@
+{% extends "pages/patient/P_base.html" %}
+{% load choose_color %}
+
+{% load static %}
+
+{% block titles %}View Documents || Nepal's Care {% endblock titles %}
+
+{% block styles %}
+
+<style>
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+{% endblock styles %}
+
+
+{% block pageof %} View Documents {% endblock pageof %}
+{% block linkPageof %} /p/document/ {% endblock linkPageof %}
+
+{% block content %}
+
+
+
+
+<section>
+    <!-- Hidden Inputs -->
+    <div class="hidden">
+        <input id="indexDocumentsCreateUrl" value="https://hms.infyom.com/documents">
+        <input id="indexDocumentsUrl" value="https://hms.infyom.com/documents">
+        <input id="indexDefaultDocumentImageUrl" value="https://hms.infyom.com/assets/img/default_image.jpg">
+        <input id="indexDownloadDocumentUrl" value="https://hms.infyom.com/document-download">
+        <input id="indexPatientUrl" value="https://hms.infyom.com/patients">
+        <input id="Documents" value="Document">
+    </div>
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <!-- Header Section -->
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
+            <div class="mb-4 sm:mb-0">
+                <h1 class="text-3xl font-bold text-gray-800">Document Management</h1>
+                <p class="text-gray-600 mt-1">Add, Organize & access Your documents here..</p>
+            </div>
+            <div>
+                <button id="addDocumentBtn"
+                    class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-md flex items-center">
+                    <svg id='Add_Circle_24' viewBox='0 0 24 24' fill="currentColor" class="w-6 h-6 mr-2"
+                        xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                        <g transform="matrix(0.83 0 0 0.83 12 12)">
+                            <path
+                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                transform=" translate(-12, -12)"
+                                d="M 12 24 C 18.627416997969522 24 24 18.627416997969522 24 12 C 24 5.372583002030478 18.627416997969522 0 12 0 C 5.372583002030479 0 0 5.372583002030478 0 11.999999999999998 C 0 18.627416997969522 5.372583002030479 24 12 24 Z M 6 11 L 10.75 11 C 10.8880711874577 11 11 10.8880711874577 11 10.75 L 11 6 C 11 5.447715250169207 11.447715250169207 5 12 5 C 12.552284749830793 5 13 5.447715250169207 13 6 L 13 10.75 C 13 10.8880711874577 13.1119288125423 11 13.25 11 L 18 11 C 18.552284749830793 11 19 11.447715250169207 19 12 C 19 12.552284749830793 18.552284749830793 13 18 13 L 13.25 13 C 13.1119288125423 13 13 13.1119288125423 13 13.25 L 13 18 C 13 18.552284749830793 12.552284749830793 19 12 19 C 11.447715250169207 19 11 18.552284749830793 11 18 L 11 13.25 C 11 13.1119288125423 10.8880711874577 13 10.75 13 L 6 13 C 5.447715250169207 13 5 12.552284749830793 5 12 C 5 11.447715250169207 5.447715250169207 11 6 11 Z"
+                                stroke-linecap="round" />
+                        </g>
+                    </svg>
+
+                    New Document
+                </button>
+            </div>
+        </div>
+
+
+
+        <!-- Search and Filters Section -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8 fade-in">
+            <div class="flex flex-col lg:flex-row gap-4">
+                <div class="w-full lg:w-1/3">
+                    <div class="relative">
+                        <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                            viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <input id="searchInput"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            type="search" placeholder="Search documents..." aria-label="Search">
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/3">
+                    <select id="documentTypeFilter"
+                        class="w-full py-3 pl-4 pr-8 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">All Document Types</option>
+                        <option value="MRI">MRI</option>
+                        <option value="PRESCRIPTION">Prescription</option>
+                        <option value="LAB_REPORT">Lab Report</option>
+                        <option value="X_RAY">X-Ray</option>
+                        <option value="OTHER_REPORT">Other Report</option>
+                    </select>
+                </div>
+            
+            </div>
+        </div>
+
+        <!-- View Selector -->
+        <div class="flex justify-end mb-4 fade-in">
+            <div class="bg-white rounded-lg shadow-sm inline-flex">
+                <button id="gridViewBtn" class="px-4 py-2 rounded-l-lg bg-blue-600 text-white">
+                    <svg class="w-4 h-4" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                        xmlns:xlink='http://www.w3.org/1999/xlink' fill=" currentColor">
+                        <g transform="matrix(1.11 0 0 1.11 12 12)">
+                            <path
+                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                transform=" translate(-12, -12)"
+                                d="M 5 3 C 3.897 3 3 3.897 3 5 L 3 9 C 3 10.103 3.897 11 5 11 L 9 11 C 10.103 11 11 10.103 11 9 L 11 5 C 11 3.897 10.103 3 9 3 L 5 3 z M 15 3 C 13.897 3 13 3.897 13 5 L 13 9 C 13 10.103 13.897 11 15 11 L 19 11 C 20.103 11 21 10.103 21 9 L 21 5 C 21 3.897 20.103 3 19 3 L 15 3 z M 5 13 C 3.897 13 3 13.897 3 15 L 3 19 C 3 20.103 3.897 21 5 21 L 9 21 C 10.103 21 11 20.103 11 19 L 11 15 C 11 13.897 10.103 13 9 13 L 5 13 z M 15 13 C 13.897 13 13 13.897 13 15 L 13 19 C 13 20.103 13.897 21 15 21 L 19 21 C 20.103 21 21 20.103 21 19 L 21 15 C 21 13.897 20.103 13 19 13 L 15 13 z"
+                                stroke-linecap="round" />
+                        </g>
+                    </svg>
+                </button>
+                <button id="listViewBtn" class="px-4 py-2 rounded-r-lg  text-gray-600 ">
+                    <svg id='Features_List_24' class="w-4 h-4" viewBox='0 0 24 24' fill=" currentColor"
+                        xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                        <g transform="matrix(1 0 0 1 12 12)">
+                            <path
+                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                transform=" translate(-12, -12)"
+                                d="M 4.5 3.7265625 L 3.7929688 5.2988281 L 2 5.4628906 L 3.3320312 6.578125 L 2.9570312 8.2734375 L 4.5 7.3632812 L 6.0820312 8.2734375 L 5.625 6.578125 L 7 5.4628906 L 5.2070312 5.296875 L 4.5 3.7265625 z M 10 5 L 10 7 L 22 7 L 22 5 L 10 5 z M 4.5 9.7265625 L 3.7929688 11.298828 L 2 11.462891 L 3.3320312 12.578125 L 2.9570312 14.273438 L 4.5 13.363281 L 6.0820312 14.273438 L 5.625 12.578125 L 7 11.462891 L 5.2070312 11.296875 L 4.5 9.7265625 z M 10 11 L 10 13 L 22 13 L 22 11 L 10 11 z M 4.5 15.726562 L 3.7929688 17.298828 L 2 17.462891 L 3.3320312 18.578125 L 2.9570312 20.273438 L 4.5 19.363281 L 6.0820312 20.273438 L 5.625 18.578125 L 7 17.462891 L 5.2070312 17.296875 L 4.5 15.726562 z M 10 17 L 10 19 L 22 19 L 22 17 L 10 17 z"
+                                stroke-linecap="round" />
+                        </g>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Documents Grid View -->
+        <div id="gridView" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8 fade-in">
+
+            {% for doc in documents %}
+                <div class="document-card bg-white rounded-xl shadow-md overflow-hidden">
+                    <!--- Document Image or Icon -->
+                    <div class="h-48 {% get_doc_type_color doc.doc_type 'bg' %} flex items-center justify-center">
+                            {% if doc.is_image %}
+                                <img src="{{ doc.file.url }}" alt="{{ doc.nick_name }}" class="w-fit h-full object-contain">
+                            {% elif  doc.is_pdf %}
+                                <svg class="text-xl {% get_doc_type_color doc.doc_type 'text' %} w-24 h-24 " viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' >
+                                <g transform="matrix(1 0 0 1 12 12)" >
+                                    <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: currentcolor; fill-rule: nonzero; opacity: 1;" transform=" translate(-11, -12)" d="M 6 2 C 4.9057453 2 4 2.9057453 4 4 L 4 9 C 2.895 9 2 9.895 2 11 L 2 16 C 2 17.105 2.895 18 4 18 L 4 20 C 4 21.094255 4.9057453 22 6 22 L 18 22 C 19.094255 22 20 21.094255 20 20 L 20 7 L 15 2 L 6 2 z M 6 4 L 14 4 L 14 8 L 18 8 L 18 9 L 6 9 L 6 4 z M 4 11 L 5.5 11 C 6.328 11 7 11.672 7 12.5 C 7 13.328 6.328 14 5.5 14 L 5 14 L 5 16 L 4 16 L 4 11 z M 13 11 L 16 11 L 16 12 L 14 12 L 14 13 L 15.599609 13 L 15.599609 14 L 14 14 L 14 16 L 13 16 L 13 11 z M 8 11.023438 L 9.6289062 11.023438 C 11.210906 11.023438 12 11.974906 12 13.128906 L 12 13.900391 C 12 15.068391 11.209234 16 9.6152344 16 L 8 16 L 8 11.023438 z M 5 12 L 5 13 L 5.5 13 C 5.776 13 6 12.776 6 12.5 C 6 12.224 5.776 12 5.5 12 L 5 12 z M 9 12.023438 L 9 15 L 9.6152344 15 C 10.247234 15 11 14.808391 11 13.900391 L 11 13.128906 C 11 12.214906 10.254906 12.023438 9.6289062 12.023438 L 9 12.023438 z M 6 18 L 18 18 L 18 20 L 6 20 L 6 18 z" stroke-linecap="round" />
+                                </g>
+                                </svg>
+
+                            {% else %}
+                                <svg class="text-xl {% get_doc_type_color doc.doc_type 'text' %} w-24 h-24 " viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' >
+                                    <g transform="matrix(0.77 0 0 0.77 12 12)" >
+                                        <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: currentcolor; fill-rule: nonzero; opacity: 1;" transform=" translate(-15, -15)" d="M 24.707 8.793 L 18.207 2.2929999999999993 C 18.019 2.105 17.765 2 17.5 2 L 7 2 C 5.895 2 5 2.895 5 4 L 5 26 C 5 27.105 5.895 28 7 28 L 23 28 C 24.105 28 25 27.105 25 26 L 25 9.5 C 25 9.235 24.895 8.981 24.707 8.793 z M 18 21 L 10 21 C 9.448 21 9 20.552 9 20 C 9 19.448 9.448 19 10 19 L 18 19 C 18.552 19 19 19.448 19 20 C 19 20.552 18.552 21 18 21 z M 20 17 L 10 17 C 9.448 17 9 16.552 9 16 C 9 15.448 9.448 15 10 15 L 20 15 C 20.552 15 21 15.448 21 16 C 21 16.552 20.552 17 20 17 z M 18 10 C 17.448 10 17 9.552 17 9 L 17 3.904 L 23.096 10 L 18 10 z" stroke-linecap="round" />
+                                    </g>
+                                </svg>
+                                
+                            {% endif %}
+                    </div>
+
+                    <div class="p-4">
+                        <!-- Nick Name & Doc type-->
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="font-semibold text-gray-800 
+                            truncate"> {{ doc.nick_name|slice:":30" }}{% if doc.nick_name|length > 30 %}…{% endif %}
+                                </h3>
+                            <span class=" {% get_doc_type_color doc.doc_type 'both' %}
+                            text-xs px-2 py-1 rounded-full">{{ doc.doc_type }}</span>
+                        </div>
+
+                        <!-- Notes -->
+                        <div class=" mb-3" >
+                            <p class="text-xs text-gray-500">Notes: 
+                                <span class="notes_ text-gray-600" >
+                                    {{doc.notes| default:"No Note Added"}}
+                                </span>
+                            </p>
+                        </div>
+
+                        <!--Footer: Calender, view, edit, delete-->
+                        <div class="border-t pt-3 flex justify-between">
+
+
+                            <span class="text-xs text-gray-500">
+                                <svg id='Calendar_24' class="w-4 h-4 mr-2" fill="currentColor" viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
+
+
+                                    <g transform="matrix(1 0 0 1 12 12)">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-12, -11)"
+                                            d="M 6 1 L 6 3 L 5 3 C 3.9 3 3 3.9 3 5 L 3 19 C 3 20.1 3.9 21 5 21 L 19 21 C 20.1 21 21 20.1 21 19 L 21 5 C 21 3.9 20.1 3 19 3 L 18 3 L 18 1 L 16 1 L 16 3 L 8 3 L 8 1 L 6 1 z M 5 8 L 19 8 L 19 19 L 5 19 L 5 8 z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+                                {{ doc.created_at|date:"M d, Y" }}
+                            </span>
+
+                            <!--View Delete-->
+                            <div class="flex space-x-2">
+                                <a href="{{ doc.file.url }}" target='_blank' class="text-blue-500 hover:text-blue-700" title="View">
+                                    
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 83.78" style="enable-background:new 0 0 122.88 83.78" xml:space="preserve" class="w-5 h-5" fill="currentColor">
+                                            <g>
+                                                <path d="M95.73,10.81c10.53,7.09,19.6,17.37,26.48,29.86l0.67,1.22l-0.67,1.21c-6.88,12.49-15.96,22.77-26.48,29.86 C85.46,79.88,73.8,83.78,61.44,83.78c-12.36,0-24.02-3.9-34.28-10.81C16.62,65.87,7.55,55.59,0.67,43.1L0,41.89l0.67-1.22 c6.88-12.49,15.95-22.77,26.48-29.86C37.42,3.9,49.08,0,61.44,0C73.8,0,85.45,3.9,95.73,10.81L95.73,10.81z M60.79,22.17l4.08,0.39 c-1.45,2.18-2.31,4.82-2.31,7.67c0,7.48,5.86,13.54,13.1,13.54c2.32,0,4.5-0.62,6.39-1.72c0.03,0.47,0.05,0.94,0.05,1.42 c0,11.77-9.54,21.31-21.31,21.31c-11.77,0-21.31-9.54-21.31-21.31C39.48,31.71,49.02,22.17,60.79,22.17L60.79,22.17L60.79,22.17z M109,41.89c-5.5-9.66-12.61-17.6-20.79-23.11c-8.05-5.42-17.15-8.48-26.77-8.48c-9.61,0-18.71,3.06-26.76,8.48 c-8.18,5.51-15.29,13.45-20.8,23.11c5.5,9.66,12.62,17.6,20.8,23.1c8.05,5.42,17.15,8.48,26.76,8.48c9.62,0,18.71-3.06,26.77-8.48 C96.39,59.49,103.5,51.55,109,41.89L109,41.89z"/>
+                                            </g>
+                                    </svg>
+                                </a>
+                                <!-- 
+                                    <a href="#" class="text-blue-500 hover:text-blue-700" title="Edit">
+                                        <svg id='Edit_Folder_24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                                            class="w-6 h-6" fill="currentColor" xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                                            <g transform="matrix(0.91 0 0 0.91 12 12)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-13, -14)"
+                                                    d="M 4 4 C 2.9 4 2 4.9 2 6 L 2 18 C 2 19.1 2.9 20 4 20 L 14.171875 20 L 22 12.171875 L 22 8 C 22 6.9 21.1 6 20 6 L 12.828125 6 C 12.298125 6 11.789062 5.7890625 11.414062 5.4140625 L 10.585938 4.5859375 C 10.210938 4.2109375 9.701875 4 9.171875 4 L 4 4 z M 22.207031 15 C 22.079156 15 21.951016 15.048984 21.853516 15.146484 L 20.853516 16.146484 L 22.853516 18.146484 L 23.853516 17.146484 C 24.048516 16.951484 24.048516 16.634453 23.853516 16.439453 L 22.560547 15.146484 C 22.462547 15.048984 22.334906 15 22.207031 15 z M 20.146484 16.853516 L 15.146484 21.853516 C 15.053484 21.947516 15 22.074031 15 22.207031 L 15 23.5 C 15 23.776 15.224 24 15.5 24 L 16.792969 24 C 16.925969 24 17.053484 23.946516 17.146484 23.853516 L 22.146484 18.853516 L 20.146484 16.853516 z"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                        </svg>
+                                    </a> 
+                                    -->
+                                <form method="POST" action="{% url 'patient:deleteDocument' doc.id %}" onsubmit="return confirm('Are you sure you want to delete this document?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-red-500 hover:text-red-700" title="Delete">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox='0 0 24 24'
+                                                                        xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                                                        <g transform="matrix(1 0 0 1 12 12)">
+                                                                            <g transform="matrix(1 0 0 1 0 0)">
+                                                                                <path
+                                                                                    style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                                                    transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z"
+                                                                                    stroke-linecap="round" />
+                                                                            </g>
+                                                                            <g transform="matrix(1 0 0 1 0 -5)">
+                                                                                <line
+                                                                                    style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                                                    x1="-8" y1="0" x2="8" y2="0" />
+                                                                            </g>
+                                                                            <g transform="matrix(1 0 0 1 -2 2)">
+                                                                                <line
+                                                                                    style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                                                    x1="0" y1="-3" x2="0" y2="3" />
+                                                                            </g>
+                                                                            <g transform="matrix(1 0 0 1 2 2)">
+                                                                                <line
+                                                                                    style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                                                    x1="0" y1="-3" x2="0" y2="3" />
+                                                                            </g>
+                                                                            <g transform="matrix(1 0 0 1 0 2)">
+                                                                                <path
+                                                                                    style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                                                    transform=" translate(-12, -14)"
+                                                                                    d="M 5 7 L 6 19 C 6 20.104569499661586 6.8954305003384135 21 8 21 L 16 21 C 17.104569499661586 21 18 20.104569499661586 18 19 L 19 7"
+                                                                                    stroke-linecap="round" />
+                                                                            </g>
+                                                                            <g transform="matrix(1 0 0 1 0 -7)">
+                                                                                <path
+                                                                                    style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                                                    transform=" translate(-12, -5)"
+                                                                                    d="M 9 7 L 9 4 C 9 3.4477152501692068 9.447715250169207 3 10 3 L 14 3 C 14.552284749830793 3 15 3.4477152501692063 15 4 L 15 7"
+                                                                                    stroke-linecap="round" />
+                                                                            </g>
+                                                                        </g>
+                                                                    </svg>
+                                    </button>
+                                </form>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="col-span-full text-gray-500">No documents uploaded yet.</p>
+            {% endfor %}
+      
+        </div>
+
+        <!-- Documents List View (Hidden by default) -->
+        <div id="listView" class="hidden bg-white rounded-xl shadow-md overflow-hidden mb-8 fade-in">
+            <div class="overflow-x-auto">
+                <table class="w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                File Name</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Notes</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Date Added</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        {% for doc in documents %}
+                        <tr class="hover:bg-gray-50 transition duration-150">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <svg class=" {% get_doc_type_color doc.doc_type 'text' %}  mr-3 w-6 h-6 " viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' >
+                                        <g transform="matrix(0.77 0 0 0.77 12 12)" >
+                                            <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: currentcolor; fill-rule: nonzero; opacity: 1;" transform=" translate(-15, -15)" d="M 24.707 8.793 L 18.207 2.2929999999999993 C 18.019 2.105 17.765 2 17.5 2 L 7 2 C 5.895 2 5 2.895 5 4 L 5 26 C 5 27.105 5.895 28 7 28 L 23 28 C 24.105 28 25 27.105 25 26 L 25 9.5 C 25 9.235 24.895 8.981 24.707 8.793 z M 18 21 L 10 21 C 9.448 21 9 20.552 9 20 C 9 19.448 9.448 19 10 19 L 18 19 C 18.552 19 19 19.448 19 20 C 19 20.552 18.552 21 18 21 z M 20 17 L 10 17 C 9.448 17 9 16.552 9 16 C 9 15.448 9.448 15 10 15 L 20 15 C 20.552 15 21 15.448 21 16 C 21 16.552 20.552 17 20 17 z M 18 10 C 17.448 10 17 9.552 17 9 L 17 3.904 L 23.096 10 L 18 10 z" stroke-linecap="round" />
+                                        </g>
+                                    </svg>
+                                    <span class='nick_name_list'>{{ doc.nick_name }}</span>
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full ml-4 category_list_">{{ doc.doc_type }}</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="notes_list text-xs" >
+                                    {{doc.notes| default:"No Note Added"}}
+                                </span>
+                            </p>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ doc.created_at|date:"M d, Y" }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex space-x-3">
+                                    <a href="{{ doc.file.url }}" target='_blank' class="text-blue-500 hover:text-blue-700" title="View">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 83.78" style="enable-background:new 0 0 122.88 83.78" xml:space="preserve" class="w-5 h-5" fill="currentColor">
+                                            <g>
+                                                <path d="M95.73,10.81c10.53,7.09,19.6,17.37,26.48,29.86l0.67,1.22l-0.67,1.21c-6.88,12.49-15.96,22.77-26.48,29.86 C85.46,79.88,73.8,83.78,61.44,83.78c-12.36,0-24.02-3.9-34.28-10.81C16.62,65.87,7.55,55.59,0.67,43.1L0,41.89l0.67-1.22 c6.88-12.49,15.95-22.77,26.48-29.86C37.42,3.9,49.08,0,61.44,0C73.8,0,85.45,3.9,95.73,10.81L95.73,10.81z M60.79,22.17l4.08,0.39 c-1.45,2.18-2.31,4.82-2.31,7.67c0,7.48,5.86,13.54,13.1,13.54c2.32,0,4.5-0.62,6.39-1.72c0.03,0.47,0.05,0.94,0.05,1.42 c0,11.77-9.54,21.31-21.31,21.31c-11.77,0-21.31-9.54-21.31-21.31C39.48,31.71,49.02,22.17,60.79,22.17L60.79,22.17L60.79,22.17z M109,41.89c-5.5-9.66-12.61-17.6-20.79-23.11c-8.05-5.42-17.15-8.48-26.77-8.48c-9.61,0-18.71,3.06-26.76,8.48 c-8.18,5.51-15.29,13.45-20.8,23.11c5.5,9.66,12.62,17.6,20.8,23.1c8.05,5.42,17.15,8.48,26.76,8.48c9.62,0,18.71-3.06,26.77-8.48 C96.39,59.49,103.5,51.55,109,41.89L109,41.89z"/>
+                                            </g>
+                                        </svg>
+                                    </a>
+                                   
+                                    <form method="POST" action="{% url 'patient:deleteDocument' doc.id %}" onsubmit="return confirm('Are you sure you want to delete this document?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="text-red-500 hover:text-red-700" title="Delete">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox='0 0 24 24'
+                                                                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                                                            <g transform="matrix(1 0 0 1 12 12)">
+                                                                                <g transform="matrix(1 0 0 1 0 0)">
+                                                                                    <path
+                                                                                        style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                                                        transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z"
+                                                                                        stroke-linecap="round" />
+                                                                                </g>
+                                                                                <g transform="matrix(1 0 0 1 0 -5)">
+                                                                                    <line
+                                                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                                                        x1="-8" y1="0" x2="8" y2="0" />
+                                                                                </g>
+                                                                                <g transform="matrix(1 0 0 1 -2 2)">
+                                                                                    <line
+                                                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                                                        x1="0" y1="-3" x2="0" y2="3" />
+                                                                                </g>
+                                                                                <g transform="matrix(1 0 0 1 2 2)">
+                                                                                    <line
+                                                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                                                        x1="0" y1="-3" x2="0" y2="3" />
+                                                                                </g>
+                                                                                <g transform="matrix(1 0 0 1 0 2)">
+                                                                                    <path
+                                                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                                                        transform=" translate(-12, -14)"
+                                                                                        d="M 5 7 L 6 19 C 6 20.104569499661586 6.8954305003384135 21 8 21 L 16 21 C 17.104569499661586 21 18 20.104569499661586 18 19 L 19 7"
+                                                                                        stroke-linecap="round" />
+                                                                                </g>
+                                                                                <g transform="matrix(1 0 0 1 0 -7)">
+                                                                                    <path
+                                                                                        style="stroke: #ef4444 ; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                                                        transform=" translate(-12, -5)"
+                                                                                        d="M 9 7 L 9 4 C 9 3.4477152501692068 9.447715250169207 3 10 3 L 14 3 C 14.552284749830793 3 15 3.4477152501692063 15 4 L 15 7"
+                                                                                        stroke-linecap="round" />
+                                                                                </g>
+                                                                            </g>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                            <p class="col-span-full text-gray-500">No documents uploaded yet.</p>
+                        {% endfor %}
+                     
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <!-- Add Document Modal -->
+    <div id="addDocumentModal" class="modal fixed inset-0
+             bg-gray-800/80 backdrop-blur-sm hidden z-40 flex 
+             items-center justify-center transition-all duration-100 ease-in-out">
+        <div class="modal-content bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl mx-4 transform
+             transition-transform duration-100 scale-95 top-2 md:top-4 relative" id="modalInner">
+            <!-- Header -->
+            <div class="flex justify-between items-center p-6 border-b dark:border-gray-700">
+                <h3 class="text-2xl font-bold text-gray-800 dark:text-white">New Document</h3>
+                <button id="closeModalBtn"
+                    class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="p-4">
+                <form id="addDocumentForm" class="space-y-4" action="{% url 'patient:ViewDocument' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Nick Name Field -->
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nick Name
+                                <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <input
+                                    class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white pl-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-3 transition-colors"
+                                    required placeholder="Enter document title" name="nick_name" type="text">
+                            </div>
+                        </div>
+
+                        <!-- Document Type -->
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Document Type
+                                <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                                        <path fill-rule="evenodd"
+                                            d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <select
+                                    class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white pl-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-3 appearance-none transition-colors"
+                                    required name="doc_type">
+                                    <option value=''>Select Document Type</option>
+                                    <option value="MRI">MRI</option>
+                                    <option value="PRESCRIPTION">Prescription</option>
+                                    <option value="LAB_REPORT">Lab Report</option>
+                                    <option value="X_RAY">X-Ray</option>
+                                    <option value="OTHER_REPORT">Other Report</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- File Upload Area - Takes full width -->
+                        <div class="col-span-1 md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Attachment
+                                <span class="text-red-500">*</span></label>
+                            <div class="mt-1 flex flex-col">
+                                <div class="w-full h-40 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-gray-700/30 mb-3 transition-all hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/10 group cursor-pointer"
+                                    id="dropZone">
+                                    <div class="text-center p-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="mx-auto h-12 w-12 text-gray-400 group-hover:text-blue-500 transition-colors duration-300"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                        </svg>
+                                        <p
+                                            class="mt-2 text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-300">
+                                            Drag and drop your file here or</p>
+                                        <button type="button" id="browseFilesBtn"
+                                            class="mt-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors duration-300">Browse
+                                            files</button>
+                                        <input type="file" class="hidden" id="fileInput" name="document_file" />
+                                    </div>
+                                </div>
+                                <!-- Selected File Preview -->
+                                <div id="selectedFile"
+                                    class="hidden animate-fadeIn flex items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-3"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="text-sm text-gray-800 dark:text-gray-200 flex-grow font-medium"
+                                        id="fileName"></span>
+                                    <button type="button" id="removeFileBtn"
+                                        class="text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors p-1 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                            fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Notes For remembering about file-->
+                         <div class="col-span-1 md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Notes</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: currentcolor; fill-rule: nonzero; opacity: 1;" transform=" translate(-25, -25)" d="M 44 4 L 6 4 C 4.907 4 4 4.907 4 6 L 4 44 C 4 45.093 4.907 46 6 46 L 44 46 C 45.093 46 46 45.093 46 44 L 46 6 C 46 4.907 45.093 4 44 4 z M 25.977 27 L 46 27 L 26 46 L 25.977 27 z" stroke-linecap="round" />
+                                        </g>
+                                    </svg>
+                                </div>
+                                <input
+                                    class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white pl-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-3 transition-colors"
+                                     placeholder="Enter Your Notes For this File" name="notes" type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-end pt-4">
+                        <button type="submit"
+                            class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 flex items-center shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Save Document
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- Add initialization script -->
+
+{% endblock content %}
+
+
+{% block scripts %}
+
+<!-- script of view document page, search -->
+<script>
+
+    // Search and filter functionality
+    function filterDocuments() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const selectedCategory = document.getElementById('documentTypeFilter').value;
+
+        // Get all document cards and rows
+        const gridCards = document.querySelectorAll('#gridView .document-card');
+        const listRows = document.querySelectorAll('#listView tbody tr');
+
+        // Filter grid view
+        gridCards.forEach(card => {
+
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const notes = card.querySelector('.notes_').textContent.toLowerCase();
+
+            const category = card.querySelector('span.rounded-full').textContent;
+
+            const matchesSearch = title.includes(searchTerm) || notes.includes(searchTerm);
+            const matchesCategory = selectedCategory === '' || category === selectedCategory;
+
+            card.style.display = matchesSearch && matchesCategory ? 'block' : 'none';
+        });
+
+        // Filter list view
+        listRows.forEach(row => {
+            const title = row.querySelector('.nick_name_list').textContent.toLowerCase();
+            const notes_list = row.querySelector('.notes_list').textContent.toLowerCase();
+
+            const category = row.querySelector('.category_list_').textContent;
+
+            const matchesSearch = title.includes(searchTerm) || notes_list.includes(searchTerm);
+            
+            const matchesCategory = selectedCategory === '' || category === selectedCategory;
+            console.log(selectedCategory, category)
+            row.style.display = matchesSearch && matchesCategory ? 'table-row' : 'none';
+        });
+    }
+
+    // Add event listeners for search and filter
+    document.getElementById('searchInput').addEventListener('input', filterDocuments);
+    document.getElementById('documentTypeFilter').addEventListener('change', filterDocuments);
+
+
+
+    // View toggle functionality
+    document.getElementById('gridViewBtn').addEventListener('click', function () {
+        document.getElementById('gridView').classList.remove('hidden');
+        document.getElementById('listView').classList.add('hidden');
+        this.classList.add('bg-blue-600', 'text-white');
+        document.getElementById('listViewBtn').classList.remove('bg-blue-600', 'text-white');
+    });
+
+    document.getElementById('listViewBtn').addEventListener('click', function () {
+        document.getElementById('listView').classList.remove('hidden');
+        document.getElementById('gridView').classList.add('hidden');
+        this.classList.remove('bg-white');
+        this.classList.add('bg-blue-600', 'text-white');
+        document.getElementById('gridViewBtn').classList.remove('bg-blue-600', 'text-white');
+    });
+
+
+</script>
+
+
+
+<!-- script of add documnet model popup -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('addDocumentModal');
+        const modalInner = document.getElementById('modalInner');
+        const closeBtn = document.getElementById('closeModalBtn');
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const selectedFile = document.getElementById('selectedFile');
+        const removeFileBtn = document.getElementById('removeFileBtn');
+        const fileName = document.getElementById('fileName');
+
+        // Function to open modal with animation
+        function openDocumentModal() {
+            modal.classList.remove('hidden');
+        };
+
+        // open if hash in url has #add_new
+        if (window.location.hash === '#add_new'){
+            openDocumentModal()
+        }
+
+        // Open modal when clicking the button
+        document.getElementById('addDocumentBtn').addEventListener('click', openDocumentModal);
+
+        // Function to close modal with animation
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+
+        // Close modal when clicking the close button
+        closeBtn.addEventListener('click', closeModal);
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // ---------------------------------------------------------------
+
+        const ALLOWED_FILE_TYPES = [
+            'application/pdf',
+            'image/jpeg',
+            'image/png',
+            'image/jpg',
+            'application/msword', // .doc
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // .docx
+        ];
+
+        const MAX_FILE_SIZE_MB = 5; // Max size in MB
+
+        // File handling functions
+        dropZone.addEventListener('click', function () {
+            fileInput.click();
+        });
+
+        modal.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            dropZone.classList.remove('border-gray-300', 'bg-gray-50');
+            dropZone.classList.add('border-blue-500', 'bg-blue-50', );
+        });
+
+        modal.addEventListener('dragleave', function () {
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50', );
+            dropZone.classList.add('border-gray-300', 'bg-gray-50');
+        });
+
+        modal.addEventListener('drop', function (e) {
+            e.preventDefault();
+             dropZone.classList.remove('border-blue-500', 'bg-blue-50', );
+            dropZone.classList.add('border-gray-300', 'bg-gray-50');
+
+            if (e.dataTransfer.files.length) {
+                validateAndHandleFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', function () {
+            if (fileInput.files.length) {
+                validateAndHandleFile(fileInput.files[0]);
+            }
+        });
+
+        function validateAndHandleFile(file) {
+            const isValidType = ALLOWED_FILE_TYPES.includes(file.type);
+            const isValidSize = file.size <= MAX_FILE_SIZE_MB * 1024 * 1024;
+
+            if (!isValidType) {
+                showNotification({
+                    color: "bg-red-500",
+                    title: "Invalid file type. ",
+                    message: "Please upload only PDF, DOC, DOCX, JPG, JPEG, or PNG files."
+                });
+                fileInput.value = '';
+                return;
+            }
+
+            if (!isValidSize) {
+                  showNotification({
+                    color: "bg-red-500",
+                    title: "File is too large..",
+                    message: `Maximum allowed size is ${MAX_FILE_SIZE_MB}  MB.`
+                });
+                fileInput.value = '';
+                return;
+            }
+
+            handleFile(file); // proceed if valid
+        }
+
+        function handleFile(file) {
+            fileName.textContent = file.name;
+            selectedFile.classList.remove('hidden');
+            dropZone.classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-900/10');
+        }
+
+        removeFileBtn.addEventListener('click', function () {
+            selectedFile.classList.add('hidden');
+            fileInput.value = '';
+            dropZone.classList.remove('border-green-500', 'bg-green-50', 'dark:bg-green-900/10');
+        });
+
+       
+    });
+</script>
+
+
+<script>
+
+    dashboard_nav_all = document.querySelectorAll('.documnet-nav a');
+    console.log(dashboard_nav_all);
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
+
+{% endblock scripts %}

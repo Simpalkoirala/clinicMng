@@ -1,0 +1,981 @@
+{% extends "pages/patient/P_base.html" %}
+{% load static %}
+
+{% block titles %}Book Appoinments || Nepal's Care {% endblock titles %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock styles %}
+
+{% block pageof %} Book Appoinments {% endblock pageof %}
+{% block linkPageof %} /p/book-appoinment/ {% endblock linkPageof %}
+
+{% block content %}
+
+
+
+<div class="container max-w-6xl px-4 py-8 mx-auto">
+
+    <div class="mb-8">
+        <div class="flex justify-between mb-4 flex-wrap md:flex-nowrap gap-4">
+            <h2 class="text-xl lg:text-2xl font-semibold">Book an Appointment</h2>
+            <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                <div id="step-1-indicator"
+                    class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white  cursor-pointer">
+                    1
+                </div>
+                <div id="step-1-2-line" class="w-8 h-1 bg-muted"></div>
+                <div id="step-2-indicator"
+                    class="flex items-center justify-center w-8 h-8 rounded-full bg-muted cursor-pointer">
+                    2
+                </div>
+                <div id="step-2-3-line" class="w-8 h-1 bg-muted"></div>
+                <div id="step-3-indicator"
+                    class="flex items-center justify-center w-8 h-8 rounded-full bg-muted cursor-pointer">
+                    3
+                </div>
+                <div id="step-3-4-line" class="w-8 h-1 bg-muted"></div>
+                <div id="step-4-indicator"
+                    class="flex items-center justify-center w-8 h-8 rounded-full bg-muted cursor-pointer">
+                    4
+                </div>
+            </div>
+        </div>
+
+        <div class="border-none shadow-lg rounded-lg bg-white">
+            <div class="p-6">
+                <!-- Step 1: Select a Doctor -->
+                <div id="step-1" class="space-y-6">
+                    <div>
+                        <h3 class="mb-4 text-xl font-medium">Select a Doctor</h3>
+                        <div class="mb-4">
+                            <div class="w-full overflow-x-auto whitespace-nowrap px-1 py-1 rounded-lg bg-muted">
+                                <div class="inline-flex gap-2" id="doc-category">
+                                <!-- Doctor Category Tabs button will be added here dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single grid for all doctor cards -->
+                        <div id="doctor-grid" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            <!-- All doctor cards will be inserted here dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Select Date & Appointment Type -->
+                <div id="step-2" class="space-y-6 hidden">
+                    <div>
+                        <h4 class="mb-4 text-base font-bold"> <span id="sel-doc-name" class="font-serif"></span>
+                            ----- <span id="sel-doc-specialty" class="font-mono text-blue-800 underline"></span>
+                        </h4>
+                        <h3 class="mb-4 text-xl font-medium">Select Date & Appointment Type</h3>
+                        <div class="grid gap-6 md:grid-cols-2">
+                            <div>
+                                <p class=" font-medium">Choose a date</p>
+                                <div id="calendar" class="calendar-container border hidden">
+                                    <!-- Calendar will be inserted here dynamically -->
+                                </div>
+                            </div>
+                            <div>
+                                <p class="mb-2 font-medium">Appointment type</p>
+                                <div id="appointment-types" class="space-y-4">
+                                    <label for='general_consultation' class="flex items-start p-4 border rounded-lg cursor-pointer">
+                                        <input type="radio" id="general_consultation" name="appointmentType" class="mt-1"
+                                            value="general_consultation" checked />
+                                        <div class="ml-3">
+                                            <p for="" class="font-medium cursor-pointer">General
+                                                Consultation</p>
+                                            <p class="text-sm text-muted-foreground">Regular checkup or general
+                                                health concerns</p>
+                                        </div>
+                                    </label>
+                                    <label for='follow_up_visit' class="flex items-start p-4 border rounded-lg cursor-pointer">
+                                        <input type="radio" id="follow_up_visit" name="appointmentType" class="mt-1"
+                                            value="follow_up_visit" />
+                                        <div class="ml-3">
+                                            <p class="font-medium ">Follow-up
+                                                Visit</p>
+                                            <p class="text-sm text-muted-foreground">Follow-up on previous treatment
+                                                or consultation</p>
+                                        </div>
+                                    </label>
+                                    <label for="offline_consultation" class="flex items-start p-4 border rounded-lg cursor-pointer">
+                                        <input type="radio" id="offline_consultation" name="appointmentType" class="mt-1"
+                                            value="offline_consultation" />
+                                        <div class="ml-3">
+                                            <p class="font-medium">Specialist
+                                                Consultation</p>
+                                            <p class="text-sm text-muted-foreground">Specialized treatment for
+                                                specific conditions</p>
+                                        </div>
+                                    </label>
+                                    <label for='online_consultation' class="flex items-start p-4 border rounded-lg cursor-pointer">
+                                        <input type="radio" id="online_consultation" name="appointmentType" class="mt-1"
+                                            value="online_consultation" />
+                                        <div class="ml-3">
+                                            <p  class="font-medium cursor-pointer">Online
+                                                Consultation</p>
+                                            <p class="text-sm text-muted-foreground">Virtual appointment via video
+                                                call</p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Select Time Slot -->
+                <div id="step-3" class="space-y-6 hidden">
+                    <div>
+                        <h3 class="mb-4 text-xl font-medium">Select Time Slot</h3>
+                        <p class="mb-4 text-muted-foreground" id="selected-date-display">
+                            Available time slots for the selected date
+                        </p>
+                        <div id="time-slots-container" class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                            <!-- Time slots will be inserted here dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Patient Information -->
+                <div id="step-4" class="space-y-6 hidden">
+                    <div class="space-y-2 md:col-span-2">
+                        <label for="reason"
+                            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Describe
+                            the Reason here</label>
+                        <textarea id="reason"
+                            class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            placeholder="Briefly describe your symptoms or reason for the appointment"
+                            rows="4"></textarea>
+                    </div>
+
+                    <div class="mt-1 flex flex-col space-y-2">
+                        <label  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                            Or   You can upload Files like (txt, audio, video) to describe...
+                        </label>
+                        <div class="w-full h-32 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-gray-700/30 mb-3 transition-all hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/10 group cursor-pointer" 
+                            id="dropZone">
+                            <div class="text-center p-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400 group-hover:text-blue-500 transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                                <p class="mt-2 text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-300">
+                                    Drag and drop your file here or</p>
+                                <button type="button" id="browseFilesBtn" class="mt-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors duration-300">Browse
+                                    files</button>
+                                <input type="file" class="hidden" id="fileInput" name="document_file">
+                            </div>
+                        </div>
+                        <!-- Selected File Preview -->
+                        <div id="selectedFile" class="hidden animate-fadeIn flex items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-3" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-sm text-gray-800 dark:text-gray-200 flex-grow font-medium" id="fileName"></span>
+                            <button type="button" id="removeFileBtn" class="text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors p-1 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="booking-summary" class="p-4 mt-6 border rounded-lg bg-muted/30">
+                        <h4 class="mb-3 text-lg font-medium">Booking Summary</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="mt-0.5 text-primary">
+                                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <div>
+                                    <p class="font-medium">Doctor</p>
+                                    <p class="text-sm text-muted-foreground" id="summary-doctor-name">Not selected
+                                    </p>
+                                    <p class="text-sm text-muted-foreground" id="summary-appointment-type"></p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="mt-0.5 text-primary">
+                                    <path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path>
+                                    <path d="M16 2v4"></path>
+                                    <path d="M8 2v4"></path>
+                                    <path d="M3 10h7"></path>
+                                    <path d="M17.5 17.5 16 16.25V14"></path>
+                                    <circle cx="16" cy="16" r="6"></circle>
+                                </svg>
+                                <div>
+                                    <p class="font-medium">Date & Time</p>
+                                    <p class="text-sm text-muted-foreground" id="summary-date">Not selected</p>
+                                    <p class="text-sm text-muted-foreground" id="summary-time">Not selected</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="mt-0.5 text-primary">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <div>
+                                    <p class="font-medium">Duration</p>
+                                    <p class="text-sm text-muted-foreground">60 minutes</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-3 mt-3 border-t">
+                            <div class="flex justify-between">
+                                <p class="font-medium">Consultation Fee</p>
+                                <p class="font-medium" >Rs. <span id='summary-doctor-fee'>0</span> </p>
+                            </div>
+                            <p class="mt-1 text-xs text-muted-foreground">
+                                Insurance coverage may apply based on your provider
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between mt-8">
+                    <button id="back-button"
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 hidden">
+                        Back
+                    </button>
+                    <div></div>
+                    <button id="next-button"
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                        Continue
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Dialog -->
+    <div id="confirmation-dialog" class="fixed inset-0 z-50 hidden bg-black/50 flex items-center justify-center">
+        <div class="bg-white rounded-lg max-w-md w-full mx-4 p-6">
+            <div class="text-center">
+                <h3 class="text-lg font-semibold">Last Click to Book</h3>
+                <p class="mt-2 text-muted-foreground" id="confirmation-message">
+                </p>
+                
+                <button id="confirm-no-button" onclick="document.getElementById('confirmation-dialog').classList.add('hidden')"
+                    class="mt-4 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-red-500 text-primary-foreground hover:bg-red-600 h-10 px-4 py-2">
+                    Cancel
+                </button>
+
+                <button id="confirm-ok-button"
+                    class="mt-4 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock content %}
+
+
+{% block scripts %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+<script>
+    const category = ["all", "general_medicine", "cardiology", "neurology", "psychiatry" ,"orthopedics" ,"pediatrics", "pediatrics", "dermatology", "radiology", ];
+
+    const doc = {{ doctor_data_json|safe }};
+
+
+
+
+    // Function to generate doctor card HTML
+    function generateDoctorCard(doctor) {
+        return `
+        <div class="doctor-card cursor-pointer transition-all hover:shadow-md border border-border rounded-lg"
+            data-id="${doctor.id}" 
+            data-name="${doctor.name}" 
+            data-specialty="${doctor.specialty}"
+            data-fees="${doctor.fees}">
+            <div class="p-4">
+                <div class="flex flex-col items-center text-center">
+                    <div class="relative w-24 h-24 mb-4 overflow-hidden rounded-full">
+                        <img src="${doctor.image}" alt="${doctor.name}" class="object-cover w-full h-full">
+                    </div>
+                    <h4 class="mb-1 text-lg font-semibold">${doctor.name}</h4>
+                    <span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 mb-2">
+                        ${doctor.specialty}
+                    </span>
+                    <div class="flex items-center mb-2 space-x-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#eab308" stroke="#eab308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        <span class="text-sm font-medium">${doctor.rating}</span>
+                        <span class="text-sm text-muted-foreground">(${doctor.reviews} reviews)</span>
+                    </div>
+                    <p class="text-sm text-muted-foreground">${doctor.experience} years experience</p>
+                    <div class="flex flex-wrap justify-center gap-1 mt-3">
+                        <span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
+                            Available Today
+                        </span>
+                        <span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
+                            Online Consult
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    }
+
+
+    // Function to populate all doctor cards into the single grid
+    function populateAllDoctorCards() {
+        const grid = document.getElementById('doctor-grid');
+        const doctorCardsHTML = doc.map(doctor => generateDoctorCard(doctor)).join('');
+        grid.innerHTML = doctorCardsHTML;
+    }
+
+    // Function to filter doctor cards based on the selected tab
+    function filterDoctorCards(tabId) {
+        const allCards = document.querySelectorAll('.doctor-card');
+        if (tabId === 'all') {
+            allCards.forEach(card => {
+                card.classList.remove('hidden');
+            });
+        } else {
+            const tabToSpecialty = {
+                'general_medicine': 'General Medicine',
+                'cardiology': 'Cardiology',
+                'dermatology': 'Dermatology',
+                'neurology': 'Neurology',
+                'orthopedics': 'Orthopedics',
+                'pediatrics': 'Pediatrics',
+                'psychiatry': 'Psychiatry',
+                'radiology': 'Radiology',
+                'surgery': 'Surgery',
+            };
+            const selectedSpecialty = tabToSpecialty[tabId];
+            let active_cards_count = 0
+            allCards.forEach(card => {
+                const cardSpecialty = card.getAttribute('data-specialty');
+                if (cardSpecialty === selectedSpecialty) {
+                    card.classList.remove('hidden');
+                    active_cards_count += 1
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+    }
+
+    // Function to initialize tab buttons
+    function init_tabButtons(category) {
+        const docCategory = document.getElementById('doc-category');
+        category.forEach(catg => {
+            if (catg === "all") {
+                docCategory.innerHTML += `
+                <button type="button" class="tab-button text-nowrap px-3 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm active hover:bg-slate-50"
+                data-tab="all">All Doctors</button>`;
+            } else {
+                docCategory.innerHTML += `
+                <button type="button" class="tab-button text-nowrap px-3 py-1.5 text-sm font-medium rounded-md hover:bg-slate-50"
+                data-tab="${catg}">${catg.charAt(0).toUpperCase() + catg.slice(1)}</button>`;
+            }
+        });
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // Create tab buttons
+        init_tabButtons(category);
+
+        // Populate all doctor cards into the single grid
+        populateAllDoctorCards();
+
+        // Initialize variables
+        let currentStep = 1;
+        let selectedDoctor = null;
+        let selectedDoctorName = '';
+        let selectedDoctorSpecialty = '';
+        let selectedDate = null;
+        let selectedTime = null;
+        let selectedTimeID = null;
+        let appointmentType = 'general_consultation'; // Default value
+        let calendarInstance = null;
+
+
+        // DOM elements
+        const nextButton = document.getElementById('next-button');
+        const backButton = document.getElementById('back-button');
+        const doctorCards = document.querySelectorAll('.doctor-card');
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const timeSlots = document.querySelectorAll('.time-slot');
+        const confirmationDialog = document.getElementById('confirmation-dialog');
+        const confirmOkButton = document.getElementById('confirm-ok-button');
+
+        const reason_text = document.getElementById('reason');
+
+
+        // Tab switching
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('active', 'bg-white', 'shadow-sm');
+                });
+                // Add active class to clicked button
+                button.classList.add('active', 'bg-white', 'shadow-sm');
+
+                // Filter doctor cards based on the selected tab
+                const tabId = button.getAttribute('data-tab');
+                filterDoctorCards(tabId);
+            });
+        });
+
+
+        // Doctor selection with event delegation
+        document.addEventListener('click', function (event) {
+            if (event.target.closest('.doctor-card')) {
+                const card = event.target.closest('.doctor-card');
+
+                // Remove selected styles from all cards
+                document.querySelectorAll('.doctor-card').forEach(c => {
+                    c.classList.remove('border-2', 'border-primary', 'shadow-md', 'bg-blue-50');
+                    c.classList.add('border', 'border-border');
+                });
+
+                // Add selected styles to clicked card
+                card.classList.remove('border', 'border-border');
+                card.classList.add('border-2', 'border-primary', 'shadow-md', 'bg-blue-50');
+
+                // Update selected doctor variables
+                selectedDoctor = card.getAttribute('data-id');
+                selectedDoctorName = card.getAttribute('data-name');
+                selectedDoctorSpecialty = card.getAttribute('data-specialty');
+                selectedDoctorFees = card.getAttribute('data-fees');
+
+
+                // data adding for appoinment date book section
+                document.getElementById('sel-doc-name').textContent = `For ${selectedDoctorName}`;
+                document.getElementById('sel-doc-name').setAttribute('data-id', selectedDoctor);
+                document.getElementById('sel-doc-specialty').textContent = `${selectedDoctorSpecialty}`;
+
+              
+                const doctorData = doc.find(doc => String(doc.id) === selectedDoctor);
+                if (doctorData) {
+                    initCalendar(doctorData.availability); // Update calendar
+                    readyToMove = updateNextButtonState();
+                    if (readyToMove) {
+                        goToStep(2); // Move to step 2 if doctor is selected
+                    }
+                }
+
+                // Update summary
+                document.getElementById('summary-doctor-name').textContent = selectedDoctorName;
+                document.getElementById('summary-doctor-fee').textContent = selectedDoctorFees;
+            }
+        });
+
+        // Ensure "All" tab is active by default
+        filterDoctorCards('all');
+
+
+        //  -------------- Step 2 - Select Date & Appointment Type ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+
+        // Initialize Flatpickr calendar dynamically based on doctor's availability
+        function initCalendar(doctorAvailability) {
+
+            if (calendarInstance) {
+                calendarInstance.destroy(); // Destroy existing instance to avoid duplicates
+            }
+            calendarInstance = flatpickr("#calendar", {
+                inline: true,
+                minDate: "today",
+                enable: Object.keys(doctorAvailability), // Get array of available dates from the freeSlot object
+                onChange: function (selectedDates, dateStr) {
+                    let selectedDate_temp = selectedDates[0];
+                    document.getElementById('selected-date-display').textContent =
+                        `Available time slots for ${selectedDate_temp.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+                    document.getElementById('summary-date').textContent =
+                        selectedDate_temp.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                    selectedDate = selectedDate_temp
+
+                    updateTimeSlots(doctorAvailability); // Update time slots based on selected date
+                    readyToMove = updateNextButtonState();
+                    if (readyToMove) {
+                        goToStep(3); // Move to step 2 if doctor is selected
+                    }
+                }
+            });
+        }
+
+        // Appointment type selection & update variable
+        document.querySelectorAll('input[name="appointmentType"]').forEach(input => {
+            input.addEventListener('change', () => {
+                if (!input.disabled) {
+                    appointmentType = input.value;
+                    const appointmentTypeText = {
+                        general_consultation: 'General Consultation',
+                        follow_up_visit: 'Follow-up Visit',
+                        offline_consultation: 'Offline Consultation',
+                        online_consultation: 'Online Consultation'
+                    }[appointmentType];
+
+                    document.getElementById('summary-appointment-type').textContent = appointmentTypeText;
+                    
+                    readyToMove= updateNextButtonState();
+                      if (readyToMove) {
+                        goToStep(3); // Move to step 2 if doctor is selected
+                    }
+                }
+            });
+        });
+
+        
+
+
+
+
+        // -----------Step 3 - Select Time Slot---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+        // Function to generate time slot buttons dynamically
+        function generateTimeSlots(availableTimesForDate) {
+            const timeSlotsContainer = document.getElementById('time-slots-container');
+            timeSlotsContainer.innerHTML = '';
+            availableTimesForDate_Key = Object.keys(availableTimesForDate)
+
+
+            availableTimesForDate_Key.forEach(time => {
+                const button = document.createElement('button');
+                button.className = 'time-slot w-full px-4 py-2 border border-border rounded-md font-medium hover:border-primary';
+                button.setAttribute('data-time', time);
+                button.setAttribute('data-time-id', availableTimesForDate[time][0]);
+                button.textContent = time;
+                timeSlotsContainer.appendChild(button);
+            });
+        }
+
+        // Function to update time slots based on selected doctor and date
+        function updateTimeSlots(doctorAvailability) {
+
+            if (selectedDoctor && selectedDate ) {
+
+                const doctorData = doc.find(doc => String(doc.id) === selectedDoctor);
+                datesel = selectedDate.toLocaleDateString('en-CA');
+
+                const availableTimesForDate = (doctorData.availability[datesel]);
+
+                if (availableTimesForDate ) {
+                    generateTimeSlots(availableTimesForDate);
+                } else {
+                    document.getElementById('time-slots-container').innerHTML =
+                        '<p class="text-muted-foreground">No available time slots for this date and appointment type.</p>';
+                }
+            }
+        }
+
+        // Event delegation for time slot selection
+        document.getElementById('time-slots-container').addEventListener('click', function (event) {
+            if (event.target.classList.contains('time-slot')) {
+                const timeSlots = document.querySelectorAll('.time-slot');
+                timeSlots.forEach(slot => {
+                    slot.classList.remove('bg-primary', 'text-primary-foreground');
+                });
+                event.target.classList.add('bg-primary', 'text-primary-foreground');
+                selectedTime = event.target.getAttribute('data-time');
+                selectedTimeID = event.target.getAttribute('data-time-id');
+
+
+                document.getElementById('summary-time').textContent = selectedTime;
+                readyToMove = updateNextButtonState();
+                if (readyToMove) {
+                        goToStep(4); // Move to step 2 if doctor is selected
+                    }
+            }
+        });
+
+
+       
+
+
+        // ------- Others -----------------
+
+
+
+
+        // Next button click
+        nextButton.addEventListener('click', () => {
+            if (currentStep < 4) {
+                // Hide current step
+                document.getElementById(`step-${currentStep}`).classList.add('hidden');
+
+                // Show next step
+                currentStep++;
+                document.getElementById(`step-${currentStep}`).classList.remove('hidden');
+
+                // Update progress indicators
+                updateProgressIndicators();
+
+                // Show back button
+                backButton.classList.remove('hidden');
+
+                // Update button text
+                if (currentStep === 4) {
+                    nextButton.textContent = 'Confirm Booking';
+                } else {
+                    nextButton.textContent = 'Continue';
+                }
+
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                // Show confirmation dialog
+                if (reason_text.value.trim() === '' && document.getElementById('fileInput').files.length === 0) {
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Please describe the reason.",
+                        message: "You must either describe your symptoms or upload a file."
+                    });
+                    return;
+                }
+                confirmationDialog.classList.remove('hidden');
+            }
+
+            updateNextButtonState();
+        });
+
+        // Back button click
+        backButton.addEventListener('click', () => {
+            if (currentStep > 1) {
+                // Hide current step
+                document.getElementById(`step-${currentStep}`).classList.add('hidden');
+
+                // Show previous step
+                currentStep--;
+                document.getElementById(`step-${currentStep}`).classList.remove('hidden');
+
+                // Update progress indicators
+                updateProgressIndicators();
+
+                // Hide back button if on first step
+                if (currentStep === 1) {
+                    backButton.classList.add('hidden');
+                }
+
+                // Update button text
+                nextButton.textContent = 'Continue';
+
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            updateNextButtonState();
+        });
+
+        
+
+        // Update progress indicators
+        function updateProgressIndicators() {
+            for (let i = 1; i <= 4; i++) {
+                const indicator = document.getElementById(`step-${i}-indicator`);
+                if (i <= currentStep) {
+                    indicator.classList.remove('bg-muted');
+                    indicator.classList.add('bg-primary', 'text-white');
+                } else {
+                    indicator.classList.remove('bg-primary', 'text-white');
+                    indicator.classList.add('bg-muted');
+                }
+
+                if (i < 4) {
+                    const line = document.getElementById(`step-${i}-${i + 1}-line`);
+                    if (i < currentStep) {
+                        line.classList.remove('bg-muted');
+                        line.classList.add('bg-primary');
+                    } else {
+                        line.classList.remove('bg-primary');
+                        line.classList.add('bg-muted');
+                    }
+                }
+            }
+        }
+
+        // Update next button state
+        function updateNextButtonState() {
+            let disabled = false;
+            switch (currentStep) {
+                case 1:
+                    disabled = !selectedDoctor;
+                    break;
+                case 2:
+                    disabled = !selectedDate;
+                    break;
+                case 3:
+                    disabled = !selectedTime;
+                    break;
+                case 4:
+                    // Form validation could be added here
+                    disabled = false;
+                    break;
+            }
+
+            if (disabled) {
+                nextButton.classList.add('opacity-50', 'cursor-not-allowed');
+                nextButton.disabled = true;
+            } else {
+                nextButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                nextButton.disabled = false;
+            }
+            return !disabled;
+        }
+
+        // go to specific step with number send among 1-4
+        function goToStep(step) {
+            if (step >= 1 && step <= 4) {
+                // Hide current step
+                document.getElementById(`step-${currentStep}`).classList.add('hidden');
+
+                // Show next step
+                currentStep = step;
+                document.getElementById(`step-${currentStep}`).classList.remove('hidden');
+
+                // Update progress indicators
+                updateProgressIndicators();
+
+                // Show back button
+                backButton.classList.remove('hidden');
+
+                // Update button text
+                if (currentStep === 4) {
+                    confirmation_message = document.getElementById('confirmation-message');
+                    confirmation_message.textContent =
+                        `Your appointment with ${selectedDoctorName} on ${selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} at ${selectedTime} will be booked.`;
+                    nextButton.textContent = 'Confirm Booking';
+                } else {
+                    nextButton.textContent = 'Continue';
+                }
+
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            updateNextButtonState();
+        }
+
+        document.getElementById('step-1-indicator').addEventListener('click', () => {
+            goToStep(1);
+        });
+
+        document.getElementById('step-2-indicator').addEventListener('click', () => {
+            goToStep(2);
+        });
+
+        document.getElementById('step-3-indicator').addEventListener('click', () => {
+            goToStep(3);
+        });
+
+        document.getElementById('step-4-indicator').addEventListener('click', () => {
+            goToStep(4);
+        });
+        // Initialize
+        updateNextButtonState();
+
+
+
+        // Confirmation dialog OK button
+        confirmOkButton.addEventListener('click', () => {
+            // create a form and do post request at postbooking
+            const formData = new FormData();
+            formData.append('doctor_id', selectedDoctor);
+            formData.append('appointment_type', appointmentType);
+            formData.append('appointment_date', `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`); // Format date to YYYY-MM-DD
+            formData.append('appointment_time', selectedTime);
+            formData.append('appointment_time_id', selectedTimeID);
+            formData.append('appointment_reason', reason_text.value.trim());
+            formData.append('appointment_file', fileInput.files[0]); // Append the file if selected    
+
+  fetch("{% url 'patient:BookAppoinment' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token for security
+                },
+                enctype: "multipart/form-data"
+
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showNotification({
+                            color: "bg-green-500",
+                            title: "Booking Confirmed",
+                            message: "Your appointment has been successfully booked."
+                        });
+                        redirect_url = data.redirect_url || "{% url 'patient:viewAppoinment' %}";
+                        window.location.href = redirect_url;
+                    } else {
+                        showNotification({
+                            color: "bg-red-500",
+                            title: "Booking Failed !!",
+                            message: data.message || "An error occurred while booking your appointment."
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Booking Failed",
+                        message: "An error occurred while booking your appointment."
+                    });
+                });
+          
+       
+       
+            });
+    });
+
+
+    //---------------------------------------------------------------------------------------------------------
+    // File upload functionality
+
+     const ALLOWED_FILE_TYPES = [
+            // Documents
+            'application/pdf',
+            'application/msword', // .doc
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+            'text/plain', // .txt
+
+             // Images
+            'image/jpeg',
+            'image/png',
+            'image/jpg',
+            'image/gif',
+            'image/webp',
+
+             // Audio
+            'audio/mpeg',  // .mp3
+            'audio/wav',
+            'audio/ogg',
+
+            // Video
+            'video/mp4',
+            'video/ogg',
+            'video/webm'
+        ];
+
+    const MAX_FILE_SIZE_MB =20 ; // 6 MB
+
+    const modal = document.getElementById('step-4');
+
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const selectedFile = document.getElementById('selectedFile');
+    const removeFileBtn = document.getElementById('removeFileBtn');
+    const fileName = document.getElementById('fileName');
+
+    // File handling functions
+    dropZone.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    modal.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dropZone.classList.remove('border-gray-300', 'bg-gray-50');
+        dropZone.classList.add('border-blue-500', 'bg-blue-50', );
+    });
+
+    modal.addEventListener('dragleave', function () {
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50', );
+        dropZone.classList.add('border-gray-300', 'bg-gray-50');
+    });
+
+    modal.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50', );
+        dropZone.classList.add('border-gray-300', 'bg-gray-50');
+
+        if (e.dataTransfer.files.length) {
+            validateAndHandleFile(e.dataTransfer.files[0]);
+        }
+    });
+
+
+    fileInput.addEventListener('change', function () {
+            if (fileInput.files.length) {
+                validateAndHandleFile(fileInput.files[0]);
+            }
+    });
+
+
+
+     function validateAndHandleFile(file) {
+            const isValidType = ALLOWED_FILE_TYPES.includes(file.type);
+            const isValidSize = file.size <= MAX_FILE_SIZE_MB * 1024 * 1024;
+
+            if (!isValidType) {
+                showNotification({
+                    color: "bg-red-500",
+                    title: "Invalid file type. ",
+                    message: "Please upload only PDF, DOC, DOCX, TXT, JPG, JPEG, PNG, GIF, audio (MP3, WAV, OGG), or video (MP4, WEBM, OGG) files."
+                });
+                fileInput.value = '';
+                return;
+            }
+
+            if (!isValidSize) {
+                  showNotification({
+                    color: "bg-red-500",
+                    title: "File is too large..",
+                    message: `Maximum allowed size is ${MAX_FILE_SIZE_MB}  MB.`
+                });
+                fileInput.value = '';
+                return;
+            }
+
+            handleFile(file); // proceed if valid
+        }
+
+        function handleFile(file) {
+            fileName.textContent = file.name;
+            selectedFile.classList.remove('hidden');
+            dropZone.classList.remove('border-gray-300', 'bg-gray-50');
+            dropZone.classList.add('border-green-500', 'bg-green-50');
+        }
+
+        removeFileBtn.addEventListener('click', function () {
+            selectedFile.classList.add('hidden');
+            fileInput.value = '';
+            dropZone.classList.remove('border-green-500', 'bg-green-50');
+            dropZone.classList.add('border-gray-300', 'bg-gray-50');
+
+        });
+    
+</script>
+
+
+
+<script>
+
+    dashboard_nav_all = document.querySelectorAll('.bookAppoinment-nav a');
+    console.log(dashboard_nav_all);
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
+
+{% endblock scripts %}

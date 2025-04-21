@@ -1,0 +1,191 @@
+<div data-state="inactive" data-orientation="horizontal" role="tabpanel" aria-labelledby="trigger-privacy"
+    id="content-privacy" tabindex="0"
+    class="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+    <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+        <div class="flex flex-col space-y-1.5 p-6">
+            <h3 class="text-2xl font-semibold leading-none tracking-tight">Privacy &amp; Security Settings</h3>
+            <p class="text-sm text-muted-foreground">Manage your password, notification preferences, and privacy
+                options.</p>
+        </div>
+        <div class="p-6 pt-0">
+            <div class="space-y-10">
+                <div>
+                    <h3 class="text-lg font-medium mb-6">Change Password</h3>
+                    <form class="space-y-6">
+                        <div class="space-y-2"><label
+                                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                for="«r1j»-form-item">Current Password</label><input
+                                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                placeholder="Enter current password" aria-describedby="«r1j»-form-item-description"
+                                aria-invalid="false" id="«r1j»-form-item" type="password" value=""
+                                name="currentPassword"></div>
+                        <div class="space-y-2"><label
+                                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                for="«r1k»-form-item">New Password</label><input
+                                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                placeholder="Enter new password" aria-describedby="«r1k»-form-item-description"
+                                aria-invalid="false" id="«r1k»-form-item" type="password" value="" name="newPassword">
+                            <p class="text-[0.8rem] text-muted-foreground" id="«r1k»-form-item-description">Password
+                                must be at least 8 characters long.</p>
+                        </div>
+                        <div class="space-y-2"><label
+                                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                for="«r1l»-form-item">Confirm New Password</label><input
+                                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                placeholder="Confirm new password" aria-describedby="«r1l»-form-item-description"
+                                aria-invalid="false" id="«r1l»-form-item" type="password" value=""
+                                name="confirmPassword"></div><button
+                            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                            type="submit">Update Password</button>
+                    </form>
+                </div>
+                <div data-orientation="horizontal" role="none" class="shrink-0 bg-border h-[1px] w-full"></div>
+                <div>
+                    <h3 class="text-lg font-medium mb-6">Privacy &amp; Security Settings</h3>
+                    <form class="space-y-8">
+                        <div class="space-y-4">
+                            <h4 class="text-md font-medium">Account Security</h4>
+                            <div class="space-y-2 flex flex-row items-center justify-between rounded-lg border p-4">
+                                <div class="space-y-0.5"><label
+                                        class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-base"
+                                        for="«r1m»-form-item">Two-Factor Authentication</label>
+                                    <p class="text-[0.8rem] text-muted-foreground" id="«r1m»-form-item-description">
+                                        Add
+                                        an extra layer of security to your account.</p>
+                                </div><button type="button" role="switch" aria-checked="false" data-state="unchecked"
+                                    value="on"
+                                    class="peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input"
+                                    aria-describedby="«r1m»-form-item-description" aria-invalid="false"
+                                    id="«r1m»-form-item"><span data-state="unchecked"
+                                        class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"></span></button><input
+                                    aria-hidden="true" tabindex="-1" type="checkbox" value="on"
+                                    style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 44px; height: 24px;">
+                            </div>
+                            <div class="space-y-2"><label
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    for="«r1n»-form-item">Session Timeout (minutes)</label><button type="button"
+                                    role="combobox" aria-controls="radix-«r1o»" aria-expanded="false"
+                                    aria-autocomplete="none" dir="ltr" data-state="closed"
+                                    class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;>span]:line-clamp-1"
+                                    aria-describedby="«r1n»-form-item-description" aria-invalid="false"
+                                    id="«r1n»-form-item"><span style="pointer-events: none;">30 minutes</span><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+                                        aria-hidden="true">
+                                        <path d="m6 9 6 6 6-6"></path>
+                                    </svg></button><select aria-hidden="true" tabindex="-1"
+                                    style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">
+                                    <option value="15">15 minutes</option>
+                                    <option value="30" selected="">30 minutes</option>
+                                    <option value="60">1 hour</option>
+                                    <option value="120">2 hours</option>
+                                </select>
+                                <p class="text-[0.8rem] text-muted-foreground" id="«r1n»-form-item-description">Your
+                                    account will be automatically logged out after this period of inactivity.</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <h4 class="text-md font-medium">Data Privacy</h4>
+                            <div class="space-y-2"><label
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    for="«r1p»-form-item">Profile Visibility</label><button type="button"
+                                    role="combobox" aria-controls="radix-«r1q»" aria-expanded="false"
+                                    aria-autocomplete="none" dir="ltr" data-state="closed"
+                                    class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;>span]:line-clamp-1"
+                                    aria-describedby="«r1p»-form-item-description" aria-invalid="false"
+                                    id="«r1p»-form-item"><span style="pointer-events: none;">Private (Only your
+                                        doctor
+                                        can see)</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-chevron-down h-4 w-4 opacity-50" aria-hidden="true">
+                                        <path d="m6 9 6 6 6-6"></path>
+                                    </svg></button><select aria-hidden="true" tabindex="-1"
+                                    style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">
+                                    <option value="private" selected="">Private (Only your doctor can see)</option>
+                                    <option value="limited">Limited (Clinic staff can see)</option>
+                                    <option value="public">Public (Other patients can see)</option>
+                                </select>
+                                <p class="text-[0.8rem] text-muted-foreground" id="«r1p»-form-item-description">
+                                    Control
+                                    who can see your profile information.</p>
+                            </div>
+                            <div class="space-y-2 flex flex-row items-center justify-between rounded-lg border p-4">
+                                <div class="space-y-0.5"><label
+                                        class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-base"
+                                        for="«r1r»-form-item">Data Sharing</label>
+                                    <p class="text-[0.8rem] text-muted-foreground" id="«r1r»-form-item-description">
+                                        Allow sharing of anonymized medical data with other healthcare providers.
+                                    </p>
+                                </div><button type="button" role="switch" aria-checked="false" data-state="unchecked"
+                                    value="on"
+                                    class="peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input"
+                                    aria-describedby="«r1r»-form-item-description" aria-invalid="false"
+                                    id="«r1r»-form-item"><span data-state="unchecked"
+                                        class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"></span></button><input
+                                    aria-hidden="true" tabindex="-1" type="checkbox" value="on"
+                                    style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 44px; height: 24px;">
+                            </div>
+                            <div class="space-y-2 flex flex-row items-center justify-between rounded-lg border p-4">
+                                <div class="space-y-0.5"><label
+                                        class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-base"
+                                        for="«r1s»-form-item">Research Participation</label>
+                                    <p class="text-[0.8rem] text-muted-foreground" id="«r1s»-form-item-description">
+                                        Allow your anonymized data to be used for medical research.</p>
+                                </div><button type="button" role="switch" aria-checked="false" data-state="unchecked"
+                                    value="on"
+                                    class="peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input"
+                                    aria-describedby="«r1s»-form-item-description" aria-invalid="false"
+                                    id="«r1s»-form-item"><span data-state="unchecked"
+                                        class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"></span></button><input
+                                    aria-hidden="true" tabindex="-1" type="checkbox" value="on"
+                                    style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 44px; height: 24px;">
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <h4 class="text-md font-medium">Communication</h4>
+                            <div class="space-y-2 flex flex-row items-center justify-between rounded-lg border p-4">
+                                <div class="space-y-0.5"><label
+                                        class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-base"
+                                        for="«r1t»-form-item">Marketing Emails</label>
+                                    <p class="text-[0.8rem] text-muted-foreground" id="«r1t»-form-item-description">
+                                        Receive emails about new services, health tips, and clinic updates.</p>
+                                </div><button type="button" role="switch" aria-checked="false" data-state="unchecked"
+                                    value="on"
+                                    class="peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input"
+                                    aria-describedby="«r1t»-form-item-description" aria-invalid="false"
+                                    id="«r1t»-form-item"><span data-state="unchecked"
+                                        class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"></span></button><input
+                                    aria-hidden="true" tabindex="-1" type="checkbox" value="on"
+                                    style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 44px; height: 24px;">
+                            </div>
+                        </div>
+                        <div class="w-full" data-orientation="vertical">
+                            <div data-state="closed" data-orientation="vertical" class="border-b">
+                                <h3 data-orientation="vertical" data-state="closed" class="flex"><button type="button"
+                                        aria-controls="radix-«r1i»" aria-expanded="false" data-state="closed"
+                                        data-orientation="vertical" id="radix-«r1h»"
+                                        class="flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&amp;[data-state=open]>svg]:rotate-180"
+                                        data-radix-collection-item="">Data Deletion<svg
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-chevron-down h-4 w-4 shrink-0 transition-transform duration-200">
+                                            <path d="m6 9 6 6 6-6"></path>
+                                        </svg></button></h3>
+                                <div data-state="closed" id="radix-«r1i»" hidden="" role="region"
+                                    aria-labelledby="radix-«r1h»" data-orientation="vertical"
+                                    class="overflow-hidden text-sm transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+                                    style="--radix-accordion-content-height: var(--radix-collapsible-content-height); --radix-accordion-content-width: var(--radix-collapsible-content-width);">
+                                </div>
+                            </div>
+                        </div><button
+                            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                            type="submit">Save Privacy Settings</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

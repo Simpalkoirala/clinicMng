@@ -1,0 +1,1090 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titles %}Doctor Portol || Nepal's Care{% endblock titles %}
+    </title>
+    <meta name="google-site-verification" content="r2c7M748axvrDabOkAYO4cTYho-D9-OruPGhVBC6TJE" />
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+    <!-- Fab icon -->
+    <link rel="icon" href="{% static 'icon-64.png' %}" type="image/png">
+    {% block styles %}
+
+
+    {% endblock styles %}
+</head>
+
+<body class="flex flex-col min-h-screen">
+
+
+    <!-- Notification Section -->
+    <div id="notifications-container" class="fixed right-0 top-5 z-50 flex flex-col space-y-2"></div>
+
+    <!-- Main Container -->
+    <div class="flex flex-row flex-1">
+        <!-- Sidebar -->
+        <div id="sidebarPanel"
+            class="w-64 fixed inset-y-0 z-50 lg:relative bg-white h-screen transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 ">
+            <div class="text-white flex-shrink-0 ">
+                <!-- Logo Section -->
+                <div class="flex flex-row justify-between items-center py-5 px-6 border-b border-gray-700">
+
+                    <a href="/" class="shortBarToggle">
+                        <img src="{% static 'icon-64.png' %}" alt="Logo" class="h-8 w-auto object-cover">
+                    </a>
+                    <button class=" p-0 ">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="29" height="28" fill="#6C757D"
+                            class=" hidden lg:block ShortBarTogglebtn" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z">
+                            </path>
+                        </svg>
+
+                        <svg id="Layer_1" data-name="Layer 1" width='24' height='24' xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 122.88 119.79" class="text-red-500 block lg:hidden sidebarToggle">
+                            <path fill="currentColor"
+                                d="M23.5,0H99.38a23.56,23.56,0,0,1,23.5,23.5V96.29a23.56,23.56,0,0,1-23.5,23.5H23.5a23.44,23.44,0,0,1-16.6-6.9l-.37-.4A23.43,23.43,0,0,1,0,96.29V23.5A23.56,23.56,0,0,1,23.5,0ZM41,49.35a7,7,0,0,1,9.89-9.89L61.44,50,72,39.46a7,7,0,1,1,9.89,9.9L71.33,59.9,81.87,70.43A7,7,0,0,1,72,80.33L61.44,69.79,50.9,80.33A7,7,0,0,1,41,70.43L51.55,59.89,41,49.35ZM99.38,12.52H23.5a11,11,0,0,0-11,11V96.29a10.92,10.92,0,0,0,3,7.49l.27.26a11,11,0,0,0,7.75,3.23H99.38a11,11,0,0,0,11-11V23.5a11,11,0,0,0-11-11Z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Search Form
+                <form class="flex relative py-3 mx-4 mt-1 shortBarToggle">
+                    <div class="relative w-full">
+                        <input
+                            class="w-full px-4 py-2 bg- border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            type="text" placeholder="Search" aria-label="Search" id="menuSearch">
+                        <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M13.77 12.6659L11.1264 10.0301C11.9794 8.94347 12.4422 7.60162 12.4404 6.22022C12.4404 4.98998 12.0756 3.78736 11.3921 2.76445C10.7087 1.74154 9.73719 0.944282 8.60059 0.473489C7.464 0.0026951 6.21332 -0.120486 5.00672 0.119523C3.80011 0.359531 2.69178 0.951949 1.82186 1.82186C0.951949 2.69178 0.359531 3.80011 0.119523 5.00672C-0.120486 6.21332 0.0026951 7.464 0.473489 8.60059C0.944282 9.73719 1.74154 10.7087 2.76445 11.3921C3.78736 12.0756 4.98998 12.4404 6.22022 12.4404C7.60162 12.4422 8.94347 11.9794 10.0301 11.1264L12.6659 13.77C12.7382 13.8429 12.8242 13.9007 12.9189 13.9402C13.0137 13.9797 13.1153 14 13.218 14C13.3206 14 13.4222 13.9797 13.517 13.9402C13.6117 13.9007 13.6977 13.8429 13.77 13.77C13.8429 13.6977 13.9007 13.6117 13.9402 13.517C13.9797 13.4222 14 13.3206 14 13.218C14 13.1153 13.9797 13.0137 13.9402 12.9189C13.9007 12.8242 13.8429 12.7382 13.77 12.6659ZM1.55506 6.22022C1.55506 5.29754 1.82866 4.39558 2.34128 3.62839C2.85389 2.86121 3.58249 2.26327 4.43494 1.91017C5.28739 1.55708 6.2254 1.46469 7.13035 1.6447C8.0353 1.8247 8.86655 2.26902 9.51899 2.92145C10.1714 3.57389 10.6157 4.40514 10.7957 5.31009C10.9757 6.21504 10.8834 7.15305 10.5303 8.0055C10.1772 8.85795 9.57923 9.58655 8.81205 10.0992C8.04486 10.6118 7.1429 10.8854 6.22022 10.8854C4.98294 10.8854 3.79634 10.3939 2.92145 9.51899C2.04656 8.6441 1.55506 7.4575 1.55506 6.22022Z"
+                                    fill="#6C757D"></path>
+                            </svg>
+                        </span>
+                    </div>
+                </form> -->
+
+                <!-- Menu List -->
+                <div class="overflow-y-auto h-full ">
+                    <ul class=" px-4 mt-3" id="menuList">
+
+                        <!-- Dashboard -->
+                        <li class="menuListItems dashboard-nav">
+                            <a href="{% url 'doctor:doctor_dashboard' %}"
+                                class=" flex items-center py-4 text-black hover:bg-blue-50 rounded px-2 no-underline  hover:border-l-4 border-blue-500 ">
+                                <span class="mr-3">
+
+
+                                    <svg id='Analytics_Pie_2_24' class="w-6 h-6" fill="currentColor" viewBox='0 0 24 24'
+                                        xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                        <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                            <g style="">
+                                                <g transform="matrix(1 0 0 1 6.25 -6.75)">
+                                                    <path
+                                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-18.25, -5.25)"
+                                                        d="M 23 10.5 C 23.2761423749154 10.5 23.5 10.276142374915397 23.5 10 C 23.5 4.477152501692066 19.022847498307932 0 13.5 0 C 13.223857625084603 0 13 0.22385762508460327 13 0.5 L 13 9.5 C 13 10.052284749830793 13.447715250169207 10.5 14 10.5 Z"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 6.62 4.03)">
+                                                    <path
+                                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-18.62, -16.03)"
+                                                        d="M 23.5 12 L 14 12 C 13.699684049286063 11.9692705306179 13.413498158830144 12.134532805388218 13.29 12.41 C 13.184571165743677 12.694283057465995 13.268536544888295 13.014151168493115 13.5 13.21 L 20.22 19.92 C 20.31167309002691 20.015141084450956 20.437881911241092 20.069230579257034 20.57 20.07 C 20.702603860411017 20.07161654755931 20.829719665190524 20.01713834551095 20.92 19.92 C 22.899093622086628 17.959059974023422 24.008648809831165 15.286040658093397 24 12.499999999999996 C 24 12.223857625084603 23.7761423749154 12 23.5 12 Z"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 -3.18 1.49)">
+                                                    <path
+                                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-8.82, -13.49)"
+                                                        d="M 10.59 24 C 13.346855097854172 23.99463419563929 15.986726840528299 22.885383859017693 17.92 20.92 C 18.01465632541155 20.826116700047223 18.067899162170836 20.69831876818528 18.067899162170836 20.565 C 18.067899162170836 20.43168123181472 18.01465632541155 20.30388329995278 17.92 20.21 L 11.21 13.490000000000002 C 11.093682998071081 13.350659278971543 11.020683279414456 13.180326602106087 11 13 L 11 3.49 C 11 3.2138576250846036 10.776142374915397 2.99 10.5 2.99 C 6.639204034532284 2.8388510648792624 3.0067838548440937 4.818258760877242 1.040924067832277 8.144515934544032 C -0.9249357191795404 11.47077310821082 -0.9072070411584008 15.607464646476348 1.0870907840389101 18.916749716090813 C 3.08138860923622 22.226034785705274 6.7306413955907285 24.174235311848783 10.590000000000003 23.990000000000002 Z"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </span>
+                                <span class="shortBarToggle">Dashboard</span>
+                            </a>
+                        </li>
+
+
+                        <!-- Edit Schedules  -->
+                        <li class="menuListItems edit_schedules-nav">
+                            <a href="{% url 'doctor:d_edit_schedules' %}"
+                                class=" flex items-center py-4 text-black hover:bg-blue-50 rounded px-2 no-underline  hover:border-l-4 border-blue-500 ">
+                                <span class="mr-3">
+
+                                    <svg id='Appointment_Scheduling_24' viewBox='0 0 24 24' class="w-6 h-6"
+                                        xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+
+                                        <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                            <path
+                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -13.5)"
+                                                d="M 12 3 C 10.067003375592222 3 8.5 4.567003375592223 8.5 6.5 C 8.5 8.432996624407778 10.067003375592222 10 12 10 C 13.932996624407778 10 15.5 8.432996624407778 15.5 6.5 C 15.5 4.567003375592223 13.932996624407778 3 12 3 z M 4.5 6 C 3.1192881254230165 6 2 7.119288125423017 2 8.5 C 2 9.880711874576983 3.1192881254230165 11 4.5 11 C 5.880711874576983 11 7 9.880711874576983 7 8.5 C 7 7.119288125423017 5.880711874576983 6 4.5 6 z M 12 12 C 9.664 12 5 13.172 5 15.5 L 5 19 L 12.091797 19 C 12.57237 21.827306 15.041286 24 18 24 C 21.3 24 24 21.3 24 18 C 24 14.7 21.3 12 18 12 C 17.095098 12 16.238168 12.207572 15.466797 12.570312 C 14.236368 12.197012 12.933023 12 12 12 z M 3.8984375 13.052734 C 2.3174375 13.296734 0 14.389078 0 15.705078 L 0 19 L 3 19 L 3 15.5 C 3 14.539 3.3454375 13.732734 3.8984375 13.052734 z M 18 14 C 20.2 14 22 15.8 22 18 C 22 20.2 20.2 22 18 22 C 15.8 22 14 20.2 14 18 C 14 15.8 15.8 14 18 14 z M 18.900391 15.199219 L 17.199219 18.099609 L 19.400391 20.300781 L 20.300781 19.300781 L 18.800781 17.900391 L 20 15.800781 L 18.900391 15.199219 z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                    </svg>
+
+                                </span>
+                                <span class="shortBarToggle">Edit Schedules</span>
+                            </a>
+                        </li>
+
+
+                        <!-- View Patients  -->
+                        <li class="menuListItems ViewPatients-nav">
+                            <a href="{% url 'doctor:ViewPatients_d' %}"
+                                class=" flex items-center py-4 text-black hover:bg-blue-50 rounded px-2 no-underline  hover:border-l-4 border-blue-500 ">
+                                <span class="mr-3">
+                                    <svg id='Medical_Room_Wait_24' class="w-6 h-6" viewBox='0 0 24 24'
+                                        xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                        <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                            <g style="">
+                                                <g transform="matrix(1 0 0 1 -1.47 -4.16)">
+                                                    <circle
+                                                        style="stroke: rgb(0,0,0); stroke-width: 1.5; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        cx="0" cy="0" r="3.179" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 -1.41 2.2)">
+                                                    <path
+                                                        style="stroke: rgb(0,0,0); stroke-width: 1.5; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-10.59, -14.2)"
+                                                        d="M 16.262 15.916 C 15.154150731309995 13.808217757685188 12.969192134867457 12.488251498448781 10.588000000000001 12.488251498448781 C 8.206807865132543 12.488251498448781 6.021849268690005 13.808217757685187 4.914 15.916"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 -1.47 -1.47)">
+                                                    <circle
+                                                        style="stroke: rgb(0,0,0); stroke-width: 1.5; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        cx="0" cy="0" r="9.783" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 8.35 8.35)">
+                                                    <line
+                                                        style="stroke: rgb(0,0,0); stroke-width: 1.5; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="2.9000000000000004" y1="2.9000000000000004"
+                                                        x2="-2.9000000000000004" y2="-2.9000000000000004" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 -1.41 4.67)">
+                                                    <line
+                                                        style="stroke: rgb(0,0,0); stroke-width: 1.5; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="0" y1="-0.5754999999999999" x2="0"
+                                                        y2="0.5754999999999999" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 -2.85 2.63)">
+                                                    <line
+                                                        style="stroke: rgb(0,0,0); stroke-width: 1.5; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="-1.4334999999999996" y1="-1.4665" x2="1.4334999999999996"
+                                                        y2="1.4665" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 0.02 2.63)">
+                                                    <line
+                                                        style="stroke: rgb(0,0,0); stroke-width: 1.5; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                                        x1="1.4335000000000004" y1="-1.4665" x2="-1.4335000000000004"
+                                                        y2="1.4665" />
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+
+                                </span>
+                                <span class="shortBarToggle">View Patients</span>
+                            </a>
+                        </li>
+
+
+                        <!-- Online Sessions -->
+                        <li class="menuListItems OnlineSession-nav">
+                            <a href="{% url 'doctor:OnlineSession' %}"
+                                class=" flex items-center py-4 text-black hover:bg-blue-50 rounded px-2 no-underline  hover:border-l-4 border-blue-500 ">
+                                <span class="mr-3">
+                                    <svg id='Medical_Room_Wait_24' class="w-6 h-6" viewBox='0 0 24 24'
+                                        xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                        <g transform="matrix(0.91 0 0 0.91 12 12)">
+                                            <path
+                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -12)"
+                                                d="M 3 5 C 1.897 5 1 5.897 1 7 L 1 17 C 1 18.103 1.897 19 3 19 L 16 19 C 17.103 19 18 18.103 18 17 L 18 14.080078 L 23 18.080078 L 23 5.9199219 L 18 9.9199219 L 18 7 C 18 5.897 17.103 5 16 5 L 3 5 z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                    </svg>
+
+                                </span>
+                                <span class="shortBarToggle">Online Sessions</span>
+                            </a>
+                        </li>
+
+                        <!-- Message -->
+                        <li class="menuListItems message-nav">
+                            <a href="{% url 'patient:p-message' %}"
+                                class=" flex items-center py-4 text-black hover:bg-blue-50 rounded px-2 no-underline  hover:border-l-4 border-blue-500 ">
+                                <span class="mr-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" viewBox="0 0 24 24">
+                                        <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                                    </svg>
+                                </span>
+                                <span class="shortBarToggle">Messages</span>
+                            </a>
+                        </li>
+
+
+
+                        <!-- Setting -->
+                        <li class="menuListItems dSetting-nav">
+                            <a href="{% url 'doctor:dSetting' %}"
+                                class=" flex items-center py-4 text-black hover:bg-blue-50 rounded px-2 no-underline  hover:border-l-4 border-blue-500 ">
+                                <span class="mr-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" viewBox="0 0 24 24">
+                                        <g transform="matrix(1 0 0 1 12 12)">
+                                            <path
+                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -12)"
+                                                d="M 9.6679688 2 L 9.1757812 4.5234375 C 8.3550224 4.8338012 7.5961042 5.2674041 6.9296875 5.8144531 L 4.5058594 4.9785156 L 2.1738281 9.0214844 L 4.1132812 10.707031 C 4.0445153 11.128986 4 11.558619 4 12 C 4 12.441381 4.0445153 12.871014 4.1132812 13.292969 L 2.1738281 14.978516 L 4.5058594 19.021484 L 6.9296875 18.185547 C 7.5961042 18.732596 8.3550224 19.166199 9.1757812 19.476562 L 9.6679688 22 L 14.332031 22 L 14.824219 19.476562 C 15.644978 19.166199 16.403896 18.732596 17.070312 18.185547 L 19.494141 19.021484 L 21.826172 14.978516 L 19.886719 13.292969 C 19.955485 12.871014 20 12.441381 20 12 C 20 11.558619 19.955485 11.128986 19.886719 10.707031 L 21.826172 9.0214844 L 19.494141 4.9785156 L 17.070312 5.8144531 C 16.403896 5.2674041 15.644978 4.8338012 14.824219 4.5234375 L 14.332031 2 L 9.6679688 2 z M 12 8 C 14.209 8 16 9.791 16 12 C 16 14.209 14.209 16 12 16 C 9.791 16 8 14.209 8 12 C 8 9.791 9.791 8 12 8 z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                    </svg>
+                                </span>
+                                <span class="shortBarToggle">Setting</span>
+                            </a>
+                        </li>
+
+
+                        <!-- profile  -->
+                        <li class="menuListItems profile-nav">
+                            <a href="{% url 'doctor:profile' %}"
+                                class=" flex items-center py-4 text-black hover:bg-blue-50 rounded px-2 no-underline  hover:border-l-4 border-blue-500 ">
+                                <span class="mr-3">
+
+                                    <svg class="h-6 w-6" fill="currentColor" stroke="currentColor" viewBox='0 0 24 24'
+                                        xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                        <g transform="matrix(0.78 0 0 0.78 12 12)">
+                                            <path
+                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12.5, -12.93)"
+                                                d="M 2.101563 23 C 2.101563 23 2.101563 21.5 2.101563 21.300781 C 2.101563 19.101563 5.398438 17.101563 9 16.398438 C 9 16.398438 10.101563 15.800781 9.800781 14.699219 C 8.699219 13.300781 8.398438 11.800781 8.398438 11.800781 C 8.199219 11.699219 7.898438 11.5 7.699219 11.300781 C 7.398438 10.898438 7 9.699219 7.101563 8.800781 C 7.199219 8 7.398438 8.300781 7.5 8.101563 C 6.699219 6.300781 7.101563 4 8 2.300781 C 9.898438 -1 13.898438 0 14.5 1.199219 C 18.300781 0.5 18.199219 6.5 17.601563 8 C 17.601563 8 17.898438 8.101563 17.898438 9.5 C 17.800781 11 16.601563 11.898438 16.601563 11.898438 C 16.601563 12.300781 16.101563 13.5 15.300781 14.601563 C 14.601563 16 16 16.300781 16 16.300781 C 19.601563 17 22.898438 19 22.898438 21.199219 C 22.898438 21.398438 22.898438 22.898438 22.898438 22.898438 C 22.898438 24.300781 17.5 25.800781 12.5 25.800781 C 7.601563 25.800781 2.101563 25.300781 2.101563 23 Z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                    </svg>
+                                </span>
+                                <span class="shortBarToggle">Profile</span>
+                            </a>
+                        </li>
+
+
+                        <!-- Prescriptions  -->
+                        <!-- <li class="menuListItems prescriptions-nav">
+                            <a href=""
+                                class=" flex items-center py-4 text-black hover:bg-blue-50 rounded px-2 no-underline  hover:border-l-4 border-blue-500 ">
+                                <span class="mr-3">
+
+                                    <svg id='Test_Results_24' class="h-6 w-6" viewBox='0 0 24 24'
+                                        xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                        <g transform="matrix(0.5 0 0 0.5 12 12)">
+                                            <path
+                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-24, -24)"
+                                                d="M 35.5 8 L 31.948999999999998 8 C 31.697 5.756 29.81 4 27.5 4 L 20.5 4 C 18.19 4 16.303 5.756 16.051000000000002 8 L 12.5 8 C 10.019 8 8 10.019 8 12.5 L 8 39.5 C 8 41.981 10.019 44 12.5 44 L 35.5 44 C 37.981 44 40 41.981 40 39.5 L 40 12.5 C 40 10.019 37.981 8 35.5 8 z M 25.5 35 L 15.5 35 C 14.672 35 14 34.328 14 33.5 C 14 32.672 14.672 32 15.5 32 L 25.5 32 C 26.328 32 27 32.672 27 33.5 C 27 34.328 26.328 35 25.5 35 z M 25.5 29 L 15.5 29 C 14.672 29 14 28.328 14 27.5 C 14 26.672 14.672 26 15.5 26 L 25.5 26 C 26.328 26 27 26.672 27 27.5 C 27 28.328 26.328 29 25.5 29 z M 25.5 23 L 15.5 23 C 14.672 23 14 22.328 14 21.5 C 14 20.672 14.672 20 15.5 20 L 25.5 20 C 26.328 20 27 20.672 27 21.5 C 27 22.328 26.328 23 25.5 23 z M 27.5 10 L 20.5 10 C 19.673 10 19 9.327 19 8.5 C 19 7.673 19.673 7 20.5 7 L 27.5 7 C 28.327 7 29 7.673 29 8.5 C 29 9.327 28.327 10 27.5 10 z M 32.5 35 L 30.5 35 C 29.672 35 29 34.328 29 33.5 C 29 32.672 29.672 32 30.5 32 L 32.5 32 C 33.328 32 34 32.672 34 33.5 C 34 34.328 33.328 35 32.5 35 z M 32.5 29 L 30.5 29 C 29.672 29 29 28.328 29 27.5 C 29 26.672 29.672 26 30.5 26 L 32.5 26 C 33.328 26 34 26.672 34 27.5 C 34 28.328 33.328 29 32.5 29 z M 32.5 23 L 30.5 23 C 29.672 23 29 22.328 29 21.5 C 29 20.672 29.672 20 30.5 20 L 32.5 20 C 33.328 20 34 20.672 34 21.5 C 34 22.328 33.328 23 32.5 23 z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                    </svg>
+
+
+                                </span>
+                                <span class="shortBarToggle">Prescriptions</span>
+                            </a>
+                        </li> -->
+
+
+
+                        <!-- Lab Report  -->
+                        <!-- <li class="menuListItems labReport-nav">
+                            <a href=""
+                                class=" flex items-center py-4 text-black hover:bg-blue-50 rounded px-2 no-underline  hover:border-l-4 border-blue-500 ">
+                                <span class="mr-3">
+
+                                    <svg class="h-6 w-6" fill="currentColor" stroke="currentColor" viewBox='0 0 24 24'
+                                        xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                        <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                            <g style="">
+                                                <g transform="matrix(1 0 0 1 -3 -3.25)">
+                                                    <path
+                                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-9, -8.75)"
+                                                        d="M 12 8 L 6 8 C 5.585786437626905 8 5.25 8.335786437626904 5.25 8.75 C 5.25 9.164213562373096 5.585786437626905 9.5 6 9.5 L 12 9.5 C 12.414213562373096 9.5 12.75 9.164213562373096 12.75 8.75 C 12.75 8.335786437626904 12.414213562373096 8 12 8 Z"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 -3 0.3)">
+                                                    <path
+                                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-9, -12.3)"
+                                                        d="M 12 11.55 L 6 11.55 C 5.585786437626905 11.55 5.25 11.885786437626905 5.25 12.3 C 5.25 12.714213562373097 5.585786437626905 13.05 6 13.05 L 12 13.05 C 12.414213562373096 13.05 12.75 12.714213562373097 12.75 12.3 C 12.75 11.885786437626905 12.414213562373096 11.55 12 11.55 Z"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 -4.25 3.85)">
+                                                    <path
+                                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-7.75, -15.85)"
+                                                        d="M 9.51 15.1 L 6 15.1 C 5.585786437626904 15.1 5.249999999999999 15.435786437626906 5.249999999999999 15.850000000000001 C 5.249999999999999 16.264213562373097 5.585786437626904 16.6 6 16.6 L 9.51 16.6 C 9.924213562373096 16.6 10.26 16.264213562373097 10.26 15.850000000000001 C 10.26 15.435786437626906 9.924213562373096 15.100000000000001 9.51 15.100000000000001 Z"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 -2 0)">
+                                                    <path
+                                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-10, -12)"
+                                                        d="M 8.58 21 L 3.5 21 C 3.2238576250846034 21 3 20.7761423749154 3 20.5 L 3 5.5 C 3 5.223857625084603 3.2238576250846034 5 3.5 5 L 16.5 5 C 16.7761423749154 5 17 5.223857625084603 17 5.5 L 17 6.66 L 18.87 6.66 C 19.269092937042497 6.677523470562369 19.65749970372167 6.7943892233684915 20 7 L 20 3.5 C 20 2.6715728752538097 19.32842712474619 2 18.5 2 L 13.5 2 C 13.414996425957586 1.995343330025426 13.337167560953473 1.9508696928802183 13.29 1.88 C 12.603028995607765 0.7157089217038677 11.35185164714019 0.0012109622604132841 10 0.0012109622604132841 C 8.64814835285981 0.0012109622604132841 7.396971004392233 0.7157089217038681 6.709999999999999 1.8800000000000008 C 6.662832439046525 1.9508696928802178 6.585003574042413 1.9953433300254253 6.5 2 L 1.5 2 C 0.6715728752538098 2 0 2.6715728752538097 0 3.5 L 0 22.5 C 0 23.32842712474619 0.6715728752538098 24 1.5 24 L 9.79 24 C 9.09579934634775 23.23305802237709 8.670945149874282 22.260457919706425 8.579999999999998 21.23 C 8.575013564480868 21.15341441335242 8.575013564480868 21.07658558664758 8.58 21 Z"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 5.1 4.15)">
+                                                    <path
+                                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                                        transform=" translate(-17.1, -16.15)"
+                                                        d="M 23.15 18.79 L 23.15 18.79 L 23.15 18.79 L 19.62 15 L 19.62 9.16 C 19.6146141876919 8.748037936375392 19.281962063624608 8.4153858123081 18.87 8.41 L 15.32 8.41 C 14.905786437626904 8.41 14.57 8.745786437626904 14.57 9.16 L 14.57 15 L 11 18.79 L 11 18.79 C 11 18.79 11 18.79 11 18.79 C 10.874356883931988 18.9444389586955 10.76069298028359 19.108248702188778 10.659999999999998 19.28 C 10.657343007869263 19.316618532981327 10.657343007869263 19.353381467018668 10.66 19.389999999999997 C 10.579046205659777 19.536717593917892 10.512084126280246 19.690730376490812 10.46 19.849999999999998 C 10.46615535446252 19.866098340838274 10.46615535446252 19.883901659161722 10.46 19.9 C 10.243568629497025 20.64200642059957 10.314989320607044 21.438347126476295 10.659999999999998 22.13 L 10.66 22.189999999999998 C 10.733802275758476 22.32905853118078 10.817343890563121 22.462725114868213 10.91 22.589999999999996 L 10.99 22.709999999999997 C 11.109806721320572 22.8498085913666 11.240191408633398 22.980193278679426 11.380000000000003 23.099999999999998 L 11.38 23.159999999999997 L 11.38 23.159999999999997 C 11.943106165348702 23.624481811450515 12.650047352546139 23.87898063884159 13.38 23.879999999999995 L 20.65 23.879999999999995 C 21.474008955414114 23.894782910062844 22.270994769115262 23.586040657908345 22.869999999999997 23.019999999999996 C 23.482322576947475 22.45693581142438 23.842658260125862 21.671404022095494 23.869999999999997 20.839999999999996 C 23.869999999999997 20.839999999999996 23.869999999999997 20.759999999999998 23.869999999999997 20.709999999999997 C 23.853958890349915 20.007007340671638 23.600155981054886 19.330199582551558 23.15 18.79 Z M 16.07 15.34 L 16.07 9.91 L 18.12 9.91 L 18.12 15.34 C 18.119423577897958 15.532221062496518 18.19076421181834 15.71770671068952 18.32 15.86 L 20.84 18.53 L 13.35 18.53 L 15.86 15.860000000000001 C 15.992045564102362 15.718695197432176 16.066886938872976 15.533373698000174 16.07 15.34 Z"
+                                                        stroke-linecap="round" />
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </span>
+                                <span class="shortBarToggle">Lab Report</span>
+                            </a>
+                        </li> -->
+
+
+
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Wrapper -->
+        <div class="flex flex-col flex-1 bg-slate-50 overflow-x-hidden">
+            <!-- Header -->
+            <header class="flex items-center justify-between px-4 py-2 bg-white shadow z-20">
+                <button class="block lg:hidden p-0  sidebarToggle">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96zM0 256C0 238.3 14.33 224 32 224H416C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H32C14.33 288 0 273.7 0 256zM416 448H32C14.33 448 0 433.7 0 416C0 398.3 14.33 384 32 384H416C433.7 384 448 398.3 448 416C448 433.7 433.7 448 416 448z">
+                        </path>
+                    </svg>
+                </button>
+                <nav class="hidden lg:flex space-x-6 bg-white py-4">
+                    <a href="{% block linkPageof %} {% endblock linkPageof %}" class="text-gray-600 hover:text-blue-500 
+                            no-underline">{% block pageof %} {% endblock pageof %}</a>
+                </nav>
+                <ul class="flex items-center space-x-4 ">
+                    <li>
+                        <a id="patientCardBtn" class="text-blue-500 text-2xl cursor-pointer">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 576 512"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M528 32h-480C21.49 32 0 53.49 0 80V96h576V80C576 53.49 554.5 32 528 32zM0 432C0 458.5 21.49 480 48 480h480c26.51 0 48-21.49 48-48V128H0V432zM368 192h128C504.8 192 512 199.2 512 208S504.8 224 496 224h-128C359.2 224 352 216.8 352 208S359.2 192 368 192zM368 256h128C504.8 256 512 263.2 512 272S504.8 288 496 288h-128C359.2 288 352 280.8 352 272S359.2 256 368 256zM368 320h128c8.836 0 16 7.164 16 16S504.8 352 496 352h-128c-8.836 0-16-7.164-16-16S359.2 320 368 320zM176 192c35.35 0 64 28.66 64 64s-28.65 64-64 64s-64-28.66-64-64S140.7 192 176 192zM112 352h128c26.51 0 48 21.49 48 48c0 8.836-7.164 16-16 16h-192C71.16 416 64 408.8 64 400C64 373.5 85.49 352 112 352z">
+                                </path>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="px-2 sm:px-3">
+                        <div class="group/notify flex items-center py-4 relative">
+                            <!-- Notification Button with Badge -->
+                            <button class="flex items-center relative" type="button" id="dropdownMenuButton1"
+                                data-dropdown-toggle="notificationDropdown">
+                                <!-- Bell Icon -->
+                                <svg class="text-primary w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 448 512">
+                                    <path fill="currentColor"
+                                        d="M256 32V51.2C329 66.03 384 130.6 384 208V226.8C384 273.9 401.3 319.2 432.5 354.4L439.9 362.7C448.3 372.2 450.4 385.6 445.2 397.1C440 408.6 428.6 416 416 416H32C19.4 416 7.971 408.6 2.809 397.1C-2.353 385.6-.2883 372.2 8.084 362.7L15.5 354.4C46.74 319.2 64 273.9 64 226.8V208C64 130.6 118.1 66.03 192 51.2V32C192 14.33 206.3 0 224 0C241.7 0 256 14.33 256 32H256zM224 512C207 512 190.7 505.3 178.7 493.3C166.7 481.3 160 464.1 160 448H288C288 464.1 281.3 481.3 269.3 493.3C257.3 505.3 240.1 512 224 512z">
+                                    </path>
+                                </svg>
+
+                                <!-- Notification Counter Badge -->
+                                <span
+                                    class="absolute -top-1 -right-2 flex items-center justify-center w-5 h-5 text-xs text-white bg-primary rounded-full"
+                                    id="header-notification-counter">12</span>
+                            </button>
+
+                            <!-- Dropdown Menu -->
+                            <div class="hidden group-hover/notify:block absolute -right-20 md:right-0 top-full -mt-3 z-10 w-80 bg-white rounded-lg shadow-lg border-[1px] border-green-950"
+                                id="notificationDropdown">
+                                <!-- Header -->
+                                <div class="border-b py-4 px-5">
+                                    <h3 class="text-gray-900 font-medium text-lg">Notifications</h3>
+                                </div>
+
+                                <!-- Notification List -->
+                                <div class="px-5 mt-3 overflow-y-auto max-h-96">
+
+                                    <script>
+                                        const Payment_SVG = `<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                                                                    viewBox="0 0 576 512">
+                                                                    <path fill="currentColor"
+                                                                        d="M48.66 79.13C128.4 100.9 208.2 80.59 288 60.25C375 38.08 462 15.9 549 48.38C565.9 54.69 576 71.62 576 89.66V399.5C576 423.4 550.4 439.2 527.3 432.9C447.6 411.1 367.8 431.4 288 451.7C200.1 473.9 113.1 496.1 26.97 463.6C10.06 457.3 0 440.4 0 422.3V112.5C0 88.59 25.61 72.83 48.66 79.13L48.66 79.13zM287.1 352C332.2 352 368 309 368 255.1C368 202.1 332.2 159.1 287.1 159.1C243.8 159.1 207.1 202.1 207.1 255.1C207.1 309 243.8 352 287.1 352zM63.1 416H127.1C127.1 380.7 99.35 352 63.1 352V416zM63.1 143.1V207.1C99.35 207.1 127.1 179.3 127.1 143.1H63.1zM512 303.1C476.7 303.1 448 332.7 448 368H512V303.1zM448 95.1C448 131.3 476.7 159.1 512 159.1V95.1H448z">
+                                                                    </path>
+                                                                </svg>`
+
+                                        const AppoinmentBooked_SVG = `<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                                                                    viewBox="0 0 448 512">
+                                                                    <path fill="currentColor"
+                                                                        d="M160 32V64H288V32C288 14.33 302.3 0 320 0C337.7 0 352 14.33 352 32V64H400C426.5 64 448 85.49 448 112V160H0V112C0 85.49 21.49 64 48 64H96V32C96 14.33 110.3 0 128 0C145.7 0 160 14.33 160 32zM0 192H448V464C448 490.5 426.5 512 400 512H48C21.49 512 0 490.5 0 464V192zM64 304C64 312.8 71.16 320 80 320H112C120.8 320 128 312.8 128 304V272C128 263.2 120.8 256 112 256H80C71.16 256 64 263.2 64 272V304zM192 304C192 312.8 199.2 320 208 320H240C248.8 320 256 312.8 256 304V272C256 263.2 248.8 256 240 256H208C199.2 256 192 263.2 192 272V304zM336 256C327.2 256 320 263.2 320 272V304C320 312.8 327.2 320 336 320H368C376.8 320 384 312.8 384 304V272C384 263.2 376.8 256 368 256H336zM64 432C64 440.8 71.16 448 80 448H112C120.8 448 128 440.8 128 432V400C128 391.2 120.8 384 112 384H80C71.16 384 64 391.2 64 400V432zM208 384C199.2 384 192 391.2 192 400V432C192 440.8 199.2 448 208 448H240C248.8 448 256 440.8 256 432V400C256 391.2 248.8 384 240 384H208zM320 432C320 440.8 327.2 448 336 448H368C376.8 448 384 440.8 384 432V400C384 391.2 376.8 384 368 384H336C327.2 384 320 391.2 320 400V432z">
+                                                                    </path>
+                                                                </svg>`
+
+                                        const AppoinmentCanceled_SVG = `<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                                                                    viewBox="0 0 448 512">
+                                                                    <path fill="currentColor"
+                                                                        d="M160 32V64H288V32C288 14.33 302.3 0 320 0C337.7 0 352 14.33 352 32V64H400C426.5 64 448 85.49 448 112V160H0V112C0 85.49 21.49 64 48 64H96V32C96 14.33 110.3 0 128 0C145.7 0 160 14.33 160 32zM0 192H448V464C448 490.5 426.5 512 400 512H48C21.49 512 0 490.5 0 464V192zM304.1 304.1C314.3 295.6 314.3 280.4 304.1 271C295.6 261.7 280.4 261.7 271 271L224 318.1L176.1 271C167.6 261.7 152.4 261.7 143 271C133.7 280.4 133.7 295.6 143 304.1L190.1 352L143 399C133.7 408.4 133.7 423.6 143 432.1C152.4 442.3 167.6 442.3 176.1 432.1L224 385.9L271 432.1C280.4 442.3 295.6 442.3 304.1 432.1C314.3 423.6 314.3 408.4 304.1 399L257.9 352L304.1 304.1z">
+                                                                    </path>
+                                                                </svg>`
+
+                                        const Done_SVG = `  <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                                                                    viewBox="0 0 448 512">
+                                                                    <path fill="currentColor"
+                                                                        d="M384 32C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96C0 60.65 28.65 32 64 32H384zM339.8 211.8C350.7 200.9 350.7 183.1 339.8 172.2C328.9 161.3 311.1 161.3 300.2 172.2L192 280.4L147.8 236.2C136.9 225.3 119.1 225.3 108.2 236.2C97.27 247.1 97.27 264.9 108.2 275.8L172.2 339.8C183.1 350.7 200.9 350.7 211.8 339.8L339.8 211.8z">
+                                                                    </path>
+                                                                </svg>`
+
+
+                                        const Cancel_SVG = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+                                                                    viewBox="0 0 122.88 122.88" class="w-6 h-6">
+                                                                    <path fill="#ef4444"
+                                                                        d="M7.513,0h107.854c2.066,0,3.944,0.845,5.306,2.207s2.207,3.24,2.207,5.306v107.854c0,2.066-0.846,3.944-2.207,5.306 c-1.361,1.362-3.239,2.207-5.306,2.207H7.513c-2.066,0-3.945-0.845-5.306-2.207C0.845,119.312,0,117.434,0,115.367V7.513 c0-2.066,0.845-3.945,2.207-5.306S5.447,0,7.513,0L7.513,0z M35.018,38.629c0,0.924,0.353,1.848,1.057,2.553l20.164,20.164 l0.094,0.095l-0.094,0.094L36.075,81.698c-0.705,0.705-1.057,1.629-1.057,2.553s0.353,1.849,1.057,2.554 c0.705,0.704,1.629,1.058,2.553,1.058c0.924,0,1.848-0.354,2.553-1.058l20.163-20.164l0.095-0.095l0.095,0.095l20.163,20.164 c0.705,0.704,1.63,1.058,2.554,1.058s1.849-0.354,2.553-1.058c0.705-0.705,1.058-1.63,1.058-2.554s-0.353-1.848-1.058-2.553 L66.641,61.534l-0.095-0.094l0.095-0.095l20.163-20.164c0.705-0.705,1.058-1.629,1.058-2.553s-0.353-1.848-1.058-2.553 c-0.704-0.705-1.629-1.057-2.553-1.057s-1.849,0.353-2.554,1.057L61.534,56.239l-0.095,0.095l-0.095-0.095L41.182,36.076 c-0.705-0.705-1.629-1.057-2.553-1.057c-0.924,0-1.848,0.353-2.553,1.057C35.371,36.781,35.018,37.705,35.018,38.629L35.018,38.629 z" />
+                                                                </svg>`
+
+
+                                    </script>
+
+
+
+                                    <!-- Notification Item 1 -->
+                                    <a href="javascript:void(0)" data-id="13770"
+                                        class="block hover:bg-gray-50 rounded-lg transition duration-150 mb-4">
+                                        <div class="flex items-start">
+                                            <!-- Icon -->
+                                            <span class="mr-3 text-primary">
+                                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 576 512">
+                                                    <path fill="currentColor"
+                                                        d="M48.66 79.13C128.4 100.9 208.2 80.59 288 60.25C375 38.08 462 15.9 549 48.38C565.9 54.69 576 71.62 576 89.66V399.5C576 423.4 550.4 439.2 527.3 432.9C447.6 411.1 367.8 431.4 288 451.7C200.1 473.9 113.1 496.1 26.97 463.6C10.06 457.3 0 440.4 0 422.3V112.5C0 88.59 25.61 72.83 48.66 79.13L48.66 79.13zM287.1 352C332.2 352 368 309 368 255.1C368 202.1 332.2 159.1 287.1 159.1C243.8 159.1 207.1 202.1 207.1 255.1C207.1 309 243.8 352 287.1 352zM63.1 416H127.1C127.1 380.7 99.35 352 63.1 352V416zM63.1 143.1V207.1C99.35 207.1 127.1 179.3 127.1 143.1H63.1zM512 303.1C476.7 303.1 448 332.7 448 368H512V303.1zM448 95.1C448 131.3 476.7 159.1 512 159.1V95.1H448z">
+                                                    </path>
+                                                </svg>
+                                            </span>
+
+                                            <!-- Content -->
+                                            <div class="flex-1">
+                                                <h5 class="text-gray-900 text-sm font-medium mb-1">Super Admin
+                                                    changed the payment status
+                                                    Pending to Paid for appointment 09:00AM - 09:10AM 10th Mar, 2025
+                                                </h5>
+                                                <p class="text-gray-500 text-xs">3 hours</p>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <!-- Notification Item 2 -->
+                                    <a href="javascript:void(0)" data-id="13740"
+                                        class="block hover:bg-gray-50 rounded-lg transition duration-150 mb-4">
+                                        <div class="flex items-start">
+                                            <span class="mr-3 text-primary">
+                                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 448 512">
+                                                    <path fill="currentColor"
+                                                        d="M160 32V64H288V32C288 14.33 302.3 0 320 0C337.7 0 352 14.33 352 32V64H400C426.5 64 448 85.49 448 112V160H0V112C0 85.49 21.49 64 48 64H96V32C96 14.33 110.3 0 128 0C145.7 0 160 14.33 160 32zM0 192H448V464C448 490.5 426.5 512 400 512H48C21.49 512 0 490.5 0 464V192zM64 304C64 312.8 71.16 320 80 320H112C120.8 320 128 312.8 128 304V272C128 263.2 120.8 256 112 256H80C71.16 256 64 263.2 64 272V304zM192 304C192 312.8 199.2 320 208 320H240C248.8 320 256 312.8 256 304V272C256 263.2 248.8 256 240 256H208C199.2 256 192 263.2 192 272V304zM336 256C327.2 256 320 263.2 320 272V304C320 312.8 327.2 320 336 320H368C376.8 320 384 312.8 384 304V272C384 263.2 376.8 256 368 256H336zM64 432C64 440.8 71.16 448 80 448H112C120.8 448 128 440.8 128 432V400C128 391.2 120.8 384 112 384H80C71.16 384 64 391.2 64 400V432zM208 384C199.2 384 192 391.2 192 400V432C192 440.8 199.2 448 208 448H240C248.8 448 256 440.8 256 432V400C256 391.2 248.8 384 240 384H208zM320 432C320 440.8 327.2 448 336 448H368C376.8 448 384 440.8 384 432V400C384 391.2 376.8 384 368 384H336C327.2 384 320 391.2 320 400V432z">
+                                                    </path>
+                                                </svg>
+                                            </span>
+                                            <div class="flex-1">
+                                                <h5 class="text-gray-900 text-sm font-medium mb-1">Your Appointment
+                                                    has been booked between
+                                                    10:20 AM-10:30 AM 14th Mar, 2025</h5>
+                                                <p class="text-gray-500 text-xs">2 days</p>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <!-- Notification Item 3 -->
+                                    <a href="javascript:void(0)" data-id="13738"
+                                        class="block hover:bg-gray-50 rounded-lg transition duration-150 mb-4">
+                                        <div class="flex items-start">
+                                            <span class="mr-3 text-primary">
+                                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 448 512">
+                                                    <path fill="currentColor"
+                                                        d="M160 32V64H288V32C288 14.33 302.3 0 320 0C337.7 0 352 14.33 352 32V64H400C426.5 64 448 85.49 448 112V160H0V112C0 85.49 21.49 64 48 64H96V32C96 14.33 110.3 0 128 0C145.7 0 160 14.33 160 32zM0 192H448V464C448 490.5 426.5 512 400 512H48C21.49 512 0 490.5 0 464V192zM64 304C64 312.8 71.16 320 80 320H112C120.8 320 128 312.8 128 304V272C128 263.2 120.8 256 112 256H80C71.16 256 64 263.2 64 272V304zM192 304C192 312.8 199.2 320 208 320H240C248.8 320 256 312.8 256 304V272C256 263.2 248.8 256 240 256H208C199.2 256 192 263.2 192 272V304zM336 256C327.2 256 320 263.2 320 272V304C320 312.8 327.2 320 336 320H368C376.8 320 384 312.8 384 304V272C384 263.2 376.8 256 368 256H336zM64 432C64 440.8 71.16 448 80 448H112C120.8 448 128 440.8 128 432V400C128 391.2 120.8 384 112 384H80C71.16 384 64 391.2 64 400V432zM208 384C199.2 384 192 391.2 192 400V432C192 440.8 199.2 448 208 448H240C248.8 448 256 440.8 256 432V400C256 391.2 248.8 384 240 384H208zM320 432C320 440.8 327.2 448 336 448H368C376.8 448 384 440.8 384 432V400C384 391.2 376.8 384 368 384H336C327.2 384 320 391.2 320 400V432z">
+                                                    </path>
+                                                </svg>
+
+
+                                            </span>
+                                            <div class="flex-1">
+                                                <h5 class="text-gray-900 text-sm font-medium mb-1">Your Appointment
+                                                    has been booked between
+                                                    04:20 PM-04:30 PM 6th Mar, 2025</h5>
+                                                <p class="text-gray-500 text-xs">3 days</p>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <!-- Notification Item 4 -->
+                                    <a href="javascript:void(0)" data-id="13735"
+                                        class="block hover:bg-gray-50 rounded-lg transition duration-150 mb-4">
+                                        <div class="flex items-start">
+                                            <span class="mr-3 text-primary">
+                                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 448 512">
+                                                    <path fill="currentColor"
+                                                        d="M384 32C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96C0 60.65 28.65 32 64 32H384zM339.8 211.8C350.7 200.9 350.7 183.1 339.8 172.2C328.9 161.3 311.1 161.3 300.2 172.2L192 280.4L147.8 236.2C136.9 225.3 119.1 225.3 108.2 236.2C97.27 247.1 97.27 264.9 108.2 275.8L172.2 339.8C183.1 350.7 200.9 350.7 211.8 339.8L339.8 211.8z">
+                                                    </path>
+                                                </svg>
+                                            </span>
+                                            <div class="flex-1">
+                                                <h5 class="text-gray-900 text-sm font-medium mb-1">Your Appointment
+                                                    has been checkout by
+                                                    Adam Diaz</h5>
+                                                <p class="text-gray-500 text-xs">4 days</p>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <!-- Notification Item 5 -->
+                                    <a href="javascript:void(0)" data-id="13733"
+                                        class="block hover:bg-gray-50 rounded-lg transition duration-150 mb-4">
+                                        <div class="flex items-start">
+                                            <span class="mr-3 text-primary">
+                                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 448 512">
+                                                    <path fill="currentColor"
+                                                        d="M384 32C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96C0 60.65 28.65 32 64 32H384zM339.8 211.8C350.7 200.9 350.7 183.1 339.8 172.2C328.9 161.3 311.1 161.3 300.2 172.2L192 280.4L147.8 236.2C136.9 225.3 119.1 225.3 108.2 236.2C97.27 247.1 97.27 264.9 108.2 275.8L172.2 339.8C183.1 350.7 200.9 350.7 211.8 339.8L339.8 211.8z">
+                                                    </path>
+                                                </svg>
+                                            </span>
+                                            <div class="flex-1">
+                                                <h5 class="text-gray-900 text-sm font-medium mb-1">Your Appointment
+                                                    has been checkout by
+                                                    Adam Diaz</h5>
+                                                <p class="text-gray-500 text-xs">4 days</p>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <!-- Notification Item 6 -->
+                                    <a href="javascript:void(0)" data-id="13731"
+                                        class="block hover:bg-gray-50 rounded-lg transition duration-150 mb-4">
+                                        <div class="flex items-start">
+                                            <span class="mr-3 text-primary">
+                                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 448 512">
+                                                    <path fill="currentColor"
+                                                        d="M160 32V64H288V32C288 14.33 302.3 0 320 0C337.7 0 352 14.33 352 32V64H400C426.5 64 448 85.49 448 112V160H0V112C0 85.49 21.49 64 48 64H96V32C96 14.33 110.3 0 128 0C145.7 0 160 14.33 160 32zM0 192H448V464C448 490.5 426.5 512 400 512H48C21.49 512 0 490.5 0 464V192zM304.1 304.1C314.3 295.6 314.3 280.4 304.1 271C295.6 261.7 280.4 261.7 271 271L224 318.1L176.1 271C167.6 261.7 152.4 261.7 143 271C133.7 280.4 133.7 295.6 143 304.1L190.1 352L143 399C133.7 408.4 133.7 423.6 143 432.1C152.4 442.3 167.6 442.3 176.1 432.1L224 385.9L271 432.1C280.4 442.3 295.6 442.3 304.1 432.1C314.3 423.6 314.3 408.4 304.1 399L257.9 352L304.1 304.1z">
+                                                    </path>
+                                                </svg>
+                                            </span>
+                                            <div class="flex-1">
+                                                <h5 class="text-gray-900 text-sm font-medium mb-1">Your Appointment
+                                                    has been cancelled by
+                                                    Adam Diaz</h5>
+                                                <p class="text-gray-500 text-xs">4 days</p>
+                                            </div>
+                                        </div>
+                                    </a>
+
+
+
+                                    <!-- Empty State (Hidden by default) -->
+                                    <div class="hidden text-center py-5">
+                                        <h5 class="text-gray-900 text-sm font-medium">You don't have any new
+                                            notification</h5>
+                                    </div>
+                                </div>
+
+                                <!-- Footer Action -->
+                                <div class="text-center border-t p-4">
+                                    <a href="javascript:void(0)"
+                                        class="text-primary hover:text-primary-dark transition duration-150 font-medium">
+                                        Mark All As Read
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="px-2 sm:px-3">
+                        <div class="relative group/profile-dropdown">
+                            <a class="block w-10 h-10 rounded-full overflow-hidden cursor-pointer">
+                                <img src="https://ui-avatars.com/api/?name=Trith+Shah&size=100&rounded=true&color=fff&background=7d68f0"
+                                    class="w-full h-full object-cover" alt="profile image">
+                            </a>
+                            <div
+                                class="hidden group-hover/profile-dropdown:block absolute right-0 w-64 bg-white rounded-lg shadow-lg border-[1px] border-green-950  z-50">
+                                <a href="/view-profile"
+                                    class="flex flex-col border-b py-4 items-center hover:bg-gray-100">
+                                    <div class="w-12 h-12 rounded-full overflow-hidden mx-auto mb-2">
+                                        <img src="https://ui-avatars.com/api/?name=Trith+Shah&size=100&rounded=true&color=fff&background=7d68f0"
+                                            class="w-full h-full object-cover" alt="profile image">
+                                    </div>
+                                    <h3 class="text-gray-900 font-semibold">Trith Shah</h3>
+                                    <span class="text-sm text-gray-600">tirth@gmail.com</span>
+                                </a>
+
+
+                                <ul class="py-4 space-y-2">
+                                    <li>
+                                        <a class="flex items-center px-4 py-2 text-gray-900 hover:bg-gray-100"
+                                            href="/edit-profile">
+                                            <span class=" text-gray-600 mr-3">
+                                                <i class="fas fa-user"></i>
+                                            </span>
+                                            Edit Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="flex items-center px-4 py-2 text-gray-900 hover:bg-gray-100"
+                                            href="/change-password">
+                                            <span class="text-gray-600 mr-3">
+                                                <i class="fas fa-lock"></i>
+                                            </span>
+                                            Change Password
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="flex items-center px-4 py-2 text-gray-900 hover:bg-gray-100"
+                                            href="/logout">
+                                            <span class="text-gray-600 mr-3">
+                                                <i class="fas fa-sign-out-alt"></i>
+                                            </span>
+                                            Logout
+                                        </a>
+                                        <form id="logout-form" action="https://hms.infyom.com/logout" method="POST"
+                                            class="hidden">
+                                            <input type="hidden" name="_token"
+                                                value="9Y01yDwGF6AfqYIIyjJf58wwSq8AdPMOTr2O1HBo">
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </li>
+                </ul>
+            </header>
+
+            <!-- Offline Alert -->
+            <div id="offlineAlert" class="hidden m-6 fade-in">
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg flex items-center">
+                    <i class="fas fa-wifi-slash mr-2"></i>
+                    <span>You are not connected to the internet.</span>
+                </div>
+            </div>
+
+            <!-- Skeleton Loading -->
+            <div class="animate-pulse hidden space-y-4">
+                <div class="flex items-center space-x-4 bg-gray-50 p-4 rounded-lg">
+                    <div class="rounded-full bg-gray-200 h-12 w-12"></div>
+                    <div class="flex-1 space-y-3">
+                        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                    <div class="h-8 bg-gray-200 rounded w-24"></div>
+                </div>
+            </div>
+
+            <!-- Patient Card Modal -->
+            <div
+                class="patientCardModal hidden fixed inset-0 bg-gray-900 bg-opacity-70 backdrop-blur-sm z-50 overflow-y-auto">
+                <div class="flex items-center justify-center min-h-screen p-4">
+                    <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl transform transition-all">
+                        <!-- Card Header -->
+                        <div class="flex items-center justify-between p-5 border-b">
+                            <div class="flex items-center">
+                                <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800">Patient Card</h3>
+                            </div>
+                            <button
+                                class="patientCardClose p-2 hover:bg-gray-100 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="p-5 md:p-6">
+                            <div class="flex flex-col md:flex-row gap-6">
+                                <!-- Left Column - Patient Photo -->
+                                <div class="flex flex-col items-center md:items-start">
+                                    <div
+                                        class="w-32 h-32 rounded-xl overflow-hidden border-4 border-blue-100 shadow-md">
+                                        <img src="https://ui-avatars.com/api/?name=Trith+Shah&size=128&rounded=true&color=fff&background=7d68f0"
+                                            class="w-full h-full object-cover" alt="Patient Photo">
+                                    </div>
+                                    <button id="downloadcardBtn"
+                                        class="mt-4 w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                                        </svg>
+                                        Download Card
+                                    </button>
+                                </div>
+
+                                <!-- Right Column - Patient Details -->
+                                <div class="flex-grow mt-6 md:mt-0">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                        <div class="space-y-1 bg-gray-50 p-3 rounded-lg">
+                                            <p class="text-xs font-medium uppercase text-gray-500">Full Name</p>
+                                            <p class="font-semibold text-gray-800">Trith Shah</p>
+                                        </div>
+                                        <div class="space-y-1 bg-gray-50 p-3 rounded-lg">
+                                            <p class="text-xs font-medium uppercase text-gray-500">Patient ID</p>
+                                            <p class="font-semibold text-gray-800">#PAT-2024-001</p>
+                                        </div>
+                                        <div class="space-y-1 bg-gray-50 p-3 rounded-lg">
+                                            <p class="text-xs font-medium uppercase text-gray-500">Date of Birth</p>
+                                            <p class="font-semibold text-gray-800">15 Jan 1990</p>
+                                        </div>
+                                        <div class="space-y-1 bg-gray-50 p-3 rounded-lg">
+                                            <p class="text-xs font-medium uppercase text-gray-500">Blood Group</p>
+                                            <p class="font-semibold text-red-600">B+</p>
+                                        </div>
+                                        <div class="space-y-1 bg-gray-50 p-3 rounded-lg">
+                                            <p class="text-xs font-medium uppercase text-gray-500">Phone</p>
+                                            <p class="font-semibold text-gray-800">+977 9876543210</p>
+                                        </div>
+                                        <div class="space-y-1 bg-gray-50 p-3 rounded-lg">
+                                            <p class="text-xs font-medium uppercase text-gray-500">Email</p>
+                                            <p class="font-semibold text-gray-800 truncate" title="tirth@gmail.com">
+                                                tirth@gmail.com
+                                            </p>
+                                        </div>
+                                        <div class="space-y-1 bg-gray-50 p-3 rounded-lg sm:col-span-2">
+                                            <p class="text-xs font-medium uppercase text-gray-500">Address</p>
+                                            <p class="font-semibold text-gray-800">123 Main St, Kathmandu, Nepal</p>
+                                        </div>
+                                        <div class="space-y-1 bg-gray-50 p-3 rounded-lg sm:col-span-2">
+                                            <p class="text-xs font-medium uppercase text-gray-500">Emergency Contact</p>
+                                            <p class="font-semibold text-gray-800">+977 9876543211</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Medical Info Section -->
+                                    <div class="mt-6">
+                                        <h4 class="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                                            <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                </path>
+                                            </svg>
+                                            Medical Information
+                                        </h4>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                                                <div class="flex items-center mb-2">
+                                                    <svg class="w-5 h-5 text-red-500 mr-1" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                            clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <p class="text-sm text-red-800 font-bold">Allergies</p>
+                                                </div>
+                                                <p class="text-sm text-red-700">Penicillin, Peanuts</p>
+                                            </div>
+                                            <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
+                                                <div class="flex items-center mb-2">
+                                                    <svg class="w-5 h-5 text-yellow-600 mr-1" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                                            clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <p class="text-sm text-yellow-800 font-bold">Current Medications</p>
+                                                </div>
+                                                <p class="text-sm text-yellow-700">Amoxicillin 500mg</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="border-t px-5 py-4 bg-gray-50 rounded-b-xl">
+                            <div
+                                class="flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs text-gray-600">
+                                <div class="flex items-center mb-2 sm:mb-0">
+                                    <svg class="w-4 h-4 text-gray-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    <p>Last Updated: <span class="font-medium">March 1, 2024</span></p>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 text-gray-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M10 2a1 1 0 00-1 1v1a1 1 0 002 0V3a1 1 0 00-1-1zM4 4h3a3 3 0 006 0h3a2 2 0 012 2v9a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm2.5 7a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm2.5 4a1 1 0 100-2 1 1 0 000 2zm5-2a1 1 0 10-2 0 1 1 0 002 0z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    <p>Card ID: <span class="font-medium">NC-2024-001</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <!-- Content -->
+            {% block content %} {% endblock content %}
+
+
+
+
+            <!-- Footer -->
+            <!-- <footer class="container mx-auto py-3 mt-6 border-t border-gray-200">
+                <div class="flex flex-col sm:flex-row justify-between items-center px-4">
+                    <p class="text-gray-600 text-xs">© 2025 <a href="/"
+                            class="hover:text-gray-800 transition-colors">Nepal's care</a></p>
+                    <div class="flex gap-4 mt-2 sm:mt-0">
+                        <a href="#" class="text-xs text-gray-500 hover:text-gray-800 transition-colors">Terms</a>
+                    </div>
+                </div>
+            </footer> -->
+        </div>
+    </div>
+
+    <!--  patient Card -->
+    <script>
+
+        const patientCardBtn = document.querySelector('#patientCardBtn');
+        const patientCardModal = document.querySelector('.patientCardModal');
+
+        patientCardBtn.addEventListener('click', () => {
+            patientCardModal.classList.remove('hidden');
+        });
+
+        const patientCardClose = document.querySelector('.patientCardClose');
+        patientCardClose.addEventListener('click', () => {
+            patientCardModal.classList.add('hidden');
+        });
+
+
+        // download btn
+        const downloadBtn = document.querySelector('#downloadcardBtn');
+        downloadBtn.addEventListener('click', () => {
+            // download card function will be added soon
+            console.log('Download Card Functionality will be added soon');
+        });
+
+
+
+    </script>
+
+    <!-- // Sidebar toggle function -->
+    <script>
+        const sidebarToggle = () => {
+            const sidebar = document.querySelector('#sidebarPanel');
+            if (sidebar) {
+                sidebar.classList.toggle('-translate-x-full');
+                sidebar.classList.toggle('translate-x-0');
+            }
+        };
+
+        // This function either initializes the nav bar state or toggles it.
+        function shortBarToggle(checking = false) {
+            const sidebarPanel = document.querySelector('#sidebarPanel');
+            const menuList = document.querySelector('#menuList');
+            const shortBarElements = document.querySelectorAll('.shortBarToggle');
+            const menuLinks = document.querySelectorAll('.menuListItems a');
+
+            // If 'checking' is true, we only apply classes based on localStorage value.
+            if (checking) {
+                if (localStorage.getItem('isBarShort') === 'true') {
+                    // Apply the "short" state.
+                    sidebarPanel.classList.add('w-20');
+                    sidebarPanel.classList.remove('w-64');
+                    menuList.classList.remove('px-4');
+
+                    menuLinks.forEach(link => link.classList.add('justify-center'));
+                    shortBarElements.forEach(el => el.classList.add('hidden'));
+                } else {
+                    // Apply the "long" state.
+                    sidebarPanel.classList.add('w-64');
+                    sidebarPanel.classList.remove('w-20');
+
+                    menuList.classList.add('px-4');
+
+                    menuLinks.forEach(link => link.classList.remove('justify-center'));
+                    shortBarElements.forEach(el => el.classList.remove('hidden'));
+                }
+            } else {
+                // Toggle the state.
+                if (localStorage.getItem('isBarShort') === 'true') {
+                    localStorage.setItem('isBarShort', 'false');
+                } else {
+                    localStorage.setItem('isBarShort', 'true');
+                }
+                // Then apply the new state.
+                shortBarToggle(true);
+            }
+        }
+
+        // Initialize event listeners on DOM load.
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set the state based on localStorage.
+            if (localStorage.getItem('isBarShort') === null) {
+                // Initialize to "long" state if not set.
+                localStorage.setItem('isBarShort', 'false');
+            }
+            shortBarToggle(true);
+
+            // Set up the toggle buttons.
+            const toggleButtons = document.querySelectorAll('.sidebarToggle');
+            toggleButtons.forEach((button) => {
+                button.addEventListener('click', sidebarToggle);
+            });
+
+            const shortBarToggleBtn = document.querySelector('.ShortBarTogglebtn');
+            shortBarToggleBtn.addEventListener('click', () => shortBarToggle(false));
+        });
+    </script>
+
+
+
+    <!-- // Check online status -->
+    <script>
+        window.addEventListener('online', function () {
+            document.getElementById('offlineAlert').classList.add('hidden');
+        });
+
+        window.addEventListener('offline', function () {
+            document.getElementById('offlineAlert').classList.remove('hidden');
+        });
+    </script>
+
+
+    <!-- Notification script -->
+    <script>
+        function showNotification({
+            color = "bg-green-500",
+            time = 3500,
+            message = "This is a notification message.",
+            title = "Notification",
+        } = {}) {
+            const notificationId = `notification-${Date.now()}`;
+
+            const notification = document.createElement("div");
+            notification.id = notificationId;
+            notification.className = `flex items-center sm:max-w-sm max-w-72 p-4 mb-4 text-white rounded-lg shadow-lg transition-all duration-500 ease-out transform translate-x-full scale-90 opacity-0 z-50 ${color}`;
+
+            notification.innerHTML = `
+              <div class="flex-shrink-0 mr-3">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 19.978a7 7 0 100-14 7 7 0 000 14z"></path>
+                </svg>
+              </div>
+              <div>
+                <span class="font-serif font-bold text-xs sm:text-base">${title}</span>
+                <p class="text-xs sm:text-sm font-mono">${message}</p>
+              </div>
+              <button onclick="closeNotification('${notificationId}', 100)" class="ml-auto text-white focus:outline-none pl-3 hover:text-black">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            `;
+
+            document.getElementById("notifications-container").appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.remove("translate-x-full", "scale-90", "opacity-0");
+                notification.classList.add("translate-x-0", "scale-100", "opacity-100");
+            }, 100);
+
+            let timeoutId = setTimeout(() => {
+                closeNotification(notificationId);
+            }, time);
+
+            notification.dataset.timeoutId = timeoutId; // Store the timeout ID for future reference
+
+            // Pause timeout on hover or touch
+            const pauseTimeout = () => clearTimeout(timeoutId);
+            const resumeTimeout = () => {
+                timeoutId = setTimeout(() => {
+                    closeNotification(notificationId);
+                }, time);
+                notification.dataset.timeoutId = timeoutId;
+            };
+
+            // callers
+            notification.addEventListener("mouseenter", pauseTimeout);
+            notification.addEventListener("mouseleave", resumeTimeout);
+            notification.addEventListener("touchstart", pauseTimeout);
+            notification.addEventListener("touchend", resumeTimeout);
+
+
+        }
+
+        function closeNotification(notificationId, time = 500) {
+            const notification = document.getElementById(notificationId);
+            if (notification) {
+                clearTimeout(notification.dataset.timeoutId); // Clear existing timeout if it exists
+                notification.classList.add("translate-x-full", "scale-90", "opacity-0");
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, time);
+            }
+        }
+    </script>
+
+
+    {% if messages %}
+    {% for message in messages %}
+    <script type="text/javascript">
+        showNotification({
+            color: "{% if message.tags == 'success' %}bg-green-500{% elif message.tags == 'info' %}bg-blue-500{% elif message.tags == 'warning' %}bg-yellow-500{% else %}bg-red-500{% endif %}",
+            title: "{{ message.title }}",
+            message: "{{ message.message }}",
+            time:
+                {% if message.tags == 'success' %} 3000
+          {% elif message.tags == 'info' %} 5000
+          {% elif message.tags == 'warning' %} 3500
+          {% else %} 6000
+          {% endif %}
+    
+        });
+    </script>
+    {% endfor %}
+    {% endif %}
+
+
+
+    {% block scripts %} {% endblock scripts %}
+</body>
+
+
+
+
+</html>

@@ -1,0 +1,450 @@
+{% extends "pages/management/M_base.html" %}
+{% load static %}
+
+{% block titles %}Dashboard || Nepal's Care {% endblock titles %}
+
+{% block styles %}{% endblock styles %}
+
+{% block pageof %} View Patients{% endblock pageof %}
+{% block linkPageof %} /m/view-patients/ {% endblock linkPageof %}
+
+{% block content %}
+
+<div class="flex h-screen overflow-hidden">
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto">
+        <div class="p-6 lg:p-10 w-full">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Patient Management</h2>
+                <p class="text-gray-600">View and manage your patient appointments</p>
+            </div>
+
+            <!-- Search and Filters -->
+            <div class="bg-white rounded-lg shadow p-4 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="relative">
+                        <input type="text" id="searchInput" placeholder="Search patients..."
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent pl-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-3"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <div class="flex space-x-2 overflow-x-auto md:justify-center">
+                        <button id="tabAll"
+                            class="px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300">All</button>
+                        <button id="tabUpcoming"
+                            class="px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 bg-blue-600 text-white">Upcoming</button>
+                        <button id="tabCompleted"
+                            class="px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300">Completed</button>
+                        <button id="tabCancelled"
+                            class="px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300">Cancelled</button>
+                    </div>
+                    <div class="text-right">
+                        <button
+                            class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors duration-200">
+                            + New Appointment
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patients List -->
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Patient</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Appointment</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Issue</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientTableBody" class="divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Patient Detail Modal -->
+            <div id="modal"
+                class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 transition-opacity duration-300">
+                <div id="modalContent"
+                    class="bg-white rounded-lg shadow-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300">
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-900">Patient Details</h3>
+                            <button id="closeModal" class="text-gray-400 hover:text-gray-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6" id="modalBody"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+
+{% block scripts %}
+
+
+<script>
+    let patientData = [
+        {
+            "id": 1,
+            "name": "John Smith",
+            "age": 45,
+            "gender": "Male",
+            "appointment": "2025-03-24 10:00 AM",
+            "status": "upcoming",
+            "issue": "Annual checkup",
+            "phone": "555-123-4567",
+            "email": "john.smith@example.com",
+            "notes": "Previous hypertension history"
+        },
+        {
+            "id": 2,
+            "name": "Emily Johnson",
+            "age": 32,
+            "gender": "Female",
+            "appointment": "2025-03-25 11:30 AM",
+            "status": "upcoming",
+            "issue": "Migraine follow-up",
+            "phone": "555-234-5678",
+            "email": "emily.j@example.com",
+            "notes": "Experiencing side effects from medication"
+        },
+        {
+            "id": 3,
+            "name": "Robert Wilson",
+            "age": 68,
+            "gender": "Male",
+            "appointment": "2025-03-23 09:15 AM",
+            "status": "completed",
+            "issue": "Diabetes monitoring",
+            "phone": "555-345-6789",
+            "email": "rwilson@example.com",
+            "notes": "Blood sugar levels improving"
+        },
+        {
+            "id": 4,
+            "name": "Sarah Thompson",
+            "age": 28,
+            "gender": "Female",
+            "appointment": "2025-03-22 02:45 PM",
+            "status": "completed",
+            "issue": "Pregnancy checkup",
+            "phone": "555-456-7890",
+            "email": "sthompson@example.com",
+            "notes": "First trimester, weeks 10-12"
+        },
+        {
+            "id": 5,
+            "name": "Michael Davis",
+            "age": 52,
+            "gender": "Male",
+            "appointment": "2025-03-26 03:30 PM",
+            "status": "upcoming",
+            "issue": "Back pain consultation",
+            "phone": "555-567-8901",
+            "email": "mdavis@example.com",
+            "notes": "Recent injury from lifting"
+        },
+        {
+            "id": 6,
+            "name": "Jessica Brown",
+            "age": 39,
+            "gender": "Female",
+            "appointment": "2025-03-24 01:15 PM",
+            "status": "upcoming",
+            "issue": "Allergy symptoms",
+            "phone": "555-678-9012",
+            "email": "jbrown@example.com",
+            "notes": "Seasonal allergies worsening"
+        },
+        {
+            "id": 7,
+            "name": "David Lee",
+            "age": 41,
+            "gender": "Male",
+            "appointment": "2025-03-25 09:45 AM",
+            "status": "cancelled",
+            "issue": "Shoulder pain",
+            "phone": "555-789-0123",
+            "email": "dlee@example.com",
+            "notes": "Needs to reschedule"
+        },
+        {
+            "id": 8,
+            "name": "Laura Martinez",
+            "age": 35,
+            "gender": "Female",
+            "appointment": "2025-03-26 11:00 AM",
+            "status": "upcoming",
+            "issue": "Thyroid follow-up",
+            "phone": "555-890-1234",
+            "email": "lmartinez@example.com",
+            "notes": "New medication started last month"
+        }
+    ];
+    let activeTab = 'upcoming';
+    let searchTerm = '';
+
+    // DOM Elements
+    const patientTableBody = document.getElementById('patientTableBody');
+    const searchInput = document.getElementById('searchInput');
+    const tabAll = document.getElementById('tabAll');
+    const tabUpcoming = document.getElementById('tabUpcoming');
+    const tabCompleted = document.getElementById('tabCompleted');
+    const tabCancelled = document.getElementById('tabCancelled');
+    const modal = document.getElementById('modal');
+    const modalContent = document.getElementById('modalContent');
+    const modalBody = document.getElementById('modalBody');
+    const closeModal = document.getElementById('closeModal');
+
+    // Load patient data (using existing array instead of fetch)
+    function loadPatientData() {
+        renderPatients();
+    }
+
+    // Filter and render patients
+    function renderPatients() {
+        const filteredPatients = patientData.filter(patient => {
+            const matchesSearch = patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                patient.issue.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesTab = activeTab === 'all' || patient.status === activeTab;
+            return matchesSearch && matchesTab;
+        });
+
+        patientTableBody.innerHTML = '';
+        if (filteredPatients.length === 0) {
+            patientTableBody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No patients found matching your search criteria.</td></tr>`;
+            return;
+        }
+
+        filteredPatients.forEach(patient => {
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-gray-50 cursor-pointer';
+            // Using placeholder images since actual images aren't available
+            row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10">
+                                <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                                    ${patient.name.charAt(0)}
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">${patient.name}</div>
+                                <div class="text-sm text-gray-500">${patient.age} yrs, ${patient.gender}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${patient.appointment}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            ${patient.status === 'upcoming' ? 'bg-blue-100 text-blue-800' :
+                    patient.status === 'completed' ? 'bg-green-100 text-green-800' :
+                        'bg-red-100 text-red-800'}">
+                            ${patient.status.charAt(0).toUpperCase() + patient.status.slice(1)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${patient.issue}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <div class="flex space-x-2">
+                            <button class="text-blue-600 hover:text-blue-900 view-btn" data-id="${patient.id}">View</button>
+                            ${patient.status === 'upcoming' ? `
+                                <button class="text-green-600 hover:text-green-900 check-in-btn" data-id="${patient.id}">Check in</button>
+                                <button class="text-red-600 hover:text-red-900 cancel-btn" data-id="${patient.id}">Cancel</button>
+                            ` : ''}
+                        </div>
+                    </td>
+                `;
+            row.querySelector('.view-btn').addEventListener('click', () => showModal(patient));
+            if (patient.status === 'upcoming') {
+                row.querySelector('.check-in-btn').addEventListener('click', () => checkInPatient(patient.id));
+                row.querySelector('.cancel-btn').addEventListener('click', () => cancelPatient(patient.id));
+            }
+            patientTableBody.appendChild(row);
+        });
+    }
+
+    // Basic check-in and cancel functionality
+    function checkInPatient(id) {
+        const patient = patientData.find(p => p.id === id);
+        if (patient) {
+            patient.status = 'completed';
+            renderPatients();
+        }
+    }
+
+    function cancelPatient(id) {
+        const patient = patientData.find(p => p.id === id);
+        if (patient) {
+            patient.status = 'cancelled';
+            renderPatients();
+        }
+    }
+
+    // Show modal with patient details
+    function showModal(patient) {
+        modalBody.innerHTML = `
+                <div class="flex flex-col md:flex-row mb-6">
+                    <div class="md:w-1/4 mb-4 md:mb-0">
+                        <div class="h-32 w-32 rounded-full bg-gray-200 flex items-center justify-center text-4xl text-gray-500 mx-auto">
+                            ${patient.name.charAt(0)}
+                        </div>
+                    </div>
+                    <div class="md:w-3/4 md:pl-6">
+                        <h2 class="text-2xl font-bold text-gray-800">${patient.name}</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Age</p>
+                                <p class="text-base text-gray-800">${patient.age} years</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Gender</p>
+                                <p class="text-base text-gray-800">${patient.gender}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Phone</p>
+                                <p class="text-base text-gray-800">${patient.phone}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Email</p>
+                                <p class="text-base text-gray-800">${patient.email}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-gray-200 pt-6">
+                    <h3 class="text-lg font-semibold mb-4">Appointment Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-500">Date & Time</p>
+                            <p class="text-base text-gray-800">${patient.appointment}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Status</p>
+                            <div>
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    ${patient.status === 'upcoming' ? 'bg-blue-100 text-blue-800' :
+                patient.status === 'completed' ? 'bg-green-100 text-green-800' :
+                    'bg-red-100 text-red-800'}">
+                                    ${patient.status.charAt(0).toUpperCase() + patient.status.slice(1)}
+                                </span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Issue</p>
+                            <p class="text-base text-gray-800">${patient.issue}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-gray-200 pt-6 mt-6">
+                    <h3 class="text-lg font-semibold mb-4">Patient Notes</h3>
+                    <p class="text-gray-700">${patient.notes}</p>
+                </div>
+                <div class="border-t border-gray-200 pt-6 mt-6 flex flex-wrap gap-3">
+                    ${patient.status === 'upcoming' ? `
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors duration-200 start-btn" data-id="${patient.id}">Start Appointment</button>
+                        <button class="bg-red-600 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-red-700 transition-colors duration-200 cancel-btn" data-id="${patient.id}">Cancel Appointment</button>
+                    ` : ''}
+                    <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-300 transition-colors duration-200">View Medical Records</button>
+                    <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-300 transition-colors duration-200">Edit Patient Info</button>
+                </div>
+            `;
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.add('opacity-100');
+            modalContent.classList.remove('scale-95');
+            modalContent.classList.add('scale-100');
+        }, 10);
+
+        // Add event listeners for modal buttons
+        if (patient.status === 'upcoming') {
+            modalBody.querySelector('.start-btn').addEventListener('click', () => checkInPatient(patient.id));
+            modalBody.querySelector('.cancel-btn').addEventListener('click', () => cancelPatient(patient.id));
+        }
+    }
+
+    // Hide modal
+    function hideModal() {
+        modal.classList.remove('opacity-100');
+        modalContent.classList.remove('scale-100');
+        modalContent.classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+    // Event Listeners
+    searchInput.addEventListener('input', (e) => {
+        searchTerm = e.target.value;
+        renderPatients();
+    });
+
+    tabAll.addEventListener('click', () => setActiveTab('all'));
+    tabUpcoming.addEventListener('click', () => setActiveTab('upcoming'));
+    tabCompleted.addEventListener('click', () => setActiveTab('completed'));
+    tabCancelled.addEventListener('click', () => setActiveTab('cancelled'));
+
+    function setActiveTab(tab) {
+        activeTab = tab;
+        [tabAll, tabUpcoming, tabCompleted, tabCancelled].forEach(btn => {
+            btn.classList.remove('bg-blue-600', 'text-white');
+            btn.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+        });
+        const activeBtn = document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
+        activeBtn.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+        activeBtn.classList.add('bg-blue-600', 'text-white');
+        renderPatients();
+    }
+
+    closeModal.addEventListener('click', hideModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) hideModal();
+    });
+
+    // Initial load
+    document.addEventListener('DOMContentLoaded', () => {
+        loadPatientData();
+    });
+</script>
+
+<script>
+
+    dashboard_nav_all = document.querySelectorAll('.ViewPatients-nav a');
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
+
+
+{% endblock scripts %}
