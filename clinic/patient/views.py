@@ -101,13 +101,19 @@ def viewAppointment(request: HttpRequest):
 
 def appoinemtCancle_Edit(request: HttpRequest, apot_id: uuid, status: str):
     try:
-        print(f"Appointment ID: {apot_id}, Status: {status}")
-        print(Appointment.objects.filter(uuid=apot_id))
         appointment = get_object_or_404(Appointment, uuid=apot_id)
-
         profile: Profile = Profile.objects.get(user=request.user)
-        print(f"Profile: {profile}")
-        print(f"Appointment: {appointment}")
+
+        common_reason = request.POST.get('common_reason', '').strip()
+        custom_reason = request.POST.get('custom_reason', '').strip()
+
+        print(f"Common reason: {common_reason}, Custom reason: {custom_reason}")
+
+        if common_reason or custom_reason:
+            appointment.cancel_reason = common_reason if common_reason != 'other' else f"Custom Reason: {custom_reason}"
+            appointment.cancled_by = request.user.profile
+            appointment.save()
+
         if request.method == 'POST':
             if status == 'cancel':
                 if appointment.status != "completed":
@@ -232,6 +238,8 @@ def BookAppointment(request: HttpRequest):
         return JsonResponse({'error': error_msg})
 
     return redirect('patient:bookAppointment')
+
+
 
 @login_required_with_message(login_url='account:login', message="You need to log in to access Profile page.")
 def ViewDocument(request: HttpRequest):
