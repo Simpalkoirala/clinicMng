@@ -88,7 +88,7 @@ def patientDashboard(request: HttpRequest):
 
 
 @login_required_with_message(login_url='account:login', message="You need to log in to access Profile page.")
-def viewAppoinment(request: HttpRequest):  
+def viewAppointment(request: HttpRequest):  
     profile: Profile = Profile.objects.get(user=request.user)
     appointments: Appointment = Appointment.objects.filter(profile=profile).order_by('-created_at')
 
@@ -96,11 +96,30 @@ def viewAppoinment(request: HttpRequest):
         'profile': profile,
         'appointments': appointments,
     }
-    return render(request, 'pages/patient/view_appoinment.html', context) 
+    return render(request, 'pages/patient/view_appointment.html', context) 
+
+
+def appoinemtCancle_Edit(request: HttpRequest, apot_id: int, status: str):
+    try:
+        appointment = get_object_or_404(Appointment, id=apot_id)
+        if request.method == 'POST':
+            if status == 'cancel':
+                appointment.status = 'cancelled'
+                appointment.save()
+                messages.success(request, _("Appointment cancelled successfully."))
+            elif status == 'edit':
+                # Logic for editing the appointment can be added here
+                pass
+            return redirect('patient:viewAppointment')
+    except Exception as e:
+        messages.error(request, _("An error occurred while processing your request."))
+        return redirect('patient:viewAppointment')
+
+
 
 
 @login_required_with_message(login_url='account:login', message="You need to log in to access Profile page.")
-def BookAppoinment(request: HttpRequest):
+def BookAppointment(request: HttpRequest):
     """Doctor booking page."""
 
     if request.method == 'GET':
@@ -144,7 +163,7 @@ def BookAppoinment(request: HttpRequest):
             'doctor_data_json': json.dumps(doctor_data, cls=DjangoJSONEncoder)
         }
 
-        return render(request, 'pages/patient/book_appoinment.html', context)
+        return render(request, 'pages/patient/book_appointment.html', context)
 
     elif request.method == 'POST':
         try:
@@ -192,14 +211,14 @@ def BookAppoinment(request: HttpRequest):
                 appointment.save()
 
             messages.success(request, _("Appointment booked successfully."))
-            return JsonResponse({'success': True, 'redirect_url': reverse('patient:viewAppoinment')})
+            return JsonResponse({'success': True, 'redirect_url': reverse('patient:viewAppointment')})
         except Exception as e:
             messages.error(request, _("An error occurred while booking the appointment."))
             error_msg = str(e)
             print(f"Error: {error_msg}")
         return JsonResponse({'error': error_msg})
 
-    return redirect('patient:BookAppoinment')
+    return redirect('patient:bookAppointment')
 
 @login_required_with_message(login_url='account:login', message="You need to log in to access Profile page.")
 def ViewDocument(request: HttpRequest):

@@ -9,7 +9,7 @@
 
 
 {% block pageof %} View Appoinments {% endblock pageof %}
-{% block linkPageof %} /p/view-appoinment/ {% endblock linkPageof %}
+{% block linkPageof %} {% url 'patient:viewAppointment' %} {% endblock linkPageof %}
 
 {% block content %}
 
@@ -43,7 +43,7 @@
                     <!-- Right Side Actions -->
                     <div class="flex items-center gap-3 flex-wrap justify-start lg:justify-end">
                         <!-- Book Appointment Button -->
-                        <a href="/p/book-appoinment/"
+                        <a href="{% url 'patient:bookAppointment' %}"
                             class="flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-sm hover:shadow-md">
                             <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -203,10 +203,10 @@
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
                                         {% for apot in appointments %}
-                                        <tr class="hover:bg-gray-50 transition-all duration-200">
+                                        <tr class="hover:bg-gray-50 transition-all duration-200"  id="{{ apot.uuid }}">
                                             
                                             <!-- Doctor & Specialization -->
-                                            <td class="table-cell px-4 py-4 whitespace-nowrap">
+                                            <td class="table-cell px-4 py-4 whitespace-nowrap doctor-details">
                                                 <div class="flex items-center">
                                                     <div class="flex-shrink-0 h-10 w-10">
                                                         <img class="h-10 w-10 rounded-full object-cover shadow-sm border border-gray-200 transition-transform duration-200 hover:scale-110"
@@ -214,8 +214,8 @@
                                                             alt="{{ apot.doctor.profile.user.first_name}}">
                                                     </div>
                                                     <div class="ml-4">
-                                                        <div class="text-sm font-medium text-gray-900">{{ apot.doctor.profile.user.first_name }}
-                                                        </div>
+                                                        <p class="text-sm font-medium text-gray-900">{{ apot.doctor.profile.user.first_name }}
+                                                        </p>
                                                         <div class="text-sm text-gray-500">{{ apot.doctor.specialization| capfirst }}</div>
                                                     </div>
                                                 </div>
@@ -303,7 +303,7 @@
                                                     
 
                                                     <!-- Cancel Button -->
-                                                    <button title="Cancel" data-id="{{ apot.uuid }}"
+                                                    <button title="Cancel" data-id="{{ apot.uuid }}" data-doctor="{{ apot.doctor.profile.user.first_name }}" data-date="{{ apot.appointment_date|date:"d M Y" }}  {{ apot.appointment_time_str }}"
                                                         class="cancel-appointment p-2 rounded-full text-gray-500 hover:bg-red-50 hover:text-red-600  transition-all duration-200"
                                                         >
                                                         <svg version="1.1" class="h-5 w-5" id="Layer_1"
@@ -335,7 +335,7 @@
                                                     </button>
 
                                                     <!-- Edit Time Button -->
-                                                    <button title="Postpone Time" data-id="{{ apot.uuid }}"
+                                                    <button title="Postpone Time" data-id="{{ apot.uuid }}" data-doctor="{{ apot.doctor.profile.user.first_name }}" data-date="{{ apot.appointment_date|date:"d M Y" }}  {{ apot.appointment_time_str }}"
                                                         class="edit-appointment p-2 rounded-full text-gray-500 hover:bg-blue-50 hover:text-blue-600  transition-all duration-200"
                                                         >
                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88" class="h-5 w-5" fill='currentColor' ><style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;}</style>
@@ -486,8 +486,6 @@
         <!-- Warning Icon -->
         <div class="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full bg-yellow-100">
             <svg id='Help_Question_Circle_24' class="w-12 h-12 text-yellow-500" fill="none" stroke="currentColor" stroke-width="3" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' >
-
-
                 <g transform="matrix(0.42 0 0 0.42 12 12)" >
                     <g style="" >
                         <g transform="matrix(1 0 0 1 0 0)" >
@@ -510,17 +508,46 @@
         <!-- Message -->
         <p id="message_field" class="text-gray-600 mb-6"></p>
 
-        <!-- Buttons -->
-        <div class="flex justify-center gap-4">
-            <button class="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition"
-                onclick="document.getElementById('dialogBOX').classList.add('hidden')"
-                id="confirm-no-button"
-                    >No</button>
 
-            <button class="bg-green-500 text-gray-800 px-5 py-2 rounded-lg hover:bg-green-300 transition"
-                id="confirm-yes-button">    
-                    Yes</button>
-        </div>
+        <form  method="POST" id="diloagBox-form">
+            {% csrf_token %}
+
+            <div class="mb-4" id="cancellation_section">
+                <label for="common_reason" class="block text-sm font-medium text-gray-700">Reason <span class="text-red-600">*</span></label>
+                <div class="mt-1 flex space-x-2">
+                    <select id="common_reason" name="common_reason" class="block w-1/2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                         <option value="">Select a reason</option>
+                        <option value="doctor_unavailable">Doctor unavailable</option>
+                        <option value="patient_unavailable">Patient unavailable</option>
+                        <option value="busy_day">Busy on that day</option>
+                        <option value="scheduling_conflict">Scheduling conflict</option>
+                        <option value="personal_reasons">Personal reasons</option>
+                        <option value="emergency">Emergency</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <button type="button" id="btn_add_custom" class="px-3 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300 focus:outline-none">Custom</button>
+                </div>
+                <div class="mt-2" id="custom_reason_field" hidden>
+                    <input type="text" name="reason" id="reason" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter custom reason">
+                </div>
+            </div>
+
+
+            <!-- Divider -->
+            <div class="border-t border-gray-200 mb-4"></div>
+
+            <!-- Buttons -->
+            <div class="flex justify-center gap-4">
+                <button class="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition"
+                    onclick="document.getElementById('dialogBOX').classList.add('hidden')"
+                    id="confirm-no-button"
+                        >No</button>
+
+                <button class="bg-green-500 text-gray-800 px-5 py-2 rounded-lg hover:bg-green-300 transition"
+                    id="confirm-yes-button">    
+                        Yes</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -534,14 +561,83 @@
 
 {% block scripts %}
 
+
 <script>
+  // Toggle custom reason field when clicking the Custom button
+  document.getElementById('btn_add_custom').addEventListener('click', function() {
+    var customField = document.getElementById('custom_reason_field');
+    customField.hidden = !customField.hidden;
+    if (!customField.hidden) {
+      document.getElementById('common_reason').value = 'other';
+      document.getElementById('reason').required = true;
+    }
+  });
+
+  // Populate or hide custom field based on select change
+  document.getElementById('common_reason').addEventListener('change', function(e) {
+    var customField = document.getElementById('custom_reason_field');
+    var customInput = document.getElementById('reason');
+    if (e.target.value === 'other') {
+      customField.hidden = false;
+      customInput.required = true;
+      customInput.value = '';
+    } else if (e.target.value === '') {
+      customField.hidden = true;
+      customInput.required = false;
+      customInput.value = '';
+    } else {
+      customField.hidden = true;
+      customInput.required = false;
+      // Store selected reason in a hidden input or use this value directly
+      customInput.value = e.target.options[e.target.selectedIndex].text;
+    }
+  });
+</script>
+
+<script>
+
+    // Helper to validate reason
+        function isValidReasonSelected() {
+            const selectReason = document.getElementById('common_reason').value;
+            const customReasonField = document.getElementById('custom_reason_field');
+            const customReason = document.getElementById('reason').value.trim();
+
+            if (selectReason === '') {
+                showNotification({
+                    color: "bg-red-500",
+                    title: "Please describe the reason.",
+                    message: "You must either describe select a reason or Set custom one."
+                });
+                return false;
+            }
+
+            if (selectReason === 'other' && customReason === '') {
+                showNotification({
+                    color: "bg-red-500",
+                    title: "Please describe the reason.",
+                    message: "You must either describe select a reason or Set custom one."
+                });
+                return false;
+            }
+
+            return true;
+        }
 
     // Function to show dialog box with title, message, and confirm action
 
-    function showDialog({ title, message, onConfirm }) {
+    function showDialog({ title, message, onConfirm, from_box = false }) {
         // Set title and message
         document.getElementById('title_field').textContent = title;
         document.getElementById('message_field').textContent = message;
+
+        // Set form to add reason with required if from_box is true
+        const cancellation_section = document.getElementById('cancellation_section');
+        if (from_box) {
+            cancellation_section.classList.remove('hidden');
+        }else {
+            cancellation_section.classList.add('hidden');
+        }
+
 
         // Show dialog box
         const dialog = document.getElementById('dialogBOX');
@@ -553,9 +649,17 @@
         yesButton.parentNode.replaceChild(newYesButton, yesButton);
 
         // Attach new event handler
+
         newYesButton.addEventListener('click', () => {
-            onConfirm();
-            dialog.classList.add('hidden');
+            if (from_box) {
+                if (isValidReasonSelected()) {
+                    onConfirm();
+                    dialog.classList.add('hidden');
+                }
+            }else {
+                onConfirm();
+                dialog.classList.add('hidden');
+            }
         });
     }
 
@@ -571,29 +675,36 @@
 
 
 <script>
-    document.querySelectorAll('.edit-appointment').forEach(button => {
+    // Add event listeners to cancel buttons
+    document.querySelectorAll('.cancel-appointment').forEach(button => {
         button.addEventListener('click', () => {
             const id = button.getAttribute('data-id');
+            const doctor = button.getAttribute('data-doctor');
+            const date = button.getAttribute('data-date');
+            const diloagBox_form = document.getElementById('diloagBox-form');
+            diloagBox_form.setAttribute('action', `/p/appointment/${id}/cancel/`);
             showDialog({
-                title: 'Edit Appointment',
-                message: `Are you sure you want to edit appointment with ID: ${id}?`,
+                title: 'Cancel Appointment',
+                message: `Do you want to cancel appointment with Dr.${doctor} on ${date}?`,
+                from_box: true,
                 onConfirm: () => {
-                    // Implement edit logic here
-                    alert(`Editing appointment ${id}`);
+                    diloagBox_form.submit();
                 }
             });
         });
     });
 
-    document.querySelectorAll('.cancel-appointment').forEach(button => {
+    // Add event listeners to edit buttons
+    document.querySelectorAll('.edit-appointment').forEach(button => {
         button.addEventListener('click', () => {
             const id = button.getAttribute('data-id');
+            const doctor = button.getAttribute('data-doctor');
+            const date = button.getAttribute('data-date');
             showDialog({
-                title: 'Cancel Appointment',
-                message: `Do you want to cancel appointment with ID: ${id}?`,
+                title: 'Edit Appointment',
+                message: `Are you sure you want to edit appointment with Dr.${doctor} on ${date}?`,
                 onConfirm: () => {
-                    // Implement cancel logic here
-                    alert(`Appointment ${id} canceled.`);
+                    alert(`Editing appointment ${id}`);
                 }
             });
         });
@@ -603,8 +714,9 @@
 
 <script>
 
-    dashboard_nav_all = document.querySelectorAll('.appoinment-nav a');
+    dashboard_nav_all = document.querySelectorAll('.appointment-nav a');
     console.log(dashboard_nav_all);
+    
     dashboard_nav_all.forEach((nav) => {
         nav_innertab =
             nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');

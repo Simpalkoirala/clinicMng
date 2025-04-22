@@ -8,7 +8,7 @@
 {% endblock styles %}
 
 {% block pageof %} Book Appoinments {% endblock pageof %}
-{% block linkPageof %} /p/book-appoinment/ {% endblock linkPageof %}
+{% block linkPageof %} {% url 'patient:bookAppointment' %} {% endblock linkPageof %}
 
 {% block content %}
 
@@ -839,7 +839,7 @@
             formData.append('appointment_reason', reason_text.value.trim());
             formData.append('appointment_file', fileInput.files[0]); // Append the file if selected    
 
-            fetch("{% url 'patient:BookAppoinment' %}", {
+            fetch("{% url 'patient:bookAppointment' %}", {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -856,7 +856,7 @@
                             title: "Booking Confirmed",
                             message: "Your appointment has been successfully booked."
                         });
-                        redirect_url = data.redirect_url || "{% url 'patient:viewAppoinment' %}";
+                        redirect_url = data.redirect_url || "{% url 'patient:viewAppointment' %}";
                         window.location.href = redirect_url;
                     } else {
                         showNotification({
@@ -1002,7 +1002,7 @@
 
 <script>
 
-    dashboard_nav_all = document.querySelectorAll('.bookAppoinment-nav a');
+    dashboard_nav_all = document.querySelectorAll('.bookAppointment-nav a');
     console.log(dashboard_nav_all);
     dashboard_nav_all.forEach((nav) => {
         nav_innertab =

@@ -10,8 +10,11 @@ urlpatterns = [
     
     path('', patientDashboard, name='patient_dashboard'),
     path('dashboard/', patientDashboard, name='patient_dashboard2'),
-    path('view-appoinment/', viewAppoinment, name='viewAppoinment'),
-    path('book-appoinment/', BookAppoinment, name='BookAppoinment'),
+    path('view-appointment/', viewAppointment, name='viewAppointment'),
+    path('appointment/<uuid:apot_id>/<str:status>/', appoinemtCancle_Edit, name='appointment_cancle_or_edit'),
+
+
+    path('book-appointment/', BookAppointment, name='bookAppointment'),
     path('document/', ViewDocument, name='ViewDocument'),
     path('delete-document/<int:doc_id>/', delete_document, name='deleteDocument'),
 
