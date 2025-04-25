@@ -83,10 +83,10 @@
                                             class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-gray-50"
                                             id="appointmentType" name="type">
                                             <option value="0">All</option>
-                                            <option value="1">General Consultation</option>
-                                            <option value="2">Follow-up Visit</option>
-                                            <option value="3">Specialist Consultation</option>
-                                            <option value="4">Online Consultation</option>
+                                            <option value="general_consultation">General Consultation</option>
+                                            <option value="follow_up_visit">Follow-up Visit</option>
+                                            <option value="online_consultation">Online Consultation</option>
+                                            <option value="offline_consultation">Offline Consultation</option>
                                         </select>
                                     </div>
                                     <div>
@@ -97,9 +97,9 @@
                                             class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-gray-50"
                                             id="appointmentStatus" name="status">
                                             <option value="0">All</option>
-                                            <option value="1">Pending</option>
-                                            <option value="2">Completed</option>
-                                            <option value="3">Cancelled</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="completed">Completed</option>
+                                            <option value="cancelled">Cancelled</option>
                                         </select>
                                     </div>
                                     <div>
@@ -109,10 +109,11 @@
                                         <select
                                             class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-gray-50"
                                             id="appointmentTimeRange" name="timerange">
-                                            <option value="0">Today</option>
-                                            <option value="1">Last 7 Days</option>
-                                            <option value="2">Last 30 Days</option>
-                                            <option value="3">Last Month</option>
+                                            <option value="0">All</option>
+                                            <option value="1">Today</option>
+                                            <option value="2">Last 7 Days</option>
+                                            <option value="3">Last 30 Days</option>
+                                            <option value="4">Last Month</option>
                                         </select>
                                     </div>
                                     <button type="reset" id="appointmentResetFilter"
@@ -153,7 +154,7 @@
                     <div class="overflow-x-auto  custom-scrollbar">
                         <div class="w-full align-middle">
                             <div class=" rounded-lg border border-gray-200">
-                                <table class="min-w-full divide-y divide-gray-200">
+                                <table id="view-list-table" class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
                                         <tr>
                                             <th class=" px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer group"
@@ -216,17 +217,17 @@
                                                     <div class="ml-4">
                                                         <p class="text-sm font-medium text-gray-900">{{ apot.doctor.profile.user.first_name }}
                                                         </p>
-                                                        <div class="text-sm text-gray-500">{{ apot.doctor.specialization| capfirst }}</div>
+                                                        <div class="text-sm text-gray-500" data-specialization='{{ apot.doctor.specialization }}' >{{ apot.doctor.specialization| capfirst }}</div>
                                                     </div>
                                                 </div>
                                             </td>
 
                                             <!-- Appointment Type & Date Time -->
                                             <td class="table-cell px-4 py-4 whitespace-nowrap">
-                                                <p class="px-3 pb-1 text-indigo-600 hover:text-indigo-800 transition-colors duration-200">
+                                                <p data-apotype="{{ apot.appointment_type }}" class="px-3 pb-1 text-indigo-600 hover:text-indigo-800 transition-colors duration-200">
                                                     {{ apot.appointment_type }}
                                                 </p>
-                                                <span
+                                                <span data-date="{{ apot.appointment_date|date:"d M Y" }}" data-time="{{ apot.appointment_time_str }}"
                                                     class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100 shadow-sm">
                                                     <svg class="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="none"
                                                         xmlns="http://www.w3.org/2000/svg">
@@ -252,7 +253,7 @@
 
                                                 {% if apot.status == 'pending' %}
 
-                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-orange-50 text-orange-700 border border-orange-100 shadow-sm">
+                                                <span data-status="{{ apot.status}}" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-orange-50 text-orange-700 border border-orange-100 shadow-sm">
 
                                                         <svg class="h-3 w-3 mr-1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="currentColor"  viewBox="0 0 237.54 237.54" style="enable-background:new 0 0 237.54 237.54" >
                                                             <g>
@@ -264,7 +265,7 @@
 
                                                 {% elif apot.status == 'confirmed' %}
                                                 
-                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-100 shadow-sm">
+                                                <span data-status="{{ apot.status}}" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-100 shadow-sm">
                                                     <svg class="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                                         <path fill-rule="evenodd"
                                                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -275,7 +276,7 @@
 
                                                {% elif apot.status == 'cancelled' %}
 
-                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100 shadow-sm">
+                                                <span data-status="{{ apot.status}}" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100 shadow-sm">
                                                     <svg class="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm3 11L7 7m0 6l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                                                     </svg>
@@ -284,7 +285,7 @@
 
                                                     
                                                 {% elif apot.status == 'completed' %}
-                                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100 shadow-sm">
+                                                <span data-status="{{ apot.status}}" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100 shadow-sm">
                                                         <svg xmlns="http://www.w3.org/2000/svg"  class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 122.881 122.88" >
                                                             <g>
                                                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M61.44,0c33.933,0,61.441,27.507,61.441,61.439 c0,33.933-27.508,61.44-61.441,61.44C27.508,122.88,0,95.372,0,61.439C0,27.507,27.508,0,61.44,0L61.44,0z M34.106,67.678 l-0.015-0.014c-0.785-0.718-1.207-1.685-1.256-2.669c-0.049-0.982,0.275-1.985,0.984-2.777c0.01-0.011,0.019-0.021,0.029-0.031 c0.717-0.784,1.684-1.207,2.668-1.256c0.989-0.049,1.998,0.28,2.792,0.998l12.956,11.748l31.089-32.559v0 c0.74-0.776,1.723-1.18,2.719-1.204c0.992-0.025,1.994,0.329,2.771,1.067v0.001c0.777,0.739,1.18,1.724,1.205,2.718 c0.025,0.993-0.33,1.997-1.068,2.773L55.279,81.769c-0.023,0.024-0.048,0.047-0.073,0.067c-0.715,0.715-1.649,1.095-2.598,1.13 c-0.974,0.037-1.963-0.293-2.744-1L34.118,67.688L34.106,67.678L34.106,67.678L34.106,67.678z"/>
@@ -571,6 +572,90 @@
 
 
 <script>
+    // filter code:
+document.addEventListener('DOMContentLoaded', () => {
+  const typeFilter   = document.getElementById('appointmentType');
+  const statusFilter = document.getElementById('appointmentStatus');
+  const timeFilter   = document.getElementById('appointmentTimeRange');
+  const resetBtn     = document.getElementById('appointmentResetFilter');
+  const rows         = document.querySelectorAll('#view-list-table tbody tr');
+
+
+  function filterRows() {
+    const typeVal   = typeFilter.value;
+    const statusVal = statusFilter.value;
+    const timeVal   = timeFilter.value;
+    const today     = new Date();
+    const firstOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+
+    rows.forEach(row => {
+      let keep = true;
+
+      // —–– 1) filter by appointment type
+      if (typeVal !== '0') {
+        if (row.querySelector('[data-apotype]').dataset.apotype !== typeVal) {
+          keep = false;
+        }
+      }
+
+      // —–– 2) filter by status
+      if (keep && statusVal !== '0') {
+        const st = row.querySelector('[data-status]').dataset.status;
+        if (st !== statusVal) {
+          keep = false;
+        }
+      }
+
+      // —–– 3) filter by time range
+      if (keep && timeVal !== '0') {
+        // use ISO date for parsing
+        const iso = row.querySelector('[data-date]').dataset.date;       // e.g. "2025-04-19"
+        const rowDate = new Date(iso + 'T00:00:00');                            // midnight local
+        const diffDays = (today - rowDate) / (1000 * 60 * 60 * 24);             // fractional days
+
+        switch (timeVal) {
+          case '1': // Today
+            if (rowDate.toDateString() !== today.toDateString()) keep = false;
+            break;
+          case '2': // Last 7 Days
+            if (diffDays > 7 || diffDays < 0) keep = false;
+            break;
+          case '3': // Last 30 Days
+            if (diffDays > 30 || diffDays < 0) keep = false;
+            break;
+          case '4': // Last Calendar Month
+            if (rowDate < firstOfLastMonth || rowDate >= firstOfThisMonth) {
+              keep = false;
+            }
+            break;
+        }
+      }
+
+      row.style.display = keep ? '' : 'none';
+    });
+  }
+
+  // wire up events
+  [ typeFilter, statusFilter, timeFilter ].forEach(el => 
+    el.addEventListener('change', filterRows)
+  );
+
+  resetBtn.addEventListener('click', () => {
+    // reset selects
+    typeFilter.value = statusFilter.value = timeFilter.value = '0';
+    // show all rows again
+    rows.forEach(r => r.style.display = '');
+  });
+});
+
+
+
+
+
+
+
+
   // Toggle custom reason field when clicking the Custom button
   document.getElementById('btn_add_custom').addEventListener('click', function() {
     var customField = document.getElementById('custom_reason_field');
