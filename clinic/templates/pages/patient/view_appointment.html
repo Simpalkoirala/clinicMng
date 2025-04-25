@@ -35,9 +35,9 @@
                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                         </span>
-                        <input
+                        <input id="searchInput" name="search"
                             class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 placeholder-gray-400 transition-all duration-200"
-                            type="search" placeholder="Search patients..." aria-label="Search" wire:model.live="search">
+                            type="search" placeholder="Search Doctor & Reason ..." aria-label="Search" wire:model.live="search">
                     </div>
 
                     <!-- Right Side Actions -->
@@ -215,7 +215,7 @@
                                                             alt="{{ apot.doctor.profile.user.first_name}}">
                                                     </div>
                                                     <div class="ml-4">
-                                                        <p class="text-sm font-medium text-gray-900">{{ apot.doctor.profile.user.first_name }}
+                                                        <p class="text-sm font-medium text-gray-900" data-doctor="{{ apot.doctor.profile.user.first_name }}"  >{{ apot.doctor.profile.user.first_name }}
                                                         </p>
                                                         <div class="text-sm text-gray-500" data-specialization='{{ apot.doctor.specialization }}' >{{ apot.doctor.specialization| capfirst }}</div>
                                                     </div>
@@ -242,7 +242,7 @@
 
                                             <!-- Reason For Appointment -->
                                              <td class="table-cell px-4 py-4 whitespace-nowrap">
-                                                <p class="text-gray-600 text-xs font-medium " title="{{ apot.reason }}">
+                                                <p class="text-gray-600 text-xs font-medium " title="{{ apot.reason }}" data-reason="{{ apot.reason }}" >
                                                     {{ apot.reason|slice:":70" }}{% if apot.reason|length > 60 %}…{% endif %}
                                                 </p>
                                          
@@ -574,6 +574,7 @@
 <script>
     // filter code:
 document.addEventListener('DOMContentLoaded', () => {
+  const searchInput   = document.getElementById('searchInput');
   const typeFilter   = document.getElementById('appointmentType');
   const statusFilter = document.getElementById('appointmentStatus');
   const timeFilter   = document.getElementById('appointmentTimeRange');
@@ -582,6 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   function filterRows() {
+    const searchText = searchInput.value.toLowerCase();
     const typeVal   = typeFilter.value;
     const statusVal = statusFilter.value;
     const timeVal   = timeFilter.value;
@@ -591,6 +593,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     rows.forEach(row => {
       let keep = true;
+
+    // search filter
+    if (searchText) {
+        const doctor_name = row.querySelector('[data-doctor]').dataset.doctor.toLowerCase();
+        const reason_of_book = row.querySelector('[data-reason]').dataset.reason.toLowerCase();
+        
+        if (!doctor_name.includes(searchText) && !reason_of_book.includes(searchText)) {
+          keep = false;
+        }
+    }
+
+
 
       // —–– 1) filter by appointment type
       if (typeVal !== '0') {
@@ -637,7 +651,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // wire up events
-  [ typeFilter, statusFilter, timeFilter ].forEach(el => 
+  [ typeFilter, statusFilter, timeFilter, searchInput ].forEach(el => 
     el.addEventListener('change', filterRows)
   );
 
