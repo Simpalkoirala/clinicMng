@@ -288,7 +288,7 @@
 <script>
 
     // Sample data
-    const activePrescriptions = [
+    {% comment %} const activePrescriptions = [
         { id: 1, name: 'Amlodipine', dosage: '10mg', frequency: 'Once daily', doctor: 'Dr. Sarah Johnson', specialty: 'Cardiology', startDate: '2025-01-15', endDate: '2025-04-15', status: 'Active', refillStatus: 'Available', instructions: 'Take with or without food, at the same time each day. Avoid grapefruit products.', sideEffects: 'May cause dizziness, swelling in ankles, or headache.' },
         { id: 2, name: 'Metformin', dosage: '500mg', frequency: 'Twice daily', doctor: 'Dr. Michael Chen', specialty: 'Endocrinology', startDate: '2025-02-10', endDate: '2025-05-10', status: 'Active', refillStatus: 'Pending', instructions: 'Take with meals to reduce stomach upset. Monitor blood sugar regularly.', sideEffects: 'May cause nausea, diarrhea, or decreased vitamin B12 levels with long-term use.' },
         { id: 3, name: 'Atorvastatin', dosage: '20mg', frequency: 'Once daily', doctor: 'Dr. Sarah Johnson', specialty: 'Cardiology', startDate: '2025-01-15', endDate: '2025-07-15', status: 'Active', refillStatus: 'Expiring Soon', instructions: 'Take in the evening. Avoid consuming large amounts of grapefruit juice.', sideEffects: 'May cause muscle pain, weakness, or liver problems.' }
@@ -297,10 +297,10 @@
     const historyPrescriptions = [
         { id: 4, name: 'Amoxicillin', dosage: '500mg', frequency: 'Three times daily', doctor: 'Dr. James Wilson', specialty: 'General Practice', startDate: '2024-12-05', endDate: '2024-12-15', status: 'Completed', reason: 'Full course completed' },
         { id: 5, name: 'Prednisone', dosage: '20mg tapering', frequency: 'Per schedule', doctor: 'Dr. Emily Roberts', specialty: 'Rheumatology', startDate: '2024-11-10', endDate: '2024-12-22', status: 'Discontinued', reason: 'Side effects (insomnia, mood changes)' }
-    ];
+    ]; {% endcomment %}
 
-    {% comment %} const activePrescriptions ={{ merged_json_data.active_data|safe}}; {% endcomment %}
-    {% comment %} const historyPrescriptions = {{ merged_json_data.history_data|safe}}; {% endcomment %}
+    const activePrescriptions ={{ merged_json_data.active_data|safe}};
+    const historyPrescriptions = {{ merged_json_data.history_data|safe}};
 
     // Today's medications
     const todayMedications = [
