@@ -1,0 +1,461 @@
+{% extends "pages/doctor/D_base.html" %}
+{% load static %}
+
+{% block titles %}Profile|| Nepal's Care {% endblock titles %}
+
+{% block pageof %} Profile{% endblock pageof %}
+{% block linkPageof %} /d/profile/ {% endblock linkPageof %}
+
+{% block styles %}
+
+
+
+
+{% endblock styles %}
+
+{% block content %}
+
+<div class="flex flex-col w-full max-w-6xl mx-auto min-h-screen p-6">
+    <h1 class="text-3xl font-bold mb-6">Patient Account Settings</h1>
+
+    <!-- Tab Navigation -->
+    <div class="flex w-full mb-8">
+        <div class="grid w-full grid-cols-2 gap-2 rounded-md bg-gray-100 p-1">
+            <button class="tab-btn active py-2 px-4 text-sm font-medium rounded-sm bg-white text-gray-900 shadow-sm"
+                data-tab="profile">Profile</button>
+            <button class="tab-btn py-2 px-4 text-sm font-medium rounded-sm text-gray-600 hover:bg-gray-200"
+                data-tab="privacy">Password & Privacy</button>
+        </div>
+    </div>
+
+    <!-- Profile Tab -->
+    <div class="tab-content active" id="profile">
+        <div class="rounded-lg border bg-white shadow-sm">
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold mb-2">Profile Information</h3>
+                <p class="text-sm text-gray-600 mb-6">View and update your personal details, medical history, and
+                    emergency contacts.</p>
+
+                <div class="flex flex-col sm:flex-row gap-8 mb-8 items-center sm:items-start">
+                    <div class="relative">
+                        <img id="pp_image" class="h-32 w-32 rounded-full border-2 border-blue-500"
+                            src="/placeholder.svg?height=100&width=100" alt="Profile picture">
+                        <button id="imageUploadButton"
+                            class="absolute bottom-0 right-0 h-10 w-10 rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300">
+                            <svg class="h-5 w-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                                <circle cx="12" cy="13" r="3" />
+                            </svg>
+                        </button>
+
+
+                        <div id="imageUploadModal"
+                            class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                            <div class="bg-white rounded-lg p-6 w-full max-w-md">
+                                <h3 class="text-lg font-semibold mb-4">Update Profile Picture</h3>
+                                <div id="imagePreview" class="mb-4 max-h-96 overflow-hidden"></div>
+                                <div class="flex gap-2 justify-end">
+                                    <button onclick="closeModal()"
+                                        class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancel</button>
+                                    <button onclick="saveImage()"
+                                        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="text-center sm:text-left">
+                        <h2 class="text-2xl font-bold">John Doe</h2>
+                        <p class="text-gray-600 mb-2">Patient ID: PAT-20240325-001</p>
+                        <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
+                            <span
+                                class="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full text-xs font-semibold">Blood
+                                Type: O+</span>
+                            <span
+                                class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-semibold">Active
+                                Patient</span>
+                        </div>
+
+                        <div class="mt-3">
+                            <div class="flex items-center gap-1 text-sm"><span class="text-muted-foreground">Profile
+                                    completion:</span><span class="font-medium">85%</span></div>
+                            <div aria-valuemax="100" aria-valuemin="0" role="progressbar" data-state="indeterminate"
+                                data-max="100"
+                                class="relative w-full overflow-hidden rounded-full bg-secondary h-2 mt-1">
+                                <div data-state="indeterminate" data-max="100"
+                                    class="h-full w-full flex-1 bg-primary transition-all"
+                                    style="transform: translateX(-15%);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Personal Information -->
+                        <div class="space-y-6">
+                            <h3 class="text-lg font-medium">Personal Information</h3>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">Full Name</label>
+                                <input
+                                    class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value="John Doe" name="fullName">
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium">Email</label>
+                                    <input
+                                        class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        value="john.doe@example.com" name="email">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium">Phone Number</label>
+                                    <input
+                                        class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        value="555-123-4567" name="phone">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">Date of Birth</label>
+                                <input
+                                    class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    type="date" value="1985-05-15" name="dateOfBirth">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">Address</label>
+                                <textarea
+                                    class="w-full min-h-[80px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    name="address">123 Main St, Anytown, CA 12345</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Medical Information -->
+                        <div class="space-y-6">
+                            <h3 class="text-lg font-medium">Medical Information</h3>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">Blood Type</label>
+                                <div class="relative">
+                                    <select
+                                        class="w-full h-10 px-3 py-2 border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        name="bloodType">
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+" selected>O+</option>
+                                        <option value="O-">O-</option>
+                                        <option value="Unknown">Unknown</option>
+                                    </select>
+                                    <svg class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">Allergies</label>
+                                <textarea
+                                    class="w-full min-h-[80px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    name="allergies">Penicillin, Peanuts</textarea>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">Medical History</label>
+                                <textarea
+                                    class="w-full min-h-[120px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    name="medicalHistory">Hypertension, diagnosed 2018
+Appendectomy, 2010</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Emergency Contact -->
+                    <div class="space-y-6">
+                        <h3 class="text-lg font-medium">Emergency Contact</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">Contact Name</label>
+                                <input
+                                    class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value="Jane Doe" name="emergencyContactName">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">Contact Phone</label>
+                                <input
+                                    class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value="555-987-6543" name="emergencyContactPhone">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">Relationship</label>
+                                <div class="relative">
+                                    <select
+                                        class="w-full h-10 px-3 py-2 border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        name="relationship">
+                                        <option value="Spouse" selected>Spouse</option>
+                                        <option value="Parent">Parent</option>
+                                        <option value="Child">Child</option>
+                                        <option value="Sibling">Sibling</option>
+                                        <option value="Friend">Friend</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <svg class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Communication Preferences -->
+                    <div class="space-y-6">
+                        <h3 class="text-lg font-medium">Communication Preferences</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="flex items-center justify-between border p-4 rounded-lg">
+                                <div>
+                                    <label class="text-base font-medium">Email Notifications</label>
+                                    <p class="text-sm text-gray-600">Receive notifications via email</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only" name="emailNotifications">
+                                    <div class="w-11 h-6 bg-gray-200 rounded-full peer"></div>
+                                    <span
+                                        class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition "></span>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between border p-4 rounded-lg">
+                                <div>
+                                    <label class="text-base font-medium">SMS Notifications</label>
+                                    <p class="text-sm text-gray-600">Receive notifications via SMS</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only" name="smsNotifications">
+                                    <div class="w-11 h-6 bg-gray-200 rounded-full peer"></div>
+                                    <span
+                                        class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition "></span>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between border p-4 rounded-lg">
+                                <div>
+                                    <label class="text-base font-medium">Appointment Reminders</label>
+                                    <p class="text-sm text-gray-600">Receive appointment reminders</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only" name="appointmentReminders">
+                                    <div class="w-11 h-6 bg-gray-200 rounded-full peer"></div>
+                                    <span
+                                        class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition "></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Buttons -->
+                    <div class="flex justify-end gap-4 pt-6 border-t">
+                        <button type="button"
+                            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save
+                            Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Tab -->
+    <div class="tab-content hidden" id="privacy">
+        <div class="rounded-lg border bg-white shadow-sm">
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold mb-2">Privacy & Security Settings</h3>
+                <p class="text-sm text-gray-600 mb-6">Manage your password, notification preferences, and privacy
+                    options.</p>
+
+                <form class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium">Current Password</label>
+                        <input
+                            class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            type="password" name="currentPassword">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium">New Password</label>
+                        <input
+                            class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            type="password" name="newPassword">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium">Confirm New Password</label>
+                        <input
+                            class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            type="password" name="confirmPassword">
+                    </div>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Update
+                        Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tab Switching
+    document.querySelectorAll('.tab-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const tab = button.getAttribute('data-tab');
+
+            // Update button states
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-white', 'text-gray-900', 'shadow-sm');
+                btn.classList.add('text-gray-600', 'hover:bg-gray-200');
+            });
+            button.classList.add('active', 'bg-white', 'text-gray-900', 'shadow-sm');
+            button.classList.remove('text-gray-600', 'hover:bg-gray-200');
+
+            // Update content visibility
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('active');
+            });
+            document.getElementById(tab).classList.remove('hidden');
+            document.getElementById(tab).classList.add('active');
+        });
+    });
+
+    // Toggle Switch Functionality
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const span = checkbox.parentElement.querySelector('span');
+            if (checkbox.checked) {
+                span.classList.add('translate-x-5', 'bg-blue-600');
+                span.classList.remove('translate-x-0', 'bg-white');
+            } else {
+                span.classList.remove('translate-x-5', 'bg-blue-600');
+                span.classList.add('translate-x-0', 'bg-white');
+            }
+        });
+    });
+</script>
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+<script>
+    let cropper;
+    let selectedFile;
+
+    document.querySelector('#imageUploadButton').addEventListener('click', function () {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+
+        input.onchange = e => {
+            selectedFile = e.target.files[0];
+            if (selectedFile) {
+                if (!selectedFile.type.startsWith('image/')) {
+                    alert('Please select an image file');
+                    return;
+                }
+
+                // Check file size (e.g., 5MB limit)
+                if (selectedFile.size > 5 * 1024 * 1024) {
+                    alert('File size should be less than 5MB');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = event => {
+                    openModal(event.target.result);
+                };
+                reader.readAsDataURL(selectedFile);
+            }
+        };
+
+        input.click();
+    });
+
+    function openModal(imageSrc) {
+        const modal = document.getElementById('imageUploadModal');
+        const preview = document.getElementById('imagePreview');
+
+        preview.innerHTML = `<img id="cropperImage" src="${imageSrc}" class="w-full">`;
+        modal.classList.remove('hidden');
+
+        // Initialize cropper
+        const image = document.getElementById('cropperImage');
+        cropper = new Cropper(image, {
+            aspectRatio: 1,
+            viewMode: 1,
+            autoCropArea: 1,
+            responsive: true,
+            checkCrossOrigin: false
+        });
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('imageUploadModal');
+        modal.classList.add('hidden');
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+    }
+
+    function saveImage() {
+        if (cropper) {
+            // Get cropped image data
+            const canvas = cropper.getCroppedCanvas({
+                width: 256,
+                height: 256
+            });
+
+            // Convert to Blob and update profile picture
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                document.querySelector('#pp_image').src = url;
+
+                // Here you would typically upload the blob to your server
+                // Example using FormData:
+                const formData = new FormData();
+                formData.append('profileImage', blob, 'profile.jpg');
+
+                // fetch('/upload', {
+                //     method: 'POST',
+                //     body: formData
+                // });
+
+                closeModal();
+            });
+        }
+    }
+</script>
+
+{% endblock content %}
+
+
+{% block scripts %}
+
+<script>
+
+    dashboard_nav_all = document.querySelectorAll('.profile-nav a');
+    console.log(dashboard_nav_all);
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
+
+{% endblock scripts %}
