@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lab Report {{ report.uuid }}</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2em;
+      color: #333;
+      line-height: 1.4;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 1.5em;
+    }
+    .header img {
+      height: 50px;
+      margin-bottom: 0.3em;
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.6em;
+    }
+    .generated {
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    /* Vertical report info */
+    .report-info {
+      margin-bottom: 1.5em;
+    }
+    .report-info p {
+      margin: 0.2em 0;
+      font-size: 1em;
+    }
+    .report-info p strong {
+      display: inline-block;
+      width: 100px;
+    }
+
+    /* Horizontal split for patient & doctor */
+    .split {
+      display: flex;
+      justify-content: space-between;
+      gap: 1em;
+      margin-bottom: 1.5em;
+    }
+    .split > div {
+      flex: 1;
+    }
+    .split h2 {
+      margin-bottom: 0.5em;
+      font-size: 1.1em;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.2em;
+    }
+    .split p {
+      margin: 0.2em 0;
+      font-size: 0.95em;
+    }
+    .split p strong {
+      display: inline-block;
+      width: 80px;
+    }
+
+    /* Section headings */
+    .section-heading {
+      margin-top: 1.8em;
+      margin-bottom: 0.6em;
+      font-size: 1.2em;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.2em;
+    }
+
+    /* Table styling retained */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5em;
+      font-size: 0.95em;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.6em;
+      text-align: left;
+    }
+    th {
+      background-color: #eaeaea;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <img src="/static/images/lab_logo.png" alt="Lab Logo">
+    <h1>Diagnostic Lab Report</h1>
+    <div class="generated">Generated on: {{ report.report_date|date:"j M Y" }}</div>
+  </div>
+
+  <div class="report-info">
+    <p><strong>Type:</strong> {{ report.report_type }}</p>
+    <p><strong>UUID:</strong> {{ report.uuid }}</p>
+    <p><strong>Status:</strong> {{ report.get_status_display }}</p>
+    <p><strong>Date:</strong> {{ report.report_date|date:"j M Y" }}</p>
+  </div>
+
+  <div class="split">
+    <div class="patient-info">
+      <h2>Patient Information</h2>
+      <p><strong>Name:</strong> {{ report.patient_profile.user.get_full_name }}</p>
+      <p><strong>DOB:</strong> {{ report.patient_profile.date_of_birth|date:"j M Y" }}</p>
+      <p><strong>Phone:</strong> {{ report.patient_profile.ph_number }}</p>
+      <p><strong>Address:</strong> {{ report.patient_profile.address }}</p>
+    </div>
+    <div class="doctor-info">
+      <h2>Doctor Information</h2>
+      <p><strong>Name:</strong> {{ report.doctor.profile.user.get_full_name }}</p>
+      <p><strong>Email:</strong> {{ report.doctor.profile.user.email }}</p>
+      {% if report.doctor.specialization %}
+        <p><strong>Specialty:</strong> {{ report.doctor.specialization }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="section-heading">Report Description</div>
+  <p>{{ report.report_description }}</p>
+
+  <div class="section-heading">Lab Parameters</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Parameter</th>
+        <th>Result</th>
+        <th>Reference Range</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in parameters %}
+      <tr>
+        <td>{{ p.parameter_name }}</td>
+        <td>{{ p.result }}</td>
+        <td>{{ p.reference_range }}</td>
+        <td>{{ p.get_status_display }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</body>
+</html>
