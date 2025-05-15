@@ -173,7 +173,9 @@ class PrescriptionSchedule(models.Model):
                        on_delete=models.CASCADE,
                        related_name='timeschedule'
                    )
-    time         = models.TimeField()
+    time         = models.TimeField( unique=False)
+
+    had_taken    = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('prescription', 'time')
@@ -181,3 +183,49 @@ class PrescriptionSchedule(models.Model):
 
     def __str__(self):
         return f"{self.prescription} @ {self.time}"
+    
+
+
+
+
+
+
+class LabReport(models.Model):
+
+
+    uuid = models.UUIDField(default=uuid.uuid4, editable=True)
+
+    STATUS_CHOICES = [
+        ('normal', 'Normal'),
+        ('abnormal', 'Abnormal'),
+        ('pending', 'Pending'),
+        ('neutral', 'Neutral'),
+    ]
+    patient_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="lab_reports_profile")
+    doctor  = models.ForeignKey(DoctorProfile, on_delete=models.CASCADE, related_name="lab_reports_doctor")
+
+
+    report_type = models.CharField(max_length=100)  # e.g., Blood Test, Lipid Panel
+    report_date = models.DateField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    report_description = models.TextField()
+
+    def __str__(self):
+        return f"{self.report_type} - {self.report_date}"
+
+
+class LabReportParameter(models.Model):
+    STATUS_CHOICES = [
+        ('high', 'High'),
+        ('low', 'Low'),
+        ('normal', 'Normal'),
+    ]
+
+    lab_report = models.ForeignKey(LabReport, on_delete=models.CASCADE, related_name='parameters')
+    parameter_name = models.CharField(max_length=100)
+    result = models.CharField(max_length=50)
+    reference_range = models.CharField(max_length=100)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+
+    def __str__(self):
+        return f"{self.parameter_name} ({self.status})"

@@ -16,8 +16,8 @@
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Prescriptions Management</h1>
 
     <!-- Overview Panel -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white p-4 rounded-lg shadow flex items-center space-x-4 border-l-4 border-green-500">
+    <div class="flex justify-between overflow-x-auto gap-4 mb-6 custom-scrollbar pb-4">
+        <div class="min-w-[320px]   bg-white p-4 rounded-lg shadow flex items-center space-x-4 border-l-4 border-green-500">
             <div class="p-3 bg-green-100 rounded-full">
                 <svg id='Pill_24' class="w-6 h-6 text-green-600" fill="currentColor" viewBox='0 0 24 24'
                     xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
@@ -32,30 +32,11 @@
             </div>
             <div>
                 <p class="text-sm text-gray-500">Active Prescriptions</p>
-                <p class="text-2xl font-bold">3</p>
+                <p class="text-2xl font-bold" id="active_preps">{{ active_prescriptions }}</p>
             </div>
         </div>
 
-        <div class="bg-white p-4 rounded-lg shadow flex items-center space-x-4 border-l-4 border-yellow-500">
-            <div class="p-3 bg-yellow-100 rounded-full">
-                <svg id='Refresh_24' class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox='0 0 24 24'
-                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                    <g transform="matrix(0.67 0 0 0.67 12 12)">
-                        <path
-                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
-                            transform=" translate(-15, -15)"
-                            d="M 15 3 C 12.031398 3 9.3028202 4.0834384 7.2070312 5.875 C 6.92097953443116 6.102722442718219 6.781996312146395 6.468394217532747 6.84458079887411 6.828625043966701 C 6.907165285601823 7.188855870400655 7.161341070445081 7.486222400749947 7.507438614792125 7.604118779359328 C 7.8535361591391695 7.722015157968709 8.236385060652946 7.641647866224133 8.5058594 7.394531200000001 C 10.25407 5.9000929 12.516602 5 15 5 C 20.19656 5 24.450989 8.9379267 24.951172 14 L 22 14 L 26 20 L 30 14 L 26.949219 14 C 26.437925 7.8516588 21.277839 3 15 3 z M 4 10 L 0 16 L 3.0507812 16 C 3.562075 22.148341 8.7221607 27 15 27 C 17.968602 27 20.69718 25.916562 22.792969 24.125 C 23.07902234348135 23.89727811487935 23.21800696636432 23.531605633011267 23.155422803510252 23.17137377040107 C 23.092838640656183 22.811141907790866 22.838662106347986 22.51377449397328 22.492563490644887 22.395878266348475 C 22.14646487494179 22.27798203872367 21.76361505519577 22.35835059547272 21.494141 22.605469 C 19.74593 24.099907 17.483398 25 15 25 C 9.80344 25 5.5490109 21.062074 5.0488281 16 L 8 16 L 4 10 z"
-                            stroke-linecap="round" />
-                    </g>
-                </svg>
-            </div>
-            <div>
-                <p class="text-sm text-gray-500">Pending Refills</p>
-                <p class="text-2xl font-bold">1</p>
-            </div>
-        </div>
-
-        <div class="bg-white p-4 rounded-lg shadow flex items-center space-x-4 border-l-4 border-blue-500">
+        <div class="min-w-[320px]   bg-white p-4 rounded-lg shadow flex items-center space-x-4 border-l-4 border-blue-500">
             <div class="p-3 bg-blue-100 rounded-full">
                 <svg id='Clock_24' class="w-6 h-6 text-blue-600" fill="currentColor" viewBox='0 0 24 24'
                     xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
@@ -69,39 +50,29 @@
                 </svg>
             </div>
             <div>
-                <p class="text-sm text-gray-500">Recent Orders</p>
-                <p class="text-2xl font-bold">2</p>
+                <p class="text-sm text-gray-500">Daily Medicine</p>
+                <p class="text-2xl font-bold">{{ medicine_to_have }}</p>
             </div>
         </div>
 
-        <div class="bg-white p-4 rounded-lg shadow flex items-center space-x-4 border-l-4 border-red-500">
-            <div class="p-3 bg-red-100 rounded-full">
-                <svg id='Alert_Warning_Circle_24' class="w-6 h-6 text-red-600" fill="currentColor" viewBox='0 0 24 24'
-                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                    <g transform="matrix(1.43 0 0 1.43 12 12)">
-                        <g style="">
-                            <g transform="matrix(1 0 0 1 0 0)">
-                                <circle
-                                    style="stroke: currentColor; stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
-                                    cx="0" cy="0" r="6.5" />
-                            </g>
-                            <g transform="matrix(1 0 0 1 0 -2)">
-                                <line
-                                    style="stroke: currentColor; stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
-                                    x1="0" y1="-1.5" x2="0" y2="1.5" />
-                            </g>
-                            <g transform="matrix(1 0 0 1 0 2.5)">
-                                <circle
-                                    style="stroke: currentColor; stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
-                                    cx="0" cy="0" r="0.5" />
-                            </g>
-                        </g>
+        <div class="min-w-[320px]   bg-white p-4 rounded-lg shadow flex items-center space-x-4 border-l-4 border-yellow-500">
+            <div class="p-3 bg-yellow-100 rounded-full">
+                <svg id='Validation_Check_Circle_24' class="h-6 w-6 text-yellow-500 " fill="currentcolor" stroke="currentcolor" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                    <g transform="matrix(1.43 0 0 1.43 12 12)" >
+                    <g style="" >
+                    <g transform="matrix(1 0 0 1 -0.5 0.5)" >
+                    <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-6.5, -7.5)" d="M 12.0524 6 C 12.1813 6.47821 12.25 6.98107 12.25 7.5 C 12.25 10.6756 9.67564 13.25 6.5 13.25 C 3.32436 13.25 0.75 10.6756 0.75 7.5 C 0.75 4.32436 3.32436 1.75 6.5 1.75 C 6.9459 1.75 7.37994 1.80075 7.79667 1.8968" stroke-linecap="round" />
+                    </g>
+                    <g transform="matrix(1 0 0 1 1 -1.5)" >
+                    <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-8, -5.5)" d="M 4 6.5 L 6.90909 9.5 C 8.278 5.56771 9.41805 3.84218 12 1.5" stroke-linecap="round" />
+                    </g>
+                    </g>
                     </g>
                 </svg>
             </div>
             <div>
-                <p class="text-sm text-gray-500">Alerts</p>
-                <p class="text-2xl font-bold">1</p>
+                <p class="text-sm text-gray-500">Past Medications</p>
+                <p class="text-2xl font-bold">{{ total_history_data }}</p>
             </div>
         </div>
     </div>
@@ -279,6 +250,13 @@
 </div>
 
 
+<div class="bg-green-100 text-green-800  
+bg-yellow-100 text-yellow-800 
+bg-orange-100 text-orange-800
+bg-blue-100 text-blue-800
+bg-red-100 text-red-800
+bg-gray-100 text-gray-800 hidden border-l border-gray-700"></div>
+
 
 {% endblock content %}
 
@@ -288,7 +266,7 @@
 <script>
 
     // Sample data
-    const activePrescriptions = [
+    {% comment %} const activePrescriptions = [
         { id: 1, name: 'Amlodipine', dosage: '10mg', frequency: 'Once daily', doctor: 'Dr. Sarah Johnson', specialty: 'Cardiology', startDate: '2025-01-15', endDate: '2025-04-15', status: 'Active', refillStatus: 'Available', instructions: 'Take with or without food, at the same time each day. Avoid grapefruit products.', sideEffects: 'May cause dizziness, swelling in ankles, or headache.' },
         { id: 2, name: 'Metformin', dosage: '500mg', frequency: 'Twice daily', doctor: 'Dr. Michael Chen', specialty: 'Endocrinology', startDate: '2025-02-10', endDate: '2025-05-10', status: 'Active', refillStatus: 'Pending', instructions: 'Take with meals to reduce stomach upset. Monitor blood sugar regularly.', sideEffects: 'May cause nausea, diarrhea, or decreased vitamin B12 levels with long-term use.' },
         { id: 3, name: 'Atorvastatin', dosage: '20mg', frequency: 'Once daily', doctor: 'Dr. Sarah Johnson', specialty: 'Cardiology', startDate: '2025-01-15', endDate: '2025-07-15', status: 'Active', refillStatus: 'Expiring Soon', instructions: 'Take in the evening. Avoid consuming large amounts of grapefruit juice.', sideEffects: 'May cause muscle pain, weakness, or liver problems.' }
@@ -297,11 +275,7 @@
     const historyPrescriptions = [
         { id: 4, name: 'Amoxicillin', dosage: '500mg', frequency: 'Three times daily', doctor: 'Dr. James Wilson', specialty: 'General Practice', startDate: '2024-12-05', endDate: '2024-12-15', status: 'Completed', reason: 'Full course completed' },
         { id: 5, name: 'Prednisone', dosage: '20mg tapering', frequency: 'Per schedule', doctor: 'Dr. Emily Roberts', specialty: 'Rheumatology', startDate: '2024-11-10', endDate: '2024-12-22', status: 'Discontinued', reason: 'Side effects (insomnia, mood changes)' }
-    ];
-
-    {% comment %} const activePrescriptions ={{ merged_json_data.active_data|safe}}; {% endcomment %}
-    {% comment %} const historyPrescriptions = {{ merged_json_data.history_data|safe}}; {% endcomment %}
-
+    ]; 
     // Today's medications
     const todayMedications = [
         { name: 'Amlodipine', time: '8:00 AM', taken: true },
@@ -309,7 +283,13 @@
         { name: 'Metformin', time: '8:00 PM', taken: false },
         { name: 'Atorvastatin', time: '8:00 PM', taken: false },
     ];
+    
+    {% endcomment %}
 
+    const activePrescriptions ={{ merged_json_data.active_data|safe}};
+    const historyPrescriptions = {{ merged_json_data.history_data|safe}};
+    const todayMedications = {{ merged_json_data.todayMedications|safe}}
+    
     // Status badge helper function
     function getStatusBadgeHTML(status) {
         let colorClass = '';
@@ -426,75 +406,14 @@
                     <td colspan="6" class="px-6 py-4 bg-gray-50 border-t border-gray-100">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <h4 class="font-medium text-gray-700 mb-2">Instructions</h4>
+                                <h4 class="font-bold text-gray-700 mb-2">Instructions</h4>
                                 <p class="text-sm text-gray-600">${prescription.instructions}</p>
+                            </div>
+                            <div class="border-l border-gray-700 pl-3">
+                                <h4 class="font-bold text-gray-700 mb-2">Possible Side Effects</h4>
+                                <p class="text-sm text-gray-600">${prescription.sideEffects}</p>                                
+                            </div>
                                 
-                                <h4 class="font-medium text-gray-700 mt-4 mb-2">Possible Side Effects</h4>
-                                <p class="text-sm text-gray-600">${prescription.sideEffects}</p>
-                            </div>
-                            <div>
-                                <h4 class="font-medium text-gray-700 mb-2">Actions</h4>
-                                <div class="flex flex-col space-y-2">
-                                    <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                                        <svg id='Refresh_24' class="w-4 h-4 mr-2" fill="currentColor" viewBox='0 0 24 24'
-                                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                                            <g transform="matrix(0.67 0 0 0.67 12 12)">
-                                                <path
-                                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
-                                                    transform=" translate(-15, -15)"
-                                                    d="M 15 3 C 12.031398 3 9.3028202 4.0834384 7.2070312 5.875 C 6.92097953443116 6.102722442718219 6.781996312146395 6.468394217532747 6.84458079887411 6.828625043966701 C 6.907165285601823 7.188855870400655 7.161341070445081 7.486222400749947 7.507438614792125 7.604118779359328 C 7.8535361591391695 7.722015157968709 8.236385060652946 7.641647866224133 8.5058594 7.394531200000001 C 10.25407 5.9000929 12.516602 5 15 5 C 20.19656 5 24.450989 8.9379267 24.951172 14 L 22 14 L 26 20 L 30 14 L 26.949219 14 C 26.437925 7.8516588 21.277839 3 15 3 z M 4 10 L 0 16 L 3.0507812 16 C 3.562075 22.148341 8.7221607 27 15 27 C 17.968602 27 20.69718 25.916562 22.792969 24.125 C 23.07902234348135 23.89727811487935 23.21800696636432 23.531605633011267 23.155422803510252 23.17137377040107 C 23.092838640656183 22.811141907790866 22.838662106347986 22.51377449397328 22.492563490644887 22.395878266348475 C 22.14646487494179 22.27798203872367 21.76361505519577 22.35835059547272 21.494141 22.605469 C 19.74593 24.099907 17.483398 25 15 25 C 9.80344 25 5.5490109 21.062074 5.0488281 16 L 8 16 L 4 10 z"
-                                                    stroke-linecap="round" />
-                                            </g>
-                                        </svg> Request Refill
-                                    </button>
-                                    <button class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                        <svg id='file-text_24' class="mr-2 h-4 w-4" fill="currentcolor" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                                                        <g transform="matrix(1 0 0 1 12 12)" >
-                                                        <g style="" >
-                                                        <g transform="matrix(1 0 0 1 0 0)" >
-                                                        <path style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z" stroke-linecap="round" />
-                                                        </g>
-                                                        <g transform="matrix(1 0 0 1 4.5 -6.5)" >
-                                                        <path style="stroke: rgb(33,33,33); stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-16.5, -5.5)" d="M 14 3 L 14 7 C 14 7.552284749830793 14.447715250169207 8 15 8 L 19 8" stroke-linecap="round" />
-                                                        </g>
-                                                        <g transform="matrix(1 0 0 1 0 0)" >
-                                                        <path style="stroke: rgb(33,33,33); stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 17 21 L 7 21 C 5.8954305003384135 21 5 20.104569499661586 5 19 L 5 5 C 5 3.895430500338413 5.8954305003384135 3 7 3 L 14 3 L 19 8 L 19 19 C 19 20.104569499661586 18.104569499661586 21 17 21 z" stroke-linecap="round" />
-                                                        </g>
-                                                        <g transform="matrix(1 0 0 1 -2.5 -3)" >
-                                                        <line style="stroke: rgb(33,33,33); stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" x1="-0.5" y1="0" x2="0.5" y2="0" />
-                                                        </g>
-                                                        <g transform="matrix(1 0 0 1 0 1)" >
-                                                        <line style="stroke: rgb(33,33,33); stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" x1="-3" y1="0" x2="3" y2="0" />
-                                                        </g>
-                                                        <g transform="matrix(1 0 0 1 0 5)" >
-                                                        <line style="stroke: rgb(33,33,33); stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" x1="-3" y1="0" x2="3" y2="0" />
-                                                        </g>
-                                                        </g>
-                                                        </g>
-                                        </svg>
-                                        
-                                        
-                                        View Full Details
-                                    </button>
-                                    <button class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                        <svg id='message-circle-2_24' class="mr-2 h-4 w-4" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                                            <g transform="matrix(1 0 0 1 12 12)" >
-                                            <g style="" >
-                                            <g transform="matrix(1 0 0 1 0 0)" >
-                                            <path style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z" stroke-linecap="round" />
-                                            </g>
-                                            <g transform="matrix(1 0 0 1 0.01 -0.01)" >
-                                            <path style="stroke: rgb(33,33,33); stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12.01, -11.99)" d="M 3 20 L 4.3 16.1 C 1.9761174147637677 12.663009706393852 2.8738762839310747 8.227707321782525 6.399767548460441 5.726274565848396 C 9.92565881298981 3.224841809914267 14.990227941838622 3.430188862125 18.245284500640466 6.206560632867749 C 21.50034105944231 8.982932403610498 21.940114917829877 13.472466134630796 19.273871249507618 16.70712772262393 C 16.607627581185362 19.94178931061706 11.65920099345933 20.92211040586947 7.700000000000003 19 L 2.999999999999999 20" stroke-linecap="round" />
-                                            </g>
-                                            </g>
-                                            </g>
-                                        </svg>
-                                        
-                                        
-                                        Report Issue
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </td>
                 `;

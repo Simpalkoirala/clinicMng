@@ -33,7 +33,7 @@ INSTALLED_APPS = [
 
     'account',
 
-    # Third party apps
+    # # Third party apps
     'tailwind',
     'theme',
 ]
@@ -46,6 +46,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+
+    # 'home.middleware.activity_logger.ActivityLoggerMiddleware',
 ]
 
 ROOT_URLCONF = 'clinic_base.urls'
@@ -68,7 +71,7 @@ TEMPLATES = [
 ]
 
 # Tailwind configuration 
-NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
+NPM_BIN_PATH = "npm.cmd"
 TAILWIND_APP_NAME = 'theme'
 
 

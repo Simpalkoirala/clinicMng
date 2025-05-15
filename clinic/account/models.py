@@ -4,7 +4,8 @@ from django.dispatch import receiver
 
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
-
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
@@ -67,4 +68,38 @@ class MedicalInfo(models.Model):
   
     def __str__(self):
         return f"{self.profile.user.username}'s Medical Info"
+    
+    
 
+
+
+class ActivityLog(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="activity_logs")
+
+    action = models.CharField(max_length=50)
+    title = models.CharField(max_length=255, blank=True)
+    description = models.TextField(blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    viewed = models.BooleanField(default=False)
+    
+    
+
+    # optional link to any object
+    target_content_type = models.ForeignKey(
+        ContentType, on_delete=models.CASCADE, null=True, blank=True
+    )
+    target_object_id = models.PositiveIntegerField(null=True, blank=True)
+    target = GenericForeignKey("target_content_type", "target_object_id")
+
+    class Meta:
+        ordering = ["-timestamp"]
+
+    def __str__(self):
+        return f"{self.profile.user.username} - {self.action} - {self.timestamp}"
+    def get_action_display(self):
+        return dict(USER_ROLES).get(self.action, self.action)
+    def get_target_display(self):
+        if self.target_content_type:
+            return f"{self.target_content_type.model} - {self.target}"
+        return "No target"

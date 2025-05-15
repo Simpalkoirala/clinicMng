@@ -56,3 +56,37 @@ def get_doc_type_color(doc_type, which):
             return f"{classes['bg']} {classes['text']}"
         else:
             return ""
+        
+
+
+@register.simple_tag
+def get_status_type_color(status_type):
+    """
+    Returns the Tailwind class associated with a given appoinment status type.
+    Usage: {% get_status_type_color appoinment.status %}
+    """
+    class_map = {
+        "pending": "bg-orange-50 text-orange-700 border-orange-100",
+        "confirmed": "bg-green-50 text-green-700 border border-green-100",
+        "cancelled": "bg-red-50 text-red-700 border border-red-100",
+        "completed": "bg-blue-50 text-blue-700 border border-blue-100"
+    }
+
+    return class_map.get(status_type, "bg-gray-100 text-gray-800")
+
+
+
+@register.simple_tag
+def get_report_status_type_color(status_type):
+    """
+    Returns the Tailwind class associated with a given Lab report status type.
+    Usage: {% get_report_status_type_color lab_report.status %}
+    """
+    class_map = {
+        "pending": "bg-orange-50 text-orange-700 border-orange-100",
+        "normal": "bg-blue-50 text-blue-700 border border-blue-100",
+        "abnormal": "bg-red-50 text-red-700 border border-red-100",
+        "neutral": "bg-green-50 text-green-700 border border-green-100",
+    }
+
+    return class_map.get(status_type, "bg-gray-100 text-gray-800")

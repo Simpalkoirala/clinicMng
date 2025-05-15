@@ -5,16 +5,27 @@ from django.utils.translation import gettext as _
 import magic  # python-magic-bin for mimetype detection 
 
 from django.contrib.auth.models import User
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+import openpyxl
+from openpyxl.styles import PatternFill, Font
+
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
 
 
 from account.views import login_required_with_message
 from django.contrib import messages
 from datetime import datetime
 
-from account.models import Profile, MedicalInfo
+from account.models import Profile, MedicalInfo, ActivityLog
 from doctor.models import DoctorProfile, AppointmentDateSlot, AppointmentTimeSlot
 from patient.models import *
+
+from account.utils import log_action
+
 from django.urls import reverse
 
 from django.core.serializers.json import DjangoJSONEncoder
@@ -83,22 +94,111 @@ def is_valid_file(uploaded_file, allowed_file_types=ALLOWED_FILE_TYPES_DOC, max_
 
 
 def patientDashboard(request: HttpRequest):
-    return render(request, 'pages/patient/dashboard.html')
+    profile: Profile = request.user.profile
 
-
-
-@login_required_with_message(login_url='account:login', message="You need to log in to access Profile page.")
-def viewAppointment(request: HttpRequest):  
-    profile: Profile = Profile.objects.get(user=request.user)
-    appointments: Appointment = Appointment.objects.filter(profile=profile).order_by('-created_at')
+    # Get all schedules from all prescriptions for this profile
+    all_schedules = PrescriptionSchedule.objects.filter(
+        prescription__profile=profile
+    ).order_by('-time')
 
     context = {
         'profile': profile,
-        'appointments': appointments,
+        'todayMedications': all_schedules
     }
-    return render(request, 'pages/patient/view_appointment.html', context) 
+
+    return render(request, 'pages/patient/dashboard.html', context)
 
 
+
+@login_required_with_message(login_url='account:login', message="You need to log in to View Your Appointments.")
+def viewAppointment(request: HttpRequest):
+    profile = Profile.objects.get(user=request.user)
+    qs = Appointment.objects.filter(profile=profile).order_by('-created_at')
+
+    # pull per_page from GET, default 10
+    per_page = int(request.GET.get('per_page', 10))
+    paginator = Paginator(qs, per_page)
+    page_num = request.GET.get('page')
+
+    try:
+        page_obj = paginator.page(page_num)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    # define your entries‑per‑page options here
+    per_page_options = [10, 25, 50, 100]
+
+    context = {
+        'profile': profile,
+        'appointments': page_obj,
+        'paginator': paginator,
+        'per_page': per_page,
+        'per_page_options': per_page_options,
+    }
+    return render(request, 'pages/patient/view_appointment.html', context)
+
+
+@login_required_with_message(login_url='account:login', message="You need to log in to Get Excel Files.")
+def export_appointments_excel(request):
+    profile: Profile = request.user.profile
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Appointments"
+
+    # Add a description/info row at the top
+    ws.append([
+        f"Exported Appointments for: {profile.user.get_full_name()} (User ID: {profile.user.username})"
+    ])
+    ws.append([
+        f"Export Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    ])
+    ws.append([])  # Empty row for spacing
+    ws.append([])  # Empty row for spacing
+
+    # Header
+    # Define a fill color (light blue) and bold font for the header
+    header_fill = PatternFill(start_color="B7DEE8", end_color="B7DEE8", fill_type="solid")
+    header_font = Font(bold=True)
+
+    ws.append([
+        "ID", "Doctor", "Specialization", "Appointment Type", "Date", "Time",
+        "Reason For Appointment", "Status", "Cancelled By", "Cancel Reason"
+    ])
+
+    # Apply the fill and font to the header row
+    for cell in ws[ws.max_row]:
+        cell.fill = header_fill
+        cell.font = header_font
+
+    appointments  = Appointment.objects.filter(profile=profile).order_by('-created_at')
+    for appt in appointments:
+        cancelled_by = appt.cancled_by.user.first_name if appt.status == 'cancelled' and appt.cancled_by else "Null"
+        cancel_reason = appt.cancel_reason if appt.status == 'cancelled' else "Null"
+        ws.append([
+            str(appt.uuid),
+            appt.doctor.profile.user.first_name,
+            appt.doctor.specialization,
+            appt.appointment_type,
+            appt.appointment_date.strftime('%d %b %Y'),
+            f"{appt.appointment_time_str}",
+            appt.reason,
+            appt.status,
+            cancelled_by,
+            cancel_reason,
+        ])
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    response["Content-Disposition"] = "attachment; filename=appointments.xlsx"
+    wb.save(response)
+    return response
+
+
+@login_required_with_message(login_url='account:login', message="You need to log in to Delete, Edit Appointments.")
 def appoinemtCancle_Edit(request: HttpRequest, apot_id: uuid, status: str):
     try:
         appointment = get_object_or_404(Appointment, uuid=apot_id)
@@ -122,6 +222,19 @@ def appoinemtCancle_Edit(request: HttpRequest, apot_id: uuid, status: str):
                         appointment.time_slot.save()
                     appointment.status = 'cancelled'
                     appointment.save()
+
+                    # Log the action
+                    log_action(
+                        profile=profile,
+                        action='CANCEL_APPT',
+                        title=_("Appointment Cancelled"),
+                        description=_("Appointment with Dr. {} on {} at {} has been cancelled.").format(
+                            appointment.doctor.profile.user.get_full_name(),
+                            appointment.appointment_date,
+                            appointment.appointment_time_str
+                        ),
+                        obj=appointment
+                    )
                     messages.success(request, _("Appointment cancelled successfully."))
                 else:
                     messages.error(request, _("Cannot cancel a completed appointment."))
@@ -137,7 +250,7 @@ def appoinemtCancle_Edit(request: HttpRequest, apot_id: uuid, status: str):
 
 
 
-@login_required_with_message(login_url='account:login', message="You need to log in to access Profile page.")
+@login_required_with_message(login_url='account:login', message="You need to log in to Book an appointment.")
 def BookAppointment(request: HttpRequest):
     """Doctor booking page."""
 
@@ -228,6 +341,19 @@ def BookAppointment(request: HttpRequest):
                     return JsonResponse({'error': error_msg})
                 appointment.file = appointment_file
                 appointment.save()
+            
+            # Log the action
+            log_action(
+                user=profile,
+                action='BOOK_APPT',
+                title=_("Appointment Scheduled"),
+                description=_("Appointment booked with Dr. {} on {} at {}").format(
+                    doctor.profile.user.get_full_name(),
+                    appointment_date,
+                    appointment_time
+                ),
+                obj=appointment
+            )
 
             messages.success(request, _("Appointment booked successfully."))
             return JsonResponse({'success': True, 'redirect_url': reverse('patient:viewAppointment')})
@@ -241,7 +367,7 @@ def BookAppointment(request: HttpRequest):
 
 
 
-@login_required_with_message(login_url='account:login', message="You need to log in to access Profile page.")
+@login_required_with_message(login_url='account:login', message="You need to log in to View Your Files/ Document.")
 def ViewDocument(request: HttpRequest):
     path = reverse('patient:viewDocument')
     if request.method == 'POST':
@@ -260,13 +386,22 @@ def ViewDocument(request: HttpRequest):
             return redirect(path+'#add_new')
         try:
             profile: Profile = request.user.profile
-            Documents.objects.create(
+            doc = Documents.objects.create(
                 profile=profile,
                 nick_name=nick_name,
                 doc_type=doc_type,
                 notes=notes,
                 file=uploaded_file,
             )
+            # Log the action
+            log_action(
+                profile=profile,
+                action='UPLOAD_DOC',
+                title=_("Document Uploaded"),
+                description=_("Document '{}' uploaded.").format(nick_name),
+                obj=doc
+            )
+
             messages.success(request, "Document uploaded successfully.")
         except Exception as e:
             messages.error(request, "An error occurred while saving the document.")
@@ -294,6 +429,17 @@ def delete_document(request, doc_id):
             if document.file:
                 document.file.delete(save=False)  # Delete file from storage
             document.delete()  # Delete record from DB
+            messages.success(request, "Document deleted successfully.")
+
+            log_action(
+                profile=request.user.profile,
+                action='DELETE_DOC',
+                title=_("Document Deleted"),
+                description=_("Document '{}' deleted.").format(document.nick_name),
+                obj=document
+            )
+
+
             return redirect('patient:viewDocument')  # Redirect to your document list page
     except Documents.DoesNotExist:
         messages.error(request, "Document not found.")
@@ -312,7 +458,65 @@ def message(request: HttpRequest):
     return render(request, 'pages/patient/message.html')
 
 def labReport(request: HttpRequest):
-    return render(request, 'pages/patient/lab_report.html')
+    profile: Profile = request.user.profile
+    reports: LabReport = LabReport.objects.filter(patient_profile=profile)
+
+    abnormal_reports = 0
+    pending_reports = 0
+
+    payload = []
+    for each_report in reports:
+        if each_report.status == 'abnormal':
+                abnormal_reports+=1
+        elif each_report.status == 'pending':
+                pending_reports+=1
+
+        params = []
+        for each_params in each_report.parameters.all():
+            params.append({
+                'name':     each_params.parameter_name,
+                'result':     each_params.result,
+                'reference': each_params.reference_range,
+                'status':   each_params.status.lower(),
+            })
+
+        payload.append({
+            'id':         each_report.id,
+            'uuid':         str(each_report.uuid),
+            'date':       each_report.report_date.strftime('%Y-%m-%d'),
+            'type':       each_report.report_type,
+            'status':     each_report.status.lower(),
+            'doctor':     each_report.doctor.profile.user.get_full_name(),
+            'parameters': params,
+            'notes':      each_report.report_description,
+        })
+
+    context = {
+            'profile': profile,
+            'lab_reports':json.dumps(payload, cls=DjangoJSONEncoder),
+            'abnormal_reports': abnormal_reports, 
+            'pending_reports': pending_reports,
+        }
+
+
+
+    return render(request, 'pages/patient/lab_report.html', context)
+
+@login_required_with_message(login_url='account:login', message="You need to log in to Download PDF.")
+def lab_report_pdf(request, uuid):
+    report = get_object_or_404(LabReport, uuid=uuid)
+    html = render_to_string('pages/patient/lab_report_pdf.html', {
+        'report': report,
+        'parameters': report.parameters.all(),
+    })
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="lab_report_{report.uuid}.pdf"'
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('Error generating PDF', status=500)
+    return response
+
+
 
 def prescriptions(request: HttpRequest):
     if request.method == 'GET':
@@ -322,6 +526,10 @@ def prescriptions(request: HttpRequest):
 
         active_data = []
         history_data = []
+        todayMedications = []
+
+        active_prescriptions = 0
+        medicine_to_have = 0
 
         for pres in prescriptions:
             data = {
@@ -336,26 +544,45 @@ def prescriptions(request: HttpRequest):
                 "status": pres.status.capitalize(),
             }
 
+
+
             if pres.status == "active":
                 data.update({
                     "refillStatus": "Available",  # placeholder: can add logic here
                     "instructions": pres.medicine.instructions,
                     "sideEffects": pres.medicine.side_effects,
                 })
+
+                pre_shed: PrescriptionSchedule = PrescriptionSchedule.objects.filter(prescription=pres).all().order_by('time')
+                if pre_shed:
+                    for each_shed in pre_shed:
+                        medicine_to_have+=1
+                        todayMedications.append({
+                            "name": pres.medicine.name,
+                            "time": each_shed.time.strftime('%I:%M %p'),  # 12-hour format with AM/PM
+                            "taken": each_shed.had_taken,
+                        })
+
+                active_prescriptions+=1
                 active_data.append(data)
+
             else:
                 data["reason"] = pres.notes or "Course ended"
                 history_data.append(data)
 
         merged_json_data = {
            'active_data' : json.dumps( active_data, cls=DjangoJSONEncoder),
-           'history_data' : json.dumps(history_data, cls=DjangoJSONEncoder)
+           'history_data' : json.dumps(history_data, cls=DjangoJSONEncoder),
+           'todayMedications' : json.dumps(todayMedications, cls=DjangoJSONEncoder)
         }
 
         context = {
             'profile': profile,
             'prescriptions': prescriptions,
             'merged_json_data':merged_json_data,
+            'active_prescriptions':active_prescriptions,
+            'medicine_to_have': medicine_to_have,
+            'total_history_data': len(history_data),
         }
         return render(request, 'pages/patient/prescriptions.html', context)
 
@@ -430,6 +657,15 @@ def p_profile(request: HttpRequest):
 
 
 
+def p_activities(request: HttpRequest):
+    """Patient activities page view."""
+    profile: Profile = request.user.profile
+    activities = ActivityLog.objects.filter(profile=profile).order_by('-timestamp')
 
+    context = {
+        'profile': profile,
+        'activities': activities,
+    }
+    return render(request, 'pages/patient/activities.html', context)
 
 # --------------------------------------- Adding Logic on each pages ------------------------------------------------------------

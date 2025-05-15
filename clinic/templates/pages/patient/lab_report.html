@@ -19,8 +19,8 @@
     <!-- Main Content -->
     <div>
         <!-- Quick Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white rounded-lg shadow p-6 flex items-center">
+        <div class="flex justify-between overflow-x-auto gap-4 mb-6 custom-scrollbar pb-4">
+            <div class="min-w-[300px] bg-white rounded-lg shadow p-6 flex items-center">
                 <div class="rounded-full bg-blue-100 p-3 mr-4">
                     <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -29,11 +29,11 @@
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500">Recent Lab Reports</p>
-                    <p class="text-xl font-semibold text-gray-900" id="total-reports">0</p>
+                    <p class="text-xl font-semibold text-gray-900" id="total-reports">{{ total_lab_reports }}</p>
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow p-6 flex items-center">
+            <div class="min-w-[300px] bg-white rounded-lg shadow p-6 flex items-center">
                 <div class="rounded-full bg-red-100 p-3 mr-4">
                     <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -42,11 +42,11 @@
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500">Abnormal Findings</p>
-                    <p class="text-xl font-semibold text-gray-900" id="abnormal-count">0</p>
+                    <p class="text-xl font-semibold text-gray-900" id="abnormal-count">{{ abnormal_reports }}</p>
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow p-6 flex items-center">
+            <div class="min-w-[300px] bg-white rounded-lg shadow p-6 flex items-center">
                 <div class="rounded-full bg-yellow-100 p-3 mr-4">
                     <svg class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -55,7 +55,7 @@
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500">Pending Lab Orders</p>
-                    <p class="text-xl font-semibold text-gray-900" id="pending-count">2</p>
+                    <p class="text-xl font-semibold text-gray-900" id="pending-count">{{ pending_reports }}</p>
                 </div>
             </div>
         </div>
@@ -164,7 +164,7 @@
 
     <!-- Report Item Template -->
     <template id="report-item-template">
-        <li class="hover:bg-gray-50 transition-colors duration-150">
+        <li class="hover:bg-gray-50 transition-colors duration-150 each-report-items">
             <div class="px-4 py-4 sm:px-6 cursor-pointer report-header">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
@@ -218,7 +218,7 @@
                     <p class="text-sm text-gray-600 report-notes"></p>
                 </div>
 
-                <div class="overflow-x-scroll my-2 custom-scrollbar">
+                <div class="overflow-x-auto my-2 custom-scrollbar">
                     <table class="min-w-full divide-y divide-gray-200 mb-4 ">
                         <thead class="bg-gray-100">
                             <tr>
@@ -246,30 +246,14 @@
                     </table>
                 </div>
 
-                <div class="flex justify-end">
+                <div class="flex justify-end report-action-btns">
                     <button
-                        class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-3">
+                        class="download-btns inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-3">
                         <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
                         Download PDF
-                    </button>
-                    <button
-                        class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-3">
-                        <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                        </svg>
-                        Share
-                    </button>
-                    <button
-                        class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                        </svg>
-                        Print
                     </button>
                 </div>
             </div>
@@ -289,6 +273,14 @@
     </template>
 </section>
 
+
+
+
+<div class="hidden">
+</div>
+
+
+
 {% endblock content %}
 
 
@@ -303,62 +295,24 @@
 
     function initializeLabReports() {
         // Sample data
-        const labReports = [
-            {
-                id: 1,
-                date: '2025-03-10',
-                type: 'Blood Test',
-                status: 'abnormal',
-                doctor: 'Dr. Sarah Johnson',
-                parameters: [
-                    { name: 'Hemoglobin', value: '10.2', unit: 'g/dL', reference: '12.0-15.5', status: 'low' },
-                    { name: 'White Blood Cells', value: '11.3', unit: '10³/µL', reference: '4.5-11.0', status: 'high' },
-                    { name: 'Glucose', value: '98', unit: 'mg/dL', reference: '70-100', status: 'normal' },
-                ],
-                notes: 'Patient shows signs of mild anemia. Recommend iron supplements and follow-up in 4 weeks.'
-            },
-            {
-                id: 2,
-                date: '2025-02-25',
-                type: 'Lipid Panel',
-                status: 'normal',
-                doctor: 'Dr. Robert Chen',
-                parameters: [
-                    { name: 'Total Cholesterol', value: '185', unit: 'mg/dL', reference: '<200', status: 'normal' },
-                    { name: 'HDL Cholesterol', value: '55', unit: 'mg/dL', reference: '>40', status: 'normal' },
-                    { name: 'LDL Cholesterol', value: '110', unit: 'mg/dL', reference: '<130', status: 'normal' },
-                    { name: 'Triglycerides', value: '120', unit: 'mg/dL', reference: '<150', status: 'normal' },
-                ],
-                notes: 'All lipid levels within normal range. Continue current diet and exercise regimen.'
-            },
-            {
-                id: 3,
-                date: '2025-03-05',
-                type: 'Urinalysis',
-                status: 'abnormal',
-                doctor: 'Dr. Emily Martinez',
-                parameters: [
-                    { name: 'pH', value: '6.0', unit: '', reference: '4.5-8.0', status: 'normal' },
-                    { name: 'Protein', value: '30', unit: 'mg/dL', reference: '<20', status: 'high' },
-                    { name: 'Glucose', value: 'Negative', unit: '', reference: 'Negative', status: 'normal' },
-                    { name: 'Ketones', value: 'Trace', unit: '', reference: 'Negative', status: 'high' },
-                ],
-                notes: 'Elevated protein levels detected. Recommend follow-up testing and possible nephrology consultation.'
-            },
-            {
-                id: 4,
-                date: '2025-01-15',
-                type: 'Thyroid Panel',
-                status: 'normal',
-                doctor: 'Dr. James Wilson',
-                parameters: [
-                    { name: 'TSH', value: '2.4', unit: 'mIU/L', reference: '0.4-4.0', status: 'normal' },
-                    { name: 'T4', value: '1.1', unit: 'ng/dL', reference: '0.8-1.8', status: 'normal' },
-                    { name: 'T3', value: '120', unit: 'ng/dL', reference: '80-200', status: 'normal' },
-                ],
-                notes: 'Thyroid function normal. No additional testing required at this time.'
-            }
-        ];
+        //const labReports = [
+        //    {
+        //        id: 1,
+        //        date: '2025-03-10',
+        //        type: 'Blood Test',
+        //        status: 'abnormal',
+        //        doctor: 'Dr. Sarah Johnson',
+        //        parameters: [
+        //            { name: 'Hemoglobin', result: '10.2 g/dL', reference: '12.0-15.5', status: 'low' },
+        //            { name: 'White Blood Cells', result: '11.3 10³/µL', reference: '4.5-11.0', status: 'high' },
+        //            { name: 'Glucose', result: '98 mg/dL', reference: '70-100', status: 'normal' },
+        //        ],
+        //        notes: 'Patient shows signs of mild anemia. Recommend iron supplements and follow-up in 4 weeks.'
+        //    },
+        //];
+
+        const labReports = {{ lab_reports|safe }}
+
 
         // State variables
         let currentReports = [...labReports];
@@ -378,7 +332,6 @@
         const sortLabel = document.getElementById('sort-label');
         const viewSelect = document.getElementById('view-select');
         const totalReportsElement = document.getElementById('total-reports');
-        const abnormalCountElement = document.getElementById('abnormal-count');
         const alertBanner = document.getElementById('alert-banner');
         const alertMessage = document.getElementById('alert-message');
 
@@ -449,6 +402,8 @@
         }
 
         function toggleReportDetails(reportId) {
+
+
             const reportItems = document.querySelectorAll('.report-header');
             reportItems.forEach(item => {
                 const id = parseInt(item.closest('li').dataset.reportId);
@@ -456,6 +411,8 @@
                 const chevron = item.querySelector('.report-chevron');
                 const downChevron = chevron.querySelector('#down_chevron');
                 const upChevron = chevron.querySelector('#up_chevron');
+
+
 
                 if (id === reportId) {
                     if (expandedReportId === reportId) {
@@ -540,21 +497,91 @@
                         const paramRow = paramClone.querySelector('tr');
 
                         // Highlight abnormal rows
-                        if (param.status !== 'normal') {
+                        if (param.status == 'high') {
                             paramRow.classList.add('bg-red-50');
+                        }else if (param.status == 'low') {
+                            paramRow.classList.add('bg-blue-50');
+                        }else if (param.status == 'normal') {
+                            paramRow.classList.add('bg-green-50');
                         }
 
                         paramRow.querySelector('.param-name').textContent = param.name;
-                        paramRow.querySelector('.param-value').textContent = `${param.value} ${param.unit}`;
+                        paramRow.querySelector('.param-value').textContent = `${param.result}`;
                         paramRow.querySelector('.param-reference').textContent = param.reference;
 
                         const statusElement = paramRow.querySelector('.param-status');
                         statusElement.textContent = param.status.charAt(0).toUpperCase() + param.status.slice(1);
                         statusElement.classList.add(getParameterStatusClass(param.status));
 
-                        parametersContainer.appendChild(paramRow);
+                        parametersContainer.appendChild(paramRow);                     
                     });
 
+                    const downloadBtn = reportItem.querySelector('.download-btns');
+
+                    function print_window_open(report_given){
+
+                        // Grab your app’s real stylesheets & <style> tags
+                            const styles = Array.from(
+                              document.querySelectorAll('link[rel="stylesheet"], style')
+                            )
+                            .map(node => node.outerHTML)
+                            .join('\n');
+                          
+                            // 3) Print‐only overrides to tame SVGs/images
+                            const printOverrides = `
+                               <style media="print">
+                                /* Make SVGs scale down */
+                                svg, img {
+                                  max-width: 100% !important;
+                                  height: auto !important;
+                                }
+                                /* Remove any overflow hiding */
+                                .overflow-hidden { overflow: visible !important; }
+                              </style>
+                            `;
+                          
+                            // 4) Build the full HTML document
+                            const htmlContent = `
+                              <!doctype html>
+                              <html>
+                                <head>
+                                  <meta charset="utf-8">
+                                  <title>Lab Report PDF</title>
+                                  ${styles}
+                                  ${printOverrides}
+                                </head>
+                                <body class="bg-white p-8">
+                                  <h2 class="text-2xl font-bold mb-4">Lab Report</h2>
+                                  ${report_given.innerHTML}
+                                </body>
+                              </html>
+                            `;
+                          
+                            // 5) Open a new window, write the content, and trigger “Save as PDF”
+                            const printWindow = window.open('', '', 'width=900,height=700');
+                            printWindow.document.write(htmlContent);
+                            printWindow.focus();
+    
+                            printWindow.print();
+                            printWindow.close();
+                    }
+
+                    // Set download and print button actions
+                    downloadBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+
+                        // Construct the URL using the report.id in JavaScript
+                        const reportUrl = `/p/lab-report/${report.uuid}/download`;
+                        window.open(reportUrl, '_blank');
+                      
+                        // 1) Clone the report item
+                        // const reportToDownload = reportItem.cloneNode(true);
+                        // reportToDownload.querySelector('.report-action-btns')?.remove();
+                        // reportToDownload.querySelector('.report-details')?.classList.remove('hidden');
+                        // print_window_open(reportToDownload);
+                    });
+
+                
                     // Add event listener to toggle details
                     const reportHeader = reportItem.querySelector('.report-header');
                     reportHeader.addEventListener('click', () => {
@@ -572,12 +599,12 @@
             updateStats();
         }
 
+
+        
+
         function updateStats() {
             totalReportsElement.textContent = labReports.length;
-
-            const abnormalCount = labReports.filter(report => report.status === 'abnormal').length;
-            abnormalCountElement.textContent = abnormalCount;
-
+            abnormalCount = {{ abnormal_reports }}
             // Show/hide alert banner
             if (abnormalCount > 0) {
                 alertBanner.classList.remove('hidden');
@@ -599,7 +626,6 @@
 
 <script>
     dashboard_nav_all = document.querySelectorAll('.labReport-nav a');
-    console.log(dashboard_nav_all);
     dashboard_nav_all.forEach((nav) => {
         nav_innertab =
             nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
