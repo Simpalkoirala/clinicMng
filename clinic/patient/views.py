@@ -344,7 +344,7 @@ def BookAppointment(request: HttpRequest):
             
             # Log the action
             log_action(
-                user=profile,
+                profile=profile,
                 action='BOOK_APPT',
                 title=_("Appointment Scheduled"),
                 description=_("Appointment booked with Dr. {} on {} at {}").format(

@@ -569,44 +569,53 @@
 
 
 <script>
+
+{% comment %} {% for each_doc in all_doc_profiles%}
+{
+    name: "{{ each_doc.profile.user.first_name }}",
+    specialty: "{{ each_doc.specialization }}",
+    image: "{{ each_doc.profile.profile_pic.url  }}" // Using placeholder as we can't load external images
+},
+{% endfor %} {% endcomment %}
+
+
     const Data = {
         "Doctors": [
-            {
-                name: "Dr. Morak jhon",
-                specialty: "Anesthesiologists",
-                image: "{% static 'Doctors/h_doc1.png' %}" // Using placeholder as we can't load external images
-            },
-            {
-                name: "Dr. Aenna backer",
-                specialty: "Cardiologist",
-                image: "{% static 'Doctors/h_doc2.png' %}"
-            },
-            {
-                name: "Dr. Morish Jemsh",
-                specialty: "Dermatologists",
-                image: "{% static 'Doctors/h_doc4.png' %}"
-            },
-            {
-                name: "Dr. Olivia Nebar",
-                specialty: "Endocrinologists",
-                image: "{% static 'Doctors/h_doc3.png' %}"
-            },
-            {
-                name: "Dr. Hory Mant",
-                specialty: "Anesthesiologists",
-                image: "{% static 'Doctors/h_doc1.png' %}"
-            },
-            {
-                name: "Dr. Vrutki vahut",
-                specialty: "Cardiologist",
-                image: "{% static 'Doctors/h_doc4.png' %}"
-            },
-            {
-                name: "Dr. Krish Bardan",
-                specialty: "Dermatologists",
-                image: "{% static 'Doctors/h_doc3.png' %}"
-            },
-
+        {
+            name: "Dr. Morak jhon",
+            specialty: "Anesthesiologists",
+            image: "{% static 'Doctors/h_doc1.png' %}" // Using placeholder as we can't load external images
+        },
+        {
+            name: "Dr. Aenna backer",
+            specialty: "Cardiologist",
+            image: "{% static 'Doctors/h_doc2.png' %}"
+        },
+        {
+            name: "Dr. Morish Jemsh",
+            specialty: "Dermatologists",
+            image: "{% static 'Doctors/h_doc4.png' %}"
+        },
+        {
+            name: "Dr. Olivia Nebar",
+            specialty: "Endocrinologists",
+            image: "{% static 'Doctors/h_doc5.png' %}"
+        },
+        {
+            name: "Dr. Hory Mant",
+            specialty: "Anesthesiologists",
+            image: "{% static 'Doctors/h_doc3.png' %}"
+        },
+        {
+            name: "Dr. Vrutki vahut",
+            specialty: "Cardiologist",
+            image: "{% static 'Doctors/h_doc4.png' %}"
+        },
+        {
+            name: "Dr. Krish Bardan",
+            specialty: "Dermatologists",
+            image: "{% static 'Doctors/h_doc3.png' %}"
+        },
         ],
 
         "Testimonials": [{
@@ -614,31 +623,31 @@
             "image": "{% static 'Doctors/h_doc1.png' %}",
             "rating": 1.5,
             "feedback": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit, error!"
-        },
-        {
-            "name": "Nesri Mratin",
-            "image": "{% static 'Doctors/h_doc1.png' %}",
-            "rating": 4,
-            "feedback": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit, error!"
-        },
-        {
-            "name": "Jhon Gaurg",
-            "image": "{% static 'Doctors/h_doc1.png' %}",
-            "rating": 2,
-            "feedback": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit, error!"
-        },
-        {
-            "name": "Rujal Baniya",
-            "image": "{% static 'Doctors/h_doc1.png' %}",
-            "rating": 3,
-            "feedback": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit, error!"
-        },
-        {
-            "name": "Sujal Sujal",
-            "image": "{% static 'Doctors/h_doc1.png' %}",
-            "rating": 4.5,
-            "feedback": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit, error!"
-        }]
+            },
+            {
+                "name": "Nesri Mratin",
+                "image": "{% static 'Doctors/h_doc1.png' %}",
+                "rating": 4,
+                "feedback": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit, error!"
+            },
+            {
+                "name": "Jhon Gaurg",
+                "image": "{% static 'Doctors/h_doc1.png' %}",
+                "rating": 2,
+                "feedback": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit, error!"
+            },
+            {
+                "name": "Rujal Baniya",
+                "image": "{% static 'Doctors/h_doc1.png' %}",
+                "rating": 3,
+                "feedback": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit, error!"
+            },
+            {
+                "name": "Sujal Sujal",
+                "image": "{% static 'Doctors/h_doc1.png' %}",
+                "rating": 4.5,
+                "feedback": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit, error!"
+            }]
     };
 
 

@@ -21,5 +21,6 @@ urlpatterns = [
     path('m/view-patients/', ViewPatients, name='ViewPatients_m'),
     path('m/view-doctors/', ViewPatients, name='ViewDoctors_m'),
 
-
+    path('m/d-profile/create/', create_doctor_profile, name='doctor_profile_create'),
+    path('m/d-profile/<slug:slug>/edit/', update_doctor_profile, name='doctor_profile_update'),
 ]
