@@ -24,12 +24,12 @@
             <button class="tab-btn active py-2 px-4 text-sm font-medium rounded-sm bg-white text-gray-900 shadow-sm"
                 data-tab="profile">Profile</button>
             <button class="tab-btn py-2 px-4 text-sm font-medium rounded-sm text-gray-600 hover:bg-gray-200"
-                data-tab="privacy">Password & Privacy</button>
+                data-tab="security">Security</button>
         </div>
     </div>
 
     <!-- Profile Tab -->
-    <div class="tab-content active" id="profile">
+    <div class="tab-content" id="profile">
         <div class="rounded-lg border bg-white shadow-sm">
             <div class="p-6">
                 <h3 class="text-2xl font-semibold mb-2">Profile Information</h3>
@@ -38,8 +38,8 @@
 
                 <div class="flex flex-col sm:flex-row gap-8 mb-8 items-center sm:items-start">
                     <div class="relative">
-                        <img id="pp_image" class="h-32 w-32 rounded-full border-2 border-blue-500"
-                            src="/placeholder.svg?height=100&width=100" alt="Profile picture">
+                        <img id="pp_image" class="h-32 w-32 rounded-full border-2 border-blue-500 object-cover"
+                            src="{{ profile.profile_pic.url }}" alt="Profile picture">
                         <button id="imageUploadButton"
                             class="absolute bottom-0 right-0 h-10 w-10 rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300">
                             <svg class="h-5 w-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -71,8 +71,8 @@
 
 
                     <div class="text-center sm:text-left">
-                        <h2 class="text-2xl font-bold">John Doe</h2>
-                        <p class="text-gray-600 mb-2">Patient ID: PAT-20240325-001</p>
+                        <h2 class="text-2xl font-bold">{{profile.user.first_name}}</h2>
+                        <p class="text-gray-600 mb-2">Doctor ID: {{profile.user.username}}</p>
                         <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
                             <span
                                 class="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full text-xs font-semibold">Blood
@@ -96,7 +96,15 @@
                     </div>
                 </div>
 
-                <form class="space-y-8">
+                <form class="space-y-8" action="{% url 'patient:profile' %}" method="POST" enctype="multipart/form-data">
+                    <!-- Image input tag -->
+                    <input type="file" id="profileImageInput_" name="profileImage" style="display: none;" />
+
+                    <!-- CSRF Token for security -->
+                    {% csrf_token %}
+                    
+                    
+                    <!-- basic info -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Personal Information -->
                         <div class="space-y-6">
@@ -105,33 +113,34 @@
                                 <label class="text-sm font-medium">Full Name</label>
                                 <input
                                     class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    value="John Doe" name="fullName">
+                                    value="{{profile.user.first_name}}" name="full_name">
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="space-y-2">
-                                    <label class="text-sm font-medium">Email</label>
+                                    <label class="text-sm font-medium">Email     <span class="text-red-500">*Can't be updated*</span></label>
                                     <input
                                         class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        value="john.doe@example.com" name="email">
+                                        value="{{profile.user.email}}" name="email" disabled placeholder="Email Address">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-sm font-medium">Phone Number</label>
                                     <input
                                         class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        value="555-123-4567" name="phone">
+                                        value="{{profile.ph_number }}" name="phone_number" placeholder="Add Phone Number">
                                 </div>
                             </div>
                             <div class="space-y-2">
                                 <label class="text-sm font-medium">Date of Birth</label>
                                 <input
                                     class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    type="date" value="1985-05-15" name="dateOfBirth">
+                                    type="date" value="{{ profile.date_of_birth|date:'Y-m-d' }}" name="date_of_birth">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-sm font-medium">Address</label>
                                 <textarea
                                     class="w-full min-h-[80px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    name="address">123 Main St, Anytown, CA 12345</textarea>
+                                    name="address" placeholder="Add Address"
+                                    >{{profile.address }}</textarea>
                             </div>
                         </div>
 
@@ -143,17 +152,26 @@
                                 <div class="relative">
                                     <select
                                         class="w-full h-10 px-3 py-2 border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        name="bloodType">
-                                        <option value="A+">A+</option>
-                                        <option value="A-">A-</option>
-                                        <option value="B+">B+</option>
-                                        <option value="B-">B-</option>
-                                        <option value="AB+">AB+</option>
-                                        <option value="AB-">AB-</option>
-                                        <option value="O+" selected>O+</option>
-                                        <option value="O-">O-</option>
-                                        <option value="Unknown">Unknown</option>
+                                        name="blood_group">
+                                        <option {% if profile.medical_info.blood_group == "A+" %}selected{% endif %} 
+                                                value="A+"  >A+</option>
+                                        <option {% if profile.medical_info.blood_group == "A-" %}selected{% endif %} 
+                                                value="A-"  >A-</option>
+                                        <option {% if profile.medical_info.blood_group == "B+" %}selected{% endif %} 
+                                                value="B+"  >B+</option>
+                                        <option {% if profile.medical_info.blood_group == "B-" %}selected{% endif %} 
+                                                value="B-"  >B-</option>
+                                        <option {% if profile.medical_info.blood_group == "AB+" %}selected{% endif %}
+                                                value="AB+" >AB+</option>
+                                        <option {% if profile.medical_info.blood_group == "AB-" %}selected{% endif %}
+                                                value="AB-" >AB-</option>
+                                        <option {% if profile.medical_info.blood_group == "O+" %}selected{% endif %} 
+                                                value="O+"  >O+</option>
+                                        <option {% if profile.medical_info.blood_group == "O-" %}selected{% endif %} 
+                                                value="O-"  >O-</option>
+                                        <option value="Unknown" {% if profile.medical_info.blood_group == "" %}selected{% endif %}>Unknown</option>
                                     </select>
+
                                     <svg class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500"
                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor">
@@ -166,14 +184,20 @@
                                 <label class="text-sm font-medium">Allergies</label>
                                 <textarea
                                     class="w-full min-h-[80px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    name="allergies">Penicillin, Peanuts</textarea>
+                                    name="allergies">{{ profile.medical_info.allergies}}</textarea>
                             </div>
                             <div class="space-y-2">
-                                <label class="text-sm font-medium">Medical History</label>
+                                <label class="text-sm font-medium">Medical Conditions</label>
                                 <textarea
-                                    class="w-full min-h-[120px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    name="medicalHistory">Hypertension, diagnosed 2018
-Appendectomy, 2010</textarea>
+                                    class="w-full min-h-[80px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    name="medicalConditions">{{ profile.medical_info.medical_conditions}}</textarea>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">On Going Medications</label>
+                                <textarea
+                                    class="w-full min-h-[80px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    name="medicines_on">{{ profile.medical_info.on_going_medications}}</textarea>
                             </div>
                         </div>
                     </div>
@@ -186,26 +210,32 @@ Appendectomy, 2010</textarea>
                                 <label class="text-sm font-medium">Contact Name</label>
                                 <input
                                     class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    value="Jane Doe" name="emergencyContactName">
+                                    value="{{profile.medical_info.emg_contact_name}}" name="emergency_contact_name">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-sm font-medium">Contact Phone</label>
                                 <input
                                     class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    value="555-987-6543" name="emergencyContactPhone">
+                                    value="{{ profile.medical_info.emg_contact_number }}" name="emergency_contact_number">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-sm font-medium">Relationship</label>
                                 <div class="relative">
                                     <select
                                         class="w-full h-10 px-3 py-2 border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        name="relationship">
-                                        <option value="Spouse" selected>Spouse</option>
-                                        <option value="Parent">Parent</option>
-                                        <option value="Child">Child</option>
-                                        <option value="Sibling">Sibling</option>
-                                        <option value="Friend">Friend</option>
-                                        <option value="Other">Other</option>
+                                        name="emergency_contact_relationship"> {{ profile.medical_info.emg_contact_relation }}
+                                        <option {% if profile.medical_info.emg_contact_relation == "spouse" %}selected{% endif %}
+                                            value="spouse">Spouse</option>
+                                        <option {% if profile.medical_info.emg_contact_relation == "parent" %}selected{% endif %}
+                                            value="parent">Parent</option>
+                                        <option {% if profile.medical_info.emg_contact_relation == "child" %}selected{% endif %}
+                                            value="child">Child</option>
+                                        <option {% if profile.medical_info.emg_contact_relation == "sibling" %}selected{% endif %}
+                                            value="sibling">Sibling</option>
+                                        <option {% if profile.medical_info.emg_contact_relation == "friend" %}selected{% endif %}
+                                            value="friend">Friend</option>
+                                        <option {% if profile.medical_info.emg_contact_relation == "other" %}selected{% endif %}
+                                            value="other">Other</option>
                                     </select>
                                     <svg class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500"
                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -214,6 +244,13 @@ Appendectomy, 2010</textarea>
                                             d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">Address</label>
+                                <input
+                                    class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value="{{profile.medical_info.emg_contact_address}}" name="emergency_contact_address">
                             </div>
                         </div>
                     </div>
@@ -228,34 +265,33 @@ Appendectomy, 2010</textarea>
                                     <p class="text-sm text-gray-600">Receive notifications via email</p>
                                 </div>
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" class="sr-only" name="emailNotifications">
-                                    <div class="w-11 h-6 bg-gray-200 rounded-full peer"></div>
-                                    <span
-                                        class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition "></span>
+                                    <input {% if profile.email_notification %}checked{% endif %}
+                                        type="checkbox" class="sr-only communication-checkbox" name="emailNotifications" >
+                                    
+                                        <div class="w-11 h-6 rounded-full peer {% if profile.email_notification %} bg-blue-600 
+                                                {% else %} bg-gray-200  {% endif %}"></div>
+                                    <span 
+                                        class=" {% if profile.email_notification %}translate-x-5 
+                                                {% else %}translate-x-0{% endif %}
+                                         absolute left-1 top-1 w-4 h-4  rounded-full transition bg-white "></span>
                                 </label>
                             </div>
-                            <div class="flex items-center justify-between border p-4 rounded-lg">
-                                <div>
-                                    <label class="text-base font-medium">SMS Notifications</label>
-                                    <p class="text-sm text-gray-600">Receive notifications via SMS</p>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" class="sr-only" name="smsNotifications">
-                                    <div class="w-11 h-6 bg-gray-200 rounded-full peer"></div>
-                                    <span
-                                        class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition "></span>
-                                </label>
-                            </div>
+
                             <div class="flex items-center justify-between border p-4 rounded-lg">
                                 <div>
                                     <label class="text-base font-medium">Appointment Reminders</label>
                                     <p class="text-sm text-gray-600">Receive appointment reminders</p>
                                 </div>
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" class="sr-only" name="appointmentReminders">
-                                    <div class="w-11 h-6 bg-gray-200 rounded-full peer"></div>
-                                    <span
-                                        class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition "></span>
+                                    <input {% if profile.reminders %}checked{% endif %}
+                                        type="checkbox" class="sr-only communication-checkbox" name="appointmentReminders">
+                                    
+                                        <div class="w-11 h-6 rounded-full peer {% if profile.reminders %} bg-blue-600 
+                                                {% else %} bg-gray-200  {% endif %}"></div>
+                                    <span 
+                                        class=" {% if profile.reminders %}translate-x-5 
+                                                {% else %}translate-x-0{% endif %}
+                                         absolute left-1 top-1 w-4 h-4  rounded-full transition bg-white "></span>
                                 </label>
                             </div>
                         </div>
@@ -268,37 +304,42 @@ Appendectomy, 2010</textarea>
                         <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save
                             Changes</button>
                     </div>
+                
                 </form>
             </div>
         </div>
     </div>
 
     <!-- Privacy Tab -->
-    <div class="tab-content hidden" id="privacy">
+    <div class="tab-content hidden" id="security">
         <div class="rounded-lg border bg-white shadow-sm">
             <div class="p-6">
                 <h3 class="text-2xl font-semibold mb-2">Privacy & Security Settings</h3>
                 <p class="text-sm text-gray-600 mb-6">Manage your password, notification preferences, and privacy
                     options.</p>
 
-                <form class="space-y-6">
+                <form class="space-y-6" action="{% url 'account:changePassword' %}" method="POST">
+                      {% csrf_token %}
+
+                    <input type="text" autocomplete="username" hidden>
+
                     <div class="space-y-2">
                         <label class="text-sm font-medium">Current Password</label>
                         <input
                             class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            type="password" name="currentPassword">
+                            type="password" name="current-password" autocomplete="current-password">
                     </div>
                     <div class="space-y-2">
                         <label class="text-sm font-medium">New Password</label>
                         <input
                             class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            type="password" name="newPassword">
+                            type="password" name="new-password" autocomplete="new-password">
                     </div>
                     <div class="space-y-2">
                         <label class="text-sm font-medium">Confirm New Password</label>
                         <input
                             class="w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            type="password" name="confirmPassword">
+                            type="password" name="confirm-password" autocomplete="new-password">
                     </div>
                     <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Update
                         Password</button>
@@ -309,10 +350,8 @@ Appendectomy, 2010</textarea>
 </div>
 
 <script>
-    // Tab Switching
-    document.querySelectorAll('.tab-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            const tab = button.getAttribute('data-tab');
+    function toggleTab(tab_name){
+            const button = document.querySelector(`.tab-btn[data-tab="${tab_name}"]`);
 
             // Update button states
             document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -325,23 +364,48 @@ Appendectomy, 2010</textarea>
             // Update content visibility
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.add('hidden');
-                content.classList.remove('active');
             });
-            document.getElementById(tab).classList.remove('hidden');
-            document.getElementById(tab).classList.add('active');
+            document.getElementById(tab_name).classList.remove('hidden');
+    }
+
+
+    // Tab Switching
+    document.querySelectorAll('.tab-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const tab_name = button.getAttribute('data-tab');
+            toggleTab(tab_name);
         });
     });
 
+    window.onload = function () {
+        if (window.location.hash === '#security') {
+            toggleTab('security');
+        }
+    };
+
+
     // Toggle Switch Functionality
-    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    document.querySelectorAll('.communication-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', () => {
             const span = checkbox.parentElement.querySelector('span');
-            if (checkbox.checked) {
-                span.classList.add('translate-x-5', 'bg-blue-600');
-                span.classList.remove('translate-x-0', 'bg-white');
+            const divs = checkbox.parentElement.querySelector('div');
+            if (checkbox.checked) { 
+                console.log(`Toggled ${checkbox.name}:`, checkbox.checked);
+
+                divs.classList.add('bg-blue-600');
+                divs.classList.remove('bg-gray-200');
+
+                span.classList.add('translate-x-5');
+                span.classList.remove('translate-x-0');
             } else {
-                span.classList.remove('translate-x-5', 'bg-blue-600');
-                span.classList.add('translate-x-0', 'bg-white');
+                console.log(`Toggled ${checkbox.name}:`, checkbox.checked);
+
+
+                divs.classList.remove('bg-blue-600');
+                divs.classList.add('bg-gray-200');
+
+                span.classList.remove('translate-x-5');
+                span.classList.add('translate-x-0');
             }
         });
     });
@@ -427,16 +491,21 @@ Appendectomy, 2010</textarea>
                 const url = URL.createObjectURL(blob);
                 document.querySelector('#pp_image').src = url;
 
-                // Here you would typically upload the blob to your server
-                // Example using FormData:
-                const formData = new FormData();
-                formData.append('profileImage', blob, 'profile.jpg');
 
-                // fetch('/upload', {
-                //     method: 'POST',
-                //     body: formData
-                // });
 
+                // new File → DataTransfer → input.files
+                const fileInput = document.querySelector('#profileImageInput_');
+                const newFile = new File([blob], selectedFile.name, {
+                type: selectedFile.type,
+                lastModified: Date.now()
+                });
+                const dt = new DataTransfer();
+                dt.items.add(newFile);
+                fileInput.files = dt.files;
+
+                console.log('Hidden input now has:', fileInput.files[0]);
+               
+              
                 closeModal();
             });
         }

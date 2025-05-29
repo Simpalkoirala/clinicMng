@@ -1,0 +1,159 @@
+{
+    id: "2",
+    contact: {
+        name: "Dr. Robert Johnson",
+        role: "Cardiologist",
+        avatar: "https://ui.shadcn.com/placeholder.svg?height=40&width=40",
+        initials: "RJ",
+        online: false
+    },
+    messages: [
+        {
+            id: "m1",
+            sender: "doctor",
+            content: "Hello John, I wanted to follow up on your heart health. Have you been monitoring your blood pressure as we discussed?",
+            timestamp: "2025-03-12T14:20:00",
+            read: true
+        },
+        {
+            id: "m2",
+            sender: "patient",
+            content: "Yes, I've been taking readings twice daily. My average is around 122/78.",
+            timestamp: "2025-03-12T14:25:00",
+            read: true
+        },
+        {
+            id: "m3",
+            sender: "doctor",
+            content: "That's within the normal range, which is excellent. Keep up with the monitoring and I'll see you at your next appointment.",
+            timestamp: "2025-03-12T14:30:00",
+            read: true
+        }
+    ],
+    lastMessage: {
+        content: "That's within the normal range, which is excellent. Keep up with the monitoring and I'll see you at your next appointment.",
+        timestamp: "2025-03-12T14:30:00",
+        unread: false
+    }
+},
+{
+    id: "3",
+    contact: {
+        name: "Dr. Lisa Chen",
+        role: "Dentist",
+        avatar: "https://ui.shadcn.com/placeholder.svg?height=40&width=40",
+        initials: "LC",
+        online: true
+    },
+    messages: [
+        {
+            id: "m1",
+            sender: "doctor",
+            content: "Hi John, this is a reminder about your upcoming dental cleaning appointment on March 20th at 2:00 PM.",
+            timestamp: "2025-03-13T09:15:00",
+            read: true
+        },
+        {
+            id: "m2",
+            sender: "patient",
+            content: "Thanks for the reminder. I'll be there.",
+            timestamp: "2025-03-13T09:20:00",
+            read: true
+        },
+        {
+            id: "m3",
+            sender: "doctor",
+            content: "Great! Please remember to bring your insurance card and arrive 15 minutes early to complete any necessary paperwork.",
+            timestamp: "2025-03-13T09:25:00",
+            read: true
+        }
+    ],
+    lastMessage: {
+        content: "Great! Please remember to bring your insurance card and arrive 15 minutes early to complete any necessary paperwork.",
+        timestamp: "2025-03-13T09:25:00",
+        unread: false
+    }
+},
+{
+    id: "4",
+    contact: {
+        name: "Nurse Jennifer",
+        role: "Primary Care Nurse",
+        avatar: "https://ui.shadcn.com/placeholder.svg?height=40&width=40",
+        initials: "JN",
+        online: false
+    },
+    messages: [
+        {
+            id: "m1",
+            sender: "doctor",
+            content: "Hello John, I'm following up on your recent flu shot. Have you experienced any side effects?",
+            timestamp: "2025-03-10T11:00:00",
+            read: true
+        },
+        {
+            id: "m2",
+            sender: "patient",
+            content: "Hi Jennifer, I had some mild soreness at the injection site, but it went away after a day. No other side effects.",
+            timestamp: "2025-03-10T11:10:00",
+            read: true
+        },
+        {
+            id: "m3",
+            sender: "doctor",
+            content: "That's normal and nothing to worry about. Thank you for the update!",
+            timestamp: "2025-03-10T11:15:00",
+            read: true
+        }
+    ],
+    lastMessage: {
+        content: "That's normal and nothing to worry about. Thank you for the update!",
+        timestamp: "2025-03-10T11:15:00",
+        unread: false
+    }
+},
+{
+    id: "5",
+    contact: {
+        name: "Pharmacy Services",
+        role: "Medication Support",
+        avatar: "https://ui.shadcn.com/placeholder.svg?height=40&width=40",
+        initials: "PS",
+        online: true
+    },
+    messages: [
+        {
+            id: "m1",
+            sender: "doctor",
+            content: "Your prescription for Lisinopril has been refilled and is ready for pickup at your local pharmacy.",
+            timestamp: "2025-03-11T15:30:00",
+            read: true
+        },
+        {
+            id: "m2",
+            sender: "patient",
+            content: "Thank you. What are your hours today?",
+            timestamp: "2025-03-11T15:40:00",
+            read: true
+        },
+        {
+            id: "m3",
+            sender: "doctor",
+            content: "We're open until 9:00 PM today. Your prescription will be held for 7 days.",
+            timestamp: "2025-03-11T15:45:00",
+            read: true
+        },
+        {
+            id: "m4",
+            sender: "patient",
+            content: "Perfect, I'll pick it up this evening. Thanks!",
+            timestamp: "2025-03-11T15:50:00",
+            read: true
+        }
+    ],
+    lastMessage: {
+        content: "Perfect, I'll pick it up this evening. Thanks!",
+        timestamp: "2025-03-11T15:50:00",
+        unread: false
+    }
+}

@@ -327,18 +327,7 @@
         border-color: #4338ca !important;
     }
 
-    /* Primary button style */
-    .bg-primary {
-        background-color: #4f46e5;
-    }
 
-    .text-primary-foreground {
-        color: white;
-    }
-
-    .hover\:bg-primary\/90:hover {
-        background-color: rgba(79, 70, 229, 0.9);
-    }
 </style>
 
 {% endblock styles %}
@@ -347,27 +336,13 @@
 
 <main>
     <div class="container mx-auto p-4">
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex flex-col md:flex-row justify-between gap-4 items-start md:items-center mb-6">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Edit Your Schedule</h1>
                 <p class="text-gray-500">Configure your availability, breaks, and working hours</p>
             </div>
 
             <div class="flex items-center gap-4">
-                <div class="tooltip">
-                    <button id="stats-button"
-                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-info">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="M12 16v-4" />
-                            <path d="M12 8h.01" />
-                        </svg>
-                    </button>
-                    <span class="tooltiptext">View schedule statistics</span>
-                </div>
-
                 <span class="text-sm text-gray-500">
                     Weekly hours: <span id="total-weekly-hours" class="font-medium text-green-500">0h</span>
                 </span>
@@ -401,7 +376,7 @@
                         <!-- calender header  -->
                         <div
                             class="pb-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg p-4 border-b border-slate-200">
-                            <div class="flex items-center justify-between">
+                            <div class="flex flex-col sm:flex-row gap-2 items-start sm:items-center justify-between">
                                 <div class="flex items-center gap-2">
                                     <div class="bg-white p-2 rounded-full shadow-sm">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -417,7 +392,29 @@
                                     <h3 class="text-lg font-semibold text-indigo-900">Weekly Schedule</h3>
                                 </div>
 
-                                <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm">
+                                <div class="relative flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm">
+                                    <a href="/d/edit-schedules/" id="reset-to-today"
+                                        title="Redirect to today's Date slot"
+                                    
+                                    class="hidden w-6 h-6 text-xs font-medium text-red-500 absolute -top-2 bg-red-50 p-1 rounded-full" >
+                                        <svg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                            <g transform="matrix(2 0 0 2 12 12)" >
+                                                <g style="" >
+                                                    <g transform="matrix(1 0 0 1 0.25 0)" >
+                                                        <path style="stroke: currentColor; stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-5.25, -5)" d="M 5.25 1 C 7.166096359608154 0.9996848994117354 8.813290162802168 2.3582058615158816 9.177665872420187 4.239337356343494 C 9.542041582038205 6.120468851171107 8.521242153349913 7.995780866849247 6.74361162156603 8.710941723623264 C 4.9659810897821455 9.426102580397284 2.930874936217567 8.780215923559776 1.8909847050437953 7.170851556580887 C 0.8510944738700239 5.561487189601997 1.0985364837583766 3.4407328234625414 2.4809999999999928 2.114000000000007" stroke-linecap="round" />
+                                                    </g>
+                                                    <g transform="matrix(1 0 0 1 -3.19 -2.11)" >
+                                                     <path style="stroke: currentColor; stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-1.81, -2.89)" d="M 0.75 2.5 L 2.481 2.114 L 2.868 3.661" stroke-linecap="round" />
+                                                    </g>
+                                                    <g transform="matrix(1 0 0 1 0.75 -0.25)" >
+                                                        <path style="stroke: currentColor; stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-5.75, -4.75)" d="M 5.25 3.5 L 5.25 5 L 6.25 6" stroke-linecap="round" />
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </a>
+
+
                                     <button id="prev-week"
                                         class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-indigo-50 text-indigo-700 h-8 w-8 p-0">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -464,8 +461,8 @@
                         </div>
 
                         <!-- calender body  -->
-                        <div class="p-4">
-                            <div id="schedule-grid" class="grid grid-cols-8 gap-1.5">
+                        <div class="p-4 relative overflow-x-auto">
+                            <div id="schedule-grid" class="grid grid-cols-8 gap-1.5 min-w-[800px]">
                                 <!-- Time column -->
                                 <div class="text-center">
 
@@ -1000,126 +997,82 @@
 {% block scripts %}
 <script>
 
+    function requestScheduleData(date = null ) {
+
+        url = date ? `/d/get-dateTime-slots/${date}/` : '/d/get-dateTime-slots/';
+
+        let todaysDate = new Date();
+        if (date) {
+            const reset_to_today_btn = document.getElementById("reset-to-today");
+            let selectedDate = new Date(date);
+            if (selectedDate != todaysDate) {
+                reset_to_today_btn.classList.remove("hidden");
+            }
+        }
+
+        return fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.success) {
+                    // Initialize the schedule display
+                    displayDate_Time(data.scheduleData)
+                    
+                } else if (data.message) {
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Error fetching data",
+                        message: "Error: " + data.message,
+                    });
+                } else if (data.error){
+                        showNotification({
+                            color: "bg-red-500",
+                            title: "Error fetching data",
+                            message:"Error: " + data.error,
+                        });
+                }
+    
+            } else {
+                throw new Error(data.error || "Error fetching schedule data");
+            }
+        })
+        .catch(error => {
+            showNotification({
+                color: "bg-red-500",
+                title: "Error fetching data",
+                message: "Please try again. Error: " + error,
+            });
+        });
+    }
+
+
     document.addEventListener("DOMContentLoaded", () => {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const dateParam = urlParams.get('date');
+    if (dateParam) {
+        requestScheduleData(dateParam);
+    } else {
+        requestScheduleData();
+    }
+  
+    });
+
+
+
+    function displayDate_Time(scheduleDatas, ) {
         // Constants
         const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         const HOURS = Array.from({ length: 14 }, (_, i) => i + 8); // 8 AM to 9 PM
 
-        // Predefined schedule data (replace this with backend data later)
-        let scheduleData = {
-            "2025-03-23": [
-                { hour: 8, status: "unavailable", duration: 30 },
-                { hour: 9, status: "unavailable", duration: 30 },
-                { hour: 10, status: "available", duration: 30 },
-                { hour: 11, status: "available", duration: 30 },
-                { hour: 12, status: "break", duration: 30 },
-                { hour: 13, status: "available", duration: 30 },
-                { hour: 14, status: "available", duration: 30 },
-                { hour: 15, status: "available", duration: 30 },
-                { hour: 16, status: "available", duration: 30 },
-                { hour: 17, status: "booked", duration: 30 },
-                { hour: 18, status: "unavailable", duration: 30 },
-                { hour: 19, status: "unavailable", duration: 30 },
-                { hour: 20, status: "unavailable", duration: 30 },
-                { hour: 21, status: "unavailable", duration: 30 }
-            ],
-            "2025-03-24": [
-                { hour: 8, status: "unavailable", duration: 30 },
-                { hour: 9, status: "available", duration: 30 },
-                { hour: 10, status: "break", duration: 30 },
-                { hour: 11, status: "available", duration: 30 },
-                { hour: 12, status: "available", duration: 30 },
-                { hour: 13, status: "break", duration: 30 },
-                { hour: 14, status: "available", duration: 30 },
-                { hour: 15, status: "available", duration: 30 },
-                { hour: 16, status: "available", duration: 30 },
-                { hour: 17, status: "available", duration: 30 },
-                { hour: 18, status: "unavailable", duration: 30 },
-                { hour: 19, status: "unavailable", duration: 30 },
-                { hour: 20, status: "unavailable", duration: 30 },
-                { hour: 21, status: "unavailable", duration: 30 }
-            ],
-            "2025-03-25": [
-                { hour: 8, status: "unavailable", duration: 30 },
-                { hour: 9, status: "available", duration: 30 },
-                { hour: 10, status: "available", duration: 30 },
-                { hour: 11, status: "booked", duration: 30 },
-                { hour: 12, status: "break", duration: 30 },
-                { hour: 13, status: "available", duration: 30 },
-                { hour: 14, status: "available", duration: 30 },
-                { hour: 15, status: "available", duration: 30 },
-                { hour: 16, status: "available", duration: 30 },
-                { hour: 17, status: "unavailable", duration: 30 },
-                { hour: 18, status: "unavailable", duration: 30 },
-                { hour: 19, status: "unavailable", duration: 30 },
-                { hour: 20, status: "unavailable", duration: 30 },
-                { hour: 21, status: "unavailable", duration: 30 }
-            ],
-            "2025-03-26": [
-                { hour: 8, status: "unavailable", duration: 30 },
-                { hour: 9, status: "available", duration: 30 },
-                { hour: 10, status: "available", duration: 30 },
-                { hour: 11, status: "available", duration: 30 },
-                { hour: 12, status: "break", duration: 30 },
-                { hour: 13, status: "available", duration: 30 },
-                { hour: 14, status: "available", duration: 30 },
-                { hour: 15, status: "booked", duration: 30 },
-                { hour: 16, status: "booked", duration: 30 },
-                { hour: 17, status: "unavailable", duration: 30 },
-                { hour: 18, status: "unavailable", duration: 30 },
-                { hour: 19, status: "unavailable", duration: 30 },
-                { hour: 20, status: "unavailable", duration: 30 },
-                { hour: 21, status: "unavailable", duration: 30 }
-            ],
-            "2025-03-27": [
-                { hour: 8, status: "unavailable", duration: 30 },
-                { hour: 9, status: "available", duration: 30 },
-                { hour: 10, status: "available", duration: 30 },
-                { hour: 11, status: "available", duration: 30 },
-                { hour: 12, status: "break", duration: 30 },
-                { hour: 13, status: "available", duration: 30 },
-                { hour: 14, status: "available", duration: 30 },
-                { hour: 15, status: "available", duration: 30 },
-                { hour: 16, status: "available", duration: 30 },
-                { hour: 17, status: "unavailable", duration: 30 },
-                { hour: 18, status: "unavailable", duration: 30 },
-                { hour: 19, status: "unavailable", duration: 30 },
-                { hour: 20, status: "unavailable", duration: 30 },
-                { hour: 21, status: "unavailable", duration: 30 }
-            ],
-            "2025-03-28": [
-                { hour: 8, status: "unavailable", duration: 30 },
-                { hour: 9, status: "available", duration: 30 },
-                { hour: 10, status: "available", duration: 30 },
-                { hour: 11, status: "available", duration: 30 },
-                { hour: 12, status: "break", duration: 30 },
-                { hour: 13, status: "available", duration: 30 },
-                { hour: 14, status: "available", duration: 30 },
-                { hour: 15, status: "available", duration: 30 },
-                { hour: 16, status: "available", duration: 30 },
-                { hour: 17, status: "unavailable", duration: 30 },
-                { hour: 18, status: "unavailable", duration: 30 },
-                { hour: 19, status: "unavailable", duration: 30 },
-                { hour: 20, status: "unavailable", duration: 30 },
-                { hour: 21, status: "unavailable", duration: 30 }
-            ],
-            "2025-03-29": [
-                { hour: 8, status: "unavailable", duration: 30 },
-                { hour: 9, status: "unavailable", duration: 30 },
-                { hour: 10, status: "unavailable", duration: 30 },
-                { hour: 11, status: "unavailable", duration: 30 },
-                { hour: 12, status: "unavailable", duration: 30 },
-                { hour: 13, status: "unavailable", duration: 30 },
-                { hour: 14, status: "unavailable", duration: 30 },
-                { hour: 15, status: "unavailable", duration: 30 },
-                { hour: 16, status: "unavailable", duration: 30 },
-                { hour: 17, status: "unavailable", duration: 30 },
-                { hour: 18, status: "unavailable", duration: 30 },
-                { hour: 19, status: "unavailable", duration: 30 },
-                { hour: 20, status: "unavailable", duration: 30 },
-                { hour: 21, status: "unavailable", duration: 30 }
-            ]
-        };
+
+        let scheduleData = scheduleDatas
 
         // State
         let currentWeekStart = new Date(Object.keys(scheduleData)[0]);
@@ -1269,6 +1222,21 @@
             const weekRangeElement = document.getElementById("week-range");
             const endOfWeek = addDays(currentWeekStart, 6);
             weekRangeElement.textContent = `${formatDate(currentWeekStart, "MMM d")} - ${formatDate(endOfWeek, "MMM d, yyyy")}`;
+
+
+            // on previous and next week button click
+            const prevWeekButton = document.getElementById("prev-week");
+            const nextWeekButton = document.getElementById("next-week");
+
+            prevWeekButton.addEventListener("click", () => {
+                window.location.href = `/d/edit-schedules/?date=${getDateString(addDays(currentWeekStart, -7))}`;
+            });
+
+            nextWeekButton.addEventListener("click", () => {
+                window.location.href = `/d/edit-schedules/?date=${getDateString(addDays(currentWeekStart, 7))}`;
+
+            });
+
         }
 
         // Calculate working hours for a date
@@ -1483,10 +1451,6 @@
             document.getElementById("save-button").addEventListener("click", saveSchedule);
         }
 
-
-
-
-
         // Handle slot click (called from mouseup if no drag)
         function handleSlotClick(dateString, hourIndex) {
             const currentStatus = scheduleData[dateString][hourIndex].status;
@@ -1506,7 +1470,6 @@
             dragOccurred = false; // Reset at the start
             dragStatus = status;
             document.body.classList.add("dragging");
-            console.log("Dragging started");
 
             // Create ghost element
             const ghost = document.createElement("div");
@@ -1519,7 +1482,7 @@
         function handleDragOver(dateString, hourIndex) {
             if (!isDragging || scheduleData[dateString][hourIndex].status === "booked") return;
             scheduleData[dateString][hourIndex].status = dragStatus;
-            console.log("Dragging over");
+
             renderDayColumns();
             updateStats();
         }
@@ -1530,7 +1493,6 @@
             dragStatus = null;
             dragOccurred = false;
             document.body.classList.remove("dragging");
-            console.log("Dragging ended");
 
             // Remove ghost element
             const ghost = document.querySelector(".drag-ghost");
@@ -1641,10 +1603,6 @@
             document.getElementById("tooltip").classList.add("hidden")
         }
 
-
-
-
-
         // Apply preset
         function applyPreset(button) {
             let preset = button.dataset.preset
@@ -1677,9 +1635,6 @@
             updateStats()
         }
 
-
-
-
         // Apply break settings
         function applyBreakSettings() {
             Object.keys(scheduleData)
@@ -1705,8 +1660,6 @@
             updateStats()
         }
 
-
-
         // Show custom template dialog
         function showCustomTemplateDialog() {
             document.getElementById("custom-template-dialog").classList.remove("hidden")
@@ -1718,7 +1671,6 @@
             document.getElementById("custom-template-dialog").classList.remove("flex")
             document.getElementById("custom-template-dialog").classList.add("hidden")
         }
-
 
         // Helper functions
         function getStartOfWeek(date) {
@@ -1774,12 +1726,6 @@
             }
         }
 
-        // Save schedule
-        function saveSchedule() {
-            alert("Schedule saved successfully!")
-            // In a real application, this would send the data to a server
-        }
-
         // Clear day
         function clearDay(dateString) {
             if (scheduleData[dateString]) {
@@ -1796,8 +1742,37 @@
         function saveSchedule() {
             const jsonData = JSON.stringify(scheduleData, null, 2);
             console.log(jsonData);
-            alert("Schedule saved as JSON! Check the console.");
-            // Replace this with an API call to your backend, e.g., fetch('/save-schedule', { method: 'POST', body: jsonData });
+             fetch('/d/submit-dateTime-slots/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: jsonData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification({
+                        color: "bg-emerald-500",
+                        title: "Schedule Saved",
+                        message: "Your schedule has been saved successfully."
+                    });
+                } else {
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Save Failed",
+                        message: data.message || "Failed to save schedule."
+                    });
+                }
+            })
+            .catch(error => {
+                showNotification({
+                    color: "bg-red-500",
+                    title: "Save Failed",
+                    message: "Error: " + error
+                });
+            }); 
         }
 
         // Initialize the application
@@ -1806,7 +1781,7 @@
         updateWeekRange();
         updateStats();
         setupEventListeners();
-    });
+    };
 </script>
 
 

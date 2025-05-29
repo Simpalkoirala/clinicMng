@@ -84,7 +84,12 @@ def is_valid_file(uploaded_file, allowed_file_types=ALLOWED_FILE_TYPES_DOC, max_
     return True, None
 
 
-
+def redirect_to_role_dashboard(request: HttpRequest):
+    """Redirect to the specific role dashboard."""
+    profile: Profile = request.user.profile
+    if profile.role == 'doctor':
+        return redirect('doctor:doctor_dashboard')
+    return redirect('patient:patientDashboard')
 
 
 
@@ -92,8 +97,10 @@ def is_valid_file(uploaded_file, allowed_file_types=ALLOWED_FILE_TYPES_DOC, max_
 
 # --------------------------------------- Rendering Pages ------------------------------------------------------------
 
-
+@login_required_with_message(login_url='account:login', message="You need to log in to Access this Page.")
 def patientDashboard(request: HttpRequest):
+    """Patient dashboard view."""
+
     profile: Profile = request.user.profile
 
     # Get all schedules from all prescriptions for this profile
@@ -107,8 +114,6 @@ def patientDashboard(request: HttpRequest):
     }
 
     return render(request, 'pages/patient/dashboard.html', context)
-
-
 
 @login_required_with_message(login_url='account:login', message="You need to log in to View Your Appointments.")
 def viewAppointment(request: HttpRequest):
@@ -218,7 +223,7 @@ def appoinemtCancle_Edit(request: HttpRequest, apot_id: uuid, status: str):
             if status == 'cancel':
                 if appointment.status != "completed":
                     if appointment.time_slot:
-                        appointment.time_slot.is_booked = False
+                        appointment.time_slot.status = 'available'
                         appointment.time_slot.save()
                     appointment.status = 'cancelled'
                     appointment.save()
@@ -247,16 +252,13 @@ def appoinemtCancle_Edit(request: HttpRequest, apot_id: uuid, status: str):
         messages.error(request, _("An error occurred while processing your request."))
         return redirect('patient:viewAppointment')
 
-
-
-
 @login_required_with_message(login_url='account:login', message="You need to log in to Book an appointment.")
 def BookAppointment(request: HttpRequest):
     """Doctor booking page."""
 
     if request.method == 'GET':
         # Fetch the user's profile information
-        profile: Profile = Profile.objects.get(user=request.user)
+        profile: Profile = request.user.profile
         doctors: DoctorProfile = DoctorProfile.objects.all()
 
         doctor_data = []
@@ -265,13 +267,14 @@ def BookAppointment(request: HttpRequest):
             date_json = {}
             for each_date_slot in date_slots:
                 date_str = each_date_slot.date.strftime('%Y-%m-%d')
-
                 times_slots = AppointmentTimeSlot.objects.filter(appointment_date_slot=each_date_slot)
+
                 for each_time_slot in times_slots:
+
                     time_str = f"{each_time_slot.from_time.strftime('%H:%M')} -- {each_time_slot.to_time.strftime('%H:%M')}"
                     all_selected_types = list(each_time_slot.appointment_type)
 
-                    if not each_time_slot.is_booked:
+                    if each_time_slot.status not in ['booked', 'unavailable', 'break']:
                         if date_str not in date_json:
                             date_json[date_str] = {}
                         date_json[date_str][time_str] = [each_time_slot.id, each_time_slot.duration, all_selected_types]
@@ -316,7 +319,9 @@ def BookAppointment(request: HttpRequest):
             doctor: DoctorProfile = get_object_or_404(DoctorProfile, id=doctor_id)
             time_slot_instance: AppointmentTimeSlot = get_object_or_404(AppointmentTimeSlot, id=appointment_time_slot_id)
 
-            time_slot_instance.is_booked = True
+
+
+            time_slot_instance.status = 'booked'
             time_slot_instance.save()   
             print(f"Time slot booked: {appointment_date}")
             appointment_date_foramt = datetime.strptime(appointment_date, '%Y-%m-%d').date()
@@ -364,8 +369,6 @@ def BookAppointment(request: HttpRequest):
         return JsonResponse({'error': error_msg})
 
     return redirect('patient:bookAppointment')
-
-
 
 @login_required_with_message(login_url='account:login', message="You need to log in to View Your Files/ Document.")
 def ViewDocument(request: HttpRequest):
@@ -420,6 +423,7 @@ def ViewDocument(request: HttpRequest):
     }
     return render(request, 'pages/patient/view_document.html', context)
 
+@login_required_with_message(login_url='account:login', message="You need to log in to Update Your Files/ Document.")
 def delete_document(request, doc_id):
     try:
         document = get_object_or_404(Documents, id=doc_id)
@@ -455,8 +459,11 @@ def join_v_call(request: HttpRequest):
     return render(request, 'pages/patient/join-v-call.html')
 
 def message(request: HttpRequest):
+    
     return render(request, 'pages/patient/message.html')
 
+
+@login_required_with_message(login_url='account:login', message="You need to log in to access your Lab Reports.")
 def labReport(request: HttpRequest):
     profile: Profile = request.user.profile
     reports: LabReport = LabReport.objects.filter(patient_profile=profile)
@@ -517,7 +524,7 @@ def lab_report_pdf(request, uuid):
     return response
 
 
-
+@login_required_with_message(login_url='account:login', message="You need to log in to access your Prescription .")
 def prescriptions(request: HttpRequest):
     if request.method == 'GET':
         """Prescription page view."""
@@ -592,7 +599,7 @@ def p_profile(request: HttpRequest):
 
     if request.method == 'GET':
         # Fetch the user's profile information
-        profile: Profile = Profile.objects.get(user=request.user)
+        profile: Profile = request.user.profile
 
         # Pass the profile information to the template
         context = {
@@ -656,7 +663,7 @@ def p_profile(request: HttpRequest):
 
 
 
-
+@login_required_with_message(login_url='account:login', message="You need to log in to View your Activities.")
 def p_activities(request: HttpRequest):
     """Patient activities page view."""
     profile: Profile = request.user.profile

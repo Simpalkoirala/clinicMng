@@ -33,6 +33,7 @@ class Profile(models.Model):
     address = models.CharField(max_length=255, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
 
+    gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], blank=True)
 
     email_notification = models.BooleanField(default=True)
     sms_notification = models.BooleanField(default=True)
@@ -46,6 +47,32 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} -- {self.role} -- {self.user.first_name}" 
+
+
+
+
+class Conversation(models.Model):
+    participants = models.ManyToManyField(Profile, related_name='conversations')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Conv Participants: {', '.join([p.user.username for p in self.participants.all()])}"
+
+class Message(models.Model):
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
+    sender       = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='sent_messages')
+    content      = models.TextField()
+    file        = models.FileField(upload_to='conversation_files/', blank=True, null=True)  
+    timestamp    = models.DateTimeField(auto_now_add=True)
+    read         = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['timestamp']
+
+    def __str__(self):
+        return f"Msg {self.pk} in Conv {self.conversation_id}"
+
+
 
 
 

@@ -22,15 +22,15 @@
             <p class="text-muted-foreground">Welcome back, Dr. Smith. Here's your overview for today.</p>
         </div>
         <!-- Status Card -->
-        <div class="bg-purple-50 rounded-lg shadow-md p-6 mb-6">
-            <div class="flex justify-between items-center">
+        {% comment %} <div class="bg-purple-50 rounded-lg shadow-md p-6 mb-6">
+            <div class="flex justify-between items-start sm:items-center flex-col sm:flex-row gap-4 ">
                 <div>
                     <h2 class="text-lg font-semibold text-gray-800">Your Current Status</h2>
                     <p class="text-gray-600 mt-1">You are available for online consultations</p>
                 </div>
                 <div class="flex items-center">
                     <span class="h-3 w-3 bg-green-500 rounded-full mr-2"></span>
-                    <select class="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select class="border rounded-lg pl-2 pr-8 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="available">Available</option>
                         <option value="busy">Busy</option>
                         <option value="away">Away</option>
@@ -38,12 +38,12 @@
                     </select>
                 </div>
             </div>
-        </div>
+        </div> {% endcomment %}
 
-        <!-- Stats cards -->
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <!-- Summary Cards Section -->
+        <div class="flex justify-between overflow-x-auto gap-6 px-3 py-4 custom-scrollbar pb-4">
             <!-- Total Patients Card -->
-            <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+            <div class="min-w-[250px] rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
                 <div class="flex flex-row items-center justify-between mb-4">
                     <h3 class="text-sm font-semibold text-gray-700">Total Patients</h3>
                     <div class="p-2 bg-blue-50 rounded-lg">
@@ -55,15 +55,15 @@
                 </div>
                 <div class="space-y-1">
                     <div class="flex items-baseline">
-                        <span class="text-3xl font-bold text-gray-900">1,248</span>
-                        <span class="ml-2 text-sm font-medium text-green-500">+4.3%</span>
+                        <span class="text-3xl font-bold text-gray-900">{{ counts.total_patients }}</span>
+                        <span class="hidden ml-2 text-sm font-medium text-green-500">+4.3%</span>
                     </div>
                     <p class="text-xs text-gray-500">Increase from last month</p>
                 </div>
             </div>
 
             <!-- Today's Appointments Card -->
-            <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+            <div class="min-w-[250px] rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
                 <div class="flex flex-row items-center justify-between mb-4">
                     <h3 class="text-sm font-semibold text-gray-700">Today's Appointments</h3>
                     <div class="p-2 bg-purple-50 rounded-lg">
@@ -74,16 +74,16 @@
                     </div>
                 </div>
                 <div class="space-y-1">
-                    <div class="text-3xl font-bold text-gray-900">12</div>
+                    <div class="text-3xl font-bold text-gray-900">{{ counts.todays_appointments }}</div>
                     <div class="flex items-center">
-                        <span class="text-xs text-amber-600 font-medium">3</span>
+                        <span class="text-xs text-amber-600 font-medium">{{ counts.pending_patients }}</span>
                         <span class="text-xs text-gray-500 ml-1">pending confirmations</span>
                     </div>
                 </div>
             </div>
 
             <!-- Unread Messages Card -->
-            <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+            <div class="min-w-[250px] rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
                 <div class="flex flex-row items-center justify-between mb-4">
                     <h3 class="text-sm font-semibold text-gray-700">Unread Messages</h3>
                     <div class="p-2 bg-green-50 rounded-lg">
@@ -103,7 +103,7 @@
             </div>
 
             <!-- Pending Lab Results Card -->
-            <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+            <div class="min-w-[250px] rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
                 <div class="flex flex-row items-center justify-between mb-4">
                     <h3 class="text-sm font-semibold text-gray-700">Pending Lab Results</h3>
                     <div class="p-2 bg-red-50 rounded-lg">
@@ -127,382 +127,1432 @@
 
     <!-- Calendar & Filter Section -->
     <section class="bg-white rounded-xl shadow-lg p-6 my-6">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-            <div class="flex items-center space-x-2">
-                <h2 class="text-xl font-bold text-gray-800">Appointment Schedule</h2>
-                <span class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full font-medium">Today</span>
+        <div class="container mx-auto px-2 py-8">
+            <div class="flex items-center space-x-2 mb-3 md:mb-0">
+                <h2 class="text-xl font-bold text-gray-800">Appointment Filters</h2>
             </div>
 
-            <div class="flex flex-wrap gap-3 mt-4 md:mt-0">
-                <div class="relative">
-                    <input type="date"
-                        class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        value="2025-03-24" />
-                    <svg class="w-5 h-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                </div>
-
-                <div class="relative">
-                    <select
-                        class="appearance-none pl-10 pr-8 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option>All Appointments</option>
-                        <option>Upcoming</option>
-                        <option>Completed</option>
-                        <option>Urgent</option>
-                    </select>
-                    <svg class="w-5 h-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                    <svg class="w-5 h-5 text-gray-500 absolute right-2 top-1/2 transform -translate-y-1/2"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </div>
-
-                <div class="relative">
-                    <input type="text" placeholder="Search patients..."
-                        class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                    <svg class="w-5 h-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                </div>
-            </div>
-        </div>
-
-        <!-- Timeline -->
-        <div
-            class="overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 custom-scrollbar">
-            <div class="timeline min-w-max flex items-center gap-4 p-2" id="timeline">
-                <!-- Dynamically generated content will be here -->
-            </div>
-        </div>
-
-        <script>
-            // Updated JSON data with additional future appointments
-            const appointmentsData = [
-
-                {
-                    id: 1,
-                    patientName: "James Wilson",
-                    time: "09:00 - 09:30",
-                    date: "2025-03-24",
-                    type: "Check-up",
-                    status: "upcoming",
-                    notes: "New patient",
-                    icon: "user"
-                },
-                {
-                    id: 2,
-                    patientName: "Emma Thompson",
-                    time: "10:00 - 10:45",
-                    date: "2025-03-24",
-                    type: "Consult",
-                    status: "upcoming",
-                    notes: "Insurance verified",
-                    icon: "shield"
-                },
-                {
-                    id: 3,
-                    patientName: "Michael Brown",
-                    time: "11:00 - 11:30",
-                    date: "2025-03-24",
-                    type: "Follow-up",
-                    status: "completed",
-                    notes: "Test results ready",
-                    icon: "file"
-                },
-                {
-                    id: 4,
-                    patientName: "Olivia Parker",
-                    time: "14:00 - 14:30",
-                    date: "2025-03-24",
-                    type: "Urgent",
-                    status: "urgent",
-                    notes: "High priority",
-                    icon: "activity"
-                },
-                // Tomorrow's appointments (March 22, 2025)
-                {
-                    id: 5,
-                    patientName: "Robert Johnson",
-                    time: "09:30 - 10:00",
-                    date: "2025-03-25",
-                    type: "Check-up",
-                    status: "upcoming",
-                    notes: "Annual physical",
-                    icon: "user"
-                },
-                {
-                    id: 6,
-                    patientName: "Sophia Martinez",
-                    time: "11:30 - 12:00",
-                    date: "2025-03-26",
-                    type: "Follow-up",
-                    status: "upcoming",
-                    notes: "Medication review",
-                    icon: "file"
-                },
-                {
-                    id: 7,
-                    patientName: "David Garcia",
-                    time: "14:30 - 15:15",
-                    date: "2025-03-24",
-                    type: "Consult",
-                    status: "upcoming",
-                    notes: "New referral",
-                    icon: "shield"
-                },
-                // Future appointments (March 23, 2025)
-                {
-                    id: 8,
-                    patientName: "Isabella Rodriguez",
-                    time: "10:00 - 10:30",
-                    date: "2025-03-23",
-                    type: "Check-up",
-                    status: "upcoming",
-                    notes: "Prenatal check",
-                    icon: "user"
-                },
-                // Additional future appointments (March 24, 2025)
-                {
-                    id: 9,
-                    patientName: "Liam Carter",
-                    time: "13:00 - 13:45",
-                    date: "2025-03-24",
-                    type: "Consult",
-                    status: "upcoming",
-                    notes: "Post-surgery review",
-                    icon: "shield"
-                },
-                {
-                    id: 10,
-                    patientName: "Ava Mitchell",
-                    time: "15:00 - 15:30",
-                    date: "2025-03-24",
-                    type: "Follow-up",
-                    status: "upcoming",
-                    notes: "Lab results discussion",
-                    icon: "file"
-                },
-                // Additional future appointments (March 25, 2025)
-                {
-                    id: 11,
-                    patientName: "Noah Evans",
-                    time: "09:15 - 09:45",
-                    date: "2025-03-25",
-                    type: "Check-up",
-                    status: "upcoming",
-                    notes: "Routine visit",
-                    icon: "user"
-                },
-                {
-                    id: 12,
-                    patientName: "Mia Turner",
-                    time: "16:00 - 16:45",
-                    date: "2025-03-25",
-                    type: "Urgent",
-                    status: "urgent",
-                    notes: "Emergency consult",
-                    icon: "activity"
-                }
-            ];
-
-            // Define working hours
-            const workingHours = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
-
-            // Define type colors for styling
-            const typeColors = {
-                'Check-up': { bg: 'green-50', border: 'green-500', text: 'green-800', badgeBg: 'green-100', badgeText: 'green-700' },
-                'Consult': { bg: 'blue-50', border: 'blue-500', text: 'blue-800', badgeBg: 'blue-100', badgeText: 'blue-700' },
-                'Follow-up': { bg: 'purple-50', border: 'purple-500', text: 'purple-800', badgeBg: 'purple-100', badgeText: 'purple-700' },
-                'Urgent': { bg: 'amber-50', border: 'amber-500', text: 'amber-800', badgeBg: 'amber-100', badgeText: 'amber-700' }
-            };
-
-            // Function to get icon SVG based on icon type
-            function getIconSvg(icon) {
-                switch (icon) {
-                    case 'user':
-                        return `<svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>`;
-                    case 'shield':
-                        return `<svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                    </svg>`;
-                    case 'file':
-                        return `<svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                        <polyline points="10 9 9 9 8 9"></polyline>
-                    </svg>`;
-                    case 'activity':
-                        return `<svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-                    </svg>`;
-                    default:
-                        return '';
-                }
-            }
-
-            // Function to convert time string to minutes since midnight
-            function timeToMinutes(time) {
-                const [hours, minutes] = time.split(':').map(Number);
-                return hours * 60 + minutes;
-            }
-
-            // Function to generate hour marker HTML
-            function generateHourMarker(hour) {
-                return `
-                <div class="timeline-hour flex flex-col items-center w-16 flex-shrink-0">
-                    <span class="text-sm font-semibold text-gray-600">${hour}</span>
-                    <div class="h-20 w-px bg-gray-200 my-1"></div>
-                </div>
-            `;
-            }
-
-            // Function to generate lunch break HTML
-            function generateLunchBreak() {
-                return `
-                <div class="bg-gray-50 border-l-4 border-gray-400 rounded-lg p-4 w-56 flex-shrink-0 shadow-sm">
-                    <div class="flex justify-center items-center h-10">
-                        <svg class="w-4 h-4 mr-2 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12 6 12 12 16 14"></polyline>
-                        </svg>
-                        <p class="text-sm font-medium text-gray-600">Lunch Break</p>
-                    </div>
-                </div>
-            `;
-            }
-
-            // Function to generate appointment card HTML
-            function generateAppointmentCard(appointment) {
-                const colors = typeColors[appointment.type] || { bg: 'gray-50', border: 'gray-500', text: 'gray-800', badgeBg: 'gray-100', badgeText: 'gray-700' };
-                const iconSvg = getIconSvg(appointment.icon);
-                return `
-                <div class="bg-${colors.bg} border-l-4 border-${colors.border} rounded-lg p-4 w-56 flex-shrink-0 shadow-sm hover:shadow-md transition-shadow">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-sm font-medium text-${colors.text}">${appointment.time}</p>
-                            <p class="text-sm text-gray-800 font-medium mt-1">${appointment.patientName}</p>
+            <!-- Filters Section -->
+            <div class="bg-white rounded-xl shadow-lg p-4 mb-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 md:space-x-4 w-full">
+                    <div class="flex flex-col sm:flex-row flex-wrap gap-3 w-full md:w-auto">
+                        <div class="relative w-full sm:w-auto">
+                            <input type="date"
+                                id="filter-date"
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                value="{{ today }}" />
+                            <svg class="w-5 h-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
                         </div>
-                        <span class="px-2 py-1 bg-${colors.badgeBg} text-${colors.badgeText} text-xs rounded-full font-medium">${appointment.type}</span>
-                    </div>
-                    <div class="flex items-center mt-2 text-xs text-gray-500">
-                        ${iconSvg}
-                        ${appointment.notes}
+                        
+                        <div class="relative w-full sm:w-auto">
+                            <select
+                                id="filter-status"
+                                class="w-full appearance-none pl-10 pr-8 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">All Statuses</option>
+                                <option value="pending">Pending</option>
+                                <option value="confirmed" selected>Confirmed</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                            <svg class="w-5 h-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                            </svg>
+                            
+                        </div>
+                        
+                        <div class="relative w-full sm:w-auto">
+                            <input type="text" 
+                                id="search-patient" 
+                                placeholder="Search patients..."
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                            <svg class="w-5 h-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </div>
+                        
+                        <!-- View Mode Toggle -->
+                        <div class="relative w-full sm:w-auto flex rounded-lg overflow-hidden border border-gray-300">
+                            <button 
+                                id="timeline-view-btn"
+                                class="view-toggle-btn flex-1 sm:flex-none px-3 py-2 flex items-center justify-center bg-blue-500 text-white hover:bg-blue-600 focus:outline-none transition-colors">
+                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+                                </svg>
+                                Timeline
+                            </button>
+                            <button 
+                                id="list-view-btn"
+                                class="view-toggle-btn flex-1 sm:flex-none px-3 py-2 flex items-center justify-center bg-white text-gray-700 hover:bg-gray-100 focus:outline-none transition-colors">
+                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                                </svg>
+                                List
+                            </button>
+                            <button 
+                                id="week-view-btn"
+                                class="view-toggle-btn flex-1 sm:flex-none px-3 py-2 flex items-center justify-center bg-white text-gray-700 hover:bg-gray-100 focus:outline-none transition-colors">
+                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                Week
+                            </button>
+                        </div>
                     </div>
                 </div>
-            `;
-            }
+            </div>
+        
+            <!-- Appointments Management Section -->
+            <div x-data="appointmentManager()" class="bg-white rounded-xl shadow-lg overflow-hidden">
+                
+                <!-- Date Navigation Header -->
+                <div class="flex flex-wrap justify-between items-center p-3 sm:p-4 border-b border-gray-100">
+                    <button @click="previousDay()" class="text-blue-600 hover:text-blue-800 flex items-center text-sm sm:text-base order-1">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        <span x-show="viewMode !== 'week'" class="hidden xs:inline">Previous Day</span>
+                        <span x-show="viewMode !== 'week'" class="inline xs:hidden">Prev</span>
+                        <span x-show="viewMode === 'week'" class="hidden xs:inline">Previous Week</span>
+                        <span x-show="viewMode === 'week'" class="inline xs:hidden">Prev</span>
+                    </button>
+                    
+                    <div class="text-center order-3 w-full sm:w-auto sm:order-2 mt-3 sm:mt-0">
+                        <template x-if="viewMode !== 'week'">
+                            <span class="text-base sm:text-lg font-medium text-gray-800" x-text="formattedCurrentDate"></span>
+                        </template>
+                        <template x-if="viewMode === 'week'">
+                            <span class="text-base sm:text-lg font-medium text-gray-800" x-text="getWeekRangeText()"></span>
+                        </template>
+                        <span 
+                            x-show="isToday" 
+                            class="ml-2 bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full font-medium"
+                        >Today</span>
+                    </div>
+                    
+                    <button @click="nextDay()" class="text-blue-600 hover:text-blue-800 flex items-center text-sm sm:text-base order-2 sm:order-3">
+                        <span x-show="viewMode !== 'week'" class="hidden xs:inline">Next Day</span>
+                        <span x-show="viewMode !== 'week'" class="inline xs:hidden">Next</span>
+                        <span x-show="viewMode === 'week'" class="hidden xs:inline">Next Week</span>
+                        <span x-show="viewMode === 'week'" class="inline xs:hidden">Next</span>
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+        
+                <!-- Legend Header -->
+                <div class="bg-gray-50 px-4 sm:px-6 py-3 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0">
+                    <div class="flex flex-col xs:flex-row items-start xs:items-center space-y-2 xs:space-y-0 xs:space-x-2 w-full sm:w-auto">
+                        <h3 class="text-sm font-medium text-gray-700">Appointments</h3>
+                        <div class="flex flex-wrap gap-x-4 gap-y-2 ml-0 xs:ml-4 mt-2 xs:mt-0">
+                            <div class="flex items-center">
+                                <span class="w-3 h-3 rounded-full bg-green-500 mr-1"></span>
+                                <span class="text-xs text-gray-600">General</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-3 h-3 rounded-full bg-purple-500 mr-1"></span>
+                                <span class="text-xs text-gray-600">Follow-up</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-3 h-3 rounded-full bg-blue-500 mr-1"></span>
+                                <span class="text-xs text-gray-600">Online</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-3 h-3 rounded-full bg-amber-500 mr-1"></span>
+                                <span class="text-xs text-gray-600">Offline</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div x-show="filteredAppointments.length > 0" class="w-full sm:w-auto text-left sm:text-right">
+                        <span class="text-sm text-gray-500" x-text="`${filteredAppointments.length} appointment(s) found`"></span>
+                    </div>
+                </div>
+        
+                <!-- No appointments message -->
+                <div 
+                    x-show="filteredAppointments.length === 0" 
+                    class="flex flex-col items-center justify-center py-12"
+                >
+                    <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                    <p class="text-gray-500 text-lg mb-1">No appointments found</p>
+                    <p class="text-gray-400 text-sm">Try adjusting your filters or checking a different date</p>
+                </div>
+        
+                <!-- Timeline View (IMPROVED) -->
+                <div 
+                    x-show="filteredAppointments.length > 0 && viewMode === 'timeline'" 
+                    class="relative"
+                >
+                    <!-- Timeline container with improved styling -->
+                    <div class="timeline-container overflow-x-auto pb-4 relative scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 border-t border-gray-100">
+                        {% comment %} <!-- Fixed "Now" indicator for today -->
+                        <div 
+                            x-show="isToday"
+                            class="absolute top-0 bottom-0 z-20 pointer-events-none"
+                            :style="{ left: `${getCurrentTimePosition()}%` }"
+                        >
+                            <div class="h-full flex flex-col">
+                                <div class="bg-red-500 text-white text-xs py-1 px-2 rounded shadow-md">Now</div>
+                                <div class="w-0.5 h-full bg-red-400 opacity-70 mx-auto"></div>
+                            </div>
+                        </div> {% endcomment %}
+                        
+                        <!-- Timeline content -->
+                        <div class="timeline min-w-max flex p-4 relative">
+                            <!-- Dynamic hours timeline -->
+                            <template x-for="hour in getDisplayHours()" :key="hour">
+                                <div class="hour-column flex flex-col mr-4" style="min-width: 200px; max-width: 300px">
+                                    <div class="flex items-center mb-2">
+                                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center mr-2">
+                                            <span class="text-xs font-medium text-gray-700" x-text="hour"></span>
+                                        </div>
+                                        <div class="text-xs font-medium text-gray-500" x-text="`${hour}:00`"></div>
+                                    </div>
+                                    
+                                    <div class="hour-slots space-y-3">
+                                        <template x-for="appointment in getAppointmentsByHour(hour)" :key="appointment.id">
+                                            <div 
+                                                @click="showDetails(appointment)"
+                                                class="appointment-card rounded-lg p-3 transform transition-all duration-200 hover:shadow-md hover:-translate-y-1 cursor-pointer shadow-sm"
+                                                :class="getAppointmentCardClasses(appointment)"
+                                            >
+                                                <div class="flex justify-between items-start">
+                                                    <div>
+                                                        <p class="text-sm font-medium" x-text="appointment.appointment_time_str"></p>
+                                                        <p class="text-sm font-medium mt-1" x-text="`${appointment.patient_first_name} ${appointment.patient_last_name}`"></p>
+                                                    </div>
+                                                    <span 
+                                                        class="px-2 py-1 text-xs rounded-full font-medium"
+                                                        :class="getAppointmentTypeClasses(appointment)"
+                                                        x-text="getAppointmentTypeDisplay(appointment)"
+                                                    ></span>
+                                                </div>
+                                                
+                                                <div class="flex items-center justify-between mt-3">
+                                                    <div class="flex items-center text-xs text-gray-500">
+                                                        <span 
+                                                            :class="getStatusIconClasses(appointment)" 
+                                                            x-html="getStatusIcon(appointment)"
+                                                        ></span>
+                                                        <span 
+                                                            class="ml-1"
+                                                            x-text="capitalizeFirstLetter(appointment.status)"
+                                                        ></span>
+                                                    </div>
+                                                    
+                                                    <div class="flex space-x-1">
+                                                        <button 
+                                                            @click.stop="showDetails(appointment)"
+                                                            class="p-1 text-gray-500 hover:text-blue-600 rounded-full hover:bg-blue-50"
+                                                            title="View details"
+                                                        >
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                                </path>
+                                                            </svg>
+                                                        </button>
+                                                     
+                                                    </div>
+                                                </div>
+                                                
+                                                <template x-if="appointment.reason">
+                                                    <div class="mt-2 text-xs text-gray-500 truncate" :title="appointment.reason" x-text="truncateText(appointment.reason, 40)"></div>
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- List View (IMPROVED) -->
+                <div 
+                    x-show="filteredAppointments.length > 0 && viewMode === 'list'" 
+                    class="pb-4 px-4"
+                >
+                    <div class="space-y-3 mt-4">
+                        <template x-if="filteredAppointments.length > 0">
+                            <div>
+                                <!-- Morning Section -->
+                                <template x-if="hasAppointmentsInTimeRange(0, 12)">
+                                    <div class="mb-4">
+                                        <h3 class="text-sm font-semibold text-gray-500 mb-2 flex items-center sticky top-0 bg-white py-2 z-10">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <path d="M12 6v6l4 2"></path>
+                                            </svg>
+                                            Morning (0:00 - 12:00)
+                                        </h3>
+                                        <div class="space-y-2">
+                                            <template x-for="appointment in getAppointmentsByTimeRange(0, 12)" :key="appointment.id">
+                                                <div 
+                                                    @click="showDetails(appointment)"
+                                                    class="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-md cursor-pointer transition-all duration-200"
+                                                    :class="{'border-l-4 border-l-green-500': appointment.status === 'completed',
+                                                            'border-l-4 border-l-blue-500': appointment.status === 'confirmed',
+                                                            'border-l-4 border-l-amber-500': appointment.status === 'pending',
+                                                            'border-l-4 border-l-red-500': appointment.status === 'cancelled'}"
+                                                >
+                                                    <div class="flex flex-wrap items-center">
+                                                        <div class="mr-3 mb-2 sm:mb-0">
+                                                            <span 
+                                                                class="inline-block w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-medium text-gray-600"
+                                                                x-text="getPatientInitials(appointment)"
+                                                            ></span>
+                                                        </div>
+                                                        <div class="flex-1 min-w-0 mb-2 sm:mb-0">
+                                                            <p class="font-medium truncate" x-text="`${appointment.patient_first_name} ${appointment.patient_last_name}`"></p>
+                                                            <div class="flex flex-wrap items-center text-sm text-gray-500 gap-y-1">
+                                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                                </svg>
+                                                                <span class="mr-3" x-text="appointment.appointment_time_str"></span>
+                                                                <span 
+                                                                    class="px-2 py-0.5 text-xs rounded-full"
+                                                                    :class="getAppointmentTypeClasses(appointment)"
+                                                                    x-text="getAppointmentTypeDisplay(appointment)"
+                                                                ></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex items-center space-x-2 ml-auto">
+                                                            <span 
+                                                                class="px-2 py-1 text-xs rounded-full capitalize whitespace-nowrap"
+                                                                :class="getStatusBadgeClass(appointment)"
+                                                                x-text="appointment.status"
+                                                            ></span>
+                                                            <button 
+                                                                @click.stop="showDetails(appointment)"
+                                                                class="p-2 text-gray-500 hover:text-blue-600 rounded-full hover:bg-blue-50"
+                                                            >
+                                                                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                                
+                                <!-- Afternoon Section -->
+                                <template x-if="hasAppointmentsInTimeRange(12, 17)">
+                                    <div class="mb-4">
+                                        <h3 class="text-sm font-semibold text-gray-500 mb-2 flex items-center sticky top-0 bg-white py-2 z-10">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <path d="M12 12l4 2"></path>
+                                            </svg>
+                                            Afternoon (12:00 - 17:00)
+                                        </h3>
+                                        <div class="space-y-2">
+                                            <template x-for="appointment in getAppointmentsByTimeRange(12, 17)" :key="appointment.id">
+                                                <div 
+                                                    @click="showDetails(appointment)"
+                                                    class="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-md cursor-pointer transition-all duration-200"
+                                                    :class="{'border-l-4 border-l-green-500': appointment.status === 'completed',
+                                                            'border-l-4 border-l-blue-500': appointment.status === 'confirmed',
+                                                            'border-l-4 border-l-amber-500': appointment.status === 'pending',
+                                                            'border-l-4 border-l-red-500': appointment.status === 'cancelled'}"
+                                                >
+                                                    <div class="flex flex-wrap items-center">
+                                                        <div class="mr-3 mb-2 sm:mb-0">
+                                                            <span 
+                                                                class="inline-block w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-medium text-gray-600"
+                                                                x-text="getPatientInitials(appointment)"
+                                                            ></span>
+                                                        </div>
+                                                        <div class="flex-1 min-w-0 mb-2 sm:mb-0">
+                                                            <p class="font-medium truncate" x-text="`${appointment.patient_first_name} ${appointment.patient_last_name}`"></p>
+                                                            <div class="flex flex-wrap items-center text-sm text-gray-500 gap-y-1">
+                                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                                </svg>
+                                                                <span class="mr-3" x-text="appointment.appointment_time_str"></span>
+                                                                <span 
+                                                                    class="px-2 py-0.5 text-xs rounded-full"
+                                                                    :class="getAppointmentTypeClasses(appointment)"
+                                                                    x-text="getAppointmentTypeDisplay(appointment)"
+                                                                ></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex items-center space-x-2 ml-auto">
+                                                            <span 
+                                                                class="px-2 py-1 text-xs rounded-full capitalize whitespace-nowrap"
+                                                                :class="getStatusBadgeClass(appointment)"
+                                                                x-text="appointment.status"
+                                                            ></span>
+                                                            <button 
+                                                                @click.stop="showDetails(appointment)"
+                                                                class="p-2 text-gray-500 hover:text-blue-600 rounded-full hover:bg-blue-50"
+                                                            >
+                                                                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                                
+                                <!-- Evening Section -->
+                                <template x-if="hasAppointmentsInTimeRange(17, 24)">
+                                    <div>
+                                        <h3 class="text-sm font-semibold text-gray-500 mb-2 flex items-center sticky top-0 bg-white py-2 z-10">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                                            </svg>
+                                            Evening (17:00 - 24:00)
+                                        </h3>
+                                        <div class="space-y-2">
+                                            <template x-for="appointment in getAppointmentsByTimeRange(17, 24)" :key="appointment.id">
+                                                <div 
+                                                    @click="showDetails(appointment)"
+                                                    class="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-md cursor-pointer transition-all duration-200"
+                                                    :class="{'border-l-4 border-l-green-500': appointment.status === 'completed',
+                                                            'border-l-4 border-l-blue-500': appointment.status === 'confirmed',
+                                                            'border-l-4 border-l-amber-500': appointment.status === 'pending',
+                                                            'border-l-4 border-l-red-500': appointment.status === 'cancelled'}"
+                                                >
+                                                    <div class="flex flex-wrap items-center">
+                                                        <div class="mr-3 mb-2 sm:mb-0">
+                                                            <span 
+                                                                class="inline-block w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-medium text-gray-600"
+                                                                x-text="getPatientInitials(appointment)"
+                                                            ></span>
+                                                        </div>
+                                                        <div class="flex-1 min-w-0 mb-2 sm:mb-0">
+                                                            <p class="font-medium truncate" x-text="`${appointment.patient_first_name} ${appointment.patient_last_name}`"></p>
+                                                            <div class="flex flex-wrap items-center text-sm text-gray-500 gap-y-1">
+                                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                                </svg>
+                                                                <span class="mr-3" x-text="appointment.appointment_time_str"></span>
+                                                                <span 
+                                                                    class="px-2 py-0.5 text-xs rounded-full"
+                                                                    :class="getAppointmentTypeClasses(appointment)"
+                                                                    x-text="getAppointmentTypeDisplay(appointment)"
+                                                                ></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex items-center space-x-2 ml-auto">
+                                                            <span 
+                                                                class="px-2 py-1 text-xs rounded-full capitalize whitespace-nowrap"
+                                                                :class="getStatusBadgeClass(appointment)"
+                                                                x-text="appointment.status"
+                                                            ></span>
+                                                            <button 
+                                                                @click.stop="showDetails(appointment)"
+                                                                class="p-2 text-gray-500 hover:text-blue-600 rounded-full hover:bg-blue-50"
+                                                            >
+                                                                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                
+                <!-- Weekly View (IMPROVED) -->
+                <div 
+                    x-show="viewMode === 'week'" 
+                    class="pb-4"
+                >
+                    <!-- Weekly view with horizontal scrolling on small screens -->
+                    <div class="overflow-x-auto">
+                        <div class="min-w-[768px] p-4">
+                            <div class="grid grid-cols-7 gap-2">
+                                <!-- Day headers -->
+                                <template x-for="(date, index) in weekDates" :key="index">
+                                    <div class="text-center">
+                                        <div 
+                                            class="font-semibold text-sm mb-1" 
+                                            :class="{'text-blue-600': isDateToday(date)}"
+                                            x-text="formatDayName(date)">
+                                        </div>
+                                        <div 
+                                            class="text-xs"
+                                            :class="{'text-blue-600': isDateToday(date)}"
+                                            x-text="formatDayNumber(date)">
+                                        </div>
+                                    </div>
+                                </template>
+                                
+                                <!-- Calendar cells -->
+                                <template x-for="(date, index) in weekDates" :key="`cell-${index}`">
+                                    <div 
+                                        :class="{'bg-blue-50 border-blue-200': isDateToday(date),
+                                                'bg-white border-gray-200': !isDateToday(date)}"
+                                        class="border rounded-lg p-2 h-[280px] overflow-y-auto relative"
+                                    >
+                                        <!-- Current day marker -->
+                                        <div 
+                                            x-show="isDateToday(date)" 
+                                            class="absolute top-0 right-0 w-0 h-0 border-t-8 border-r-8 border-blue-500 border-transparent"
+                                        ></div>
+                                        
+                                        <!-- Appointment count badge -->
+                                        <div class="text-center mb-2">
+                                            <span 
+                                                x-show="getAppointmentCountForDate(date) > 0"
+                                                class="inline-block px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800"
+                                                x-text="`${getAppointmentCountForDate(date)} appointment(s)`">
+                                            </span>
+                                        </div>
+                                        
+                                        <!-- Appointments for this day -->
+                                        <div class="space-y-2">
+                                            <template x-for="appointment in getAppointmentsForDate(date)" :key="`week-apt-${appointment.id}`">
+                                                <div 
+                                                    @click="showDetails(appointment)"
+                                                    class="text-xs p-2 rounded-md cursor-pointer border-l-2 hover:shadow-md transition-all"
+                                                    :class="getWeekViewAppointmentClasses(appointment)"
+                                                >
+                                                    <div class="font-semibold" x-text="appointment.appointment_time_str"></div>
+                                                    <div class="truncate" x-text="`${appointment.patient_first_name} ${appointment.patient_last_name}`"></div>
+                                                    <div class="flex items-center justify-between mt-1">
+                                                        <span 
+                                                            class="px-1.5 py-0.5 text-xs rounded-full"
+                                                            :class="getAppointmentTypeClasses(appointment)"
+                                                            x-text="getAppointmentTypeDisplay(appointment)"
+                                                        ></span>
+                                                        <span 
+                                                            class="capitalize text-xs"
+                                                            :class="getStatusTextClass(appointment)"
+                                                            x-text="appointment.status"
+                                                        ></span>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Appointment details modal -->
+                <div 
+                    x-show="showModal" 
+                    @keydown.escape.window="showModal = false"
+                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 "
+                    x-cloak
+                >
+                    <div 
+                        @click.away="showModal = false"
+                        class="bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+                    >
+                        <div class="border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+                            <h3 class="text-lg font-medium text-gray-900">Appointment Details</h3>
+                            <button @click="showModal = false" class="text-gray-400 hover:text-gray-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="px-6 py-4" x-show="selectedAppointment">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                                <div>
+                                    <p class="text-xs text-gray-500">Date</p>
+                                    <p class="font-medium" x-text="formatDetailDate(selectedAppointment?.appointment_date)"></p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Time</p>
+                                    <p class="font-medium" x-text="selectedAppointment?.appointment_time_str"></p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Status</p>
+                                    <span
+                                        class="inline-block px-2 py-1 text-xs rounded-full font-medium mt-1 capitalize"
+                                        :class="getStatusBadgeClass(selectedAppointment)"
+                                        x-text="selectedAppointment?.status"
+                                    ></span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <p class="text-xs text-gray-500">Patient</p>
+                                <p class="font-medium" x-text="`${selectedAppointment?.patient_first_name} ${selectedAppointment?.patient_last_name}`"></p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <p class="text-xs text-gray-500">Appointment Type</p>
+                                <span 
+                                    class="inline-block px-2 py-1 text-xs rounded-full font-medium mt-1"
+                                    :class="getAppointmentTypeClasses(selectedAppointment)"
+                                    x-text="getAppointmentTypeDisplay(selectedAppointment)"
+                                ></span>
+                            </div>
+                            
+                            <template x-if="selectedAppointment?.reason">
+                                <div class="mb-4">
+                                    <p class="text-xs text-gray-500">Reason</p>
+                                    <p class="text-sm mt-1 bg-gray-50 p-3 rounded-md" x-text="selectedAppointment?.reason"></p>
+                                </div>
+                            </template>
+                            
+                            <template x-if="selectedAppointment?.file">
+                                <div class="mb-4">
+                                    <p class="text-xs text-gray-500">Attached File</p>
+                                    <a 
+                                        :href="selectedAppointment?.file" 
+                                        target="_blank"
+                                        class="text-blue-600 hover:underline flex items-center mt-1 p-2 bg-blue-50 rounded-md inline-block"
+                                    >
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13">
+                                            </path>
+                                        </svg>
+                                        View File
+                                    </a>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex justify-end">
+                            <div class="flex flex-wrap gap-2">
+                                <template x-if="selectedAppointment?.status == 'confirmed'">
+                                    <button 
+                                        @click=""
+                                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium transition-colors"
+                                    >
+                                        Begin Appointment/ Check in
+                                    </button>
+                                </template>
+                                <template x-if="['pending', 'confirmed'].includes(selectedAppointment?.status)">
+                                    <button 
+                                        @click="changeAppointmentStatus('cancelled')"
+                                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-medium transition-colors"
+                                    >
+                                        Cancel Appointment
+                                    </button>
+                                </template>
+                                <template x-if="selectedAppointment?.status === 'pending'">
+                                    <button 
+                                        @click="changeAppointmentStatus('confirmed')"
+                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors"
+                                    >
+                                        Confirm Appointment
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            // Function to generate the timeline based on filtered appointments
-            function generateTimeline(filteredAppointments) {
-                const timelineContainer = document.getElementById('timeline');
-                timelineContainer.innerHTML = ''; // Clear existing content
+<script id="appointment-data" type="application/json">
+    {{ all_appointments_json|safe }}
+</script>
 
-                workingHours.forEach(hour => {
-                    // Add hour marker
-                    const hourMarker = generateHourMarker(hour);
-                    timelineContainer.insertAdjacentHTML('beforeend', hourMarker);
+<script id="week-dates" type="application/json">
+    {{ week_dates_json|safe }}
+</script>
 
-                    if (hour === '12:00') {
-                        // Add lunch break
-                        const lunchBreak = generateLunchBreak();
-                        timelineContainer.insertAdjacentHTML('beforeend', lunchBreak);
+<!-- Alpine.js -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('appointmentManager', () => ({
+            appointments: [],
+            filteredAppointments: [],
+            currentDate: '',
+            selectedStatus: 'Confirmed',
+            searchTerm: '',
+            hourList: JSON.parse('{{ hour_list|safe }}'),
+            weekDates: [],
+            viewMode: 'timeline', // 'timeline', 'list', or 'week'
+            showModal: false,
+            selectedAppointment: null,
+            isToday: false,
+            nowIndicatorInterval: null,
+            
+            init() {
+                try {
+                    // Get pre-serialized JSON from the hidden script tag
+                    const appointmentDataElement = document.getElementById('appointment-data');
+                    if (appointmentDataElement) {
+                        this.appointments = JSON.parse(appointmentDataElement.textContent.trim());
                     } else {
-                        // Find appointments starting in this hour
-                        const hourStartMinutes = timeToMinutes(hour);
-                        const nextHour = (parseInt(hour.split(':')[0]) + 1).toString().padStart(2, '0') + ':00';
-                        const hourEndMinutes = timeToMinutes(nextHour);
-
-                        const appointmentsInHour = filteredAppointments
-                            .filter(appointment => {
-                                const startTime = appointment.time.split(' - ')[0];
-                                const startMinutes = timeToMinutes(startTime);
-                                return startMinutes >= hourStartMinutes && startMinutes < hourEndMinutes;
-                            })
-                            .sort((a, b) => {
-                                const aStart = timeToMinutes(a.time.split(' - ')[0]);
-                                const bStart = timeToMinutes(b.time.split(' - ')[0]);
-                                return aStart - bStart;
-                            });
-
-                        // Add appointment cards
-                        appointmentsInHour.forEach(appointment => {
-                            const appointmentCard = generateAppointmentCard(appointment);
-                            timelineContainer.insertAdjacentHTML('beforeend', appointmentCard);
+                        showNotification({
+                            color: "bg-red-500",
+                            title: "Error Occured",
+                            message: `Appointment data element not found`
                         });
+                        this.appointments = [];
+                    }
+                    
+                    // Get week dates
+                    const weekDatesElement = document.getElementById('week-dates');
+                    if (weekDatesElement) {
+                        this.weekDates = JSON.parse(weekDatesElement.textContent.trim());
+                    }
+                } catch (error) {
+                    
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Error Occured",
+                        message: `Failed to parse appointment data: ${error}`
+                    });
+                    this.appointments = [];
+                }
+                
+                // Set default date to today from Django context
+                const today = '{{ today }}';
+                this.currentDate = today;
+                
+                // Connect filter elements to Alpine data
+                const dateInput = document.getElementById('filter-date');
+                const statusSelect = document.getElementById('filter-status');
+                const searchInput = document.getElementById('search-patient');
+
+                
+                
+                if (dateInput) {
+                    dateInput.addEventListener('change', (e) => {
+                        this.currentDate = e.target.value;
+                        this.checkIfToday();
+                        this.filterAppointments();
+                    });
+                }
+                
+                if (statusSelect) {
+                    statusSelect.addEventListener('change', (e) => {
+                        this.selectedStatus = e.target.value;
+                        this.filterAppointments();
+                    });
+                }
+                
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => {
+                        clearTimeout(this.searchTimeout);
+                        this.searchTimeout = setTimeout(() => {
+                            this.searchTerm = e.target.value.trim().toLowerCase();
+                            this.filterAppointments();
+                        }, 300);
+                    });
+                }
+                
+                // Connect view toggle buttons
+                const timelineBtn = document.getElementById('timeline-view-btn');
+                const listBtn = document.getElementById('list-view-btn');
+                const weekBtn = document.getElementById('week-view-btn');
+                
+                if (timelineBtn) {
+                    timelineBtn.addEventListener('click', () => this.setViewMode('timeline'));
+                }
+                
+                if (listBtn) {
+                    listBtn.addEventListener('click', () => this.setViewMode('list'));
+                }
+                
+                if (weekBtn) {
+                    weekBtn.addEventListener('click', () => this.setViewMode('week'));
+                }
+                
+                this.checkIfToday();
+                this.filterAppointments();
+                
+                // Start now indicator update interval when it's today
+                if (this.isToday) {
+                    this.startNowIndicatorInterval();
+                }
+                
+                // Add event listener for window resize to handle responsive layout adjustments
+                window.addEventListener('resize', () => {
+                    // This helps ensure layouts adapt when window size changes
+                    this.$nextTick(() => {
+                        if (this.viewMode === 'timeline' && this.isToday) {
+                            // Force recalculation of "now" indicator position
+                            this.updateNowIndicator();
+                        }
+                    });
+                });
+            },
+            
+            startNowIndicatorInterval() {
+                // Clear existing interval if any
+                if (this.nowIndicatorInterval) {
+                    clearInterval(this.nowIndicatorInterval);
+                }
+                
+                // Update now indicator every minute
+                this.nowIndicatorInterval = setInterval(() => {
+                    this.updateNowIndicator();
+                }, 60000); // Update every minute
+                
+                // Initial update
+                this.updateNowIndicator();
+            },
+            
+            updateNowIndicator() {
+                // This function will be called by the interval to update the now indicator position
+                // For Alpine, changing the return value of getCurrentTimePosition will update the indicator
+                // We need to force a reactivity update
+                this.$nextTick(() => {
+                    const timelineContainer = document.querySelector('.timeline-container');
+                    if (timelineContainer) {
+                        // This trivial update forces Alpine to recalculate the position
+                        this.isToday = this.isToday;
                     }
                 });
-            }
-
-            // Function to update the timeline based on filter inputs
-            function updateTimeline() {
-                const dateFilter = document.querySelector('input[type="date"]');
-                const statusFilter = document.querySelector('select');
-                const searchFilter = document.querySelector('input[type="text"]');
-
-                const selectedDate = dateFilter.value;
-                const selectedStatus = statusFilter.value;
-                const searchTerm = searchFilter.value.toLowerCase();
-
-                // Filter appointments
-                const filteredAppointments = appointmentsData.filter(appointment => {
-                    const dateMatch = appointment.date === selectedDate;
-                    const statusMatch = selectedStatus === 'All Appointments' || appointment.status.toLowerCase() === selectedStatus.toLowerCase();
-                    const searchMatch = appointment.patientName.toLowerCase().includes(searchTerm);
-                    return dateMatch && statusMatch && searchMatch;
+            },
+            
+            setViewMode(mode) {
+                this.viewMode = mode;
+                
+                // Update button styles
+                const buttons = document.querySelectorAll('.view-toggle-btn');
+                buttons.forEach(btn => {
+                    btn.classList.remove('bg-blue-500', 'text-white');
+                    btn.classList.add('bg-white', 'text-gray-700');
                 });
-
-                // Generate timeline with filtered appointments
-                generateTimeline(filteredAppointments);
-            }
-
-            // DOM Content Loaded Event Listener
-            document.addEventListener('DOMContentLoaded', function () {
-                const dateFilter = document.querySelector('input[type="date"]');
-                const statusFilter = document.querySelector('select');
-                const searchFilter = document.querySelector('input[type="text"]');
-
-                // Add event listeners for filter changes
-                dateFilter.addEventListener('change', updateTimeline);
-                statusFilter.addEventListener('change', updateTimeline);
-                searchFilter.addEventListener('input', updateTimeline);
-
-                // Add reset button
-                const filtersContainer = document.querySelector('.flex.flex-wrap.gap-3');
-                const resetButton = document.createElement('button');
-                resetButton.className = 'px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors';
-                resetButton.textContent = 'Reset Filters';
-                resetButton.addEventListener('click', function () {
-                    dateFilter.value = '2025-03-24';
-                    statusFilter.value = 'All Appointments';
-                    searchFilter.value = '';
-                    updateTimeline();
+                
+                // Highlight the active button
+                const activeBtn = document.getElementById(`${mode}-view-btn`);
+                if (activeBtn) {
+                    activeBtn.classList.remove('bg-white', 'text-gray-700');
+                    activeBtn.classList.add('bg-blue-500', 'text-white');
+                }
+                
+                // Initialize special behaviors for different view modes
+                this.$nextTick(() => {
+                    if (mode === 'timeline' && this.isToday) {
+                        // Reset the now indicator interval when switching to timeline
+                        this.startNowIndicatorInterval();
+                    }
                 });
-                filtersContainer.appendChild(resetButton);
+            },
+            
+            get formattedCurrentDate() {
+                if (!this.currentDate) return '';
+                try {
+                    const date = new Date(this.currentDate);
+                    if (isNaN(date.getTime())) return this.currentDate; // Fallback if invalid
+                    
+                    return date.toLocaleDateString('en-US', { 
+                        weekday: 'long',
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric'
+                    });
+                } catch (e) {
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Error Occured",
+                        message: `Error formatting date: ${e}`
+                    });
+                    return this.currentDate; // Fallback
+                }
+            },
+            
+            formatDetailDate(dateStr) {
+                if (!dateStr) return '';
+                try {
+                    const date = new Date(dateStr);
+                    if (isNaN(date.getTime())) return dateStr;
+                    
+                    return date.toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                } catch (e) {
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Error Occured",
+                        message: `Error formatting detail date: ${e}`
+                    });
+                    return dateStr;
+                }
+            },
+            
+            formatDayName(dateStr) {
+                if (!dateStr) return '';
+                try {
+                    const date = new Date(dateStr);
+                    if (isNaN(date.getTime())) return '';
+                    
+                    return date.toLocaleDateString('en-US', { weekday: 'short' });
+                } catch (e) {
+                    return '';
+                }
+            },
+            
+            formatDayNumber(dateStr) {
+                if (!dateStr) return '';
+                try {
+                    const date = new Date(dateStr);
+                    if (isNaN(date.getTime())) return '';
+                    
+                    return date.getDate();
+                } catch (e) {
+                    return '';
+                }
+            },
+            
+            checkIfToday() {
+                try {
+                    const today = new Date().toISOString().split('T')[0];
+                    const wasToday = this.isToday;
+                    this.isToday = this.currentDate === today;
+                    
+                    // Start or stop the now indicator interval based on whether it's today
+                    if (!wasToday && this.isToday && this.viewMode === 'timeline') {
+                        this.startNowIndicatorInterval();
+                    } else if (wasToday && !this.isToday && this.nowIndicatorInterval) {
+                        clearInterval(this.nowIndicatorInterval);
+                        this.nowIndicatorInterval = null;
+                    }
+                } catch (error) {
+                    console.error('Error in checkIfToday:', error);
+                    this.isToday = false;
+                }
+            },
+            
+            isDateToday(dateStr) {
+                if (!dateStr) return false;
+                try {
+                    const today = new Date().toISOString().split('T')[0];
+                    return dateStr === today;
+                } catch (e) {
+                    return false;
+                }
+            },
+            
+            previousDay() {
+                try {
+                    if (this.viewMode === 'week') {
+                        // Go back one week
+                        this.weekDates = this.weekDates.map(date => {
+                            const d = new Date(date);
+                            d.setDate(d.getDate() - 7);
+                            return d.toISOString().split('T')[0];
+                        });
+                        this.currentDate = this.weekDates[0]; // Set current date to first day of week
+                    } else {
+                        // Go back one day
+                        const date = new Date(this.currentDate);
+                        if (isNaN(date.getTime())) {
+                            throw new Error('Invalid date');
+                        }
+                        
+                        date.setDate(date.getDate() - 1);
+                        
+                        // Format as YYYY-MM-DD
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                        const day = String(date.getDate()).padStart(2, '0');
+                        
+                        this.currentDate = `${year}-${month}-${day}`;
+                    }
+                    
+                    // Update the date input
+                    const dateInput = document.getElementById('filter-date');
+                    if (dateInput) {
+                        dateInput.value = this.currentDate;
+                    }
+                    
+                    this.checkIfToday();
+                    this.filterAppointments();
+                } catch (e) {
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Error Occured",
+                        message: `'Error navigating to previous day: ${e}`
+                    });
+                }
+            },
+            
+            nextDay() {
+                try {
+                    if (this.viewMode === 'week') {
+                        // Go forward one week
+                        this.weekDates = this.weekDates.map(date => {
+                            const d = new Date(date);
+                            d.setDate(d.getDate() + 7);
+                            return d.toISOString().split('T')[0];
+                        });
+                        this.currentDate = this.weekDates[0]; // Set current date to first day of week
+                    } else {
+                        // Go forward one day
+                        const date = new Date(this.currentDate);
+                        if (isNaN(date.getTime())) {
+                            throw new Error('Invalid date');
+                        }
+                        
+                        date.setDate(date.getDate() + 1);
+                        
+                        // Format as YYYY-MM-DD
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                        const day = String(date.getDate()).padStart(2, '0');
+                        
+                        this.currentDate = `${year}-${month}-${day}`;
+                    }
+                    
+                    // Update the date input
+                    const dateInput = document.getElementById('filter-date');
+                    if (dateInput) {
+                        dateInput.value = this.currentDate;
+                    }
+                    
+                    this.checkIfToday();
+                    this.filterAppointments();
+                } catch (e) {
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Error Occured",
+                        message: `Error navigating to next day: ${e}`
+                    });
+                }
+            },
+            
+            getWeekRangeText() {
+                if (!Array.isArray(this.weekDates) || this.weekDates.length < 2) {
+                    return 'Week View';
+                }
+                
+                try {
+                    const firstDay = new Date(this.weekDates[0]);
+                    const lastDay = new Date(this.weekDates[6]);
+                    
+                    const formatOptions = { month: 'short', day: 'numeric' };
+                    const start = firstDay.toLocaleDateString('en-US', formatOptions);
+                    const end = lastDay.toLocaleDateString('en-US', formatOptions);
+                    
+                    return `${start} - ${end}, ${firstDay.getFullYear()}`;
+                } catch (e) {
+                    console.error('Error formatting week range:', e);
+                    return 'Week View';
+                }
+            },
+            
+            filterAppointments() {
+                try {
+                    if (!Array.isArray(this.appointments)) {
+                        console.error('Appointments is not an array:', this.appointments);
 
-                // Initial timeline generation
-                updateTimeline();
-            });
-        </script>
-    </section>
+                        showNotification({
+                            color: "bg-red-500",
+                            title: "Error Occured",
+                            message: `Appointments data is not an array`
+                        });
+
+                        this.filteredAppointments = [];
+                        return;
+                    }
+
+                    console.log('Filtering appointments:', {
+                        currentDate: this.currentDate,
+                        selectedStatus: this.selectedStatus,
+                        searchTerm: this.searchTerm
+                    });
+                    
+                    // For week view, don't filter by date
+                    if (this.viewMode === 'week') {
+                        const matchingAppointments = this.appointments.filter(app => {
+                            if (!app) return false;
+                            const matchesStatus = !this.selectedStatus || app.status === this.selectedStatus;
+                            const matchesSearch = !this.searchTerm || 
+                                `${app.patient_first_name || ''} ${app.patient_last_name || ''}`.toLowerCase().includes(this.searchTerm.toLowerCase());
+                            
+                            return matchesStatus && matchesSearch;
+                        });
+                        this.filteredAppointments = matchingAppointments;
+                    } else {
+                        // For day views, filter by the current date
+                        this.filteredAppointments = this.appointments.filter(app => {
+                            if (!app) return false;
+                            
+                            const matchesDate = app.appointment_date === this.currentDate;
+                            const matchesStatus = !this.selectedStatus || app.status === this.selectedStatus;
+                            const matchesSearch = !this.searchTerm || 
+                                `${app.patient_first_name || ''} ${app.patient_last_name || ''}`.toLowerCase().includes(this.searchTerm.toLowerCase());
+                            
+                            return matchesDate && matchesStatus && matchesSearch;
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error filtering appointments:', error);
+
+
+                    this.filteredAppointments = [];
+                }
+            },
+            
+            getDisplayHours() {
+                // If there are appointments, only show hours that have appointments
+                if (this.filteredAppointments.length > 0) {
+                    // Extract unique hours from filtered appointments
+                    const uniqueHours = [...new Set(
+                        this.filteredAppointments
+                            .filter(app => app && app.hour !== undefined)
+                            .map(app => app.hour)
+                    )].sort((a, b) => a - b);
+                    
+                    // Format hours with leading zeros
+                    return uniqueHours.map(hour => String(hour).padStart(2, '0'));
+                }
+                
+                // Fallback to default hour range
+                return this.hourList;
+            },
+            
+            getAppointmentsByHour(hour) {
+                try {
+                    if (!Array.isArray(this.filteredAppointments)) return [];
+                    
+                    const hourInt = parseInt(hour, 10);
+                    return this.filteredAppointments.filter(app => 
+                        app && app.hour !== undefined && app.hour === hourInt
+                    );
+                } catch (error) {
+                    console.error('Error getting appointments by hour:', error);
+                    return [];
+                }
+            },
+            
+            hasAppointmentsInTimeRange(startHour, endHour) {
+                return this.filteredAppointments.some(app => {
+                    if (!app || app.hour === undefined) return false;
+                    return app.hour >= startHour && app.hour < endHour;
+                });
+            },
+            
+            getAppointmentsByTimeRange(startHour, endHour) {
+                return this.filteredAppointments.filter(app => {
+                    if (!app || app.hour === undefined) return false;
+                    return app.hour >= startHour && app.hour < endHour;
+                }).sort((a, b) => a.hour - b.hour || a.appointment_time_str.localeCompare(b.appointment_time_str));
+            },
+            
+            getAppointmentsForDate(date) {
+                if (!Array.isArray(this.appointments) || !date) return [];
+                
+                return this.appointments.filter(app => 
+                    app && app.appointment_date === date
+                ).sort((a, b) => a.hour - b.hour || a.appointment_time_str.localeCompare(b.appointment_time_str));
+            },
+            
+            getAppointmentCountForDate(date) {
+                const appointments = this.getAppointmentsForDate(date);
+                return appointments.length;
+            },
+            
+            getPatientInitials(appointment) {
+                if (!appointment) return '';
+                
+                const firstInitial = appointment.patient_first_name ? appointment.patient_first_name.charAt(0).toUpperCase() : '';
+                const lastInitial = appointment.patient_last_name ? appointment.patient_last_name.charAt(0).toUpperCase() : '';
+                
+                return `${firstInitial}${lastInitial}`;
+            },
+            
+            getAppointmentCardClasses(appointment) {
+                if (!appointment) return 'bg-gray-50 border-l-4 border-gray-400';
+                
+                const baseClasses = 'border-l-4';
+                
+                const typeClasses = {
+                    'general_consultation': 'bg-green-50 border-green-500',
+                    'follow_up_visit': 'bg-purple-50 border-purple-500',
+                    'online_consultation': 'bg-blue-50 border-blue-500',
+                    'offline_consultation': 'bg-amber-50 border-amber-500'
+                };
+                
+                return `${baseClasses} ${typeClasses[appointment.appointment_type] || 'bg-gray-50 border-gray-400'}`;
+            },
+            
+            getAppointmentTypeClasses(appointment) {
+                if (!appointment) return 'bg-gray-100 text-gray-700';
+                
+                const typeClasses = {
+                    'general_consultation': 'bg-green-100 text-green-700',
+                    'follow_up_visit': 'bg-purple-100 text-purple-700',
+                    'online_consultation': 'bg-blue-100 text-blue-700',
+                    'offline_consultation': 'bg-amber-100 text-amber-700'
+                };
+                
+                return typeClasses[appointment.appointment_type] || 'bg-gray-100 text-gray-700';
+            },
+            
+            getWeekViewAppointmentClasses(appointment) {
+                if (!appointment) return '';
+                
+                const baseClasses = 'border-l-2';
+                
+                const statusClasses = {
+                    'pending': 'border-amber-500 bg-amber-50',
+                    'confirmed': 'border-blue-500 bg-blue-50',
+                    'completed': 'border-green-500 bg-green-50',
+                    'cancelled': 'border-red-500 bg-red-50'
+                };
+                
+                return `${baseClasses} ${statusClasses[appointment.status] || 'border-gray-300 bg-gray-50'}`;
+            },
+            
+            getStatusBadgeClass(appointment) {
+                if (!appointment) return '';
+                
+                const statusClasses = {
+                    'pending': 'bg-amber-100 text-amber-800',
+                    'confirmed': 'bg-blue-100 text-blue-800',
+                    'completed': 'bg-green-100 text-green-800',
+                    'cancelled': 'bg-red-100 text-red-800'
+                };
+                
+                return statusClasses[appointment.status] || 'bg-gray-100 text-gray-800';
+            },
+            
+            getStatusTextClass(appointment) {
+                if (!appointment) return '';
+                
+                const statusClasses = {
+                    'pending': 'text-amber-600',
+                    'confirmed': 'text-blue-600',
+                    'completed': 'text-green-600',
+                    'cancelled': 'text-red-600'
+                };
+                
+                return statusClasses[appointment.status] || 'text-gray-600';
+            },
+            
+            getAppointmentTypeDisplay(appointment) {
+                if (!appointment) return '';
+                
+                const typeDisplay = {
+                    'general_consultation': 'General',
+                    'follow_up_visit': 'Follow-up',
+                    'online_consultation': 'Online',
+                    'offline_consultation': 'Offline'
+                };
+                
+                return typeDisplay[appointment.appointment_type] || appointment.appointment_type;
+            },
+            
+            getStatusIconClasses(appointment) {
+                if (!appointment) return 'text-gray-500';
+                
+                const statusClasses = {
+                    'pending': 'text-amber-500',
+                    'confirmed': 'text-blue-500',
+                    'completed': 'text-green-500',
+                    'cancelled': 'text-red-500'
+                };
+                
+                return statusClasses[appointment.status] || 'text-gray-500';
+            },
+            
+            getStatusIcon(appointment) {
+                if (!appointment) return '';
+                
+                const icons = {
+                    'pending': `<svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>`,
+                    'confirmed': `<svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>`,
+                    'completed': `<svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>`,
+                    'cancelled': `<svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                            </svg>`
+                };
+                
+                return icons[appointment.status] || icons.pending;
+            },
+            
+            showDetails(appointment) {
+                this.selectedAppointment = appointment;
+                this.showModal = true;
+            },
+            
+            async changeAppointmentStatus(newStatus) {
+                if (!this.selectedAppointment) return;
+
+                console.log('Changing status to:', newStatus);
+                
+                try {
+                    const response = await fetch('/d/actions-appointment/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': "{{ csrf_token }}"
+                        },
+                        body: JSON.stringify({
+                            app_id: this.selectedAppointment.id,
+                            action: newStatus
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const result = await response.json();
+                        // Update the appointment in the local array
+                        this.updateAppointmentInArray(this.selectedAppointment.id, { status: newStatus });
+                        this.showModal = false;
+
+                         // Show a success notification
+                        showNotification({
+                            color: "bg-green-500",
+                            title: "Updated Appointment",
+                            message: `Appointment status updated to ${newStatus}`
+                        });
+                    } else {
+                        showNotification({
+                            color: "bg-red-500",
+                            title: "Error Occured",
+                            message: `Failed to update appointment status`
+                        });
+                    }
+                   
+                } catch (error) {
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Error Occured",
+                        message: `Error updating appointment status: ${error}`
+                    });
+                }
+            },
+            
+           
+            
+            updateAppointmentInArray(appointmentId, updates) {
+                try {
+                    // Update in main array
+                    const index = this.appointments.findIndex(app => app && app.id === appointmentId);
+                    if (index !== -1) {
+                        this.appointments[index] = { ...this.appointments[index], ...updates };
+                    }
+                    
+                    // Update in filtered array
+                    const filteredIndex = this.filteredAppointments.findIndex(app => app && app.id === appointmentId);
+                    if (filteredIndex !== -1) {
+                        this.filteredAppointments[filteredIndex] = { ...this.filteredAppointments[filteredIndex], ...updates };
+                    }
+                    
+                    // Update selected appointment if it's the same one
+                    if (this.selectedAppointment && this.selectedAppointment.id === appointmentId) {
+                        this.selectedAppointment = { ...this.selectedAppointment, ...updates };
+                    }
+                } catch (error) {
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Error Occured",
+                        message: `Error updating appointment in array: ${error}`
+                    });
+                }
+            },
+            
+            getCurrentTimePosition() {
+                try {
+                    if (!this.isToday) return 0;
+                    
+                    const now = new Date();
+                    const hours = now.getHours();
+                    const minutes = now.getMinutes();
+                    
+                    // Find min and max hours in the current display
+                    const displayHours = this.getDisplayHours().map(h => parseInt(h, 10));
+                    
+                    if (displayHours.length === 0) {
+                        return 0; // No hours to display, fallback to start
+                    }
+                    
+                    const minHour = Math.min(...displayHours);
+                    const maxHour = Math.max(...displayHours) + 1;
+                    
+                    // Calculate position percentage
+                    const totalHours = maxHour - minHour;
+                    if (totalHours <= 0) return 0;
+                    
+                    const hourPosition = hours - minHour;
+                    const minutePosition = minutes / 60;
+                    let position = (hourPosition + minutePosition) / totalHours * 100;
+                    
+                    // If current time is before the first appointment hour, position at beginning
+                    if (hours < minHour) {
+                        position = 0;
+                    }
+                    
+                    // If current time is after the last appointment hour, position at end
+                    if (hours >= maxHour) {
+                        position = 100;
+                    }
+                    
+                    // Return a percentage value, clamped to reasonable range
+                    return Math.max(0, Math.min(100, position));
+                } catch (error) {
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Error Occured",
+                        message: `Error calculating current time position: ${error}`
+                    });
+                    return 0;
+                }
+            },
+            
+            truncateText(text, maxLength) {
+                if (!text) return '';
+                return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+            },
+            
+            capitalizeFirstLetter(string) {
+                if (!string) return '';
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+        }));
+    });
+</script>
+
+
+    
 
 </main>
 
@@ -515,7 +1565,7 @@
 <script>
 
     dashboard_nav_all = document.querySelectorAll('.dashboard-nav a');
-    console.log(dashboard_nav_all);
+    
     dashboard_nav_all.forEach((nav) => {
         nav_innertab =
             nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');

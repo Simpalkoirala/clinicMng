@@ -4,6 +4,7 @@ from django.contrib import admin
 from .models import DoctorProfile, AppointmentTimeSlot, AppointmentDateSlot
 
 admin.site.register(DoctorProfile)
+# admin.site.register(AppointmentTimeSlot)
 
 
 
@@ -11,7 +12,7 @@ admin.site.register(DoctorProfile)
 class AppointmentTimeSlotInline(admin.TabularInline):
     model = AppointmentTimeSlot
     extra = 1
-    fields = ('from_time', 'to_time', 'duration', 'appointment_type', 'is_booked')
+    fields = ('unique_id','from_time', 'to_time', 'duration', 'appointment_type', 'status')
     readonly_fields = ()
     verbose_name = "Time Slot"
     verbose_name_plural = "Time Slots"

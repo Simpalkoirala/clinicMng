@@ -69,11 +69,13 @@ class AppointmentDateSlot(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return f"{self.doctor} – @ {self.date}"
-    
 
 
 
 class AppointmentTimeSlot(models.Model):
+
+    unique_id = models.CharField(max_length=100, unique=True, blank=True, null=True)
+
     appointment_date_slot = models.ForeignKey(AppointmentDateSlot, on_delete=models.CASCADE, related_name='appointment_times')
     from_time = models.TimeField()
     to_time = models.TimeField()
@@ -93,7 +95,19 @@ class AppointmentTimeSlot(models.Model):
         ('offline_consultation', 'Offline Consultation'),
     ]
     appointment_type = MultiSelectField(choices=APPOINTMENT_TYPES, max_length=100, blank=True, null=True)
-    is_booked = models.BooleanField(default=False)
+    # is_booked = models.BooleanField(default=False)
+
+    status = models.CharField(max_length=20, default='available', choices=[
+        ('available', 'Available'),
+        ('booked', 'Booked'),
+        ('unavailable', 'Unavailable'),
+        ('break', 'Break'),
+    ])
+
+    def save(self, *args, **kwargs):
+        # if not self.unique_id:
+        self.unique_id = f"{self.pk}--{self.appointment_date_slot.id}-{self.from_time.strftime('%H:%M')}-{self.to_time.strftime('%H:%M')}"
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.appointment_date_slot} – {self.from_time}--{self.to_time}"
