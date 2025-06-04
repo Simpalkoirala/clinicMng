@@ -3,108 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendar Skeleton Loader</title>
+    <title>Message Box with Text Wrapping</title>
     <script src="https://cdn.tailwindcss.com"></script>
-  
 </head>
-<body class="bg-gray-50 p-6">
-    <div class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-6">
-        <!-- Calendar Header -->
-        <div class="flex items-center justify-between mb-6">
-            <div class="skeleton h-6 w-16 rounded"></div>
-            <div class="skeleton h-6 w-12 rounded"></div>
-            <div class="skeleton h-6 w-6 rounded"></div>
+<body class="p-8 bg-gray-100">
+    <div class="max-w-md mx-auto space-y-4">
+        <h2 class="text-lg font-semibold mb-4">Message Box Examples</h2>
+        
+        <!-- Original (overflowing) -->
+        <div class="mb-6">
+            <h3 class="text-sm font-medium mb-2 text-red-600">Before (Overflowing):</h3>
+            <div class="bg-muted bg-gray-200 rounded-lg p-3 max-w-[75%]">
+                <p class="text-sm">dffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsd</p>
+                <p class="text-xs mt-1 opacity-70 text-right">
+                    31 May
+                </p>
+            </div>
         </div>
 
-        <!-- Calendar Days Header -->
-        <div class="grid grid-cols-7 gap-2 mb-4">
-            <div class="skeleton h-4 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-4 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-4 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-4 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-4 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-4 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-4 w-8 rounded mx-auto"></div>
+        <!-- Fixed version -->
+        <div>
+            <h3 class="text-sm font-medium mb-2 text-green-600">After (Fixed with word wrapping):</h3>
+            <div class="bg-muted bg-gray-200 rounded-lg p-3 max-w-[75%]">
+                <p class="text-sm break-words overflow-wrap-anywhere">dffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsd</p>
+                <p class="text-xs mt-1 opacity-70 text-right">
+                    31 May
+                </p>
+            </div>
         </div>
 
-        <!-- Calendar Days Grid -->
-        <div class="grid grid-cols-7 gap-2 mb-6">
-            <!-- Week 1 -->
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            
-            <!-- Week 2 -->
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            
-            <!-- Week 3 -->
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            
-            <!-- Week 4 -->
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            
-            <!-- Week 5 -->
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto bg-blue-200"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            
-            <!-- Week 6 partial -->
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
-        </div>
-
-        <!-- Available Time Slots Header -->
-        <div class="mb-4">
-            <div class="skeleton h-5 w-64 rounded mb-2"></div>
-        </div>
-
-        <!-- Time Slots Grid -->
-        <div class="grid grid-cols-3 gap-3">
-            <!-- Row 1 -->
-            <div class="skeleton h-10 w-full rounded-lg"></div>
-            <div class="skeleton h-10 w-full rounded-lg"></div>
-            <div class="skeleton h-10 w-full rounded-lg"></div>
-            
-            <!-- Row 2 -->
-            <div class="skeleton h-10 w-full rounded-lg"></div>
-            <div class="skeleton h-10 w-full rounded-lg"></div>
-            <div class="skeleton h-10 w-full rounded-lg"></div>
-            
-            <!-- Row 3 -->
-            <div class="skeleton h-10 w-full rounded-lg"></div>
-            <div class="skeleton h-10 w-full rounded-lg"></div>
-            <div></div>
+        <!-- Alternative with hyphens -->
+        <div>
+            <h3 class="text-sm font-medium mb-2 text-blue-600">Alternative (with hyphens):</h3>
+            <div class="bg-muted bg-gray-200 rounded-lg p-3 max-w-[75%]">
+                <p class="text-sm break-all hyphens-auto" lang="en">dffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsddffffsasfasfdsfsd</p>
+                <p class="text-xs mt-1 opacity-70 text-right">
+                    31 May
+                </p>
+            </div>
         </div>
     </div>
 </body>

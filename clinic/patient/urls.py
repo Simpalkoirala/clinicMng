@@ -26,11 +26,14 @@ urlpatterns = [
 
 
     path('prescriptions/', prescriptions, name='prescriptions'),
-    path('message/', message, name='message'),
     path('profile/', p_profile, name='profile'),
     path('activities/', p_activities, name='activities'),
 
+    # path('message/<int:conversation_id>/', conversation_view, name='conversation_view'),
 
+    path('message/', message, name='message'),
+    path('get-msg/<int:conversation_id>/', get_msg_list, name='conversation_view'),
+    path('send-msg/', post_msg, name='send_msg'),
 
 
     

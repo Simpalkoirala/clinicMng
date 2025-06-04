@@ -1,4 +1,4 @@
-{% extends "pages/patient/P_base.html" %}
+{% extends "pages/doctor/D_base.html" %}
 {% load static %}
 
 {% block titles %}Message || Nepal's Care {% endblock titles %}
@@ -13,199 +13,329 @@
 {% block linkPageof %} /p/message/ {% endblock linkPageof %}
 
 {% block content %}
-<div class="flex h-screen">
-    <!-- Left Sidebar -->
-    <div class="w-80 bg-white border-r border-gray-200 flex flex-col">
-        <!-- Header -->
-        <div class="p-4 border-b border-gray-200">
-            <div class="flex items-center justify-between mb-4">
-                <h1 class="text-xl font-semibold text-gray-900">Messages</h1>
-                <button class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100">
-                    <i class="fas fa-plus"></i>
-                </button>
-            </div>
-            
-            <!-- Search Bar -->
-            <div id="search-container" class="hidden">
+
+
+<section>
+    <!-- Main Content -->
+    <div class="grid md:grid-cols-[300px_1fr]">
+
+        <!-- overlay backround -->
+        <div id="overlaySidebar" class="hidden fixed inset-0 bg-black bg-opacity-50 z-10"></div>
+
+
+        <!-- Left Sidebar - Conversations List -->
+        <div id="sidebarConvList"
+            class="hidden md:flex flex-col border-r h-[calc(100vh-4rem)] w-3/4 md:w-auto  absolute md:relative bg-white z-20">
+            <!-- Sidebar Header -->
+            <div class="p-4 border-b">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold">Messages</h2>
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                        <svg id='Add_Circle_24' class="w-5 h-5" fill="currentColor" viewBox='0 0 24 24'
+                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                            <g transform="matrix(1.43 0 0 1.43 12 12)">
+                                <g style="">
+                                    <g transform="matrix(1 0 0 1 0 0)">
+                                        <circle
+                                            style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                            cx="0" cy="0" r="6.25" />
+                                    </g>
+                                    <g transform="matrix(1 0 0 1 0 0)">
+                                        <path
+                                            style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-7, -7)" d="M 7 4.5 L 7 9.5" stroke-linecap="round" />
+                                    </g>
+                                    <g transform="matrix(1 0 0 1 0 0)">
+                                        <path
+                                            style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-7, -7)" d="M 9.5 7 L 4.5 7" stroke-linecap="round" />
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                        <span class="sr-only">New Message</span>
+                    </button>
+                </div>
                 <div class="relative">
-                    <input 
-                        type="text" 
-                        id="search-input"
-                        placeholder="Search messages..."
-                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    <span class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </span>
+
+
+                    <input type="search" id="search-input" placeholder="Search messages..."
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-8">
                 </div>
             </div>
+
+            <!-- Sidebar Content -->
+            <div class="flex-1 overflow-auto">
+                <!-- Tabs -->
+                <div class="p-1">
+                    <div class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground w-full grid grid-cols-3">
+                        <button class=" tab-button px-3 py-1 text-sm font-medium rounded-lg active bg-blue-50 text-blue-700" data-filter="all">All</button>
+                        <button class="hover:bg-slate-300 tab-button px-3 py-1 text-sm font-medium rounded-lg" data-filter="unread">Unread</button>
+                        <button class="hover:bg-slate-300 tab-button px-3 py-1 text-sm font-medium rounded-lg" data-filter="flagged">Flagged</button>
+                    </div>
+                </div>
+
+                <!-- Conversation List -->
+                <div id="conversation-list" class="space-y-1 px-1 py-2">
+                    {% for conversation in conversations %}
+                    <button  data-unread="{{ conversation.has_unread }}" data-conversation-id="{{ conversation.id }}" class="conversation-item flex items-start gap-3 p-2 rounded-md w-full text-left transition-colors font-medium border-b-2 border-gray-100 hover:bg-gray-50 {% if conversation.id == active_conversation_id %}bg-blue-50 {% endif %}">
+                        <div class="relative">
+                            <div class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-primary/10">
+                                <img class="aspect-square h-full w-full conversation-avatar" src=" {{ conversation.other_participant.profile_pic.url }}" alt="{{ conversation.other_participant.user.first_name }}">
+                            </div>
+                            {% if conversation.other_participant.is_online %}
+                                <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                            {% endif %}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center">
+                                <p class="text-sm font-medium truncate conversation-name">Dr. {{ conversation.other_participant.user.first_name }}</p>
+                                <span class="text-xs text-muted-foreground">{{ conversation.last_message.timestamp|date:"j M" }}</span>
+                            </div>
+                            <p class="text-xs text-muted-foreground conversation-role">{{ conversation.other_participant.specialty|default:"Healthcare Provider" }}</p>
+                            <p class="text-xs truncate mt-1 last-chat">{{ conversation.last_message.content|truncatechars:50 }}</p>
+                        </div>
+                    </button>
+                    {% empty %}
+                    <div class="p-8 text-center text-gray-500">
+                        <i class="fas fa-comments text-4xl mb-4"></i>
+                        <p>No conversations yet</p>
+                    </div>
+                    {% endfor %}
+
+                </div>
+                <div id="no-conversation" class="p-4 text-center text-muted-foreground hidden">No Conversations Found</div>
+            </div>
+        </div>
+
+        <!-- Main Content - Conversation -->
+        <section id="conversation-view" class=" flex flex-col h-[calc(100vh-4rem)]">
             
-            <button 
-                id="toggle-search"
-                class="w-full flex items-center px-3 py-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100"
-            >
-                <i class="fas fa-search mr-3"></i>
-                <span>Search messages...</span>
-            </button>
-        </div>
+                <!-- Conversation content will be populated here by JavaScript -->
+                <div id="conversation-content" class="flex-col h-full flex {% if not active_conversation %} hidden {% endif %}">
+                    <!-- Conversation Header -->
+                    <div id="conversation-header" class="flex items-center justify-between p-4 border-b">
+                        <div class="flex items-center gap-3">
+                            <button id="mobile-menu-button" class="md:hidden inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                                <svg class="h-5 w-5" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <g transform="matrix(1 0 0 1 12 12)">
+                                        <g style="">
+                                            <g transform="matrix(1 0 0 1 0 0)">
+                                            <path style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z" stroke-linecap="round"></path>
+                                            </g>
+                                            <g transform="matrix(1 0 0 1 0 0)">
+                                            <line style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" x1="-7" y1="0" x2="7" y2="0"></line>
+                                            </g>
+                                            <g transform="matrix(1 0 0 1 -4 3)">
+                                            <line style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" x1="-3" y1="-3" x2="3" y2="3"></line>
+                                            </g>
+                                            <g transform="matrix(1 0 0 1 -4 -3)">
+                                            <line style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" x1="-3" y1="3" x2="3" y2="-3"></line>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </button>
+                            <div class="relative">
+                                <div class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-primary/10">
+                                    <img class="aspect-square h-full w-full" src="{{ active_conversation.other_participant.profile_pic.url }}" alt="{{ active_conversation.other_participant.user.first_name }}">
+                                </div>
+                                {% if active_conversation.other_participant.is_online %}
+                                    <span class="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-background"></span>
+                                {% endif %}
 
-        <!-- Filter Tabs -->
-        <div class="px-4 py-2 border-b border-gray-200">
-            <div class="flex space-x-1">
-                <button class="filter-tab active px-4 py-2 text-sm font-medium rounded-lg" data-filter="all">All</button>
-                <button class="filter-tab px-4 py-2 text-sm font-medium rounded-lg" data-filter="unread">Unread</button>
-                <button class="filter-tab px-4 py-2 text-sm font-medium rounded-lg" data-filter="flagged">Flagged</button>
-            </div>
-        </div>
-
-        <!-- Conversations List -->
-        <div class="flex-1 overflow-y-auto">
-            {% for conversation in conversations %}
-            <div class="conversation-item p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer {% if conversation.id == active_conversation_id %}bg-blue-50 border-l-4 border-l-blue-500{% endif %}"
-                 data-conversation-id="{{ conversation.id }}"
-                 data-unread="{% if conversation.has_unread %}true{% else %}false{% endif %}">
-                <div class="flex items-start space-x-3">
-                    <div class="relative">
-                        <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-                            <span class="text-sm font-medium text-gray-600">
-                                {{ conversation.other_participant.user.first_name.0 }}{{ conversation.other_participant.user.last_name.0 }}
-                            </span>
+                            </div>
+                            <div>
+                                <h2 class="text-sm font-medium">{{ active_conversation.other_participant.user.first_name }}</h2>
+                                <p class="text-xs text-muted-foreground">{{ active_conversation.other_participant.specialty|default:"Healthcare Provider" }}</p>
+                            </div>
                         </div>
-                        {% if conversation.other_participant.is_online %}
-                        <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                        {% endif %}
+
+                        <div class="flex items-center gap-2">
+                            <div class="relative hidden">
+                                <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                                    <svg class="h-4 w-4" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g transform="matrix(1.43 0 0 1.43 12 12)">
+                                            <g style="">
+                                                <g transform="matrix(1 0 0 1 5 0)">
+                                                <circle style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" cx="0" cy="0" r="1.5"></circle>
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 0 0)">
+                                                <circle style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" cx="0" cy="0" r="1.5"></circle>
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 -5 0)">
+                                                <circle style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" cx="0" cy="0" r="1.5"></circle>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-sm font-medium text-gray-900 truncate">
-                                Dr. {{ conversation.other_participant.user.first_name }} {{ conversation.other_participant.user.last_name }}
-                            </h3>
-                            <span class="text-xs text-gray-500">{{ conversation.last_message.timestamp|date:"j M" }}</span>
+
+                    <!-- Messages -->
+                    <div id="messages-container" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+                        {% for message in message_lists %}
+                            <div class="flex {% if message.sender == request.user.profile %}justify-end{% else %}justify-start{% endif %}">
+                                <div class="max-w-xs lg:max-w-md">
+                                    {% if message.sender != request.user.profile %}
+                                    <div class="flex justify-start">
+                                            <div class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full border-2 border-primary/10 mr-2 mt-1">
+                                                <img class="aspect-square h-full w-full" src="{{ message.sender.profile_pic.url }}" alt="{{ message.sender.user.first_name.0 }}">
+                                            </div>
+                                        <div class="bg-muted rounded-lg p-3 max-w-[100%]">
+                                            <p class="text-sm break-words overflow-wrap-anywhere">{{ message.content }}</p>
+                                            <p class="text-xs mt-1 opacity-70 text-right">
+                                                {{ message.timestamp|date:"j M, g:i A" }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="flex justify-end">
+                                        <div class="bg-primary text-primary-foreground rounded-lg p-3 max-w-[100%]">
+                                            <p class="text-sm break-words overflow-wrap-anywhere">{{ message.content }}</p>
+                                            <p class="text-xs mt-1 opacity-70 text-right">
+                                                {{ message.timestamp|date:"j M, g:i A" }}
+                                                <span class="ml-1">
+                                                    {% if message.is_read %}
+                                                        <svg id="Checkmark_24" class="h-4 w-4 inline" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                            <g transform="matrix(1.15 0 0 1.15 12 12)">
+                                                                <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -11.84)" d="M 19.28125 5.28125 L 9 15.5625 L 4.71875 11.28125 L 3.28125 12.71875 L 8.28125 17.71875 L 9 18.40625 L 9.71875 17.71875 L 20.71875 6.71875 Z" stroke-linecap="round"></path>
+                                                            </g>
+                                                        </svg>
+                                                    {% else %}
+                                                        <svg id="Checkmark_24" class="h-4 w-4 inline text-green-400" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                            <g transform="matrix(0.4 0 0 0.4 12 12)" >
+                                                                <path style=" stroke-width: 5; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;" transform=" translate(-25.01, -24.99)" d="M 37.90625 8.96875 C 37.863281 8.976563 37.820313 8.988281 37.78125 9 C 37.554688 9.054688 37.355469 9.1875 37.21875 9.375 L 12.9375 38.5 L 1.71875 27.28125 C 1.320313 26.882813 0.679688 26.882813 0.28125 27.28125 C -0.117188 27.679688 -0.117188 28.320313 0.28125 28.71875 L 12.28125 40.71875 C 12.484375 40.921875 12.765625 41.03125 13.050781 41.011719 C 13.339844 40.992188 13.605469 40.851563 13.78125 40.625 L 38.78125 10.625 C 39.058594 10.3125 39.113281 9.863281 38.917969 9.492188 C 38.722656 9.125 38.320313 8.914063 37.90625 8.96875 Z M 48.90625 8.96875 C 48.863281 8.976563 48.820313 8.988281 48.78125 9 C 48.554688 9.054688 48.355469 9.1875 48.21875 9.375 L 23.9375 38.5 L 21.375 35.96875 C 21.132813 35.671875 20.746094 35.535156 20.371094 35.621094 C 20 35.707031 19.707031 36 19.621094 36.371094 C 19.535156 36.746094 19.671875 37.132813 19.96875 37.375 L 23.28125 40.71875 C 23.484375 40.921875 23.765625 41.03125 24.050781 41.011719 C 24.339844 40.992188 24.605469 40.851563 24.78125 40.625 L 49.78125 10.625 C 50.058594 10.3125 50.113281 9.863281 49.917969 9.492188 C 49.722656 9.125 49.320313 8.914063 48.90625 8.96875 Z" stroke-linecap="round" />
+                                                            </g>
+                                                        </svg>
+                                                    {% endif %}
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% empty %}
+                        <div class="text-center text-gray-500">
+                            <p>No messages yet. Start the conversation!</p>
                         </div>
-                        <p class="text-xs text-gray-500 mb-1">{{ conversation.other_participant.specialty|default:"Healthcare Provider" }}</p>
-                        <p class="text-sm text-gray-600 truncate">{{ conversation.last_message.content|truncatechars:50 }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Message Input -->
+                    <div class="p-4 border-t">
+                        <div class="flex items-end gap-2">
+                            <textarea id="message-input" placeholder="Type your message..." class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"></textarea>
+                            <div class="flex flex-col gap-2">
+                                <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                                    <svg class="h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <rect width="24" height="24" stroke="none" fill="#000000" opacity="0"></rect>
+            
+            
+                                        <g transform="matrix(1 0 0 1 12 12)">
+                                            <g style="">
+                                                <g transform="matrix(1 0 0 1 0 0)">
+                                                    <path style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z" stroke-linecap="round"></path>
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 0.32 0.06)">
+                                                    <path style="stroke: rgb(33,33,33); stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12.32, -12.06)" d="M 15 7 L 8.5 13.5 C 7.67157287525381 14.32842712474619 7.67157287525381 15.67157287525381 8.5 16.5 C 9.32842712474619 17.32842712474619 10.67157287525381 17.32842712474619 11.5 16.5 L 18 10 C 19.65685424949238 8.34314575050762 19.65685424949238 5.656854249492381 18 4 C 16.34314575050762 2.3431457505076194 13.65685424949238 2.3431457505076194 12 4 L 5.5 10.5 C 3.0147186257614296 12.985281374238571 3.014718625761429 17.01471862576143 5.5 19.5 C 7.985281374238571 21.98528137423857 12.014718625761429 21.98528137423857 14.5 19.5 L 21 13" stroke-linecap="round"></path>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </button>
+                                <button id="send-button" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 w-10 disabled:opacity-50" disabled="">
+                                    <svg class="h-5 w-5" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            
+                                        <g transform="matrix(1 0 0 1 12 12)">
+                                            <g style="">
+                                                <g transform="matrix(1 0 0 1 0 0)">
+                                                    <path style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z" stroke-linecap="round"></path>
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 3.5 -3.5)">
+                                                    <line style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" x1="-5.5" y1="5.5" x2="5.5" y2="-5.5"></line>
+                                                </g>
+                                                <g transform="matrix(1 0 0 1 -0.16 0.16)">
+                                                    <path style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-11.84, -12.16)" d="M 21 3 L 14.5 21 C 14.410403519289869 21.195515549931347 14.215067104924483 21.320871215252208 14 21.320871215252208 C 13.784932895075517 21.320871215252208 13.589596480710131 21.195515549931347 13.5 21 L 10 14 L 3 10.5 C 2.804484450068652 10.410403519289869 2.679128784747792 10.215067104924483 2.679128784747792 10 C 2.679128784747792 9.784932895075517 2.8044844500686517 9.589596480710131 2.9999999999999996 9.5 L 21 3" stroke-linecap="round"></path>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            {% empty %}
-            <div class="p-8 text-center text-gray-500">
-                <i class="fas fa-comments text-4xl mb-4"></i>
-                <p>No conversations yet</p>
-            </div>
-            {% endfor %}
-        </div>
+                {% if not active_conversation %}
+                <!-- Empty state will be shown initially -->
+                <div id="empty-state" class="flex flex-col items-center justify-center h-full text-center p-4">
+                    <svg class="h-16 w-16 text-muted-foreground/30 mb-4" fill="currentColor" stroke="currentColor"
+                        viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
 
-        <!-- Filter Button -->
-        <div class="p-4 border-t border-gray-200">
-            <button class="flex items-center text-gray-600 hover:text-gray-800">
-                <i class="fas fa-filter mr-2"></i>
-                <span>Filter</span>
-                <i class="fas fa-ellipsis-h ml-auto"></i>
-            </button>
-        </div>
+                        <g transform="matrix(1 0 0 1 12 12)">
+                            <g style="">
+                                <g transform="matrix(1 0 0 1 0 0)">
+                                    <path
+                                        style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                        transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z"
+                                        stroke-linecap="round" />
+                                </g>
+                                <g transform="matrix(1 0 0 1 0.01 -0.01)">
+                                    <path
+                                        style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                        transform=" translate(-12.01, -11.99)"
+                                        d="M 3 20 L 4.3 16.1 C 1.9761174147637677 12.663009706393852 2.8738762839310747 8.227707321782525 6.399767548460441 5.726274565848396 C 9.92565881298981 3.224841809914267 14.990227941838622 3.430188862125 18.245284500640466 6.206560632867749 C 21.50034105944231 8.982932403610498 21.940114917829877 13.472466134630796 19.273871249507618 16.70712772262393 C 16.607627581185362 19.94178931061706 11.65920099345933 20.92211040586947 7.700000000000003 19 L 2.999999999999999 20"
+                                        stroke-linecap="round" />
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                    <h3 class="text-xl font-medium mb-2">Your Messages</h3>
+                    <p class="text-muted-foreground max-w-md mb-6">
+                        Select a conversation from the list to view your messages or start a new conversation with your
+                        healthcare providers.
+                    </p>
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                        <svg id='Add_Circle_24' class="w-4 h-4 mr-2" fill="currentColor" viewBox='0 0 24 24'
+                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                            <g transform="matrix(1.43 0 0 1.43 12 12)">
+                                <g style="">
+                                    <g transform="matrix(1 0 0 1 0 0)">
+                                        <circle
+                                            style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                            cx="0" cy="0" r="6.25" />
+                                    </g>
+                                    <g transform="matrix(1 0 0 1 0 0)">
+                                        <path
+                                            style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-7, -7)" d="M 7 4.5 L 7 9.5" stroke-linecap="round" />
+                                    </g>
+                                    <g transform="matrix(1 0 0 1 0 0)">
+                                        <path
+                                            style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-7, -7)" d="M 9.5 7 L 4.5 7" stroke-linecap="round" />
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                        Start New Conversation
+                    </button>
+                </div>
+            {% endif %}
+        </section>
     </div>
-
-    <!-- Right Chat Area -->
-    <div class="flex-1 flex flex-col">
-        {% if active_conversation %}
-        <!-- Chat Header -->
-        <div class="bg-white border-b border-gray-200 p-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="relative">
-                        <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-                            <span class="text-sm font-medium text-gray-600">
-                                {{ active_conversation.other_participant.user.first_name.0 }}{{ active_conversation.other_participant.user.last_name.0 }}
-                            </span>
-                        </div>
-                        {% if active_conversation.other_participant.is_online %}
-                        <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                        {% endif %}
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-medium text-gray-900">
-                            Dr. {{ active_conversation.other_participant.user.first_name }} {{ active_conversation.other_participant.user.last_name }}
-                        </h2>
-                        <p class="text-sm text-gray-500">{{ active_conversation.other_participant.specialty|default:"Healthcare Provider" }}</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100">
-                        <i class="fas fa-phone"></i>
-                    </button>
-                    <button class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Messages Area -->
-        <div id="messages-container" class="flex-1 overflow-y-auto p-4 space-y-4">
-            {% for message in messages %}
-            <div class="flex {% if message.sender == request.user.profile %}justify-end{% else %}justify-start{% endif %}">
-                <div class="max-w-xs lg:max-w-md">
-                    {% if message.sender != request.user.profile %}
-                    <div class="flex items-end space-x-2">
-                        <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                            <span class="text-xs font-medium text-gray-600">
-                                {{ message.sender.user.first_name.0 }}
-                            </span>
-                        </div>
-                        <div class="bg-gray-200 rounded-lg px-4 py-2">
-                            <p class="text-sm text-gray-800">{{ message.content }}</p>
-                            <p class="text-xs text-gray-500 mt-1">{{ message.timestamp|date:"j M" }}</p>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="bg-blue-600 text-white rounded-lg px-4 py-2">
-                        <p class="text-sm">{{ message.content }}</p>
-                        <div class="flex items-center justify-end mt-1 space-x-1">
-                            <p class="text-xs text-blue-100">{{ message.timestamp|date:"j M" }}</p>
-                            <i class="fas fa-check text-xs text-blue-100"></i>
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- Message Input -->
-        <div class="bg-white border-t border-gray-200 p-4">
-            <form id="message-form" method="post" action="{% url 'doctor:send_message' active_conversation.id %}">
-                {% csrf_token %}
-                <div class="flex items-center space-x-2">
-                    <button type="button" class="p-2 text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-paperclip"></i>
-                    </button>
-                    <input 
-                        type="text" 
-                        name="content"
-                        id="message-input"
-                        placeholder="Type your message..."
-                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        required
-                    >
-                    <button 
-                        type="submit"
-                        class="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
-                    >
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
-        {% else %}
-        <!-- No Conversation Selected -->
-        <div class="flex-1 flex items-center justify-center bg-gray-50">
-            <div class="text-center">
-                <i class="fas fa-comments text-6xl text-gray-300 mb-4"></i>
-                <h3 class="text-lg font-medium text-gray-900 mb-2">Select a conversation</h3>
-                <p class="text-gray-500">Choose a conversation from the sidebar to start messaging</p>
-            </div>
-        </div>
-        {% endif %}
-    </div>
-</div>
+</section>
 
 {% endblock content %}
 
@@ -213,154 +343,476 @@
 {% block scripts %}
 
 <script>
-    // Toggle search functionality
-    document.getElementById('toggle-search').addEventListener('click', function() {
-        const searchContainer = document.getElementById('search-container');
-        const toggleButton = document.getElementById('toggle-search');
-        
-        if (searchContainer.classList.contains('hidden')) {
-            searchContainer.classList.remove('hidden');
-            toggleButton.classList.add('hidden');
-            document.getElementById('search-input').focus();
+    
+    const conversations = []
+
+    // Format date for display (improved, always shows time too)
+    function formatMessageDate(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+
+        if (isNaN(date)) return dateString; // fallback if invalid
+
+        const now = new Date();
+        const isToday = date.toDateString() === now.toDateString();
+
+        // Yesterday
+        const yesterday = new Date(now);
+        yesterday.setDate(now.getDate() - 1);
+        const isYesterday = date.toDateString() === yesterday.toDateString();
+
+        // Format time as "2:05 PM"
+        const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+
+        if (isToday) {
+            // Show time: 2:05 PM
+            return timeStr;
+        }
+        if (isYesterday) {
+            return `Yesterday, ${timeStr}`;
+        }
+
+        // If within this week (but not today/yesterday), show weekday and time
+        const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+        if (diffDays < 7 && diffDays > 1 && now.getDay() > date.getDay()) {
+            return `${date.toLocaleDateString([], { weekday: 'long' })}, ${timeStr}`;
+        }
+
+        // If this year, show "Mar 5, 2:05 PM"
+        if (date.getFullYear() === now.getFullYear()) {
+            return `${date.toLocaleDateString([], { month: 'short', day: 'numeric' })}, ${timeStr}`;
+        }
+
+        // Else, show "Mar 5, 2023, 2:05 PM"
+        return `${date.toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' })}, ${timeStr}`;
+    }
+
+    // DOM elements
+    const conversationList = document.getElementById('conversation-list');
+    const AllConversationsItems = document.querySelectorAll('.conversation-item');
+    const conversationContent = document.getElementById('conversation-content');
+    const emptyState = document.getElementById('empty-state');
+    const conversationHeader = document.getElementById('conversation-header');
+    const messagesContainer = document.getElementById('messages-container');
+    const messageInput = document.getElementById('message-input');
+    const sendButton = document.getElementById('send-button');
+    const searchInput = document.getElementById('search-input');
+    const sidebarConvList = document.getElementById('sidebarConvList');
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const overlaySidebar = document.getElementById('overlaySidebar');
+
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    // Event listeners
+    messageInput.addEventListener('input', () => {
+        sendButton.disabled = !messageInput.value.trim();
+    });
+
+    messageInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
         }
     });
 
-    // Hide search when clicking outside
-    document.addEventListener('click', function(e) {
-        const searchContainer = document.getElementById('search-container');
-        const toggleButton = document.getElementById('toggle-search');
-        
-        if (!searchContainer.contains(e.target) && !toggleButton.contains(e.target)) {
-            searchContainer.classList.add('hidden');
-            toggleButton.classList.remove('hidden');
+    sendButton.addEventListener('click', handleSendMessage);
+    searchInput.addEventListener('input', (e) => filterSearchConversations(e.target.value));
+
+    // Current active conversation
+    let activeConversation = null;
+    let chatSocket = null;
+
+    // -----------------------------
+    // 4. Open (or re‐open) the WebSocket for live updates
+    // -----------------------------
+    function openChatWebSocket(conversationId) {
+        // If there is already an open socket, close it cleanly
+        if (chatSocket) {
+            chatSocket.onmessage = null;
+            chatSocket.onclose = null;
+            chatSocket.onerror = null;
+            chatSocket.close();
+            chatSocket = null;
         }
+
+        // Build the URL dynamically
+        const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+        const wsUrl = `${protocol}://${window.location.host}/ws/chat/${conversationId}/`;
+
+        chatSocket = new WebSocket(wsUrl);
+
+        chatSocket.onopen = function(event) {
+            console.log(`WebSocket connected to ${wsUrl}`);
+        };
+
+        chatSocket.onmessage = function(event) {
+            // Parse the JSON payload ChatConsumer is sending
+            const data = JSON.parse(event.data);
+            console.log('Message received:', data.msg_by_me);
+
+            // Only append if msg_by_me is true (sent by me)
+            // OR if msg_by_me is false AND the username is not the sender's username
+            if (data.msg_by_me === true || (data.msg_by_me === false && data.username !== "{{ request.user.username }}")) {
+                appendSingleMessage(data);
+            }
+
+
+        };
+
+        chatSocket.onclose = function(event) {
+            console.warn("Chat socket closed unexpectedly:", event);
+            // If you want, you can attempt a very basic reconnect:
+            // setTimeout(() => openChatWebSocket(conversationId), 2000);
+        };
+
+        chatSocket.onerror = function(error) {
+            console.error("WebSocket error:", error);
+        };
+    }
+
+
+
+
+
+    // Conversation click handler
+    AllConversationsItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const conversationId = this.dataset.conversationId;
+            activeConversationId = conversationId;
+    
+            // Close existing WebSocket connection if any
+            if (chatSocket) {
+                chatSocket.close();
+            }
+    
+            // Establish new WebSocket connection
+            chatSocket = new WebSocket(
+                'ws://' + window.location.host + '/ws/chat/' + conversationId + '/'
+            );
+    
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                console.log('Message received:', data);
+                renderMessages(data);
+            };
+    
+            chatSocket.onclose = function(e) {
+                console.log(chatSocket);
+                console.error('Chat socket closed unexpectedly');
+            };
+    
+            // Fetch existing messages for inital conversation load
+            fetch(`/p/get-msg/${conversationId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    renderMessages(data);
+                    openChatWebSocket(conversationId); // Open WebSocket after fetching messages
+                })
+                .catch(error => {
+                    console.error('Error fetching messages:', error);
+                }); 
+        });
     });
 
-    // Filter tabs functionality
-    document.querySelectorAll('.filter-tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-            // Remove active class from all tabs
-            document.querySelectorAll('.filter-tab').forEach(t => {
-                t.classList.remove('active', 'bg-blue-100', 'text-blue-700');
-                t.classList.add('text-gray-500', 'hover:text-gray-700');
+    // Set active conversation
+    function setActiveConversation(convoID) {
+        activeConversationElement = document.querySelector(`.conversation-item[data-conversation-id="${convoID}"]`);
+        
+        activeConversation = activeConversationElement;
+
+
+        activePersonName = activeConversationElement.querySelector('.conversation-name').textContent;
+        activePersonAvatar = activeConversationElement.querySelector('.conversation-avatar').src;
+        activePersonRole = activeConversationElement.querySelector('.conversation-role').textContent;
+
+        document.querySelectorAll('.conversation-item').forEach(item => {
+            if (item.dataset.conversationId == convoID) {
+                item.classList.add('bg-blue-50');
+            } else {
+                item.classList.remove('bg-blue-50');
+            }
+        });
+
+        // Show conversation content and hide empty state
+        if (emptyState && !emptyState.classList.contains('hidden')) {
+            emptyState.classList.add('hidden');
+        }
+        conversationContent.classList.remove('hidden');
+        conversationContent.classList.add('flex');
+
+        // Hide sidebar on mobile when a conversation is selected
+        sidebarConvList.classList.add('hidden');
+
+        // Render conversation header
+        conversationHeader.innerHTML = `
+            <div class="flex items-center gap-3">
+                <button id="mobile-menu-button" class="md:hidden inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                    <svg class="h-5 w-5" fill="currentColor" stroke="currentColor" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                        <g transform="matrix(1 0 0 1 12 12)" >
+                            <g style="" >
+                                <g transform="matrix(1 0 0 1 0 0)" >
+                                <path style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z" stroke-linecap="round" />
+                                </g>
+                                <g transform="matrix(1 0 0 1 0 0)" >
+                                <line style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" x1="-7" y1="0" x2="7" y2="0" />
+                                </g>
+                                <g transform="matrix(1 0 0 1 -4 3)" >
+                                <line style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" x1="-3" y1="-3" x2="3" y2="3" />
+                                </g>
+                                <g transform="matrix(1 0 0 1 -4 -3)" >
+                                <line style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" x1="-3" y1="3" x2="3" y2="-3" />
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                </button>
+                <div class="relative">
+                    <div class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-primary/10">
+                        <img class="aspect-square h-full w-full" src="${activePersonAvatar}" alt="${activePersonName}">
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-sm font-medium">${activePersonName}</h2>
+                    <p class="text-xs text-muted-foreground">${activePersonRole}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="relative hidden">
+                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                        <svg  class="h-4 w-4" fill="currentColor" stroke="currentColor" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                            <g transform="matrix(1.43 0 0 1.43 12 12)" >
+                                <g style="" >
+                                    <g transform="matrix(1 0 0 1 5 0)" >
+                                    <circle style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" cx="0" cy="0" r="1.5" />
+                                    </g>
+                                    <g transform="matrix(1 0 0 1 0 0)" >
+                                    <circle style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" cx="0" cy="0" r="1.5" />
+                                    </g>
+                                    <g transform="matrix(1 0 0 1 -5 0)" >
+                                    <circle style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" cx="0" cy="0" r="1.5" />
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        // Attach event listener to mobile-menu-button to show sidebar
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', close_open_SidebarConvList);
+        }
+        overlaySidebar.addEventListener('click', close_open_SidebarConvList);
+    }
+
+    // Render messages (unchanged)
+    function renderMessages(payload) {
+        const messages = payload.messages || [];
+
+        setActiveConversation(payload.conversation_id);
+        messagesContainer.innerHTML = messages.map(message => `
+            <div class="flex ${message.msg_by_me === true ? 'justify-end' : 'justify-start'}">
+                <div class="max-w-xs lg:max-w-md">
+                    ${message.msg_by_me != true ? `
+                        <div class="flex justify-start">
+                            <div class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full border-2 border-primary/10 mr-2 mt-1">
+                                <img class="aspect-square h-full w-full" src="${ payload.other_participant_pic }" alt="${ payload.other_participant_name }">
+                            </div>
+                            <div class="bg-muted rounded-lg p-3 max-w-[100%]">
+                                <p class="text-sm break-words overflow-wrap-anywhere">${message.content}</p>
+                                <p class="text-xs mt-1 opacity-70 text-right">
+                                    ${formatMessageDate(message.timestamp)}
+                                </p>
+                            </div>
+                        </div>
+                    ` : 
+                    `
+                        <div class="flex justify-end">
+                            <div class="bg-primary text-primary-foreground rounded-lg p-3 max-w-[100%]">
+                                <p class="text-sm break-words overflow-wrap-anywhere">${message.content}</p>
+                                <p class="text-xs mt-1 opacity-70 text-right">
+                                    ${formatMessageDate(message.timestamp)}
+                                    <span class="ml-1">
+                                        ${message.read ? `
+                                            <svg id="Checkmark_24" class="h-4 w-4 inline" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                <g transform="matrix(1.15 0 0 1.15 12 12)">
+                                                    <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -11.84)" d="M 19.28125 5.28125 L 9 15.5625 L 4.71875 11.28125 L 3.28125 12.71875 L 8.28125 17.71875 L 9 18.40625 L 9.71875 17.71875 L 20.71875 6.71875 Z" stroke-linecap="round"></path>
+                                                </g>
+                                            </svg>` : `
+                                            <svg id="Checkmark_24" class="h-4 w-4 inline text-green-400" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                            <g transform="matrix(0.4 0 0 0.4 12 12)" >
+                                                                <path style=" stroke-width: 5; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;" transform=" translate(-25.01, -24.99)" d="M 37.90625 8.96875 C 37.863281 8.976563 37.820313 8.988281 37.78125 9 C 37.554688 9.054688 37.355469 9.1875 37.21875 9.375 L 12.9375 38.5 L 1.71875 27.28125 C 1.320313 26.882813 0.679688 26.882813 0.28125 27.28125 C -0.117188 27.679688 -0.117188 28.320313 0.28125 28.71875 L 12.28125 40.71875 C 12.484375 40.921875 12.765625 41.03125 13.050781 41.011719 C 13.339844 40.992188 13.605469 40.851563 13.78125 40.625 L 38.78125 10.625 C 39.058594 10.3125 39.113281 9.863281 38.917969 9.492188 C 38.722656 9.125 38.320313 8.914063 37.90625 8.96875 Z M 48.90625 8.96875 C 48.863281 8.976563 48.820313 8.988281 48.78125 9 C 48.554688 9.054688 48.355469 9.1875 48.21875 9.375 L 23.9375 38.5 L 21.375 35.96875 C 21.132813 35.671875 20.746094 35.535156 20.371094 35.621094 C 20 35.707031 19.707031 36 19.621094 36.371094 C 19.535156 36.746094 19.671875 37.132813 19.96875 37.375 L 23.28125 40.71875 C 23.484375 40.921875 23.765625 41.03125 24.050781 41.011719 C 24.339844 40.992188 24.605469 40.851563 24.78125 40.625 L 49.78125 10.625 C 50.058594 10.3125 50.113281 9.863281 49.917969 9.492188 C 49.722656 9.125 49.320313 8.914063 48.90625 8.96875 Z" stroke-linecap="round" />
+                                                            </g>
+                                            </svg>`}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    `}
+                </div>
+            </div>
+        `).join('');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function appendSingleMessage(message) {
+        // If the incoming message belongs to a different conversation, ignore it
+        if (String(message.conversation_id) !== String(activeConversationId)) {
+            return;
+        }
+    
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("flex", message.msg_by_me ? "justify-end" : "justify-start");
+    
+        if (!message.msg_by_me) {
+            // incoming
+            wrapper.innerHTML = `
+                <div class="max-w-xs lg:max-w-md">
+                    <div class="flex justify-start">
+                        <div class="relative flex h-8 w-8 overflow-hidden rounded-full border-2 border-primary/10 mr-2 mt-1">
+                            <img class="aspect-square h-full w-full" ${message.sender_pic}" alt="${message.sender}">
+                        </div>
+                        <div class="bg-muted rounded-lg p-3 max-w-[100%]">
+                            <p class="text-sm break-words">${message.content}</p>
+                            <p class="text-xs mt-1 opacity-70 text-right">
+                                ${formatMessageDate(message.timestamp)}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            // outgoing
+            wrapper.innerHTML = `
+                <div class="max-w-xs lg:max-w-md">
+                    <div class="flex justify-end">
+                        <div class="bg-primary text-primary-foreground rounded-lg p-3 max-w-[100%]">
+                            <p class="text-sm break-words">${message.content}</p>
+                            <p class="text-xs mt-1 opacity-70 text-right">
+                                ${formatMessageDate(message.timestamp)}
+                                <span class="ml-1">
+                                    ${message.read 
+                                        ? `<svg class="h-4 w-4 inline" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24"><path d="M19.28 5.28L9 15.56L4.72 11.28L3.28 12.72L8.28 17.72L9 18.41L9.72 17.72L20.72 6.72Z"/></svg>` 
+                                        : `<svg class="h-4 w-4 inline text-green-400" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24"><path d="M37.91 8.97C37.86 8.98 37.82 8.99 37.78 9C37.55 9.05 37.36 9.19 37.22 9.38L12.94 38.5L1.72 27.28C1.32 26.88 0.68 26.88 0.28 27.28C-0.12 27.68 -0.12 28.32 0.28 28.72L12.28 40.72C12.48 40.92 12.77 41.03 13.05 41.01C13.34 40.99 13.61 40.85 13.78 40.63L38.78 10.63C39.06 10.31 39.11 9.86 38.92 9.49C38.72 9.13 38.32 8.91 37.91 8.97ZM48.91 8.97C48.86 8.98 48.82 8.99 48.78 9C48.55 9.05 48.36 9.19 48.22 9.38L23.94 38.5L21.38 35.97C21.13 35.67 20.75 35.54 20.37 35.62C20 35.71 19.71 36 19.62 36.37C19.54 36.75 19.67 37.13 19.97 37.38L23.28 40.72C23.48 40.92 23.77 41.03 24.05 41.01C24.34 40.99 24.61 40.85 24.78 40.63L49.78 10.63C50.06 10.31 50.11 9.86 49.92 9.49C49.72 9.13 49.32 8.91 48.91 8.97Z"/></svg>`}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    
+        messagesContainer.appendChild(wrapper);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+       // Handle sending a new message (unchanged)
+    function handleSendMessage() {
+        console.log("Handling send message...");
+        const content = messageInput.value.trim();
+        if (!content || !activeConversation) return;
+
+        convID = activeConversation.getAttribute('data-conversation-id');
+        timestamp = new Date().toDateString();
+        const newMessage = {
+            content: content,
+        };
+        
+        // sending the msg to the server via WebSocket
+        if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
+            chatSocket.send(JSON.stringify(newMessage));
+        } else {
+            console.error('WebSocket is not open. Unable to send message.');
+        }
+
+        console.log("New message content:", newMessage);
+            
+        messageInput.value = '';
+        sendButton.disabled = true;
+
+
+    }
+
+    function close_open_SidebarConvList() {
+        sidebarConvList.classList.toggle('hidden');
+        overlaySidebar.classList.toggle('hidden');
+    }
+  
+
+    // Tab functionality (unchanged)
+    tabButtons.forEach(each_btn => {
+        each_btn.addEventListener('click', () => {
+            tabButtons.forEach(btn => {
+                btn.classList.remove('active', 'bg-blue-50',  'text-blue-700');
+                btn.classList.add('text-gray-500', 'hover:bg-slate-300');
             });
-            
+
             // Add active class to clicked tab
-            this.classList.add('active', 'bg-blue-100', 'text-blue-700');
-            this.classList.remove('text-gray-500', 'hover:text-gray-700');
-            
-            // Filter conversations
-            const filter = this.dataset.filter;
-            filterConversations(filter);
+            each_btn.classList.add('active', 'bg-blue-50', 'text-blue-700');
+            each_btn.classList.remove('text-gray-500', 'hover:bg-slate-300');
+
+            const tabName = each_btn.getAttribute('data-filter');
+
+            if (tabName === 'flagged') {
+                document.getElementById('no-conversation').classList.remove('hidden');
+                document.getElementById('conversation-list').classList.add('hidden');
+            } else{
+                document.getElementById('no-conversation').classList.add('hidden');
+                document.getElementById('conversation-list').classList.remove('hidden');
+                filterConversations(tabName);
+            }
         });
     });
 
     // Filter conversations function
     function filterConversations(filter) {
-        const conversations = document.querySelectorAll('.conversation-item');
-        
-        conversations.forEach(conv => {
-            const isUnread = conv.dataset.unread === 'true';
-            const isFlagged = conv.dataset.flagged === 'true';
-            
+        AllConversationsItems.forEach(conv => {
+            const isUnread = conv.dataset.unread === 'True';
+            const isFlagged = conv.dataset.flagged === 'True';
             switch(filter) {
                 case 'unread':
-                    conv.style.display = isUnread ? 'block' : 'none';
+                    if (isUnread) {
+                        conv.classList.remove('hidden');
+                        conv.classList.add('flex');
+                    } else {
+                        conv.classList.add('hidden');
+                        conv.classList.remove('flex');
+                    }
                     break;
                 case 'flagged':
-                    conv.style.display = isFlagged ? 'block' : 'none';
+                    if (isFlagged) {
+                        conv.classList.remove('hidden');
+                        conv.classList.add('flex');
+                    } else {
+                        conv.classList.add('hidden');
+                        conv.classList.remove('flex');
+                    }
                     break;
                 default:
-                    conv.style.display = 'block';
+                    conv.classList.remove('hidden');
+                    conv.classList.add('flex');
             }
         });
     }
 
-    // Conversation click handler
-    document.querySelectorAll('.conversation-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const conversationId = this.dataset.conversationId;
-            window.location.href = `/d/msg/${conversationId}/`;
-        });
-    });
-
-    // Search functionality
-    document.getElementById('search-input').addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
+    // Filter conversations (unchanged)
+    function filterSearchConversations(searchTerm) {
+        const filter = searchTerm.toLowerCase();
         const conversations = document.querySelectorAll('.conversation-item');
-        
         conversations.forEach(conv => {
-            const text = conv.textContent.toLowerCase();
-            conv.style.display = text.includes(searchTerm) ? 'block' : 'none';
-        });
-    });
-
-    // Message form submission
-    document.getElementById('message-form')?.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(this);
-        const messageInput = document.getElementById('message-input');
-        
-        fetch(this.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            const contactName = conv.querySelector('p').textContent.toLowerCase();
+            if (contactName.includes(filter)) {
+                conv.classList.remove('hidden');
+                conv.classList.add('flex');
+            } else {
+                conv.classList.add('hidden');
+                conv.classList.remove('flex');
             }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                messageInput.value = '';
-                // Reload messages
-                location.reload();
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
         });
-    });
-
-    // Auto-refresh for new messages
-    let lastMessageCount = {{ messages|length|default:0 }};
-    
-    function checkForNewMessages() {
-        {% if active_conversation %}
-        fetch(`d/msg/{{ active_conversation.id }}/check/`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.message_count > lastMessageCount) {
-                    location.reload();
-                }
-            })
-            .catch(error => {
-                console.error('Error checking for new messages:', error);
-            });
-        {% endif %}
+        
     }
 
-    // Check for new messages every 5 seconds
-    setInterval(checkForNewMessages, 5000);
-
-    // Auto-scroll to bottom of messages
-    const messagesContainer = document.getElementById('messages-container');
-    if (messagesContainer) {
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-
-    // Initialize filter tabs styling
-    document.addEventListener('DOMContentLoaded', function() {
-        const activeTab = document.querySelector('.filter-tab.active');
-        if (activeTab) {
-            activeTab.classList.add('bg-blue-100', 'text-blue-700');
-            activeTab.classList.remove('text-gray-500');
-        }
-        
-        document.querySelectorAll('.filter-tab:not(.active)').forEach(tab => {
-            tab.classList.add('text-gray-500', 'hover:text-gray-700');
-        });
-    });
 </script>
 
 

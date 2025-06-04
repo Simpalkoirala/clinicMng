@@ -19,8 +19,9 @@ from xhtml2pdf import pisa
 from account.views import login_required_with_message
 from django.contrib import messages
 from datetime import datetime
+from django.utils import timezone
 
-from account.models import Profile, MedicalInfo, ActivityLog
+from account.models import Profile, MedicalInfo, ActivityLog, Conversation, Message
 from doctor.models import DoctorProfile, AppointmentDateSlot, AppointmentTimeSlot
 from patient.models import *
 
@@ -30,6 +31,9 @@ from django.urls import reverse
 
 from django.core.serializers.json import DjangoJSONEncoder
 import json
+from django.views.decorators.csrf import csrf_exempt
+
+
 
 # Constants
 ALLOWED_FILE_TYPES_APPOINTMENT = [
@@ -459,8 +463,146 @@ def join_v_call(request: HttpRequest):
     return render(request, 'pages/patient/join-v-call.html')
 
 def message(request: HttpRequest):
+    profile : Profile = request.user.profile
+
+    conversations = Conversation.objects.filter(
+        participants=profile
+    )
     
-    return render(request, 'pages/patient/message.html')
+        # Add additional data to each conversation
+    for conversation in conversations:
+        # Get the other participant (not the current user)
+        conversation.other_participant = conversation.participants.exclude(
+            id=profile.id
+        ).first()
+        
+        # Get the last message
+        conversation.last_message = conversation.messages.last()
+        
+        # Check if there are unread messages
+        conversation.has_unread = conversation.messages.filter(
+            read=False
+        ).exclude(sender=profile).exists()
+
+    # # Mark messages as read
+    conversation.messages.filter(
+        read=False
+    ).exclude(sender=profile).update(read=True)
+
+    messages_list = conversation.messages.all().order_by('timestamp')
+    # concept_data = {'active_conversation_id': conversation.id,
+    #     'active_conversation': conversation,
+    #     'message_lists': messages_list,}
+
+    context = {
+        'profile': profile,
+        'conversations': conversations,
+        # 'active_conversation_id': conversation.id,
+        # 'active_conversation': conversation,
+        # 'message_lists': messages_list,
+    }
+
+    return render(request, 'pages/patient/message.html', context)
+
+
+def get_msg_list(request: HttpRequest, conversation_id: int):
+
+    if request.method != 'GET':
+        return JsonResponse({'error': 'Invalid request method.'}, status=405)
+    """Fetch messages for a specific conversation."""
+
+
+
+    profile: Profile = request.user.profile
+    conversation = get_object_or_404(Conversation, id=conversation_id)
+
+    # Ensure the user is part of the conversation
+    if profile not in conversation.participants.all():
+        return JsonResponse({'error': 'You are not part of this conversation.'}, status=403)
+
+    # Fetch messages for the conversation
+    messages_list = conversation.messages.all().order_by('timestamp')
+
+    # Mark messages as read
+    messages_list.filter(read=False).exclude(sender=profile).update(read=True)
+
+    other_participant = conversation.participants.exclude(id=profile.id).first()
+
+    all_msg = []
+    for message in messages_list:
+        local_dt = timezone.localtime(message.timestamp)
+        timestamp = local_dt.strftime('%I:%M %p, %d %b %Y')
+        all_msg.append({
+            'msg_by_me': message.sender == profile,
+            'id': message.id,
+            'sender': message.sender.user.get_full_name(),
+            'content': message.content,
+            'timestamp': timestamp,
+            'read': message.read,
+        })
+
+    payload = {
+            'other_participant_name': other_participant.user.get_full_name(),
+            'other_participant_pic' : other_participant.profile_pic.url,
+            'conversation_id': conversation.id,
+            'messages': all_msg,
+    }
+
+    return JsonResponse(payload, safe=False, json_dumps_params={'indent': 2})
+
+
+def post_msg(request: HttpRequest):
+    """Post a new message to the conversation."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+    profile: Profile = request.user.profile
+    data = json.loads(request.body)
+    conversation_id = data.get('conversation_id')
+    content = data.get('content', '').strip()
+
+    if not content:
+        return JsonResponse({'error': 'Message content cannot be empty.'}, status=400)
+
+    conversation = get_object_or_404(Conversation, id=conversation_id)
+
+    # Ensure the user is part of the conversation
+    if profile not in conversation.participants.all():
+        return JsonResponse({'error': 'You are not part of this conversation.'}, status=403)
+
+    # Create the message
+    message = Message.objects.create(
+        sender=profile,
+        conversation=conversation,
+        content=content,
+        read=False
+    )
+
+    messages_list = conversation.messages.all().order_by('timestamp')
+    other_participant = conversation.participants.exclude(id=profile.id).first()
+    all_msg = []
+    for message in messages_list:
+        local_dt = timezone.localtime(message.timestamp)
+        timestamp = local_dt.strftime('%I:%M %p, %d %b %Y')
+        all_msg.append({
+            'msg_by_me': message.sender == profile,
+            'id': message.id,
+            'sender': message.sender.user.get_full_name(),
+            'content': message.content,
+            'timestamp': timestamp,
+            'read': message.read,
+        })
+
+    payload = {
+            'other_participant_name': other_participant.user.get_full_name(),
+            'other_participant_pic' : other_participant.profile_pic.url,
+            'conversation_id': conversation.id,
+            'messages': all_msg,
+    }
+
+    return JsonResponse({'success': True, 'payload': payload}, safe=False, json_dumps_params={'indent': 2})
+
+
 
 
 @login_required_with_message(login_url='account:login', message="You need to log in to access your Lab Reports.")
