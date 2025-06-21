@@ -81,7 +81,7 @@
                                 <div id="appointment-types" class="space-y-4">
                                     <label for='general_consultation' class="flex items-start p-4 border rounded-lg cursor-pointer">
                                         <input type="radio" id="general_consultation" name="appointmentType" class="mt-1"
-                                            value="general_consultation" checked />
+                                            value="general_consultation" />
                                         <div class="ml-3">
                                             <p for="" class="font-medium cursor-pointer">General
                                                 Consultation</p>
@@ -111,7 +111,7 @@
                                     </label>
                                     <label for='online_consultation' class="flex items-start p-4 border rounded-lg cursor-pointer">
                                         <input type="radio" id="online_consultation" name="appointmentType" class="mt-1"
-                                            value="online_consultation" />
+                                            value="online_consultation" checked />
                                         <div class="ml-3">
                                             <p  class="font-medium cursor-pointer">Online
                                                 Consultation</p>
@@ -433,7 +433,7 @@
         let selectedDate = null;
         let selectedTime = null;
         let selectedTimeID = null;
-        let appointmentType = 'general_consultation'; // Default value
+        let appointmentType = 'online_consultation'; // Default value
         let calendarInstance = null;
 
 
@@ -567,7 +567,7 @@
                     
                     readyToMove= updateNextButtonState();
                       if (readyToMove) {
-                        goToStep(3); // Move to step 2 if doctor is selected
+                        goToStep(3); // Move to step 3 after selected appoinment type
                     }
                 }
             });

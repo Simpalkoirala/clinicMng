@@ -64,7 +64,7 @@
             <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center space-x-8">
 
-                
+                <!-- book/ view todays appoinment  -->
                 <a href="{% role_to_wants user.profile.role 'url' %}"
                     class="group relative px-6 py-3 rounded-full text-gray-700 bg-white border-2 border-blue-200 hover:border-blue-400 shadow-sm hover:shadow-lg hover:shadow-blue-100 transition-all duration-300 overflow-hidden">
                     <!-- Pulsing background effect -->
@@ -201,7 +201,7 @@
                 </button>
             </div>
             <div class="px-4 py-6 space-y-4">
-                <a href="{% url 'patient:bookAppointment' %}"
+                <a href="{% role_to_wants user.profile.role 'url' %}"
                     class="flex items-center space-x-3 py-3 border-b border-gray-50 text-gray-600 hover:text-blue-500 hover:bg-gray-50 hover:shadow-sm transition-all duration-300 font-medium">
                     <svg xmlns="http://www.w3.org/2000/svg"
                         class="h-6 w-6 text-blue-500 transition-transform group-hover:scale-110 animate-heartbeat"
@@ -209,9 +209,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    <span>Book Appointment</span>
-
-
+                    <span>{% role_to_wants user.profile.role 'text' %}</span>
                 </a>
 
 

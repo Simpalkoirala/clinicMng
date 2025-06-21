@@ -21,12 +21,11 @@ from django.contrib import messages
 from datetime import datetime
 from django.utils import timezone
 
-from account.models import Profile, MedicalInfo, ActivityLog, Conversation, Message
+from account.models import Profile, MedicalInfo, ActivityLog, Conversation, Message, Calls
 from doctor.models import DoctorProfile, AppointmentDateSlot, AppointmentTimeSlot
 from patient.models import *
 
 from account.utils import log_action
-
 from django.urls import reverse
 
 from django.core.serializers.json import DjangoJSONEncoder
@@ -305,7 +304,7 @@ def BookAppointment(request: HttpRequest):
         return render(request, 'pages/patient/book_appointment.html', context)
 
     elif request.method == 'POST':
-        try:
+        # try:
             # Fetch the user's profile information
             profile: Profile = Profile.objects.get(user=request.user)
 
@@ -327,7 +326,6 @@ def BookAppointment(request: HttpRequest):
 
             time_slot_instance.status = 'booked'
             time_slot_instance.save()   
-            print(f"Time slot booked: {appointment_date}")
             appointment_date_foramt = datetime.strptime(appointment_date, '%Y-%m-%d').date()
             # Create a new appointment
             appointment = Appointment.objects.create(
@@ -342,6 +340,37 @@ def BookAppointment(request: HttpRequest):
                 reason = appointment_reason,
                 status='pending'
             )
+
+            # build the connections conversation
+            # Check if a conversation already exists between the patient and doctor
+            existing_conversation: Conversation = Conversation.objects.filter(
+                participants=profile
+            ).filter(
+                participants=doctor.profile
+            ).distinct().first()
+            
+            # Only create new conversation if one doesn't exist
+            if not existing_conversation:
+                conversation = Conversation.objects.create(
+                    uuid=uuid.uuid4(),
+                    status='initiated',
+                )
+                conversation.participants.add(profile, doctor.profile)
+                conversation.save()
+                existing_conversation = conversation
+
+            if appointment.appointment_type == 'online_consultation':
+                # Create a new call record for the appointment
+                call = Calls.objects.create(
+                    uuid=uuid.uuid4(),
+                    appointment=appointment,
+                    connection=existing_conversation,
+                    caller=profile,
+                    receiver=doctor.profile,
+                    last_req=timezone.now(),
+                    status='requested'
+                )
+                call.save()
 
             if appointment_file:
                 is_valid, error_msg = is_valid_file(appointment_file, ALLOWED_FILE_TYPES_APPOINTMENT, 20)
@@ -366,11 +395,11 @@ def BookAppointment(request: HttpRequest):
 
             messages.success(request, _("Appointment booked successfully."))
             return JsonResponse({'success': True, 'redirect_url': reverse('patient:viewAppointment')})
-        except Exception as e:
-            messages.error(request, _("An error occurred while booking the appointment."))
-            error_msg = str(e)
-            print(f"Error: {error_msg}")
-        return JsonResponse({'error': error_msg})
+        # except Exception as e:
+        #     messages.error(request, _("An error occurred while booking the appointment."))
+        #     error_msg = str(e)
+        #     print(f"Error: {error_msg}")
+        # return JsonResponse({'error': error_msg})
 
     return redirect('patient:bookAppointment')
 
@@ -458,45 +487,153 @@ def delete_document(request, doc_id):
     return redirect('patient:viewDocument')
 
 
+def view_v_call(request: HttpRequest):
+    """Request a video call with a doctor."""
+    if request.method != 'POST':
+        profile: Profile = request.user.profile
+        room_name = ''
 
-def join_v_call(request: HttpRequest):
-    return render(request, 'pages/patient/join-v-call.html')
+        payload = {
+            'room_name': room_name,
+            'user_name': profile.user.get_full_name(),
+            'user_pic': profile.profile_pic.url,
+        }
 
+    convs =  Conversation.objects.filter(
+        participants=request.user.profile
+    )
+    for conversation in convs:
+        # Get the other participant (not the current user)
+        conversation.other_participant = conversation.participants.exclude(
+            id=profile.id
+        ).first()
+
+    return render(request, 'pages/patient/list-v-call.html',{ 'conv': convs,}  )
+
+def send_req_calls(request: HttpRequest, convo_uuid: uuid):
+    """Send a request for a video call."""
+    try:
+        profile: Profile = request.user.profile
+        conversation: Conversation = get_object_or_404(Conversation, uuid=convo_uuid)
+
+        # Ensure the user is part of the conversation
+        if profile not in conversation.participants.all():
+            messages.error(request, _("You are not part of this conversation."))
+            return redirect('patient:view_v_call')
+
+        # create a call object
+        call = Calls.objects.create(
+            uuid=uuid.uuid4(),
+            connection=conversation,
+            caller=profile,
+            last_req=timezone.now(),
+            status='requested',
+            receiver=conversation.participants.exclude(id=profile.id).first()
+        )
+
+        messages.success(request, _("Video call request sent successfully."))
+        return redirect('patient:join_v_call', calls_uuid=call.uuid)
+    except Exception as e:
+        print(f"Error: {e}")
+        messages.error(request, _("An error occurred while sending the video call request."))
+        return redirect('patient:view_v_call')
+
+def join_v_call(request: HttpRequest, calls_uuid: uuid):
+
+    profile: Profile = request.user.profile
+    calls: Calls = get_object_or_404(Calls, uuid=calls_uuid)
+    conversation: Conversation = calls.connection
+
+    # Ensure the user is part of the conversation
+    if profile not in conversation.participants.all():
+        messages.error(request, _("You are not part of this conversation."))
+        return redirect('patient:view_v_call')
+    
+    conversation.other_participant = conversation.participants.exclude(
+        id=profile.id
+    ).first()
+
+    is_caller = calls.caller == profile
+
+    return render(request, 'pages/patient/join-v-call.html', {'conversation': conversation,
+                                                                'call_obj': calls,
+                                                                'is_caller': is_caller,})
+
+def waiting_room(request: HttpRequest, calls_uuid: uuid):
+    """Join a video call with a specific conversation ID."""
+    profile: Profile = request.user.profile
+    calls: Calls = get_object_or_404(Calls, uuid=calls_uuid)
+    conversation: Conversation = calls.connection
+
+    # Ensure the user is part of the conversation
+    if profile not in conversation.participants.all():
+        messages.error(request, _("You are not part of this conversation."))
+        return redirect('patient:view_v_call')
+    
+
+    conversation.other_participant = conversation.participants.exclude(
+        id=profile.id
+    ).first()
+    
+    return render(request, 'pages/patient/waiting-room.html', {'conversation': conversation,
+                                                                'call_obj': calls,})
+
+
+
+
+
+@login_required_with_message(login_url='account:login', message="You need to log in to view your Messages.")
 def message(request: HttpRequest):
     profile : Profile = request.user.profile
-
+    
     conversations = Conversation.objects.filter(
         participants=profile
     )
+
+    connected_paritcipants = []
     
-        # Add additional data to each conversation
+    # Add additional data to each conversation
     for conversation in conversations:
         # Get the other participant (not the current user)
         conversation.other_participant = conversation.participants.exclude(
             id=profile.id
         ).first()
+
+        if conversation.other_participant:
+            connected_paritcipants.append(conversation.other_participant)
         
         # Get the last message
         conversation.last_message = conversation.messages.last()
-        
         # Check if there are unread messages
         conversation.has_unread = conversation.messages.filter(
             read=False
         ).exclude(sender=profile).exists()
 
     # # Mark messages as read
-    conversation.messages.filter(
-        read=False
-    ).exclude(sender=profile).update(read=True)
+    # conversation.messages.filter(
+    #     read=False
+    # ).exclude(sender=profile).update(read=True)
 
-    messages_list = conversation.messages.all().order_by('timestamp')
+    # messages_list = conversation.messages.all().order_by('timestamp')
     # concept_data = {'active_conversation_id': conversation.id,
     #     'active_conversation': conversation,
     #     'message_lists': messages_list,}
 
+
+
+
+    # Get all other not connected participants excluding the current user
+    connected_ids = [p.id for p in connected_paritcipants]
+    connected_ids.append(profile.id)
+    if profile.role == 'doctor':
+        not_connected_usr = Profile.objects.exclude(id__in=connected_ids).filter(role='patient')
+    else:
+        not_connected_usr = Profile.objects.exclude(id__in=connected_ids).filter(role='doctor')
+
     context = {
         'profile': profile,
         'conversations': conversations,
+        'not_connected_usr': not_connected_usr,
         # 'active_conversation_id': conversation.id,
         # 'active_conversation': conversation,
         # 'message_lists': messages_list,
@@ -505,13 +642,59 @@ def message(request: HttpRequest):
     return render(request, 'pages/patient/message.html', context)
 
 
+def req_conv(request: HttpRequest):
+    """Create a new conversation with another user."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+    profile: Profile = request.user.profile
+    data = json.loads(request.body)
+    other_username = data.get('userID')
+
+    if not other_username:
+        return JsonResponse({'error': 'Other user ID is required.'}, status=400)
+
+    other_profile = get_object_or_404(Profile, user__username=other_username)
+
+    if other_profile == profile:
+        return JsonResponse({'error': 'You cannot start a conversation with yourself.'}, status=400)
+
+    print(f"Profile: {profile}, Other Profile: {other_profile}")
+
+    # Check if a conversation already exists between the two users
+    # Find if a conversation exists with exactly these two participants (no more, no less)
+    conversation = (
+        Conversation.objects
+        .filter(participants=profile)
+        .filter(participants=other_profile)
+        .distinct()
+    )
+    # Check if any conversation has exactly these two participants (and no more)
+    for conv in conversation:
+        if conv.participants.count() == 2:
+            return JsonResponse({'error': 'Conversation already exists.'}, status=400)
+
+    else:
+        conversation = Conversation.objects.create(status='requested')
+        conversation.participants.add(profile, other_profile)
+
+    # Add both profiles to the conversation
+    # conversation.participants.add(profile, other_profile)
+    
+    payload = {
+        'conversation_id': conversation.id,
+        'other_participant_name': other_profile.user.get_full_name(),
+        'other_participant_pic': other_profile.profile_pic.url,
+    }
+
+    return JsonResponse({'success': True, 'payload': payload}, safe=False, json_dumps_params={'indent': 2})
+
+
 def get_msg_list(request: HttpRequest, conversation_id: int):
 
     if request.method != 'GET':
         return JsonResponse({'error': 'Invalid request method.'}, status=405)
     """Fetch messages for a specific conversation."""
-
-
 
     profile: Profile = request.user.profile
     conversation = get_object_or_404(Conversation, id=conversation_id)
@@ -604,12 +787,12 @@ def post_msg(request: HttpRequest):
 
 
 
-
 @login_required_with_message(login_url='account:login', message="You need to log in to access your Lab Reports.")
 def labReport(request: HttpRequest):
     profile: Profile = request.user.profile
     reports: LabReport = LabReport.objects.filter(patient_profile=profile)
 
+    
     abnormal_reports = 0
     pending_reports = 0
 
@@ -646,9 +829,7 @@ def labReport(request: HttpRequest):
             'abnormal_reports': abnormal_reports, 
             'pending_reports': pending_reports,
         }
-
-
-
+    
     return render(request, 'pages/patient/lab_report.html', context)
 
 @login_required_with_message(login_url='account:login', message="You need to log in to Download PDF.")

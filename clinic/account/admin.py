@@ -24,7 +24,7 @@ class ConversationAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
     fieldsets = (
         (None, {
-            'fields': ('participants',),
+            'fields': ('participants','status', 'uuid'),
         }),
         ('Timestamps', {
             'fields': ('created_at',),
@@ -34,3 +34,24 @@ class ConversationAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.prefetch_related('participants')
+
+
+class CallsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'caller', 'receiver', 'started_at', 'ended_at', 'status')
+    search_fields = ('caller__user__username', 'receiver__user__username')
+    readonly_fields = ('started_at', 'ended_at')
+    list_filter = ('status', 'started_at')
+    fieldsets = (
+        (None, {
+            'fields': ('caller', 'receiver', 'status', 'uuid'),
+        }),
+        ('Timestamps', {
+            'fields': ('started_at', 'ended_at'),
+        }),
+    )
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('caller', 'receiver')
+
+admin.site.register(Calls)

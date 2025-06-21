@@ -1,0 +1,903 @@
+{% extends "pages/patient/P_base.html" %}
+{% load static %}
+
+{% block titles %}Waiting Room || Nepal's Care {% endblock titles %}
+
+{% block styles %}
+
+<style>
+    .smooth-transition {
+        transition: all 0.3s ease;
+    }
+</style>
+{% endblock styles %}
+
+
+{% block pageof %} Waiting Room {% endblock pageof %}
+{% block linkPageof %} {% endblock linkPageof %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+        <!-- Header -->
+        <div class=" text-black px-6 py-4 flex justify-between items-center bg-violet-50">
+            <h1 class="text-2xl font-semibold tracking-tight">[ Audio || Video ] Preview</h1>
+            <div class="flex items-center space-x-4">
+                <span id="current-time" class="text-sm font-medium opacity-90"></span>
+            </div>
+        </div>
+
+        <!-- joining preview section -->
+        <div class=" flex flex-col-reverse md:flex-row max-w-7xl h-screen mx-auto bg-white shadow-xl overflow-x-auto custom-scrollbar">
+            <!-- Left Panel -->
+            <div class="w-full md:w-2/5 p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-gray-50 to-blue-50 flex flex-col">
+                <div class="flex-grow flex flex-col">
+                    <div class="relative flex items-center bg-white p-4 md:p-6 rounded-lg shadow-sm mb-6 md:mb-8">
+                        <span id="active_usr" class="bg-green-50 text-green-800 text-sm px-2 py-1 rounded-2xl absolute -top-4 -right-2 border border-green-900 hidden">
+                            Active ⭐
+                        </span>
+                        <span id="n_active_usr" class="bg-rose-50 text-rose-800 text-sm px-2 py-1 rounded-2xl absolute -top-4 -right-2 border border-rose-900 hidden">
+                            Not Active 🚫
+                        </span>
+
+                        <div class="mr-3 md:mr-4">
+                            <img src="{{ conversation.other_participant.profile_pic.url }}" alt="{{ conversation.other_participant.user.first_name }}" class="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover border-2 md:border-3 border-primary">
+                        </div>
+                        <div>
+                            <h3 class="text-lg md:text-xl font-medium text-gray-800 mb-0.5 md:mb-1">{{ conversation.other_participant.user.first_name }}</h3>
+                            {% if conversation.other_participant.role == 'doctor'%}
+                                <p class="text-sm text-gray-500 truncate mb-1 md:mb-2">{{conversation.other_participant.doctor_profile.specialization }}</p>
+                                <div class="flex items-center">
+                                    <span class="ml-1.5 md:ml-2 font-semibold text-xs md:text-sm">{{conversation.other_participant.doctor_profile.star_rating }} ⭐</span>
+                                </div>
+                            {% else %}
+                                <p class="text-sm text-gray-500 truncate mb-1 md:mb-2">Patient</p>
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+
+                    {% if call_obj.appointment %}
+                        <div class="mb-4 md:mb-6 p-3 md:p-4 bg-white rounded-lg shadow-sm">
+                            <div class="flex items-center mb-2 font-medium text-sm md:text-base">
+                                <svg class="w-6 h-6 text-primary mr-2" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(0.83 0 0 0.83 12 12)" >
+                                        <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: currentColor; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 12 0 C 5.371094 0 0 5.371094 0 12 C 0 18.628906 5.371094 24 12 24 C 18.628906 24 24 18.628906 24 12 C 24 5.371094 18.628906 0 12 0 Z M 12 2 C 17.523438 2 22 6.476563 22 12 C 22 17.523438 17.523438 22 12 22 C 6.476563 22 2 17.523438 2 12 C 2 6.476563 6.476563 2 12 2 Z M 10.9375 3.875 L 10.5 12.0625 L 10.59375 12.9375 L 16.75 18.375 L 17.71875 17.375 L 12.625 11.96875 L 12.1875 3.875 Z" stroke-linecap="round" />
+                                    </g>
+                                </svg>
+                                <span>{{ call_obj.appointment.appointment_date|date:"M d, Y" }} {{ call_obj.appointment.appointment_time_str }}</span>
+                            </div>
+                            <div class="mt-1 md:mt-2">
+                                <span class="bg-blue-500 text-white px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-medium">{{ call_obj.appointment.appointment_type }}</span>
+                            </div>
+                            <div class="mt-1 md:mt-2 text-sm">
+                                <span class="font-medium text-gray-600">Reason:</span>
+                                <span class="ml-1 text-gray-900">{{ call_obj.appointment.reason|truncatechars:100|default:'Null' }}</span>
+                            </div>
+                            <div class="mt-1 md:mt-2 text-sm">
+                                <span class="font-medium text-gray-600">Appointment Status:</span>
+                                <span class="
+                                    {% if call_obj.appointment.status == 'pending' %}text-yellow-600
+                                    {% elif call_obj.appointment.status == 'confirmed' %}text-green-600
+                                    {% elif call_obj.appointment.status == 'cancelled' %}text-red-600
+                                    {% elif call_obj.appointment.status == 'completed' %}text-blue-600
+                                    {% endif %}
+                                ">
+                                    {{ call_obj.appointment.get_status_display }}
+                                </span>
+                            </div>
+                        </div>
+                    {% endif %}
+
+
+                    
+                    <div class="mt-auto" >
+                            <div class="mb-3">
+                                <span class="text-xs text-gray-500">Last requested:</span>
+                                <span class="text-xs font-medium text-primary" id="last-requested-time">
+                                    {{ call_obj.last_req|date:"M d, Y H:i" }}
+                                </span>
+                            </div>
+
+                        <div id='call-actions-btns'>
+                            {% if call_obj.status == 'cancelled' %}
+                                    <div class="flex flex-col gap-3 md:gap-4 mt-4">
+                                        <button class="bg-red-500 text-white py-3 md:py-4 px-4 rounded-lg font-semibold text-sm md:text-base cursor-not-allowed" disabled>
+                                            Cancelled
+                                        </button>
+                                    </div>
+                            {% elif call_obj.status == 'completed' %}
+                                    <div class="flex flex-col gap-3 md:gap-4 mt-4">
+                                        <button class="bg-gray-400 text-white py-3 md:py-4 px-4 rounded-lg font-semibold text-sm md:text-base cursor-not-allowed" disabled>
+                                            Completed
+                                        </button>
+                                    </div>
+                            {% else %}
+                                <div class="flex  flex-col gap-3 md:gap-4 mt-4">
+                                    <button onclick='request_join()' id="request-btn" class="bg-primary text-white py-3 md:py-4 px-4 rounded-lg font-semibold transition transform hover:-translate-y-0.5 text-sm md:text-base">
+                                        Send Another Request
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Right Panel - Video Preview -->
+            <div class="w-full md:w-3/5 p-4 sm:p-6 lg:p-8 bg-white flex flex-col">
+                <div class="relative w-full h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] bg-gray-100 rounded-xl overflow-hidden mb-4 md:mb-6">
+                    <div id="video-preview" class="w-full h-full bg-gray-900 flex items-center justify-center">
+                        <div class="video-placeholder flex flex-col justify-center items-center text-white">
+                            <svg class="text-2xl sm:text-3xl md:text-4xl mb-2 md:mb-4 w-12 h-12" fill="currentColor" stroke="currentColor"  viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                <g transform="matrix(1.43 0 0 1.43 12 12)" >
+                                    <g style="" >
+                                        <g transform="matrix(1 0 0 1 0 0)" >
+                                            <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;" transform=" translate(-7, -7)" d="M 13.5 13.5 L 0.5 0.5" stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 0)" >
+                                            <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;" transform=" translate(-7, -7)" d="M 2.5 2.5 L 9 2.5 C 9.26522 2.5 9.51957 2.60536 9.70711 2.79289 C 9.89464 2.98043 10 3.23478 10 3.5 L 10 5 L 12.82 3.75 C 12.896 3.72066 12.9781 3.71035 13.059 3.71996 C 13.1399 3.72958 13.2173 3.75882 13.2843 3.80516 C 13.3513 3.85149 13.406 3.91351 13.4436 3.98581 C 13.4812 4.05811 13.5006 4.13851 13.5 4.22 L 13.5 9.78 C 13.5006 9.86149 13.4812 9.94189 13.4436 10.0142 C 13.406 10.0865 13.3513 10.1485 13.2843 10.1948 C 13.2173 10.2412 13.1399 10.2704 13.059 10.28 C 12.9781 10.2897 12.896 10.2793 12.82 10.25 L 10 9 L 10 10 M 0.5 3.5 L 0.5 10.5 C 0.5 10.7652 0.605357 11.0196 0.792893 11.2071 C 0.98043 11.3946 1.23478 11.5 1.5 11.5 L 8.5 11.5" stroke-linecap="round" />
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                            <p class="text-sm md:text-base">Camera is turned off</p>
+                        </div>
+                    </div>
+                    <div class="absolute top-2 md:top-4 right-2 md:right-4 flex items-center">
+                        <div class="hidden flex items-center px-2 py-1 md:px-4 md:py-2 rounded-full text-green-400 bg-slate-400 bg-opacity-10 text-xs md:text-sm font-medium">
+                            <svg class="mr-1 md:mr-2 w-5 h-5 " stroke="currentColor" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><rect width='24' height='24' stroke='none' fill='#000000' opacity='0'/>
+                                <g transform="matrix(1 0 0 1 12 12)" >
+                                    <g style="" >
+                                        <g transform="matrix(1 0 0 1 0 0)" >
+                                            <path style="stroke: none; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 0 0 L 24 0 L 24 24 L 0 24 z" stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 6)" >
+                                            <line style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" x1="-0.004999999999999893" y1="0" x2="0.004999999999999893" y2="0" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 2.59)" >
+                                            <path style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -14.59)" d="M 9.172 15.172 C 10.733999405943257 13.61047224666855 13.266000594056742 13.61047224666855 14.827999999999998 15.171999999999999" stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 -0.83)" >
+                                            <path style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -11.17)" d="M 6.343 12.343 C 7.843302876328007 10.84261980919729 9.878196654335923 9.99970849522936 12 9.99970849522936 C 14.121803345664077 9.99970849522936 16.15669712367199 10.842619809197288 17.656999999999996 12.342999999999998" stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0.02 -4.24)" >
+                                            <path style=" stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12.02, -7.76)" d="M 3.515 9.515 C 8.201 4.828 15.799000000000001 4.828 20.515 9.515" stroke-linecap="round" />
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                            <span>Connection stable</span>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="flex justify-center gap-4 sm:gap-6 md:gap-8 mb-4 md:mb-6 lg:mb-8">
+                    <div class="control-item flex flex-col items-center" id="mic-control">
+                        <div class="w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] md:w-[50px] md:h-[50px] rounded-full flex items-center justify-center cursor-pointer mb-1 md:mb-2 bg-primary text-white  transition"> 
+                            <svg class="w-5 h-5" fill="currentColor" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                <g transform="matrix(0.83 0 0 0.83 12 12)" >
+                                    <line style="stroke: currentColor; stroke-width: 2; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;" x1="-9" y1="-9" x2="9" y2="9" />
+                                </g>
+                                
+                                <g transform="matrix(0.83 0 0 0.83 12 12)" >
+                                    <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 12 0 C 9.800781 0 8 1.800781 8 4 L 8 11 C 8 13.199219 9.800781 15 12 15 C 14.199219 15 16 13.199219 16 11 L 16 4 C 16 1.800781 14.199219 0 12 0 Z M 3 11 C 3 15.605469 6.523438 19.429688 11 19.9375 L 11 24 L 13 24 L 13 19.9375 C 17.476563 19.429688 21 15.605469 21 11 L 19 11 C 19 14.855469 15.855469 18 12 18 C 8.144531 18 5 14.855469 5 11 Z" stroke-linecap="round" />
+                                </g>
+                                
+                            </svg>
+                        </div>
+                        <span class="text-xs md:text-sm">Microphone</span>
+                    </div>
+
+                    
+                    <div class="control-item flex flex-col items-center" id="video-control">
+                        <div class="w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] md:w-[50px] md:h-[50px] rounded-full flex items-center justify-center cursor-pointer mb-1 md:mb-2 bg-primary bg-red-600 text-white transition">
+                            <svg class="w-5 h-5" fill="currentColor" stroke="currentColor"  viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                <g transform="matrix(1.43 0 0 1.43 12 12)" >
+                                    <g transform="matrix(1 0 0 1 0 0)" >
+                                        <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;" transform=" translate(-7, -7)" d="M 13.5 13.5 L 0.5 0.5" stroke-linecap="round" />
+                                    </g>
+                                    <g transform="matrix(0.70 0 0 .60 0 0)"  >
+                                        <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 3 5 C 1.897 5 1 5.897 1 7 L 1 17 C 1 18.103 1.897 19 3 19 L 16 19 C 17.103 19 18 18.103 18 17 L 18 14.080078 L 23 18.080078 L 23 5.9199219 L 18 9.9199219 L 18 7 C 18 5.897 17.103 5 16 5 L 3 5 z" stroke-linecap="round" />
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <span class="text-xs md:text-sm">Camera</span>
+                    </div>
+                </div>
+                
+                <div class="mb-3 md:mb-4">
+                    <select id="audio-select" class="w-full py-2 md:py-3 px-3 md:px-4 rounded-lg border border-gray-300 text-xs md:text-sm text-gray-800 bg-white">
+                        <option value="default">Default Microphone</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3 md:mb-4">
+                    <select id="video-select" class="w-full py-2 md:py-3 px-3 md:px-4 rounded-lg border border-gray-300 text-xs md:text-sm text-gray-800 bg-white">
+                        <option value="default">Default Camera</option>
+                    </select>
+                </div>
+    
+                <div class="mb-4 md:mb-6">
+                    <div class="flex justify-between items-center mb-1 md:mb-2">
+                        <div class="text-xs md:text-sm text-gray-600">Audio level</div>
+                        <div id="mic-status" class="text-xs text-primary font-medium">Active</div>
+                    </div>
+                    <div class="h-2 md:h-2.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                        <div class="h-full w-[2%] bg-primary rounded-full transition-all" id="audio-level"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+{% block scripts %}
+<!-- Call Preview section script -->
+<script>
+    // Display current time
+    function updateCurrentTime() {
+        const now = new Date();
+        const formatted = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('current-time').textContent = formatted;
+    }
+    updateCurrentTime();
+    setInterval(updateCurrentTime, 1000);
+
+
+    let chatSocket = null;
+    const currentUsr = "{{ user.username }}";
+    const anotherUsr = "{{ conversation.other_participant.user.username }}";
+    const call_status = "{{ call_obj.status }}";
+    let last_requested_time = "{{ call_obj.last_req|date:"M d, Y H:i" }}";
+
+    function openChatWebSocket() {
+         // If there is already an open socket, close it cleanly
+         if (chatSocket) {
+             chatSocket.onmessage = null;
+             chatSocket.onclose = null;
+             chatSocket.onerror = null;
+             chatSocket.close();
+             chatSocket = null;
+         }
+ 
+         // Build the URL dynamically
+         const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+         const wsUrl = `${protocol}://${window.location.host}/ws/waiting-room/{{ call_obj.uuid }}/`;
+ 
+         chatSocket = new WebSocket(wsUrl);
+ 
+         chatSocket.onopen = function(event) {
+             console.log(`WebSocket connected to ${wsUrl}`);
+         };
+
+
+        chatSocket.onmessage = function(event) {
+            // Parse the JSON payload ChatConsumer is sending
+            const data = JSON.parse(event.data);
+            
+            let newConnectedUSR = null;
+            
+            if (data.request_type === 'user_joined') {
+                // Get the list of all connected users
+                const connectedUsers = data.connected_users || [];
+                // Check if the other participant is in the connected users list
+                const isOtherParticipantConnected = connectedUsers.includes(anotherUsr);
+
+                // Update the active user indicator
+                const activeUsrElement = document.getElementById('active_usr');
+                const notactiveUsrElement = document.getElementById('n_active_usr');
+                if (activeUsrElement) {
+                    if (isOtherParticipantConnected) {
+                        showNotification({
+                            color: "bg-green-500",
+                            title: "User Joined",
+                            message: `${anotherUsr} has joined the waiting room. Starting calls...`,
+                        });
+
+                        if (call_status === 'requested') {
+                            chatSocket.send(JSON.stringify({
+                                'request_type': 'request_to_active',
+                                'call_uuid': '{{ call_obj.uuid }}'
+                            }));
+                        } 
+
+                        ActionsBtnMng('join');
+
+                        activeUsrElement.classList.remove('hidden');
+                        notactiveUsrElement.classList.add('hidden');
+                    } else {
+                        activeUsrElement.classList.add('hidden');
+                        notactiveUsrElement.classList.remove('hidden');
+                    }
+                }
+            }else if (data.request_type === 'user_left') {
+                // Handle user left event
+                const connectedUsers = data.connected_users || [];
+                const isOtherParticipantConnected = connectedUsers.includes(anotherUsr);
+                
+                const activeUsrElement = document.getElementById('active_usr');
+                const notactiveUsrElement = document.getElementById('n_active_usr');
+                if (activeUsrElement) {
+                    if (isOtherParticipantConnected) {
+                        activeUsrElement.classList.remove('hidden');
+                        notactiveUsrElement.classList.add('hidden');
+                    } else {
+                        
+                        showNotification({
+                            color: "bg-yellow-500",
+                            title: "User Left",
+                            message: `${anotherUsr} has left the waiting room.`,
+                        });
+                        
+                        ActionsBtnMng('requested');
+                        activeUsrElement.classList.add('hidden');
+                        notactiveUsrElement.classList.remove('hidden');
+                    }
+                }
+            } 
+        };
+ 
+         chatSocket.onclose = function(event) {
+             console.warn("Chat socket closed unexpectedly:", event);
+         };
+ 
+         chatSocket.onerror = function(error) {
+             console.error("WebSocket error:", error);
+         };
+ }
+
+
+    // Function to join the consultation
+    function joinConsultation() {
+        url = `/join-v-call/{{call_obj.uuid}}/`;
+        window.location = url;
+    }
+
+
+    function request_join(){
+
+        const now = new Date();
+        const lastRequested = new Date(last_requested_time);
+        const diffMs = now - lastRequested;
+        const diffMin = diffMs / (1000 * 60);
+
+        if (diffMin < 10) {
+            showNotification({
+                color: "bg-yellow-500",
+                title: "Please Wait",
+                message: `You can send another request after ${Math.ceil(10 - diffMin)} minute(s).`,
+            });
+            return;
+        }
+
+        // Send a message to the WebSocket to request the other user
+        if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
+            chatSocket.send(JSON.stringify({
+                'request_type': 'request_to_join',
+                'from_user': currentUsr,
+                'to_user': anotherUsr,
+                'call_uuid': '{{ call_obj.uuid }}'
+            }));
+
+            last_requested_timeEle = document.getElementById('last-requested-time');
+            if (last_requested_timeEle) {
+                const now = new Date();
+                // Format: Jun 18, 2025 20:45
+                const options = {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                };
+                // Remove comma between date and time
+                let formatted = now.toLocaleString('en-US', options).replace(',', '');
+                last_requested_timeEle.textContent = formatted;
+                last_requested_time = formatted;
+            }
+
+            
+            showNotification({
+                color: "bg-blue-500",
+                title: "Request Sent",
+                message: `Your request has been sent to ${anotherUsr}.`,
+            });
+        } else {
+            showNotification({
+                color: "bg-red-500",
+                title: "Connection Error",
+                message: "Unable to send request. Please check your connection.",
+            });
+            // Try to reconnect
+            openChatWebSocket();
+        }
+    }
+ 
+
+
+    function ActionsBtnMng(btn_type) {
+        call_actions_btns = document.getElementById('call-actions-btns');
+        if (call_actions_btns) {
+
+            if (btn_type == 'join' || btn_type == 'active' || btn_type == 'ongoing'){
+                call_actions_btns.innerHTML = `
+                    
+
+                    <div class="flex flex-col gap-3 md:gap-4 mt-4">
+                        <button id="join-btn" class="bg-primary hover:bg-primary-dark text-white py-3 md:py-4 px-4 rounded-lg font-semibold transition transform hover:-translate-y-0.5 text-sm md:text-base">
+                            Join Consultation
+                        </button>
+                    </div>
+                `;
+
+                // Initialize the join button
+                setTimeout(joinConsultation, 2000);
+
+                // Add event listener to the join button
+                const joinButton = document.getElementById('join-btn');``
+                if (joinButton) {
+                    joinButton.addEventListener('click', joinConsultation);
+                    
+                    // Scroll to join button
+                    joinButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                
+
+            }
+            else if (btn_type == 'requested') {
+                call_actions_btns.innerHTML = `
+                    <div class="flex  flex-col gap-3 md:gap-4 mt-4">
+                        <button id="request-btn" class="bg-primary hover:bg-primary-dark text-white py-3 md:py-4 px-4 rounded-lg font-semibold transition transform hover:-translate-y-0.5 text-sm md:text-base">
+                            Send Another Request
+                        </button>
+                    </div>
+                `;      
+
+                // Initialize the request button
+                const requestButton = document.getElementById('request-btn');
+                if (requestButton) {
+                    requestButton.addEventListener('click', request_join);
+                    requestButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+
+                last_requested_timeEle = document.getElementById('last-requested-time');
+                last_requested_timeEle.textContent = last_requested_time;
+            }
+            
+            else if (btn_type == 'cancelled') {
+                call_actions_btns.innerHTML = `
+                    <div class="flex flex-col gap-3 md:gap-4 mt-4">
+                        <button class="bg-red-500 text-white py-3 md:py-4 px-4 rounded-lg font-semibold text-sm md:text-base cursor-not-allowed" disabled>
+                            Cancelled
+                        </button>
+                    </div>
+                `;
+
+            }else if (btn_type == 'completed') {
+                call_actions_btns.innerHTML = `
+                    <div class="flex flex-col gap-3 md:gap-4 mt-4">
+                        <button class="bg-gray-400 text-white py-3 md:py-4 px-4 rounded-lg font-semibold text-sm md:text-base cursor-not-allowed" disabled>
+                            Completed
+                        </button>
+                    </div>
+                `;
+            }
+        }
+    }
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+       // DOM elements
+       const videoPreview = document.getElementById('video-preview');
+       const micControl = document.getElementById('mic-control');
+       const videoControl = document.getElementById('video-control');
+       const audioSelect = document.getElementById('audio-select');
+       const videoSelect = document.getElementById('video-select');
+       const audioLevel = document.getElementById('audio-level');
+       const micStatus = document.getElementById('mic-status');
+
+       const joinBtn = document.getElementById('join-btn');
+       
+       // State variables
+       let stream = null;
+       let audioTrack = null;
+       let videoTrack = null;
+       let micEnabled = true;
+       let videoEnabled = false;
+       let audioContext = null;
+       let analyser = null;
+       let microphone = null;
+       let javascriptNode = null;
+       
+       openChatWebSocket();
+
+       // Initialize devices
+       initializeDevices();
+       
+       // Function to initialize devices
+       async function initializeDevices() {
+           try {
+               // Get available audio and video devices
+               const devices = await navigator.mediaDevices.enumerateDevices();
+               
+               // Clear previous options
+               while (audioSelect.firstChild) {
+                   audioSelect.removeChild(audioSelect.firstChild);
+               }
+               
+               while (videoSelect.firstChild) {
+                   videoSelect.removeChild(videoSelect.firstChild);
+               }
+               
+               // Add default option
+               const defaultAudioOption = document.createElement('option');
+               defaultAudioOption.value = 'default';
+               defaultAudioOption.text = 'Default Microphone';
+               audioSelect.appendChild(defaultAudioOption);
+               
+               const defaultVideoOption = document.createElement('option');
+               defaultVideoOption.value = 'default';
+               defaultVideoOption.text = 'Default Camera';
+               videoSelect.appendChild(defaultVideoOption);
+               
+               // Populate audio devices
+               const audioDevices = devices.filter(device => device.kind === 'audioinput');
+               audioDevices.forEach(device => {
+                   const option = document.createElement('option');
+                   option.value = device.deviceId;
+                   option.text = device.label || `D: Microphone ${audioSelect.length}`;
+                   audioSelect.appendChild(option);
+               });
+               
+               // Populate video devices
+               const videoDevices = devices.filter(device => device.kind === 'videoinput');
+               videoDevices.forEach(device => {
+                   const option = document.createElement('option');
+                   option.value = device.deviceId;
+                   option.text = device.label || `D: Camera ${videoSelect.length}`;
+                   videoSelect.appendChild(option);
+               });
+               
+               // Start with audio only by default
+               startAudioOnly();
+               
+           } catch (error) {
+               showNotification({
+                   color: "bg-red-500",
+                   title: "Error initializing devices",
+                   message: `${error}`, 
+               });
+               console.log('Unable to access media devices. Please check permissions and try again.')
+           }
+       }
+       
+       // Start audio only with actual volume detection
+       async function startAudioOnly() {
+           try {
+               // Request access to the microphone
+               stream = await navigator.mediaDevices.getUserMedia({ 
+                   audio: true, 
+                   video: false 
+               });
+               
+               audioTrack = stream.getAudioTracks()[0];
+               updateMicUI(true);
+               
+               // Set up audio context for volume metering
+               setupAudioMeter();
+               
+           } catch (error) {
+               showNotification({
+                   color: "bg-red-500",
+                   title: "Error accessing microphone",
+                   message: `${error.message}, Plz Enable Microphone Access.`, 
+               });
+
+               console.error('Error accessing microphone:', error);
+               updateMicUI(false);
+               micStatus.textContent = 'Not available';
+               micStatus.className = 'text-xs text-error font-medium';
+           }
+       }
+       
+       // Set up audio meter with Web Audio API
+       function setupAudioMeter() {
+           // Create audio context
+           try {
+               window.AudioContext = window.AudioContext || window.webkitAudioContext;
+               audioContext = new AudioContext();
+               
+               // Create analyzer
+               analyser = audioContext.createAnalyser();
+               analyser.fftSize = 256;
+               analyser.minDecibels = -90;
+               analyser.maxDecibels = -10;
+               analyser.smoothingTimeConstant = 0.85;
+               
+               // Create microphone input
+               microphone = audioContext.createMediaStreamSource(stream);
+               microphone.connect(analyser);
+               
+               // Create a node to detect volume
+               javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+               analyser.connect(javascriptNode);
+               javascriptNode.connect(audioContext.destination);
+               
+               // Setup volume detection
+               javascriptNode.onaudioprocess = function() {
+                   const array = new Uint8Array(analyser.frequencyBinCount);
+                   analyser.getByteFrequencyData(array);
+                   let values = 0;
+                   
+                   const length = array.length;
+                   for (let i = 0; i < length; i++) {
+                       values += array[i];
+                   }
+                   
+                   const average = values / length;
+                   const volume = Math.min(100, Math.round(average * 2.5));
+                   
+                   // Update UI with volume level
+                   updateAudioMeter(volume);
+               };
+               
+               micStatus.textContent = 'Active';
+               micStatus.className = 'text-xs text-primary font-medium';
+               
+           } catch (e) {
+               showNotification({
+                   color: "bg-red-500",
+                   title: "Web Audio API not supported",
+                   message: "Your browser does not support the Web Audio API. Using simulated audio level.",
+               });
+               console.error("Web Audio API not supported:", e);
+               // Fall back to simulated audio meter
+               simulateAudioLevel();
+           }
+       }
+       
+       // Update audio meter with real volume
+       function updateAudioMeter(volume) {
+           if (!micEnabled) {
+               volume = 0;
+           }
+           
+           audioLevel.style.width = `${volume}%`;
+           
+           // Change color based on level
+           if (volume > 60) {
+               audioLevel.className = 'h-full bg-error rounded-full transition-all';
+           } else if (volume > 30) {
+               audioLevel.className = 'h-full bg-primary rounded-full transition-all';
+           } else if (volume > 5) {
+               audioLevel.className = 'h-full bg-success rounded-full transition-all';
+           } else {
+               audioLevel.className = 'h-full bg-gray-300 rounded-full transition-all';
+           }
+       }
+       
+       // Fallback simulated audio meter
+       function simulateAudioLevel() {
+           setInterval(() => {
+               if (micEnabled) {
+                   const level = Math.random() * 60 + 10;
+                   updateAudioMeter(level);
+               } else {
+                   updateAudioMeter(0);
+               }
+           }, 200);
+       }
+       
+       // Toggle microphone
+       micControl.addEventListener('click', function() {
+           toggleMicrophone();
+       });
+       
+       function toggleMicrophone() {
+           if (audioTrack) {
+               micEnabled = !micEnabled;
+               audioTrack.enabled = micEnabled;
+               updateMicUI(micEnabled);
+               
+               // Update status text
+               if (micEnabled) {
+                   micStatus.textContent = 'Active';
+                   micStatus.className = 'text-xs text-primary font-medium';
+               } else {
+                   micStatus.textContent = 'Muted';
+                   micStatus.className = 'text-xs text-error font-medium';
+               }
+           } else {
+               startAudioOnly();
+           }
+       }
+       
+       // Toggle camera
+       videoControl.addEventListener('click', function() {
+           toggleVideo();
+       });
+       
+       async function toggleVideo() {
+           if (videoEnabled) {
+               // Disable video
+               if (videoTrack) {
+                   videoTrack.stop();
+                   videoTrack = null;
+               }
+               videoEnabled = false;
+               updateVideoUI(false);
+           } else {
+               // Enable video
+               try {
+                   const videoStream = await navigator.mediaDevices.getUserMedia({ 
+                       video: {
+                           deviceId: videoSelect.value !== 'default' ? { exact: videoSelect.value } : undefined,
+                           width: { ideal: 1280 },
+                           height: { ideal: 720 }
+                       } 
+                   });
+                   videoTrack = videoStream.getVideoTracks()[0];
+                   
+                   // Create video element
+                   const videoElement = document.createElement('video');
+                   videoElement.srcObject = videoStream;
+                   videoElement.autoplay = true;
+                   videoElement.muted = true; // Mute to avoid feedback
+                   videoElement.className = 'w-full h-full object-cover';
+                   
+                   // Clear placeholder and add video element
+                   videoPreview.innerHTML = '';
+                   videoPreview.appendChild(videoElement);
+                   
+                   videoEnabled = true;
+                   updateVideoUI(true);
+               } catch (error) {
+                   showNotification({
+                       color: "bg-red-500",
+                       title: "Error accessing camera",
+                       message: `${error.message}, Plz Enable Camera Access.`,
+                   });
+                   console.error('Error accessing camera:', error);
+               }
+           }
+       }
+       
+       // Update UI based on microphone state
+       function updateMicUI(enabled) {
+           const micButton = micControl.querySelector('div');
+           const micSlash = micButton.querySelector('svg > g');
+           if (enabled) {
+               micButton.classList.remove('bg-red-600');
+               micSlash.classList.add('hidden');
+           } else {
+               micButton.classList.add('bg-red-600');
+               micSlash.classList.remove('hidden');
+
+           }
+       }
+       
+       // Update UI based on video state
+       function updateVideoUI(enabled) {
+           const videoButton = videoControl.querySelector('div');
+           const videoSlash = videoControl.querySelector('svg > g > g');
+           
+           if (enabled) {
+               videoButton.classList.remove('bg-red-600');
+               videoSlash.classList.add('hidden');
+               
+           } else {
+               videoButton.classList.add('bg-red-600');
+               videoSlash.classList.remove('hidden');
+               
+
+               videoPreviewELE = `
+                       <div class="video-placeholder flex flex-col justify-center items-center text-white">
+                           <svg class="text-2xl sm:text-3xl md:text-4xl mb-2 md:mb-4 w-12 h-12" fill="currentColor" stroke="currentColor"  viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                               <g transform="matrix(1.43 0 0 1.43 12 12)" >
+                                   <g style="" >
+                                       <g transform="matrix(1 0 0 1 0 0)" >
+                                           <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;" transform=" translate(-7, -7)" d="M 13.5 13.5 L 0.5 0.5" stroke-linecap="round" />
+                                       </g>
+                                       <g transform="matrix(1 0 0 1 0 0)" >
+                                           <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;" transform=" translate(-7, -7)" d="M 2.5 2.5 L 9 2.5 C 9.26522 2.5 9.51957 2.60536 9.70711 2.79289 C 9.89464 2.98043 10 3.23478 10 3.5 L 10 5 L 12.82 3.75 C 12.896 3.72066 12.9781 3.71035 13.059 3.71996 C 13.1399 3.72958 13.2173 3.75882 13.2843 3.80516 C 13.3513 3.85149 13.406 3.91351 13.4436 3.98581 C 13.4812 4.05811 13.5006 4.13851 13.5 4.22 L 13.5 9.78 C 13.5006 9.86149 13.4812 9.94189 13.4436 10.0142 C 13.406 10.0865 13.3513 10.1485 13.2843 10.1948 C 13.2173 10.2412 13.1399 10.2704 13.059 10.28 C 12.9781 10.2897 12.896 10.2793 12.82 10.25 L 10 9 L 10 10 M 0.5 3.5 L 0.5 10.5 C 0.5 10.7652 0.605357 11.0196 0.792893 11.2071 C 0.98043 11.3946 1.23478 11.5 1.5 11.5 L 8.5 11.5" stroke-linecap="round" />
+                                       </g>
+                                   </g>
+                               </g>
+                           </svg>
+                           <p class="text-sm md:text-base">Camera is turned off</p>
+                       </div>`
+               videoPreview.innerHTML = videoPreviewELE;
+           }
+       }
+       
+       // Handle device selection changes
+       audioSelect.addEventListener('change', function() {
+           // Restart audio with selected device
+           if (audioTrack) {
+               audioTrack.stop();
+               
+               if (javascriptNode) {
+                   javascriptNode.disconnect();
+               }
+               if (microphone) {
+                   microphone.disconnect();
+               }
+               if (analyser) {
+                   analyser.disconnect();
+               }
+               if (audioContext) {
+                   audioContext.close();
+               }
+               
+               navigator.mediaDevices.getUserMedia({
+                   audio: {
+                       deviceId: audioSelect.value !== 'default' ? { exact: audioSelect.value } : undefined
+                   }
+               }).then(newStream => {
+                   stream = newStream;
+                   audioTrack = stream.getAudioTracks()[0];
+                   setupAudioMeter();
+               }).catch(error => {
+                   console.error('Error switching audio device:', error);
+                   micStatus.textContent = 'Error';
+                   micStatus.className = 'text-xs text-error font-medium';
+               });
+           }
+       });
+       
+       videoSelect.addEventListener('change', function() {
+           // If video is enabled, restart it with the new device
+           if (videoEnabled) {
+               toggleVideo();
+               setTimeout(() => {
+                   toggleVideo();
+               }, 500);
+           }
+       });    
+       
+       // Clean up resources when page is closed
+       window.addEventListener('beforeunload', function() {
+           if (stream) {
+               stream.getTracks().forEach(track => {
+                   track.stop();
+               });
+           }
+           
+           if (javascriptNode) {
+               javascriptNode.disconnect();
+           }
+           if (microphone) {
+               microphone.disconnect();
+           }
+           if (analyser) {
+               analyser.disconnect();
+           }
+           if (audioContext) {
+               audioContext.close();
+           }
+       });
+   });
+
+</script>
+
+
+
+
+<script>
+    dashboard_nav_all = document.querySelectorAll('.joinVCall-nav a');
+    console.log(dashboard_nav_all);
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
+
+
+{% endblock scripts %}

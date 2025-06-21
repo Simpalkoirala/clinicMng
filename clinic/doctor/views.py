@@ -14,6 +14,10 @@ from django.utils import timezone
 from django.core.serializers.json import DjangoJSONEncoder
 from account.views import login_required_with_message
 from django.db.models import Q, Max, Count, Case, When, BooleanField
+from django.http import HttpRequest, HttpResponse
+
+import uuid
+from django.utils.translation import gettext as _
 
 
 @login_required_with_message(login_url='account:login', message="You need to log in to Access Doctor Dashboard.")
@@ -441,222 +445,157 @@ def d_profile(request):
 
 @login_required_with_message(login_url='account:login', message="You need to log in to view your Messages.")
 def message(request):
-    user_profile = request.user.profile
-    
-    # Get all conversations for the current user
+    profile : Profile = request.user.profile
+
     conversations = Conversation.objects.filter(
-        participants=user_profile
-    ).annotate(
-        last_message_time=Max('messages__timestamp'),
-        has_unread=Count(
-            Case(
-                When(
-                    Q(messages__read=False) & ~Q(messages__sender=user_profile),
-                    then=1
-                ),
-                default=0
-            )
-        )
-    ).order_by('-last_message_time')
+        participants=profile
+    )
+
+    connected_paritcipants = []
     
     # Add additional data to each conversation
     for conversation in conversations:
         # Get the other participant (not the current user)
         conversation.other_participant = conversation.participants.exclude(
-            id=user_profile.id
+            id=profile.id
         ).first()
+
+        if conversation.other_participant:
+            connected_paritcipants.append(conversation.other_participant)
         
         # Get the last message
         conversation.last_message = conversation.messages.last()
-        
         # Check if there are unread messages
         conversation.has_unread = conversation.messages.filter(
             read=False
-        ).exclude(sender=user_profile).exists()
+        ).exclude(sender=profile).exists()
+
+    # # Mark messages as read
+    # conversation.messages.filter(
+    #     read=False
+    # ).exclude(sender=profile).update(read=True)
+
+    # messages_list = conversation.messages.all().order_by('timestamp')
+    # concept_data = {'active_conversation_id': conversation.id,
+    #     'active_conversation': conversation,
+    #     'message_lists': messages_list,}
+
+
+
+
+    # Get all other not connected participants excluding the current user
+    connected_ids = [p.id for p in connected_paritcipants]
+    connected_ids.append(profile.id)
+    if profile.role == 'doctor':
+        not_connected_usr = Profile.objects.exclude(id__in=connected_ids).filter(role='patient')
+    else:
+        not_connected_usr = Profile.objects.exclude(id__in=connected_ids).filter(role='doctor')
+
     context = {
+        'profile': profile,
         'conversations': conversations,
-        'active_conversation_id': None,
-        'active_conversation': None,
-        'messages': [],
+        'not_connected_usr': not_connected_usr,
+        # 'active_conversation_id': conversation.id,
+        # 'active_conversation': conversation,
+        # 'message_lists': messages_list,
     }
-    print(conversations)
+
     return render(request, 'pages/doctor/message.html', context)
 
 
-def conversation_view(request, conversation_id):
-    """View for a specific conversation"""
-    user_profile = request.user.profile
-    
-    # Get the specific conversation
-    conversation = get_object_or_404(
-        Conversation,
-        id=conversation_id,
-        participants=user_profile
+
+# video call views
+@login_required_with_message(login_url='account:login', message="You need to log in to view your Video Calls.")
+def view_v_call(request: HttpRequest):
+    """Request a video call with a doctor."""
+    if request.method != 'POST':
+        profile: Profile = request.user.profile
+        room_name = ''
+
+        payload = {
+            'room_name': room_name,
+            'user_name': profile.user.get_full_name(),
+            'user_pic': profile.profile_pic.url,
+        }
+
+    convs =  Conversation.objects.filter(
+        participants=request.user.profile
     )
-    
-    # Get all conversations for the sidebar
-    conversations = Conversation.objects.filter(
-        participants=user_profile
-    ).annotate(
-        last_message_time=Max('messages__timestamp'),
-        has_unread=Count(
-            Case(
-                When(
-                    Q(messages__read=False) & ~Q(messages__sender=user_profile),
-                    then=1
-                ),
-                default=0
-            )
-        )
-    ).order_by('-last_message_time')
-    
-    # Add additional data to each conversation
-    for conv in conversations:
-        conv.other_participant = conv.participants.exclude(
-            id=user_profile.id
+    for conversation in convs:
+        # Get the other participant (not the current user)
+        conversation.other_participant = conversation.participants.exclude(
+            id=profile.id
         ).first()
-        conv.last_message = conv.messages.last()
-        conv.has_unread = conv.messages.filter(
-            read=False
-        ).exclude(sender=user_profile).exists()
+
+    return render(request, 'pages/doctor/list-v-call.html',{ 'conv': convs,}  )
+
+def send_req_calls(request: HttpRequest, convo_uuid: uuid):
+    """Send a request for a video call."""
+    try:
+        profile: Profile = request.user.profile
+        conversation: Conversation = get_object_or_404(Conversation, uuid=convo_uuid)
+
+        # Ensure the user is part of the conversation
+        if profile not in conversation.participants.all():
+            messages.error(request, _("You are not part of this conversation."))
+            return redirect('doctor:view_v_call')
+
+        # create a call object
+        call = Calls.objects.create(
+            uuid=uuid.uuid4(),
+            connection=conversation,
+            caller=profile,
+            last_req=timezone.now(),
+            status='requested',
+            receiver=conversation.participants.exclude(id=profile.id).first()
+        )
+
+        messages.success(request, _("Video call request sent successfully."))
+        return redirect('patient:join_v_call', calls_uuid=call.uuid)
+    except Exception as e:
+        print(f"Error: {e}")
+        messages.error(request, _("An error occurred while sending the video call request."))
+        return redirect('patient:view_v_call')
+
+def join_v_call(request: HttpRequest, calls_uuid: uuid):
+
+    profile: Profile = request.user.profile
+    calls: Calls = get_object_or_404(Calls, uuid=calls_uuid)
+    conversation: Conversation = calls.connection
+
+    # Ensure the user is part of the conversation
+    if profile not in conversation.participants.all():
+        messages.error(request, _("You are not part of this conversation."))
+        return redirect('doctor:view_v_call')
     
-    # Get messages for the active conversation
-    messages_list = conversation.messages.all().order_by('timestamp')
+    conversation.other_participant = conversation.participants.exclude(
+        id=profile.id
+    ).first()
+
+    is_caller = calls.caller == profile
+
+    return render(request, 'pages/doctor/join-v-call.html', {'conversation': conversation,
+                                                                'call_obj': calls,
+                                                                'is_caller': is_caller,})
+
+def waiting_room(request: HttpRequest, calls_uuid: uuid):
+    """Join a video call with a specific conversation ID."""
+    profile: Profile = request.user.profile
+    calls: Calls = get_object_or_404(Calls, uuid=calls_uuid)
+    conversation: Conversation = calls.connection
+
+    # Ensure the user is part of the conversation
+    if profile not in conversation.participants.all():
+        messages.error(request, _("You are not part of this conversation."))
+        return redirect('doctor:view_v_call')
     
-    # Mark messages as read
-    conversation.messages.filter(
-        read=False
-    ).exclude(sender=user_profile).update(read=True)
-    
-    # Get the other participant
-    other_participant = conversation.participants.exclude(
-        id=user_profile.id
+
+    conversation.other_participant = conversation.participants.exclude(
+        id=profile.id
     ).first()
     
-    context = {
-        'conversations': conversations,
-        'active_conversation_id': conversation.id,
-        'active_conversation': conversation,
-        'messages': messages_list,
-        'other_participant': other_participant,
-    }
-    
-    return render(request, 'pages/doctor/message.html', context)
+    return render(request, 'pages/patient/waiting-room.html', {'conversation': conversation,
+                                                                'call_obj': calls,})
 
 
-def send_message(request, conversation_id):
-    """Send a new message in a conversation"""
-    if request.method == 'POST':
-        user_profile = request.user.profile
-        conversation = get_object_or_404(
-            Conversation,
-            id=conversation_id,
-            participants=user_profile
-        )
-        
-        content = request.POST.get('content', '').strip()
-        
-        if content:
-            message = Message.objects.create(
-                conversation=conversation,
-                sender=user_profile,
-                content=content
-            )
-            
-            return JsonResponse({
-                'success': True,
-                'message_id': message.id,
-                'timestamp': message.timestamp.isoformat()
-            })
-        
-        return JsonResponse({'success': False, 'error': 'Message content is required'})
-    
-    return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
-def check_new_messages(request, conversation_id):
-    """Check for new messages in a conversation"""
-    user_profile = request.user.profile
-    conversation = get_object_or_404(
-        Conversation,
-        id=conversation_id,
-        participants=user_profile
-    )
-    
-    message_count = conversation.messages.count()
-    unread_count = conversation.messages.filter(
-        read=False,
-        sender__ne=user_profile
-    ).count()
-    
-    return JsonResponse({
-        'message_count': message_count,
-        'unread_count': unread_count,
-        'has_new_messages': unread_count > 0
-    })
-
-def start_conversation(request):
-    """Start a new conversation with a user"""
-    if request.method == 'POST':
-        user_profile = request.user.profile
-        other_user_id = request.POST.get('user_id')
-        
-        try:
-            from django.contrib.auth.models import User
-            other_user = User.objects.get(id=other_user_id)
-            other_profile = other_user.profile
-            
-            # Check if conversation already exists
-            existing_conversation = Conversation.objects.filter(
-                participants=user_profile
-            ).filter(
-                participants=other_profile
-            ).first()
-            
-            if existing_conversation:
-                return redirect('conversation_view', conversation_id=existing_conversation.id)
-            
-            # Create new conversation
-            conversation = Conversation.objects.create()
-            conversation.participants.add(user_profile, other_profile)
-            
-            return redirect('conversation_view', conversation_id=conversation.id)
-            
-        except User.DoesNotExist:
-            messages.error(request, 'User not found')
-            return redirect('doctor:message')
-    messages.error(request, 'Invalid request method')
-    return redirect('doctor:message')
-
-def search_conversations(request):
-    """Search conversations and messages"""
-    query = request.GET.get('q', '').strip()
-    user_profile = request.user.profile
-    
-    if not query:
-        return JsonResponse({'results': []})
-    
-    # Search in conversation participants and message content
-    conversations = Conversation.objects.filter(
-        participants=user_profile
-    ).filter(
-        Q(participants__user__first_name__icontains=query) |
-        Q(participants__user__last_name__icontains=query) |
-        Q(messages__content__icontains=query)
-    ).distinct()
-    
-    results = []
-    for conversation in conversations:
-        other_participant = conversation.participants.exclude(
-            id=user_profile.id
-        ).first()
-        
-        if other_participant:
-            results.append({
-                'id': conversation.id,
-                'name': f"{other_participant.user.first_name} {other_participant.user.last_name}",
-                'specialty': getattr(other_participant, 'specialty', 'Healthcare Provider'),
-                'last_message': conversation.messages.last().content if conversation.messages.exists() else '',
-                'timestamp': conversation.messages.last().timestamp.isoformat() if conversation.messages.exists() else ''
-            })
-    
-    return JsonResponse({'results': results})

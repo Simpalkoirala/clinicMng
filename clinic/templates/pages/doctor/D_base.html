@@ -233,6 +233,28 @@
                         </li>
 
 
+                        <!-- Join Video call  -->
+                        <li class="menuListItems joinVCall-nav">
+                            <a href="{% url 'doctor:view_v_call' %}"
+                                class=" flex items-center py-4 text-black hover:bg-blue-50 rounded px-2 no-underline  hover:border-l-4 border-blue-500 ">
+                                <span class="mr-3">
+
+                                    <svg class="h-6 w-6" fill="currentColor" stroke="currentColor" viewBox='0 0 24 24'
+                                        xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                        <g transform="matrix(0.5 0 0 0.5 12 12)">
+                                            <path
+                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-24, -24)"
+                                                d="M 32 32.5 C 32 36.09 29.09 39 25.5 39 L 10.5 39 C 6.91 39 4 36.09 4 32.5 L 4 15.5 C 4 11.91 6.91 9 10.5 9 L 25.5 9 C 29.09 9 32 11.91 32 15.5 L 32 32.5 z M 43.239 13.195 C 42.769 12.929 42.192 12.936 41.727999999999994 13.214 L 34 17.851 L 34 30.149 L 41.729 34.786 C 41.966 34.929 42.232 35 42.5 35 C 42.755 35 43.01 34.935 43.239 34.805 C 43.709 34.539 44 34.041 44 33.5 L 44 14.5 C 44 13.959 43.709 13.461 43.239 13.195 z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                    </svg>
+                                </span>
+                                <span class="shortBarToggle">Video Call</span>
+                            </a>
+                        </li>
+
+
                         <!-- profile  -->
                         <li class="menuListItems profile-nav">
                             <a href="{% url 'doctor:profile' %}"
@@ -663,7 +685,7 @@
                 <div class="bg-white w-full max-w-md rounded-lg shadow-lg overflow-y-auto h-4/5  max-h-screen flex flex-col custom-scrollbar">
                     <!-- Simple Header -->
                     <div class="flex justify-between items-center p-4 border-b">
-                        <h3 class="text-lg font-medium text-gray-900">Patient ID</h3>
+                        <h3 class="text-lg font-medium text-gray-900">Doctor ID</h3>
                         <button class="patientCardClose text-gray-400 hover:text-gray-500">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -749,7 +771,7 @@
                         <html>
                             <head>
                             <meta charset="utf-8">
-                            <title>Patient ID</title>
+                            <title>Doctor ID</title>
                             ${styles}
                             <style>@media print { body { margin: 0; } }</style>
                             </head>
@@ -768,10 +790,8 @@
             </div>
 
 
-
             <!-- Content -->
             {% block content %} {% endblock content %}
-
 
 
 

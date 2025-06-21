@@ -6,8 +6,6 @@ app_name = 'patient'
 
 
 urlpatterns = [
-
-    
     path('', patientDashboard, name='patientDashboard'),
     path('dashboard/', patientDashboard, name='patient_dashboard2'),
     path('view-appointment/', viewAppointment, name='viewAppointment'),
@@ -19,7 +17,10 @@ urlpatterns = [
     path('document/', ViewDocument, name='viewDocument'),
     path('delete-document/<int:doc_id>/', delete_document, name='deleteDocument'),
 
-    path('join-v-call/', join_v_call, name='join_v_call'),
+
+
+
+
     path('lab-report/', labReport, name='labReport'),
     path('lab-report/<uuid:uuid>/download/', lab_report_pdf, name='lab_report_pdf'),
 
@@ -35,7 +36,14 @@ urlpatterns = [
     path('get-msg/<int:conversation_id>/', get_msg_list, name='conversation_view'),
     path('send-msg/', post_msg, name='send_msg'),
 
+    # Video Call URLs
+    path('view-v-call/', view_v_call, name='view_v_call'), # view calls 
+    path('send-req-calls/<uuid:convo_uuid>/', send_req_calls, name='send_req_calls'),
+    path('waiting-room/<uuid:calls_uuid>/', waiting_room, name='waiting_room'),
+    path('join-v-call/<uuid:calls_uuid>/', join_v_call, name='join_v_call'),
 
+
+    path('req-conv/', req_conv, name='req_conv'),
     
 
 ]

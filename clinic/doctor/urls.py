@@ -30,28 +30,18 @@ urlpatterns = [
 
 
     path('view-patients/', ViewPatients, name='ViewPatients_d'),
-    path('view-patients-records/<str:patient_id>', ViewPatientsRecords, name='ViewPatientsRecords'),
-
+    path('view-patients-records/<str:patient_id>/', ViewPatientsRecords, name='ViewPatientsRecords'),
+ 
     path('actions-appointment/', Action_Appointment, name='Action_Appointment_from_Doc'),
 
 
     path('message/', message, name='message'),
 
-    
-    # Specific conversation view
-    path('msg/<int:conversation_id>/', conversation_view, name='conversation_view'),
-    
-    # Send message
-    path('<int:conversation_id>/send/', send_message, name='send_message'),
-    
-    # Check for new messages
-    path('msg/<int:conversation_id>/check/', check_new_messages, name='check_new_messages'),
-    
-    # Start new conversation
-    path('start/', start_conversation, name='start_conversation'),
-    
-    # Search conversations
-    path('search/', search_conversations, name='search_conversations'),
+    # Video Call URLs
+    path('view-v-call/', view_v_call, name='view_v_call'), # view calls 
+    path('send-req-calls/<uuid:convo_uuid>/', send_req_calls, name='send_req_calls'),
+    path('waiting-room/<uuid:calls_uuid>/', waiting_room, name='waiting_room'),
+    path('join-v-call/<uuid:calls_uuid>/', join_v_call, name='join_v_call'),
 
 
     path('profile/', d_profile, name='profile'),

@@ -30,7 +30,7 @@
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-xl font-bold">Messages</h2>
                     <button
-                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                        class="openRequestDialog inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
                         <svg id='Add_Circle_24' class="w-5 h-5" fill="currentColor" viewBox='0 0 24 24'
                             xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
                             <g transform="matrix(1.43 0 0 1.43 12 12)">
@@ -77,14 +77,14 @@
                     <div class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground w-full grid grid-cols-3">
                         <button class=" tab-button px-3 py-1 text-sm font-medium rounded-lg active bg-blue-50 text-blue-700" data-filter="all">All</button>
                         <button class="hover:bg-slate-300 tab-button px-3 py-1 text-sm font-medium rounded-lg" data-filter="unread">Unread</button>
-                        <button class="hover:bg-slate-300 tab-button px-3 py-1 text-sm font-medium rounded-lg" data-filter="flagged">Flagged</button>
+                        <button class="hover:bg-slate-300 tab-button px-3 py-1 text-sm font-medium rounded-lg" data-filter="requested">Request</button>
                     </div>
                 </div>
 
                 <!-- Conversation List -->
                 <div id="conversation-list" class="space-y-1 px-1 py-2">
                     {% for conversation in conversations %}
-                    <button  data-unread="{{ conversation.has_unread }}" data-conversation-id="{{ conversation.id }}" class="conversation-item flex items-start gap-3 p-2 rounded-md w-full text-left transition-colors font-medium border-b-2 border-gray-100 hover:bg-gray-50 {% if conversation.id == active_conversation_id %}bg-blue-50 {% endif %}">
+                    <button data-status="{{ conversation.status }}"  data-unread="{{ conversation.has_unread }}" data-conversation-id="{{ conversation.id }}" class="conversation-item flex items-start gap-3 p-2 rounded-md w-full text-left transition-colors font-medium border-b-2 border-gray-100 hover:bg-gray-50 {% if conversation.status == "requested"%}hidden {% endif %}    {% if conversation.id == active_conversation_id %}bg-blue-50 {% endif %}">
                         <div class="relative">
                             <div class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-primary/10">
                                 <img class="aspect-square h-full w-full conversation-avatar" src=" {{ conversation.other_participant.profile_pic.url }}" alt="{{ conversation.other_participant.user.first_name }}">
@@ -95,7 +95,7 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <div class="flex justify-between items-center">
-                                <p class="text-sm font-medium truncate conversation-name">Dr. {{ conversation.other_participant.user.first_name }}</p>
+                                <p class="text-sm font-medium truncate conversation-name">{{ conversation.other_participant.user.first_name }}</p>
                                 <span class="text-xs text-muted-foreground">{{ conversation.last_message.timestamp|date:"j M" }}</span>
                             </div>
                             <p class="text-xs text-muted-foreground conversation-role">{{ conversation.other_participant.specialty|default:"Healthcare Provider" }}</p>
@@ -116,13 +116,12 @@
 
         <!-- Main Content - Conversation -->
         <section id="conversation-view" class=" flex flex-col h-[calc(100vh-4rem)]">
-            
                 <!-- Conversation content will be populated here by JavaScript -->
                 <div id="conversation-content" class="flex-col h-full flex {% if not active_conversation %} hidden {% endif %}">
                     <!-- Conversation Header -->
                     <div id="conversation-header" class="flex items-center justify-between p-4 border-b">
                         <div class="flex items-center gap-3">
-                            <button id="mobile-menu-button" class="md:hidden inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                            <button class="mobile-menu-button md:hidden inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
                                 <svg class="h-5 w-5" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <g transform="matrix(1 0 0 1 12 12)">
                                         <g style="">
@@ -203,7 +202,7 @@
                                             <p class="text-sm break-words overflow-wrap-anywhere">{{ message.content }}</p>
                                             <p class="text-xs mt-1 opacity-70 text-right">
                                                 {{ message.timestamp|date:"j M, g:i A" }}
-                                                <span class="ml-1">
+                                                <span class="ml-1 hidden">
                                                     {% if message.is_read %}
                                                         <svg id="Checkmark_24" class="h-4 w-4 inline" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                                             <g transform="matrix(1.15 0 0 1.15 12 12)">
@@ -236,7 +235,7 @@
                         <div class="flex items-end gap-2">
                             <textarea id="message-input" placeholder="Type your message..." class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"></textarea>
                             <div class="flex flex-col gap-2">
-                                <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                                <button class="hidden inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
                                     <svg class="h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                         <rect width="24" height="24" stroke="none" fill="#000000" opacity="0"></rect>
             
@@ -305,7 +304,7 @@
                         healthcare providers.
                     </p>
                     <button
-                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                        class="openRequestDialog inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
                         <svg id='Add_Circle_24' class="w-4 h-4 mr-2" fill="currentColor" viewBox='0 0 24 24'
                             xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
                             <g transform="matrix(1.43 0 0 1.43 12 12)">
@@ -330,9 +329,114 @@
                         </svg>
                         Start New Conversation
                     </button>
+
+                    <button class="mobile-menu-button md:hidden inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-green-600 text-white hover:bg-green-600/90 h-10 px-4 py-2 mt-6">
+                        Open Chat Sidebar
+                    </button>
                 </div>
-            {% endif %}
+                {% endif %}
         </section>
+    </div>
+
+
+    <!-- Dialog Overlay -->
+    <div id="dialogOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-40 hidden">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md mx-auto dialog-enter">
+            
+            <!-- Header -->
+            <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 14a4 4 0 10-8 0 4 4 0 008 0zM12 14v7m-6 0h12" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Start New Conversation</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Request Someone to Chat</p>
+                    </div>
+                </div>
+                <button id="closeDialog" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <line x1="6" y1="6" x2="18" y2="18" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="18" y1="6" x2="6" y2="18" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Search -->
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="relative">
+                    <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search users..."
+                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-800 border-0 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all text-gray-900 dark:text-white placeholder-gray-500 outline-none"
+                    />
+                </div>
+            </div>
+
+            <!-- User List -->
+            <div class="max-h-80 overflow-y-auto" id="userList">
+                    {% for each_profile in not_connected_usr %}
+                        <div  class=" border-gray-300 border-b-2  p-2 flex items-center space-x-4 hover:bg-gray-100 cursor-pointer group transition-colors">
+                                <img
+                                    src="{{each_profile.profile_pic.url}}"
+                                    alt="{{each_profile.user.first_name}}"
+                                    class="w-10 h-10 rounded-full object-cover ring-2 ring-white/90 dark:ring-gray-800"
+                                />
+                            
+                            <div class="flex-1 ml-4 min-w-0">
+                                <div class="flex items-center space-x-2">
+                                    <h3 class=" text-gray-900 dark:text-white truncate _name-user_">{{each_profile.user.first_name}}</h3>
+
+                                    {% if each_profile.is_verified %}
+                                        <div class="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                                            <svg class="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                {% if each_profile.role == 'doctor'%}
+                                <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{each_profile.doctor_profile.specialization}}</p>
+                                {% else %}
+                                <p class="text-sm text-gray-500 dark:text-gray-400 truncate">Patient</p>
+                                {% endif %}
+                            </div>
+            
+                            <div class="flex items-center space-x-2">
+                                <button data-profile-id="{{ each_profile.user.username }}" data-profile-name="{{ each_profile.user.first_name }}" 
+                                 class="send-req-btn p-2 text-2xs hover:bg-blue-100  rounded-lg transition-colors flex items-center gap-1" data-action="send-request">
+                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M22 2L11 13"></path>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                    </svg>
+                                    <span class=" send-req-txt">Request</span>
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div id="noResults" class="p-8 text-center {% if not not_connected_usr %}{% else %} hidden{% endif %}">
+                        <svg class="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" fill="none" viewBox="0 0 48 48" stroke="currentColor">
+                            <circle cx="24" cy="18" r="8" stroke-width="2" />
+                            <path stroke-width="2" d="M8 40c0-5.5 7.16-10 16-10s16 4.5 16 10" />
+                        </svg>
+                        <p class="text-gray-500 dark:text-gray-400">No users found</p>
+                    </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 rounded-b-2xl">
+                <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                    <span id="userCount" class="text-blue-600">{{ not_connected_usr|length }} </span> users Related
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -343,8 +447,6 @@
 
 <script>
     
-    const conversations = []
-
     // Format date for display (improved, always shows time too)
     function formatMessageDate(dateString) {
         if (!dateString) return '';
@@ -420,6 +522,15 @@
     let activeConversation = null;
     let chatSocket = null;
 
+
+    // Attach event listener to mobile-menu-button to show sidebar
+    const mobileMenuButton = document.querySelectorAll('.mobile-menu-button');
+
+    for (const button of mobileMenuButton) {
+        button.addEventListener('click', close_open_SidebarConvList);
+    }
+    overlaySidebar.addEventListener('click', close_open_SidebarConvList);
+
     // -----------------------------
     // 4. Open (or re‐open) the WebSocket for live updates
     // -----------------------------
@@ -447,11 +558,14 @@
             // Parse the JSON payload ChatConsumer is sending
             const data = JSON.parse(event.data);
             console.log('Message received:', data.msg_by_me);
+
             // Only append if msg_by_me is true (sent by me)
             // OR if msg_by_me is false AND the username is not the sender's username
             if (data.msg_by_me === true || (data.msg_by_me === false && data.username !== "{{ request.user.username }}")) {
                 appendSingleMessage(data);
             }
+
+
         };
 
         chatSocket.onclose = function(event) {
@@ -465,10 +579,6 @@
         };
     }
 
-
-
-
-
     // Conversation click handler
     AllConversationsItems.forEach(item => {
         item.addEventListener('click', function() {
@@ -481,8 +591,9 @@
             }
     
             // Establish new WebSocket connection
+            const protocol = window.location.protocol === "https:" ? "wss" : "ws";
             chatSocket = new WebSocket(
-                'ws://' + window.location.host + '/ws/chat/' + conversationId + '/'
+                `${protocol}://` + window.location.host + '/ws/chat/' + conversationId + '/'
             );
     
             chatSocket.onmessage = function(e) {
@@ -515,7 +626,6 @@
         
         activeConversation = activeConversationElement;
 
-
         activePersonName = activeConversationElement.querySelector('.conversation-name').textContent;
         activePersonAvatar = activeConversationElement.querySelector('.conversation-avatar').src;
         activePersonRole = activeConversationElement.querySelector('.conversation-role').textContent;
@@ -537,11 +647,14 @@
 
         // Hide sidebar on mobile when a conversation is selected
         sidebarConvList.classList.add('hidden');
+        overlaySidebar.classList.add('hidden');
+
+
 
         // Render conversation header
         conversationHeader.innerHTML = `
             <div class="flex items-center gap-3">
-                <button id="mobile-menu-button" class="md:hidden inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                <button id="e-mobile-menu-button" class=" md:hidden inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
                     <svg class="h-5 w-5" fill="currentColor" stroke="currentColor" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
                         <g transform="matrix(1 0 0 1 12 12)" >
                             <g style="" >
@@ -593,13 +706,12 @@
                 </div>
             </div>
         `;
-
         // Attach event listener to mobile-menu-button to show sidebar
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        if (mobileMenuButton) {
-            mobileMenuButton.addEventListener('click', close_open_SidebarConvList);
-        }
+        const mobileMenuButton = document.getElementById('e-mobile-menu-button');
+
+        mobileMenuButton.addEventListener('click', close_open_SidebarConvList);
         overlaySidebar.addEventListener('click', close_open_SidebarConvList);
+
     }
 
     // Render messages (unchanged)
@@ -629,7 +741,7 @@
                                 <p class="text-sm break-words overflow-wrap-anywhere">${message.content}</p>
                                 <p class="text-xs mt-1 opacity-70 text-right">
                                     ${formatMessageDate(message.timestamp)}
-                                    <span class="ml-1">
+                                    <span class="ml-1 hidden">
                                         ${message.read ? `
                                             <svg id="Checkmark_24" class="h-4 w-4 inline" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                                 <g transform="matrix(1.15 0 0 1.15 12 12)">
@@ -687,8 +799,8 @@
                             <p class="text-sm break-words">${message.content}</p>
                             <p class="text-xs mt-1 opacity-70 text-right">
                                 ${formatMessageDate(message.timestamp)}
-                                <span class="ml-1">
-                                    ${message.read 
+                                <span class="ml-1 hidden">
+                                    ${message.read
                                         ? `<svg class="h-4 w-4 inline" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24"><path d="M19.28 5.28L9 15.56L4.72 11.28L3.28 12.72L8.28 17.72L9 18.41L9.72 17.72L20.72 6.72Z"/></svg>` 
                                         : `<svg class="h-4 w-4 inline text-green-400" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24"><path d="M37.91 8.97C37.86 8.98 37.82 8.99 37.78 9C37.55 9.05 37.36 9.19 37.22 9.38L12.94 38.5L1.72 27.28C1.32 26.88 0.68 26.88 0.28 27.28C-0.12 27.68 -0.12 28.32 0.28 28.72L12.28 40.72C12.48 40.92 12.77 41.03 13.05 41.01C13.34 40.99 13.61 40.85 13.78 40.63L38.78 10.63C39.06 10.31 39.11 9.86 38.92 9.49C38.72 9.13 38.32 8.91 37.91 8.97ZM48.91 8.97C48.86 8.98 48.82 8.99 48.78 9C48.55 9.05 48.36 9.19 48.22 9.38L23.94 38.5L21.38 35.97C21.13 35.67 20.75 35.54 20.37 35.62C20 35.71 19.71 36 19.62 36.37C19.54 36.75 19.67 37.13 19.97 37.38L23.28 40.72C23.48 40.92 23.77 41.03 24.05 41.01C24.34 40.99 24.61 40.85 24.78 40.63L49.78 10.63C50.06 10.31 50.11 9.86 49.92 9.49C49.72 9.13 49.32 8.91 48.91 8.97Z"/></svg>`}
                                 </span>
@@ -753,7 +865,13 @@
             if (tabName === 'flagged') {
                 document.getElementById('no-conversation').classList.remove('hidden');
                 document.getElementById('conversation-list').classList.add('hidden');
-            } else{
+            }
+            else if (tabName === 'requested') {
+                document.getElementById('no-conversation').classList.add('hidden');
+                document.getElementById('conversation-list').classList.remove('hidden');
+                filterConversations(tabName);
+            }
+            else{
                 document.getElementById('no-conversation').classList.add('hidden');
                 document.getElementById('conversation-list').classList.remove('hidden');
                 filterConversations(tabName);
@@ -766,6 +884,8 @@
         AllConversationsItems.forEach(conv => {
             const isUnread = conv.dataset.unread === 'True';
             const isFlagged = conv.dataset.flagged === 'True';
+            const isRequested = conv.dataset.status == 'requested';
+            console.log(conv.dataset.status, isRequested)
             switch(filter) {
                 case 'unread':
                     if (isUnread) {
@@ -776,6 +896,16 @@
                         conv.classList.remove('flex');
                     }
                     break;
+                case 'requested':
+                    if (isRequested) {
+                        conv.classList.remove('hidden');
+                        conv.classList.add('flex');
+                    } else {
+                        conv.classList.add('hidden');
+                        conv.classList.remove('flex');
+                    }
+                    break;
+
                 case 'flagged':
                     if (isFlagged) {
                         conv.classList.remove('hidden');
@@ -785,6 +915,16 @@
                         conv.classList.remove('flex');
                     }
                     break;
+                case 'all':
+                    if (isRequested) {
+                        conv.classList.add('hidden');
+                        conv.classList.remove('flex');
+                    } else {
+                        conv.classList.remove('hidden');
+                        conv.classList.add('flex');
+                    }
+                    break;
+
                 default:
                     conv.classList.remove('hidden');
                     conv.classList.add('flex');
@@ -809,7 +949,146 @@
         
     }
 
+
+
+
+
+    // --------------------------------------------------------------------------------------------------------  \\
+
+    const openDialogBtn = document.querySelectorAll('.openRequestDialog');
+    const closeDialogBtn = document.getElementById('closeDialog');
+    const dialogOverlay = document.getElementById('dialogOverlay');
+
+    const userList = document.getElementById('userList');
+    const noResults = document.getElementById('noResults');
+    const searchuser_toreq = document.getElementById('searchInput');
+
+    const sendReqBtn = document.querySelectorAll('.send-req-btn');
+
+    // Function to handle sending a request
+    function sendRequest(user_name_, profileName) {
+        console.log(`Sending request to ${profileName} (${user_name_})`);
+
+        fetch(`/p/req-conv/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}' // Ensure CSRF token is included
+            },  
+            body: JSON.stringify({ 'userID': user_name_ })
+        })
+        .then(response => {
+            if (response.ok) {
+                showNotification({
+                    color: "bg-green-500",
+                    title: "Request Sent Successfully",
+                    message: `Your request to ${profileName} has been sent successfully.`,
+                });
+
+                // Optionally, you can update the UI to reflect the sent request
+                const button = document.querySelector(`button[data-profile-id="${user_name_}"]`)
+                if (button) {
+                    button.disabled = true; // Disable the button after sending
+                    button.textContent = 'Requested ✅'; // Change button text
+                    button.classList.add('bg-gray-300', 'text-gray-700'); // Change button style
+                }
+                 dialogOverlay.classList.add('hidden'); // Close the dialog after sending the request
+
+            } else {
+                response.json().then(data => {
+                    const error_message = data.error || 'Unknown error';
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Failed to send request",
+                        message: `${error_message}`, 
+                    });
+                });
+            }
+        })
+        .catch(error => {
+
+            showNotification({
+                color: "bg-red-500",
+                title: "Error",
+                message: `Failed to send request to ${profileName}. Please try again later.`,
+            });
+            console.error('Error sending request:', error);
+        });
+    }
+
+    // Attach event listeners to send request buttons
+    sendReqBtn.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent dialog from closing
+            const user_name_ = button.getAttribute('data-profile-id');
+            const profileName = button.getAttribute('data-profile-name');
+            sendRequest(user_name_, profileName);
+        });
+    });
+
+
+    // Event listeners
+    for (const button of openDialogBtn) {
+        button.addEventListener('click', () => {
+            dialogOverlay.classList.toggle('hidden');
+        });
+    }
+
+    closeDialogBtn.addEventListener('click', () => {
+        dialogOverlay.classList.toggle('hidden');
+    });
+
+    dialogOverlay.addEventListener('click', (e) => {
+        if (e.target === dialogOverlay) {
+            dialogOverlay.classList.toggle('hidden');
+        }
+    });
+
+    // Search functionality
+    searchuser_toreq.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.trim();
+        if (searchTerm) {
+            filterUsers(searchTerm);
+        } else {
+            // If search term is empty, show all users
+            const userItems = document.querySelectorAll('#userList > div');
+            userItems.forEach(user => {
+                user.classList.remove('hidden');
+                user.classList.add('flex');
+            });
+            noResults.classList.add('hidden');
+        }
+    });
+
+
+    function filterUsers(searchTerm) {
+        const filter = searchTerm.toLowerCase();
+        const userItems = document.querySelectorAll('#userList > div');
+        let hasResults = false;
+
+        userItems.forEach(user => {
+            const nameElem = user.querySelector('._name-user_');
+            const userName = nameElem ? nameElem.textContent.toLowerCase() : '';
+            if (userName.includes(filter)) {
+                user.classList.remove('hidden');
+                user.classList.add('flex');
+                hasResults = true;
+            } else {
+                user.classList.add('hidden');
+                user.classList.remove('flex');
+            }
+        });
+
+        // Show or hide no results message
+        if (hasResults) {
+            noResults.classList.add('hidden');
+        } else {
+            noResults.classList.remove('hidden');
+        }
+
+    }
 </script>
+
 
 
 

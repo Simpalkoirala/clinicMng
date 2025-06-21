@@ -49,14 +49,63 @@ class Profile(models.Model):
         return f"{self.user.username} -- {self.role} -- {self.user.first_name}" 
 
 
+    
+
+
 
 
 class Conversation(models.Model):
     participants = models.ManyToManyField(Profile, related_name='conversations')
+    uuid = models.UUIDField(unique=True, editable=True, null=True, blank=True)
+
+    status_choices = (
+        ('initiated', 'Initiated'),
+        ('active', 'Active'),
+        ('requested', 'Requested'),
+        ('rejected', 'Rejected'),
+        ('archived', 'Archived'),
+        ('deleted', 'Deleted'),
+    )
+
+    conv_type_choices = (
+        ('audio', 'Audio'),
+        ('video', 'Video'),
+    )
+    
+    status = models.CharField(max_length=10, choices=status_choices, default='requested')
+    conv_type = models.CharField(max_length=10, choices=conv_type_choices, default='audio')
+
     created_at = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return f"Conv Participants: {', '.join([p.user.username for p in self.participants.all()])}"
+
+
+class Calls(models.Model):
+    uuid = models.UUIDField(unique=True, editable=False, null=True, blank=True)
+
+    appointment = models.ForeignKey('patient.Appointment', on_delete=models.CASCADE, related_name='appointments', null=True, blank=True)
+    connection = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='convosation_calls')
+    caller = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='calls_made')
+    receiver = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='calls_received')
+
+    last_req = models.DateTimeField(null=True, blank=True)
+
+    status_choices = (
+        ('requested', 'Requested'),
+        ('active', 'Active'),
+        ('ongoing', 'Ongoing'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    )
+
+    status = models.CharField(max_length=10, choices=status_choices, default='requested')
+
+    def __str__(self):
+        return f"Call {self.pk} - Caller: {self.caller.user.username} - Receiver: {self.receiver.user.username}"
+
+
 
 class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
@@ -96,9 +145,6 @@ class MedicalInfo(models.Model):
     def __str__(self):
         return f"{self.profile.user.username}'s Medical Info"
     
-    
-
-
 
 class ActivityLog(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="activity_logs")

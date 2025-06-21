@@ -58,7 +58,6 @@ class Appointment(models.Model):
     file = models.FileField(upload_to='appointment_files/', blank=True)
     reason = models.TextField(blank=True)
 
-
     STATUS_TYPE = [
         ('pending', 'Pending'),
         ('confirmed', 'Confirmed'),
