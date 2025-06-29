@@ -90,3 +90,20 @@ def get_report_status_type_color(status_type):
     }
 
     return class_map.get(status_type, "bg-gray-100 text-gray-800")
+
+
+
+@register.simple_tag
+def get_prescription_status_color(status_type):
+    """
+    Returns the Tailwind class associated with a given prescription status type.
+    Usage: {% get_prescription_status_color prescription.status %}
+    """
+    class_map = {
+        "active": "bg-green-50 text-green-700 border border-green-100",
+        "completed": "bg-blue-50 text-blue-700 border border-blue-100",
+        "discontinued": "bg-red-50 text-red-700 border border-red-100",
+        "break": "bg-orange-50 text-orange-700 border border-orange-100",
+    }
+
+    return class_map.get(status_type, "bg-gray-100 text-gray-800")

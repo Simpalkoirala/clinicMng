@@ -7,6 +7,7 @@ from django.core.validators import RegexValidator
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
+
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -19,6 +20,7 @@ USER_ROLES = (
         ('doctor', 'Doctor'),
         ('patient', 'Patient'),
         ('admin', 'Admin'),
+        ('management', 'Management'),
     )
 
 class Profile(models.Model):
@@ -39,6 +41,9 @@ class Profile(models.Model):
     sms_notification = models.BooleanField(default=True)
     reminders = models.BooleanField(default=True)
 
+    # additional fields
+    token = models.CharField(max_length=255, blank=True, null=True)
+    token_expiry = models.DateTimeField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -47,11 +52,6 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} -- {self.role} -- {self.user.first_name}" 
-
-
-    
-
-
 
 
 class Conversation(models.Model):
@@ -85,7 +85,7 @@ class Conversation(models.Model):
 class Calls(models.Model):
     uuid = models.UUIDField(unique=True, editable=False, null=True, blank=True)
 
-    appointment = models.ForeignKey('patient.Appointment', on_delete=models.CASCADE, related_name='appointments', null=True, blank=True)
+    appointment = models.ForeignKey('patient.Appointment', on_delete=models.CASCADE, related_name='appointments_Calls', null=True, blank=True)
     connection = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='convosation_calls')
     caller = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='calls_made')
     receiver = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='calls_received')
@@ -120,8 +120,6 @@ class Message(models.Model):
 
     def __str__(self):
         return f"Msg {self.pk} in Conv {self.conversation_id}"
-
-
 
 
 
@@ -176,3 +174,18 @@ class ActivityLog(models.Model):
         if self.target_content_type:
             return f"{self.target_content_type.model} - {self.target}"
         return "No target"
+    
+
+
+class Review(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="reviews")
+    doctor = models.ForeignKey('doctor.DoctorProfile', on_delete=models.CASCADE, related_name="doctor_reviews", null=True, blank=True)
+
+    rating = models.PositiveIntegerField(default=0)
+    comment = models.TextField(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Review by {self.profile.user.username} for {self.doctor.profile.user.username} - Rating: {self.rating}"

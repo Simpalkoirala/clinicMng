@@ -47,7 +47,7 @@ class Appointment(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=True)
 
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="patients_appointments", help_text=" Patient Profile")
-    doctor = models.ForeignKey(DoctorProfile, on_delete=models.SET_NULL, related_name="patients_appointments", blank=True, null=True)
+    doctor = models.ForeignKey(DoctorProfile, on_delete=models.SET_NULL, related_name="doctors_appointments", blank=True, null=True)
     appointment_type = models.CharField(max_length=50, choices=APPOINTMENT_TYPES, default='general_consultation')
     
     time_slot = models.ForeignKey(AppointmentTimeSlot, on_delete=models.SET_NULL, related_name="patients_appointments", blank=True, null=True)
@@ -88,7 +88,6 @@ class Medicine(models.Model):
     manufacturer        = models.CharField(max_length=255, blank=True)
     description        = models.TextField(blank=True)
 
-
     default_dosage     = models.CharField(max_length=50, blank=True)
     default_frequency  = models.CharField(max_length=100, blank=True)
     instructions       = models.TextField(blank=True,
@@ -111,50 +110,27 @@ class Medicine(models.Model):
 
 
 class Prescription(models.Model):
-
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="prescriptions")
-    prescribing_doctor  = models.ForeignKey(DoctorProfile, on_delete=models.CASCADE, related_name="prescriptions")
-    medicine            = models.ForeignKey(
-                              Medicine,
-                              on_delete=models.PROTECT,
-                              related_name='prescriptions'
-                          )
-
-    update_dosage = models.CharField(
-        max_length=50,
-        help_text='e.g. "10mg", "500mg".'
-    )
-    update_frequency = models.CharField(
-        max_length=100,
-        help_text='Descriptive frequency, e.g. "Once daily", "Three times daily".'
-    )
-
-    notes = models.TextField(
-        blank=True,
-        help_text='Additional notes or instructions for the medication.'
-    )
-
-
     STATUS_CHOICES = [
-        ('active',    'Running'),
+        ('active',    'Active'),
         ('completed', 'Completed'),
         ('discontinued', 'Discontinued'),
         ('break', 'In Break'),
     ]
 
-    status = models.CharField(
-        max_length=50,
-        choices=STATUS_CHOICES,
-        default='active',
-        help_text='Current status of the medication.')
+    uuid = models.UUIDField(default=uuid.uuid4, editable=True)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="prescriptions")
+    prescribing_doctor  = models.ForeignKey(DoctorProfile, on_delete=models.CASCADE, related_name="prescriptions")
+    medicine            = models.ForeignKey(Medicine,on_delete=models.PROTECT,related_name='prescriptions')
 
+    update_dosage = models.CharField(max_length=50,help_text='e.g. "10mg", "500mg".')
+    update_frequency = models.CharField( max_length=100, help_text='Descriptive frequency, e.g. "Once daily", "Three times daily".' )
+
+    notes = models.TextField( blank=True, help_text='Additional notes or instructions for the medication.' )
+    status = models.CharField( max_length=50, choices=STATUS_CHOICES, default='active', help_text='Current status of the medication.')
 
 
     start_date = models.DateField(help_text='When the patient should start this medication.')
     end_date   = models.DateField(help_text='When the course ends or next review is due.')
-
-
-
 
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
@@ -165,10 +141,6 @@ class Prescription(models.Model):
 
 
 class PrescriptionSchedule(models.Model):
-    """
-    If you prefer a relational schedule rather than JSON/ArrayField,
-    use this model instead of the above schedule field.
-    """
     prescription = models.ForeignKey(
                        Prescription,
                        on_delete=models.CASCADE,
@@ -184,16 +156,8 @@ class PrescriptionSchedule(models.Model):
 
     def __str__(self):
         return f"{self.prescription} @ {self.time}"
-    
-
-
-
-
-
 
 class LabReport(models.Model):
-
-
     uuid = models.UUIDField(default=uuid.uuid4, editable=True)
 
     STATUS_CHOICES = [
@@ -205,11 +169,13 @@ class LabReport(models.Model):
     patient_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="lab_reports_profile")
     doctor  = models.ForeignKey(DoctorProfile, on_delete=models.CASCADE, related_name="lab_reports_doctor")
 
-
     report_type = models.CharField(max_length=100)  # e.g., Blood Test, Lipid Panel
     report_date = models.DateField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
     report_description = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True)
 
     def __str__(self):
         return f"{self.report_type} - {self.report_date}"

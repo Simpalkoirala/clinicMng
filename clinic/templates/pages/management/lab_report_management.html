@@ -1,0 +1,2080 @@
+{% extends "pages/management/M_base.html" %}
+{% load choose_color %}
+{% load static %}
+
+{% block titles %} Lab Report Management || Nepal's Care {% endblock titles %}
+
+{% block styles %}
+
+{% endblock styles %}
+
+
+{% block pageof %} Lab Report View-Add-Edit {% endblock pageof %}
+{% block linkPageof %} {% url 'management:labreportMng' %} {% endblock linkPageof %}
+
+{% block content %}
+
+<div class="flex h-screen overflow-hidden">
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto">
+        <div class="p-6 lg:p-10 w-full">
+            
+            <div class="mb-6 bg-white rounded-xl p-6 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div class="mb-4 md:mb-0">
+                        <h2 class="text-3xl font-bold text-gray-800">Lab Report Management</h2>
+                        <p class="text-gray-600 max-w-2xl">Manage all Lab Report, add new ones, and view or edit existing Lab Report with ease.</p>
+                    </div>
+                    <button id="add-labreport-trigger" class="flex items-center justify-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span class="font-medium">Add New Lab Report</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Prescriptions List -->
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Report From</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Report To</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Report Type & Date</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientTableBody" class="divide-y divide-gray-200">
+                            {% for each_report in lab_reports %}
+                                <tr class="hover:bg-gray-50 transition-all duration-200">
+                                
+
+                                    <!-- Report By -->
+                                    <td class="table-cell px-4 py-4 whitespace-nowrap doctor-details"
+                                        title="View Profile" data-patient="{{ each_report.doctor.profile.user.first_name }}" >
+                                        <a class="bg-indigo-600 hover:bg-indigo-800">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img class="h-10 w-10 rounded-full object-cover shadow-sm border border-gray-200 transition-transform duration-200 hover:scale-110"
+                                                        src="{{ each_report.doctor.profile.profile_pic.url }}"
+                                                        alt="{{ each_report.doctor.profile.user.first_name}}">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <p class="text-sm font-medium text-gray-900" data-doctor="{{ each_report.doctor.profile.user.first_name }}"  >{{ each_report.doctor.profile.user.first_name }}
+                                                    </p>
+                                                    <div class="text-sm text-gray-500" data-specialization='{{ each_report.doctor.profile.user.username }}' >{{ each_report.doctor.profile.user.username }}</div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </td>
+
+                                    <!-- Prescribed To -->
+                                    <td class="table-cell px-4 py-4 whitespace-nowrap doctor-details"
+                                        title="View Profile" data-patient="{{ each_report.patient_profile.user.first_name }}" >
+                                        <a href="/view-patients-records/{{each_report.patient_profile.user.username}}" target="_blank_" class="bg-indigo-600 hover:bg-indigo-800">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img class="h-10 w-10 rounded-full object-cover shadow-sm border border-gray-200 transition-transform duration-200 hover:scale-110"
+                                                        src="{{ each_report.patient_profile.profile_pic.url }}"
+                                                        alt="{{ each_report.patient_profile.user.first_name}}">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <p class="text-sm font-medium text-gray-900" data-doctor="{{ each_report.patient_profile.user.first_name }}"  >{{ each_report.patient_profile.user.first_name }}
+                                                    </p>
+                                                    <div class="text-sm text-gray-500" data-specialization='{{ each_report.patient_profile.user.username }}' >{{ each_report.patient_profile.user.username }}</div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </td>
+
+                                    <!-- Date Start to End -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">
+                                            <div class="flex items-center">
+                                                <svg class="h-4 w-4 mr-1 text-gray-500" fill="currentcolor" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                                    <g transform="matrix(1 0 0 1 12 12)" >
+                                                    <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -11)" d="M 6 1 L 6 3 L 5 3 C 3.9 3 3 3.9 3 5 L 3 19 C 3 20.1 3.9 21 5 21 L 19 21 C 20.1 21 21 20.1 21 19 L 21 5 C 21 3.9 20.1 3 19 3 L 18 3 L 18 1 L 16 1 L 16 3 L 8 3 L 8 1 L 6 1 z M 5 8 L 19 8 L 19 19 L 5 19 L 5 8 z" stroke-linecap="round" />
+                                                    </g>
+                                                </svg>
+                                                <span>{{ each_report.report_date}}</span>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <svg class="h-4 w-4 mr-1 text-gray-500" fill="currentcolor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M19 5h-4V3H9v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-8 12c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm3-6h-2v2h-2v-2H8v-2h2V9h2v2h2v2z"/>
+                                                </svg>
+                                                <span>{{ each_report.report_type }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Status -->
+                                    <td class="px-6 py-4 whitespace-nowrap ">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {% get_report_status_type_color each_report.status %}">
+                                            {{ each_report.status|capfirst }}
+                                        </span> 
+                                    </td>
+
+                                    <!-- Actions Btns -->
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="flex space-x-2">
+                                            <button class="bg-blue-500 text-white px-3 py-1 rounded labreport-modal-trigger" data-uuid="{{ each_report.uuid }}">
+                                                View/Edit
+                                            </button>
+                                            <a href="/m/labreport-mng/delete/{{each_report.uuid}}/" class="bg-red-500 text-white px-3 py-1 rounded">
+                                                Delete
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr class="col-span-full text-gray-500">
+                                    <td>
+                                        No Lab Report found.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pagination and Show Entries -->
+            <div class="bg-white border-t border-gray-200 rounded-b-lg">
+                <div class="flex flex-col lg:flex-row items-center justify-between py-4 px-4 md:px-6 space-y-4 lg:space-y-0">
+            
+                <!-- Show Entries Selector -->
+                <form method="get" class="flex items-center space-x-3 w-full lg:w-auto" id="perPageForm">
+                    <span class="text-gray-600 text-sm whitespace-nowrap">Show entries</span>
+                    <div class="relative">
+                    <select name="per_page" onchange="document.getElementById('perPageForm').submit()"
+                            class="appearance-none pl-4 pr-10 py-2 border border-gray-300 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm hover:border-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 cursor-pointer">
+                        {% for n in per_page_options %}
+                        <option value="{{ n }}" {% if per_page == n %}selected{% endif %}>{{ n }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-indigo-500">
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    </div>
+                    {# preserve current page when changing per_page #}
+                    <input type="hidden" name="page" value="{{ appointments.number }}">
+                </form>
+            
+                <!-- Results Counter -->
+                <div class="hidden sm:block text-center lg:text-left text-sm text-gray-500">
+                    Showing
+                    <span class="font-semibold text-gray-700">
+                    {{ appointments.start_index }}
+                    </span>
+                    to
+                    <span class="font-semibold text-gray-700">
+                    {{ appointments.end_index }}
+                    </span>
+                    of
+                    <span class="font-semibold text-gray-700">
+                    {{ paginator.count }}
+                    </span>
+                    results
+                </div>
+            
+                <!-- Pagination Navigation -->
+                <div class="w-full lg:w-auto flex justify-center lg:justify-end">
+                    <nav class="relative z-0 inline-flex shadow-sm -space-x-px rounded-md" aria-label="Pagination">
+            
+                    {# Previous #}
+                    {% if appointments.has_previous %}
+                        <a href="?page={{ appointments.previous_page_number }}&per_page={{ per_page }}"
+                        class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-150">
+                        <span class="sr-only">Previous</span>
+                        <!-- ← -->
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 
+                                    01-1.414 1.414l-4-4a1 1 0 
+                                    010-1.414l4-4a1 1 0 011.414 0z"
+                                clip-rule="evenodd"/>
+                        </svg>
+                        </a>
+                    {% else %}
+                        <span class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-400 cursor-not-allowed disabled:opacity-50">
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 
+                                    01-1.414 1.414l-4-4a1 1 0 
+                                    010-1.414l4-4a1 1 0 011.414 0z"
+                                clip-rule="evenodd"/>
+                        </svg>
+                        </span>
+                    {% endif %}
+            
+                    {# Page Numbers #}
+                    {% for num in paginator.page_range %}
+                        {% if num >= appointments.number|add:-2 and num <= appointments.number|add:2 %}
+                        {% if num == appointments.number %}
+                            <span aria-current="page"
+                                class="relative inline-flex items-center px-4 py-2 border border-indigo-500 bg-indigo-50 text-sm font-medium text-indigo-600">
+                            {{ num }}
+                            </span>
+                        {% else %}
+                            <a href="?page={{ num }}&per_page={{ per_page }}"
+                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-150">
+                            {{ num }}
+                            </a>
+                        {% endif %}
+                        {% elif num == 1 or num == paginator.num_pages %}
+                        <!-- always show first and last -->
+                        <a href="?page={{ num }}&per_page={{ per_page }}"
+                            class="relative inline-flex hidden md:inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-150">
+                            {{ num }}
+                        </a>
+                        {% elif num == appointments.number|add:-3 or num == appointments.number|add:3 %}
+                        <span class="relative inline-flex hidden md:inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                            …
+                        </span>
+                        {% endif %}
+                    {% endfor %}
+            
+                    {# Next #}
+                    {% if appointments.has_next %}
+                        <a href="?page={{ appointments.next_page_number }}&per_page={{ per_page }}"
+                        class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition duration-150">
+                        <span class="sr-only">Next</span>
+                        <!-- → -->
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M7.293 14.707a1 1 0 
+                                    010-1.414L10.586 10 7.293 6.707a1 1 0 
+                                    011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 
+                                    01-1.414 0z"
+                                clip-rule="evenodd"/>
+                        </svg>
+                        </a>
+                    {% else %}
+                        <span class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-400 cursor-not-allowed disabled:opacity-50">
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M7.293 14.707a1 1 0 
+                                    010-1.414L10.586 10 7.293 6.707a1 1 0 
+                                    011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 
+                                    01-1.414 0z"
+                                clip-rule="evenodd"/>
+                        </svg>
+                        </span>
+                    {% endif %}
+            
+                    </nav>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Add Lab Report Modal Background Overlay -->
+<div id="add-labreport-modal-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center transition-opacity duration-300 ease-in-out opacity-0">
+    <!-- Modal Container -->
+    <div id="add-labreport-modal" class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full mx-4 md:mx-auto max-h-[90vh] overflow-hidden flex flex-col transform transition-all duration-300 ease-in-out scale-95 opacity-0">
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gradient-to-r from-indigo-600 to-blue-500 text-white">
+        <h3 class="text-lg md:text-xl font-bold flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Add New Lab Report</span>
+        </h3>
+        
+        <button id="close-add-labreport-modal" class="bg-white bg-opacity-20 hover:bg-opacity-30 p-1.5 rounded-lg transition-all duration-200">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Modal Content -->
+      <div class="flex-1 overflow-y-auto p-6">
+        <form id="add-labreport-form">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Left Column -->
+            <div>
+              <!-- Patient Selection -->
+              <div class="mb-6">
+                <label for="patient-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Patient <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                  <select id="patient-select" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" required>
+                    <option value="">-- Select Patient --</option>
+                    <!-- Options will be populated from DataInfo using JavaScript -->
+                  </select>
+                  <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Doctor Selection -->
+              <div class="mb-6">
+                <label for="doctor-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Doctor <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                  <select id="doctor-select" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" required>
+                    <option value="">-- Select Doctor --</option>
+                    <!-- Options will be populated from DataInfo using JavaScript -->
+                  </select>
+                  <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Report Type -->
+              <div class="mb-6">
+                <label for="report-type-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Report Type <span class="text-red-500">*</span>
+                </label>
+                <input type="text" id="report-type-input" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="e.g., Blood Test, Lipid Panel" required>
+              </div>
+              
+              <!-- Status Selection -->
+              <div class="mb-6">
+                <label for="report-status-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Status <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                  <select id="report-status-select" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" required>
+                    <option value="normal">Normal</option>
+                    <option value="abnormal">Abnormal</option>
+                    <option value="pending">Pending</option>
+                    <option value="neutral">Neutral</option>
+                  </select>
+                  <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Right Column -->
+            <div>
+              <!-- Report Date -->
+              <div class="mb-6">
+                <label for="report-date-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Report Date <span class="text-red-500">*</span>
+                </label>
+                <input type="date" id="report-date-input" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+              </div>
+              
+              <!-- Report Description -->
+              <div class="mb-6">
+                <label for="report-description-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Report Description <span class="text-red-500">*</span>
+                </label>
+                <textarea id="report-description-input" rows="5" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Enter detailed report description" required></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Parameters Section -->
+          <div class="mt-6">
+            <div class="flex justify-between items-center mb-3">
+              <h4 class="text-lg font-medium text-gray-900 dark:text-white flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Test Parameters
+              </h4>
+              
+              <button type="button" id="add-new-parameter-btn" class="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Add Parameter
+              </button>
+            </div>
+            
+            <!-- Parameters Table -->
+            <div class="overflow-x-auto bg-white dark:bg-gray-700 rounded-lg shadow p-4">
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-600">
+                  <tr>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Parameter</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Result</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Reference Range</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                    <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="new-parameters-table-body" class="bg-white dark:bg-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
+                  <!-- Parameters will be populated here -->
+                </tbody>
+              </table>
+              
+              <!-- Empty State -->
+              <div id="no-new-parameters" class="py-4 text-center text-gray-500 dark:text-gray-400">
+                No parameters added yet
+              </div>
+              
+              <!-- Hidden input to store parameters -->
+              <input type="hidden" id="parameters-input" value="[]">
+            </div>
+          </div>
+          
+          <!-- Current User and Time Info -->
+          <div class="mt-4 text-sm text-gray-500 dark:text-gray-400 flex justify-between">
+            <div>Current User: <span id="current-user">{{ request.user.username }}</span></div>
+            <div>Current Time (UTC): <span id="current-time">{% now "Y-m-d H:i:s" %}</span></div>
+          </div>
+          
+          <!-- Submit Button -->
+          <div class="flex justify-end mt-8">
+            <button type="button" id="cancel-add-labreport-btn" class="mr-3 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              Cancel
+            </button>
+            <button type="submit" id="submit-labreport-btn" class="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center">
+              <span>Create Lab Report</span>
+              <svg id="labreport-submit-spinner" class="animate-spin ml-2 h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- New Parameter Form Modal -->
+  <div id="new-parameter-form-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-lg w-full mx-4 overflow-hidden">
+      <div class="px-6 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+        <h3 class="text-lg font-medium" id="new-parameter-form-title">Add Parameter</h3>
+      </div>
+      <div class="p-6">
+        <form id="new-parameter-form">
+          <input type="hidden" id="new-parameter-index" value="-1">
+          
+          <div class="mb-4">
+            <label for="new-parameter-name-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Parameter Name <span class="text-red-500">*</span></label>
+            <input type="text" id="new-parameter-name-input" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          </div>
+          
+          <div class="mb-4">
+            <label for="new-parameter-result-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Result <span class="text-red-500">*</span></label>
+            <input type="text" id="new-parameter-result-input" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          </div>
+          
+          <div class="mb-4">
+            <label for="new-parameter-range-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Reference Range <span class="text-red-500">*</span></label>
+            <input type="text" id="new-parameter-range-input" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          </div>
+          
+          <div class="mb-6">
+            <label for="new-parameter-status-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status <span class="text-red-500">*</span></label>
+            <select id="new-parameter-status-input" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+              <option value="normal">Normal</option>
+              <option value="high">High</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          
+          <div class="flex justify-end space-x-3">
+            <button type="button" id="cancel-new-parameter-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">
+              Cancel
+            </button>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+              Save Parameter
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+
+<!-- Lab Report Modal Background Overlay -->
+<div id="labreport-modal-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center transition-opacity duration-300 ease-in-out opacity-0">
+    <!-- Modal Container -->
+    <div id="labreport-modal" class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full mx-4 md:mx-auto max-h-[90vh] overflow-hidden flex flex-col transform transition-all duration-300 ease-in-out scale-95 opacity-0">
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gradient-to-r from-indigo-600 to-blue-500 text-white">
+        <h3 class="text-lg md:text-xl font-bold flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span id="report-modal-title">Lab Report Details</span>
+        </h3>
+        
+        <!-- Mode Indicators and Controls -->
+        <div class="flex items-center space-x-2">
+          <span id="report-mode-indicator" class="hidden md:inline-block text-sm font-medium bg-white bg-opacity-20 px-2 py-1 rounded">View Mode</span>
+          <button id="edit-report-mode-toggle" class="bg-white bg-opacity-20 hover:bg-opacity-30 p-1.5 rounded-lg transition-all duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+          </button>
+          <button id="close-report-modal" class="bg-white bg-opacity-20 hover:bg-opacity-30 p-1.5 rounded-lg transition-all duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Modal Content -->
+      <div id="report-modal-content" class="flex-1 overflow-y-auto p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Left Column - Patient & Doctor Info -->
+          <div class="md:col-span-1">
+            <!-- Report Info Card -->
+            <div class="bg-white dark:bg-gray-700 rounded-lg shadow p-4 mb-4">
+              <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-3 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Report Information
+              </h4>
+              
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Report Type</label>
+                  <div id="report-type" class="view-mode-element mt-1 font-medium text-gray-800 dark:text-white"></div>
+                  <div class="edit-mode-element" style="display: none;">
+                    <input type="text" id="report-type-input" class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" placeholder="e.g., Blood Test">
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Report Date</label>
+                  <div id="report-date" class="view-mode-element mt-1 text-gray-800 dark:text-white"></div>
+                  <div class="edit-mode-element" style="display: none;">
+                    <input type="date" id="report-date-input" class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Status</label>
+                  <div id="report-status-badge" class="view-mode-element mt-1"></div>
+                  <div class="edit-mode-element" style="display: none;">
+                    <select id="report-status-select" class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                      <option value="normal">Normal</option>
+                      <option value="abnormal">Abnormal</option>
+                      <option value="pending">Pending</option>
+                      <option value="neutral">Neutral</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Patient Info -->
+            <div class="bg-white dark:bg-gray-700 rounded-lg shadow p-4 mb-4">
+              <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                Patient
+              </h4>
+              <div id="patient-info" class="flex items-center">
+                <div class="ml-3">
+                  <p id="patient-name" class="font-medium text-gray-800 dark:text-white"></p>
+                  <p id="patient-username" class="text-sm text-gray-500 dark:text-gray-300"></p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Doctor Info -->
+            <div class="bg-white dark:bg-gray-700 rounded-lg shadow p-4">
+              <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                Doctor
+              </h4>
+              <div id="doctor-info" class="flex items-center">
+                <div class="ml-3">
+                  <p id="doctor-name" class="font-medium text-gray-800 dark:text-white"></p>
+                  <p id="doctor-username" class="text-sm text-gray-500 dark:text-gray-300"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right Column - Report Details -->
+          <div class="md:col-span-2">
+            <!-- Report Description -->
+            <div class="bg-white dark:bg-gray-700 rounded-lg shadow p-4 mb-4">
+              <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-3 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Report Description
+              </h4>
+              
+              <div id="report-description" class="view-mode-element mt-1 text-gray-800 dark:text-white whitespace-pre-line"></div>
+              <div class="edit-mode-element" style="display: none;">
+                <textarea id="report-description-input" rows="4" class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" placeholder="Enter report description"></textarea>
+              </div>
+            </div>
+            
+            <!-- Parameters Table -->
+            <div class="bg-white dark:bg-gray-700 rounded-lg shadow p-4">
+              <div class="flex justify-between items-center mb-3">
+                <h4 class="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  Test Parameters
+                </h4>
+                
+                <!-- Add Parameter Button (Edit Mode) -->
+                <button id="add-parameter-btn" class="edit-mode-element px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors flex items-center" style="display: none;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  Add Parameter
+                </button>
+              </div>
+              
+              <!-- Parameters Table -->
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                  <thead class="bg-gray-50 dark:bg-gray-600">
+                    <tr>
+                      <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Parameter</th>
+                      <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Result</th>
+                      <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Reference Range</th>
+                      <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                      <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider edit-mode-element" style="display: none;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="parameters-table-body" class="bg-white dark:bg-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
+                    <!-- Parameters will be populated here -->
+                  </tbody>
+                </table>
+                
+                <!-- Empty State -->
+                <div id="no-parameters" class="py-4 text-center text-gray-500 dark:text-gray-400 hidden">
+                  No parameters available for this report
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Created/Updated Info -->
+        <div class="mt-4 text-sm text-gray-500 dark:text-gray-400 flex justify-between">
+          <div>Created: <span id="created-at"></span></div>
+          <div>Last Updated: <span id="updated-at"></span></div>
+        </div>
+      </div>
+      
+      <!-- Modal Footer (for Edit Mode) -->
+      <div id="report-modal-footer" class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 edit-mode-element" style="display: none;">
+        <div class="flex justify-end space-x-3">
+          <button id="cancel-report-edit-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">
+            Cancel
+          </button>
+          <button id="save-report-edit-btn" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center">
+            <span>Save Changes</span>
+            <svg id="save-report-spinner" class="animate-spin ml-2 h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Parameter Form Modal (Edit Mode) -->
+  <div id="parameter-form-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-lg w-full mx-4 overflow-hidden">
+      <div class="px-6 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+        <h3 class="text-lg font-medium" id="parameter-form-title">Add Parameter</h3>
+      </div>
+      <div class="p-6">
+        <form id="parameter-form">
+          <input type="hidden" id="parameter-index" value="-1">
+          
+          <div class="mb-4">
+            <label for="parameter-name-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Parameter Name <span class="text-red-500">*</span></label>
+            <input type="text" id="parameter-name-input" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          </div>
+          
+          <div class="mb-4">
+            <label for="parameter-result-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Result <span class="text-red-500">*</span></label>
+            <input type="text" id="parameter-result-input" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          </div>
+          
+          <div class="mb-4">
+            <label for="parameter-range-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Reference Range <span class="text-red-500">*</span></label>
+            <input type="text" id="parameter-range-input" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          </div>
+          
+          <div class="mb-6">
+            <label for="parameter-status-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status <span class="text-red-500">*</span></label>
+            <select id="parameter-status-input" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+              <option value="normal">Normal</option>
+              <option value="high">High</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          
+          <div class="flex justify-end space-x-3">
+            <button type="button" id="cancel-parameter-btn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">
+              Cancel
+            </button>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+              Save Parameter
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+
+{% block scripts %}
+
+
+<script>
+        // Data for dropdown options
+        window.DataInfo = {
+            patient: [
+                {% for eachP in all_patients %}
+                {
+                    name: "{{ eachP.user.first_name }}",
+                    username: "{{ eachP.user.username }}",
+                },
+                {% endfor %}
+            ],
+            doctors: [
+                {% for eachD in all_doctors %}
+                {
+                    username: "{{ eachD.profile.user.username }}",
+                    name: "Dr. {{ eachD.profile.user.first_name }}",
+                    specialty: "{{ eachD.specialization }}"
+                },
+                {% endfor %}
+            ],
+        };
+
+
+        /**
+ * Add Lab Report Modal with API Integration
+ * A vanilla JavaScript implementation for a modal to add new lab reports
+ * Current date: 2025-06-27
+ */
+
+document.addEventListener('DOMContentLoaded', function() {
+    // DOM Elements
+    const addModalTriggers = document.getElementById('add-labreport-trigger');
+    const addModalOverlay = document.getElementById('add-labreport-modal-overlay');
+    const addModal = document.getElementById('add-labreport-modal');
+    const closeAddModalBtn = document.getElementById('close-add-labreport-modal');
+    const cancelAddBtn = document.getElementById('cancel-add-labreport-btn');
+    const addLabReportForm = document.getElementById('add-labreport-form');
+    const submitBtn = document.getElementById('submit-labreport-btn');
+    const submitSpinner = document.getElementById('labreport-submit-spinner');
+    
+    // Dropdown elements
+    const patientSelect = document.getElementById('patient-select');
+    const doctorSelect = document.getElementById('doctor-select');
+    
+    // Form input elements
+    const reportTypeInput = document.getElementById('report-type-input');
+    const reportDateInput = document.getElementById('report-date-input');
+    const reportStatusSelect = document.getElementById('report-status-select');
+    const reportDescriptionInput = document.getElementById('report-description-input');
+    
+    // Parameter management
+    const addNewParameterBtn = document.getElementById('add-new-parameter-btn');
+    const newParametersTableBody = document.getElementById('new-parameters-table-body');
+    const noNewParametersElem = document.getElementById('no-new-parameters');
+    const parametersInput = document.getElementById('parameters-input');
+    
+    // New Parameter Form Elements
+    const newParameterFormModal = document.getElementById('new-parameter-form-modal');
+    const newParameterForm = document.getElementById('new-parameter-form');
+    const newParameterFormTitle = document.getElementById('new-parameter-form-title');
+    const newParameterIndexInput = document.getElementById('new-parameter-index');
+    const newParameterNameInput = document.getElementById('new-parameter-name-input');
+    const newParameterResultInput = document.getElementById('new-parameter-result-input');
+    const newParameterRangeInput = document.getElementById('new-parameter-range-input');
+    const newParameterStatusInput = document.getElementById('new-parameter-status-input');
+    const cancelNewParameterBtn = document.getElementById('cancel-new-parameter-btn');
+    
+    // Parameters array
+    let newParameters = [];
+    
+    // Status color mapping for parameters
+    const parameterStatusColors = {
+        'normal': 'bg-green-100 text-green-800',
+        'high': 'bg-red-100 text-red-800',
+        'low': 'bg-yellow-100 text-yellow-800'
+    };
+    
+    // Status display names
+    const parameterStatusDisplayNames = {
+        'normal': 'Normal',
+        'high': 'High',
+        'low': 'Low'
+    };
+    
+    // Initialize dropdown options using window.DataInfo if available
+    initializeDropdowns();
+    
+    // Set default date
+    if (reportDateInput) {
+        // Set to current date if empty
+        if (!reportDateInput.value) {
+            const today = new Date();
+            reportDateInput.value = formatDateForInput(today);
+        }
+    }
+    
+    // ---- Event Listeners ----
+    
+    // Open modal when clicking add lab report buttons
+    addModalTriggers.addEventListener('click', openAddModal);
+    
+    // Close modal when clicking the close button or cancel button
+    closeAddModalBtn.addEventListener('click', closeAddModal);
+    cancelAddBtn.addEventListener('click', closeAddModal);
+    
+    // Close modal when clicking outside
+    addModalOverlay.addEventListener('click', function(e) {
+        if (e.target === addModalOverlay) {
+            closeAddModal();
+        }
+    });
+    
+    // Add parameter button
+    if (addNewParameterBtn) {
+        addNewParameterBtn.addEventListener('click', function() {
+            openNewParameterForm();
+        });
+    }
+    
+    // Cancel parameter button
+    if (cancelNewParameterBtn) {
+        cancelNewParameterBtn.addEventListener('click', function() {
+            closeNewParameterForm();
+        });
+    }
+    
+    // Parameter form submission
+    if (newParameterForm) {
+        newParameterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveNewParameter();
+        });
+    }
+    
+    // Delegate click events for parameter actions (using event delegation)
+    document.addEventListener('click', function(e) {
+        // Edit parameter button
+        if (e.target.closest('.edit-new-parameter-btn')) {
+            const parameterRow = e.target.closest('tr');
+            const parameterIndex = parseInt(parameterRow.dataset.index);
+            editNewParameter(parameterIndex);
+        }
+        
+        // Delete parameter button
+        if (e.target.closest('.delete-new-parameter-btn')) {
+            const parameterRow = e.target.closest('tr');
+            const parameterIndex = parseInt(parameterRow.dataset.index);
+            deleteNewParameter(parameterIndex);
+        }
+    });
+    
+    // Form submission via API
+    if (addLabReportForm) {
+        addLabReportForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            // Validate form fields
+            if (!validateForm()) {
+                return false;
+            }
+            
+            // Disable submit button and show spinner
+            submitBtn.disabled = true;
+            submitSpinner.classList.remove('hidden');
+            
+            // Prepare data for API request
+            const reportData = {
+                patient_username: patientSelect.value,
+                doctor_username: doctorSelect.value,
+                report_type: reportTypeInput.value,
+                report_date: reportDateInput.value,
+                status: reportStatusSelect.value,
+                report_description: reportDescriptionInput.value,
+                parameters: newParameters
+            };
+            
+            // Make API request
+            fetch('/m/labreport-mng/create/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}' // Use Django's CSRF token
+                },
+                body: JSON.stringify(reportData)
+            })
+                .then(response => {
+                    // Show success notification
+                    showNotification({
+                        color: "bg-green-500",
+                        title: "Success ✅",
+                        message: "Lab report created successfully."
+                    });
+                    
+                    // Close the modal
+                    closeAddModal();
+
+                    location.reload(); // Uncomment to reload the page
+                  
+                })
+                .catch(error => {
+                    // Show error notification
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Error",
+                        message: error.message || "Failed to create lab report."
+                    });
+                })
+                .finally(() => {
+                    // Re-enable submit button and hide spinner
+                    submitBtn.disabled = false;
+                    submitSpinner.classList.add('hidden');
+                });
+            
+            return false;
+        });
+    }
+    
+    // ---- Functions ----
+    
+    /**
+     * Initialize dropdown options using window.DataInfo
+     */
+    function initializeDropdowns() {
+        // Check if DataInfo exists
+        if (!window.DataInfo) {
+            console.error('DataInfo not found');
+            return;
+        }
+        
+        // Populate Patient dropdown
+        if (patientSelect && window.DataInfo.patient) {
+            // Clear existing options except the first one (placeholder)
+            while (patientSelect.options.length > 1) {
+                patientSelect.remove(1);
+            }
+            
+            // Add new options
+            window.DataInfo.patient.forEach(patient => {
+                const option = document.createElement('option');
+                option.value = patient.username;
+                option.textContent = `${patient.name} (@${patient.username})`;
+                patientSelect.appendChild(option);
+            });
+        }
+        
+        // Populate Doctor dropdown
+        if (doctorSelect && window.DataInfo.doctors) {
+            // Clear existing options except the first one (placeholder)
+            while (doctorSelect.options.length > 1) {
+                doctorSelect.remove(1);
+            }
+            
+            // Add new options
+            window.DataInfo.doctors.forEach(doctor => {
+                const option = document.createElement('option');
+                option.value = doctor.username;
+                option.textContent = `${doctor.name} (${doctor.specialty})`;
+                doctorSelect.appendChild(option);
+            });
+        }
+    }
+    
+    /**
+     * Validate the form fields
+     * @returns {boolean} Whether the form is valid
+     */
+    function validateForm() {
+        let isValid = true;
+        let firstInvalidField = null;
+        
+        // Required fields
+        const requiredFields = [
+            { field: patientSelect, name: 'Patient' },
+            { field: doctorSelect, name: 'Doctor' },
+            { field: reportTypeInput, name: 'Report Type' },
+            { field: reportDateInput, name: 'Report Date' },
+            { field: reportDescriptionInput, name: 'Report Description' }
+        ];
+        
+        // Check each required field
+        requiredFields.forEach(item => {
+            if (!item.field.value.trim()) {
+                isValid = false;
+                showFieldError(item.field, `${item.name} is required`);
+                if (!firstInvalidField) {
+                    firstInvalidField = item.field;
+                }
+            } else {
+                clearFieldError(item.field);
+            }
+        });
+        
+        // Focus on the first invalid field
+        if (firstInvalidField) {
+            firstInvalidField.focus();
+        }
+        
+        return isValid;
+    }
+    
+    /**
+     * Show an error message for a field
+     * @param {HTMLElement} field - The field with the error
+     * @param {string} message - The error message
+     */
+    function showFieldError(field, message) {
+        // Clear any existing error
+        clearFieldError(field);
+        
+        // Add error class to the field
+        field.classList.add('border-red-500');
+        
+        // Create error message element
+        const errorElement = document.createElement('p');
+        errorElement.className = 'mt-1 text-sm text-red-600 field-error';
+        errorElement.textContent = message;
+        
+        // Insert the error message after the field
+        field.parentNode.insertBefore(errorElement, field.nextSibling);
+    }
+    
+    /**
+     * Clear error message for a field
+     * @param {HTMLElement} field - The field to clear errors for
+     */
+    function clearFieldError(field) {
+        // Remove error class
+        field.classList.remove('border-red-500');
+        
+        // Remove any existing error messages
+        const errorElements = field.parentNode.querySelectorAll('.field-error');
+        errorElements.forEach(el => el.remove());
+    }
+    
+    /**
+     * Open the add lab report modal
+     */
+    function openAddModal() {
+        // Reset form if it exists
+        if (addLabReportForm) {
+            addLabReportForm.reset();
+            
+            // Clear error messages
+            document.querySelectorAll('.field-error').forEach(el => el.remove());
+            document.querySelectorAll('.border-red-500').forEach(el => el.classList.remove('border-red-500'));
+            
+            // Clear parameters
+            newParameters = [];
+            updateNewParametersTable();
+            
+            // Set default date
+            const today = new Date();
+            if (reportDateInput) {
+                reportDateInput.value = formatDateForInput(today);
+            }
+        }
+        
+        // Show the modal with animation
+        addModalOverlay.classList.remove('hidden');
+        setTimeout(() => {
+            addModalOverlay.classList.add('opacity-100');
+            addModal.classList.add('opacity-100', 'scale-100');
+            addModal.classList.remove('scale-95', 'opacity-0');
+        }, 10);
+        
+        // Default focus on the first field
+        if (patientSelect) {
+            setTimeout(() => {
+                patientSelect.focus();
+            }, 300);
+        }
+    }
+    
+    /**
+     * Close the add lab report modal
+     */
+    function closeAddModal() {
+        // Hide the modal with animation
+        addModalOverlay.classList.remove('opacity-100');
+        addModal.classList.remove('opacity-100', 'scale-100');
+        addModal.classList.add('scale-95', 'opacity-0');
+        
+        setTimeout(() => {
+            addModalOverlay.classList.add('hidden');
+        }, 300);
+    }
+    
+    /**
+     * Open the parameter form for adding a new parameter
+     */
+    function openNewParameterForm(paramIndex = -1) {
+        // Set form title
+        newParameterFormTitle.textContent = paramIndex >= 0 ? 'Edit Parameter' : 'Add Parameter';
+        
+        // Clear form fields
+        newParameterForm.reset();
+        
+        // Set parameter index (for editing)
+        newParameterIndexInput.value = paramIndex;
+        
+        // If editing, populate form with parameter data
+        if (paramIndex >= 0 && paramIndex < newParameters.length) {
+            const param = newParameters[paramIndex];
+            newParameterNameInput.value = param.parameter_name;
+            newParameterResultInput.value = param.result;
+            newParameterRangeInput.value = param.reference_range;
+            newParameterStatusInput.value = param.status;
+        }
+        
+        // Show the form modal
+        newParameterFormModal.classList.remove('hidden');
+        
+        // Focus on the first field
+        newParameterNameInput.focus();
+    }
+    
+    /**
+     * Close the parameter form
+     */
+    function closeNewParameterForm() {
+        newParameterFormModal.classList.add('hidden');
+    }
+    
+    /**
+     * Save the parameter from the form
+     */
+    function saveNewParameter() {
+        // Get form values
+        const paramIndex = parseInt(newParameterIndexInput.value);
+        const paramName = newParameterNameInput.value.trim();
+        const paramResult = newParameterResultInput.value.trim();
+        const paramRange = newParameterRangeInput.value.trim();
+        const paramStatus = newParameterStatusInput.value;
+        
+        // Validate required fields
+        if (!paramName || !paramResult || !paramRange) {
+            showNotification({
+                color: "bg-red-500",
+                title: "Validation Error",
+                message: "All fields are required."
+            });
+            return;
+        }
+        
+        // Create parameter object
+        const paramObject = {
+            parameter_name: paramName,
+            result: paramResult,
+            reference_range: paramRange,
+            status: paramStatus
+        };
+        
+        // Add or update parameter
+        if (paramIndex >= 0) {
+            // Update existing parameter
+            newParameters[paramIndex] = paramObject;
+        } else {
+            // Add new parameter
+            newParameters.push(paramObject);
+        }
+        
+        // Update parameters table
+        updateNewParametersTable();
+        
+        // Close the form
+        closeNewParameterForm();
+        
+        // Show success notification
+        showNotification({
+            color: "bg-green-500",
+            title: "Success ✅",
+            message: paramIndex >= 0 ? "Parameter updated successfully." : "Parameter added successfully."
+        });
+    }
+    
+    /**
+     * Update the parameters table
+     */
+    function updateNewParametersTable() {
+        // Clear existing rows
+        newParametersTableBody.innerHTML = '';
+        
+        // Update hidden input
+        updateParametersInput();
+        
+        if (newParameters.length > 0) {
+            noNewParametersElem.style.display = 'none';
+            
+            // Create table rows for each parameter
+            newParameters.forEach((param, index) => {
+                const row = document.createElement('tr');
+                row.dataset.index = index;
+                
+                // Create status badge
+                const statusClass = parameterStatusColors[param.status] || 'bg-gray-100 text-gray-800';
+                const statusText = parameterStatusDisplayNames[param.status] || param.status;
+                
+                row.innerHTML = `
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">${param.parameter_name}</div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="text-sm text-gray-900 dark:text-white">${param.result}</div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="text-sm text-gray-500 dark:text-gray-300">${param.reference_range}</div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                            ${statusText}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                        <button type="button" class="edit-new-parameter-btn text-indigo-600 hover:text-indigo-900 mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                        </button>
+                        <button type="button" class="delete-new-parameter-btn text-red-600 hover:text-red-900">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </td>
+                `;
+                
+                newParametersTableBody.appendChild(row);
+            });
+        } else {
+            noNewParametersElem.style.display = '';
+        }
+    }
+    
+    /**
+     * Update the hidden input with parameters
+     */
+    function updateParametersInput() {
+        if (parametersInput) {
+            parametersInput.value = JSON.stringify(newParameters);
+        }
+    }
+    
+    /**
+     * Edit a parameter
+     * @param {number} index - The index of the parameter to edit
+     */
+    function editNewParameter(index) {
+        if (index >= 0 && index < newParameters.length) {
+            openNewParameterForm(index);
+        }
+    }
+    
+    /**
+     * Delete a parameter
+     * @param {number} index - The index of the parameter to delete
+     */
+    function deleteNewParameter(index) {
+        if (index >= 0 && index < newParameters.length) {
+            if (confirm('Are you sure you want to delete this parameter?')) {
+                newParameters.splice(index, 1);
+                updateNewParametersTable();
+                
+                showNotification({
+                    color: "bg-green-500",
+                    title: "Success ✅",
+                    message: "Parameter deleted successfully."
+                });
+            }
+        }
+    }
+    
+    /**
+     * Format a date for the date input
+     * @param {Date} date - The date to format
+     * @returns {string} Formatted date (YYYY-MM-DD)
+     */
+    function formatDateForInput(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+    
+    // Initialize on load
+    initializeDropdowns();
+});
+</script>
+
+
+<script>
+    window.ReportData= [
+        {% for each_report in lab_reports %}
+        {
+            uuid: "{{ each_report.uuid }}",
+            report_date: "{{ each_report.report_date }}",
+            report_type: "{{ each_report.report_type }}",
+            status: "{{ each_report.status }}",
+            doctor_name: "{{ each_report.doctor.profile.user.first_name }}",
+            doctor_username: "{{ each_report.doctor.profile.user.username }}",
+            patient_name: "{{ each_report.patient_profile.user.first_name }}",
+            patient_username: "{{ each_report.patient_profile.user.username }}",
+            report_description: "{{ each_report.report_description|escapejs }}",
+
+            parameters:[
+                {% for parameter in each_report.parameters.all %}
+                {
+                    parameter_name: "{{ parameter.parameter_name }}",
+                    result: "{{ parameter.result }}",
+                    reference_range: "{{ parameter.reference_range }}",
+                    status: "{{ parameter.status }}"
+                },
+                {% endfor %}
+            ],
+
+            created_at: "{{ each_report.created_at }}",
+            updated_at: "{{ each_report.updated_at }}"
+        },
+        {% endfor %}
+    ]
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // DOM Elements
+        const modalOverlay = document.getElementById('labreport-modal-overlay');
+        const modal = document.getElementById('labreport-modal');
+        const closeModalBtn = document.getElementById('close-report-modal');
+        const editModeToggle = document.getElementById('edit-report-mode-toggle');
+        const modeIndicator = document.getElementById('report-mode-indicator');
+        const cancelEditBtn = document.getElementById('cancel-report-edit-btn');
+        const saveEditBtn = document.getElementById('save-report-edit-btn');
+        const saveSpinner = document.getElementById('save-report-spinner');
+        const modalFooter = document.getElementById('report-modal-footer');
+        
+        // Parameter Form Elements
+        const parameterFormModal = document.getElementById('parameter-form-modal');
+        const parameterForm = document.getElementById('parameter-form');
+        const parameterFormTitle = document.getElementById('parameter-form-title');
+        const parameterIndexInput = document.getElementById('parameter-index');
+        const parameterNameInput = document.getElementById('parameter-name-input');
+        const parameterResultInput = document.getElementById('parameter-result-input');
+        const parameterRangeInput = document.getElementById('parameter-range-input');
+        const parameterStatusInput = document.getElementById('parameter-status-input');
+        const cancelParameterBtn = document.getElementById('cancel-parameter-btn');
+        const addParameterBtn = document.getElementById('add-parameter-btn');
+        
+        // Current report data and state
+        let currentReport = null;
+        let isEditMode = false;
+        let tempParameters = []; // For storing temporary parameters in edit mode
+        let originalData = null; // For storing original data to revert changes
+        
+        // Status color mapping for lab report
+        const reportStatusColors = {
+            'normal': 'bg-green-100 text-green-800',
+            'abnormal': 'bg-red-100 text-red-800',
+            'pending': 'bg-yellow-100 text-yellow-800',
+            'neutral': 'bg-blue-100 text-blue-800'
+        };
+        
+        // Status color mapping for parameters
+        const parameterStatusColors = {
+            'normal': 'bg-green-100 text-green-800',
+            'high': 'bg-red-100 text-red-800',
+            'low': 'bg-yellow-100 text-yellow-800'
+        };
+        
+        // Status display names
+        const reportStatusDisplayNames = {
+            'normal': 'Normal',
+            'abnormal': 'Abnormal',
+            'pending': 'Pending',
+            'neutral': 'Neutral'
+        };
+        
+        const parameterStatusDisplayNames = {
+            'normal': 'Normal',
+            'high': 'High',
+            'low': 'Low'
+        };
+        
+        // ---- Event Listeners ----
+        
+        // Close modal when clicking the close button or outside the modal
+        closeModalBtn.addEventListener('click', function(e) {
+            // If in edit mode with unsaved changes, confirm before closing
+            if (isEditMode && hasUnsavedChanges()) {
+                if (confirm('You have unsaved changes. Are you sure you want to close?')) {
+                    closeModal();
+                }
+            } else {
+                closeModal();
+            }
+        });
+        
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === modalOverlay) {
+                // If in edit mode with unsaved changes, confirm before closing
+                if (isEditMode && hasUnsavedChanges()) {
+                    if (confirm('You have unsaved changes. Are you sure you want to close?')) {
+                        closeModal();
+                    }
+                } else {
+                    closeModal();
+                }
+            }
+        });
+        
+        // Toggle edit mode
+        editModeToggle.addEventListener('click', function() {
+            if (isEditMode && hasUnsavedChanges()) {
+                if (confirm('You have unsaved changes. Are you sure you want to exit edit mode?')) {
+                    toggleEditMode(false);
+                }
+            } else {
+                toggleEditMode(!isEditMode);
+            }
+        });
+        
+        // Cancel edit button
+        cancelEditBtn.addEventListener('click', function() {
+            if (hasUnsavedChanges()) {
+                if (confirm('You have unsaved changes. Are you sure you want to cancel?')) {
+                    revertChanges();
+                    toggleEditMode(false);
+                }
+            } else {
+                toggleEditMode(false);
+            }
+        });
+        
+        // Save changes button
+        saveEditBtn.addEventListener('click', function() {
+            saveChanges();
+        });
+        
+        // Add parameter button
+        if (addParameterBtn) {
+            addParameterBtn.addEventListener('click', function() {
+                openParameterForm();
+            });
+        }
+        
+        // Cancel parameter button
+        if (cancelParameterBtn) {
+            cancelParameterBtn.addEventListener('click', function() {
+                closeParameterForm();
+            });
+        }
+        
+        // Parameter form submission
+        if (parameterForm) {
+            parameterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveParameter();
+            });
+        }
+        
+        // Delegate click events for parameter actions (using event delegation)
+        document.addEventListener('click', function(e) {
+            // Edit parameter button
+            if (e.target.closest('.edit-parameter-btn')) {
+                const parameterRow = e.target.closest('tr');
+                const parameterIndex = parseInt(parameterRow.dataset.index);
+                editParameter(parameterIndex);
+            }
+            
+            // Delete parameter button
+            if (e.target.closest('.delete-parameter-btn')) {
+                const parameterRow = e.target.closest('tr');
+                const parameterIndex = parseInt(parameterRow.dataset.index);
+                deleteParameter(parameterIndex);
+            }
+        });
+        
+        // Listen for trigger buttons throughout the page
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.labreport-modal-trigger')) {
+                const trigger = e.target.closest('.labreport-modal-trigger');
+                const uuid = trigger.dataset.uuid;
+                if (uuid) {
+                    openModal(uuid);
+                }
+            }
+        });
+        
+        // ---- Functions ----
+        
+        /**
+         * Check if there are unsaved changes in edit mode
+         * @returns {boolean} True if there are unsaved changes
+         */
+        function hasUnsavedChanges() {
+            if (!isEditMode || !originalData) return false;
+            
+            const reportType = document.getElementById('report-type-input').value;
+            const reportDate = document.getElementById('report-date-input').value;
+            const reportStatus = document.getElementById('report-status-select').value;
+            const reportDescription = document.getElementById('report-description-input').value;
+            
+            // Check if any of the fields are different from the original data
+            if (reportType !== originalData.report_type) return true;
+            if (reportDate !== originalData.report_date) return true;
+            if (reportStatus !== originalData.status) return true;
+            if (reportDescription !== originalData.report_description) return true;
+            
+            // Check if parameters have changed
+            if (JSON.stringify(tempParameters) !== JSON.stringify(originalData.parameters)) return true;
+            
+            return false;
+        }
+        
+        /**
+         * Revert changes to original data
+         */
+        function revertChanges() {
+            if (!originalData) return;
+            
+            // Restore form fields to original values
+            document.getElementById('report-type-input').value = originalData.report_type;
+            document.getElementById('report-date-input').value = originalData.report_date;
+            document.getElementById('report-status-select').value = originalData.status;
+            document.getElementById('report-description-input').value = originalData.report_description;
+            
+            // Restore parameters
+            tempParameters = JSON.parse(JSON.stringify(originalData.parameters));
+            updateParametersTable(tempParameters);
+        }
+        
+        /**
+         * Open the modal and load report data
+         * @param {string} uuid - The UUID of the report to display
+         */
+        function openModal(uuid) {
+            // Find the report data from the global array
+            const report = window.ReportData.find(r => r.uuid === uuid);
+            
+            if (!report) {
+                console.error('Lab report not found:', uuid);
+                return;
+            }
+            
+            // Store the current report data
+            currentReport = report;
+            
+            // Reset edit mode
+            toggleEditMode(false);
+            
+            // Populate the modal with report data
+            populateModalData(report);
+            
+            // Show the modal with animation
+            modalOverlay.classList.remove('hidden');
+            setTimeout(() => {
+                modalOverlay.classList.add('opacity-100');
+                modal.classList.add('opacity-100', 'scale-100');
+                modal.classList.remove('scale-95', 'opacity-0');
+            }, 10);
+            
+            // Show edit button
+            editModeToggle.style.display = '';
+        }
+        
+        /**
+         * Close the modal with animation
+         */
+        function closeModal() {
+            // Hide the modal with animation
+            modalOverlay.classList.remove('opacity-100');
+            modal.classList.remove('opacity-100', 'scale-100');
+            modal.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modalOverlay.classList.add('hidden');
+                // Clear current report data
+                currentReport = null;
+                originalData = null;
+            }, 300);
+        }
+        
+        /**
+         * Populate the modal with report data
+         * @param {Object} report - The report data object
+         */
+        function populateModalData(report) {
+            // Report info
+            document.getElementById('report-type').textContent = report.report_type;
+            document.getElementById('report-date').textContent = formatDate(report.report_date);
+            
+            // Status badge
+            const statusBadge = document.getElementById('report-status-badge');
+            statusBadge.textContent = reportStatusDisplayNames[report.status] || report.status;
+            statusBadge.className = 'view-mode-element inline-block px-2 py-1 rounded-full text-xs font-medium ' + 
+                                   (reportStatusColors[report.status] || 'bg-gray-100 text-gray-800');
+            
+            // Patient info
+            document.getElementById('patient-name').textContent = report.patient_name;
+            document.getElementById('patient-username').textContent = '@' + report.patient_username;
+            
+            // Doctor info
+            document.getElementById('doctor-name').textContent = report.doctor_name;
+            document.getElementById('doctor-username').textContent = '@' + report.doctor_username;
+            
+            // Report description
+            document.getElementById('report-description').textContent = report.report_description;
+            
+            // Timestamps
+            document.getElementById('created-at').textContent = formatDateTime(report.created_at);
+            document.getElementById('updated-at').textContent = formatDateTime(report.updated_at);
+            
+            // Form inputs (for edit mode)
+            document.getElementById('report-type-input').value = report.report_type;
+            document.getElementById('report-date-input').value = new Date(report.report_date).toISOString().split('T')[0];
+            document.getElementById('report-status-select').value = report.status;
+            document.getElementById('report-description-input').value = report.report_description;
+            
+            // Parameters
+            updateParametersTable(report.parameters);
+            
+            // Store original data for reverting changes
+            originalData = {
+                report_type: report.report_type,
+                report_date: report.report_date,
+                status: report.status,
+                report_description: report.report_description,
+                parameters: JSON.parse(JSON.stringify(report.parameters || []))
+            };
+            
+            // Store a copy of the parameters for edit mode
+            tempParameters = JSON.parse(JSON.stringify(report.parameters || []));
+        }
+        
+        /**
+         * Update the parameters table
+         * @param {Array} parameters - Array of parameter objects
+         */
+        function updateParametersTable(parameters) {
+            const tableBody = document.getElementById('parameters-table-body');
+            const noParametersElem = document.getElementById('no-parameters');
+            
+            // Clear existing rows
+            tableBody.innerHTML = '';
+            
+            if (parameters && parameters.length > 0) {
+                noParametersElem.classList.add('hidden');
+                
+                // Create table rows for each parameter
+                parameters.forEach((param, index) => {
+                    const row = document.createElement('tr');
+                    row.dataset.index = index;
+                    
+                    // Create status badge
+                    const statusClass = parameterStatusColors[param.status] || 'bg-gray-100 text-gray-800';
+                    const statusText = parameterStatusDisplayNames[param.status] || param.status;
+                    
+                    row.innerHTML = `
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900 dark:text-white">${param.parameter_name}</div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <div class="text-sm text-gray-900 dark:text-white">${param.result}</div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <div class="text-sm text-gray-500 dark:text-gray-300">${param.reference_range}</div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                                ${statusText}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium edit-mode-element" style="display: ${isEditMode ? 'table-cell' : 'none'}">
+                            <button class="edit-parameter-btn text-indigo-600 hover:text-indigo-900 mr-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                            </button>
+                            <button class="delete-parameter-btn text-red-600 hover:text-red-900">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            } else {
+                noParametersElem.classList.remove('hidden');
+            }
+        }
+        
+        /**
+         * Toggle edit mode
+         * @param {boolean} enable - Whether to enable edit mode
+         */
+        function toggleEditMode(enable) {
+            isEditMode = enable;
+            
+            // Toggle view/edit fields
+            const viewModeElements = document.querySelectorAll('.view-mode-element');
+            const editModeElements = document.querySelectorAll('.edit-mode-element');
+            
+            viewModeElements.forEach(element => {
+                if (element.tagName === 'TD') {
+                    element.style.display = enable ? 'none' : 'table-cell';
+                } else {
+                    element.style.display = enable ? 'none' : '';
+                }
+            });
+            
+            editModeElements.forEach(element => {
+                if (element.tagName === 'TD') {
+                    element.style.display = enable ? 'table-cell' : 'none';
+                } else {
+                    element.style.display = enable ? '' : 'none';
+                }
+            });
+            
+            // Update mode indicator and toggle button
+            modeIndicator.textContent = enable ? 'Edit Mode' : 'View Mode';
+            
+            // Update edit button icon
+            editModeToggle.innerHTML = enable ? 
+                `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>` : 
+                `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>`;
+            
+            // If canceling edit, reset the form values
+            if (!enable && currentReport) {
+                // This will be handled by revertChanges if there are unsaved changes
+                // Otherwise, just reset the values to match currentReport
+                document.getElementById('report-type-input').value = currentReport.report_type;
+                document.getElementById('report-date-input').value = currentReport.report_date;
+                document.getElementById('report-status-select').value = currentReport.status;
+                document.getElementById('report-description-input').value = currentReport.report_description;
+                
+                // Reset parameters
+                tempParameters = JSON.parse(JSON.stringify(currentReport.parameters || []));
+                updateParametersTable(tempParameters);
+            }
+        }
+        
+        /**
+         * Open the parameter form for adding a new parameter
+         */
+        function openParameterForm(paramIndex = -1) {
+            // Set form title
+            parameterFormTitle.textContent = paramIndex >= 0 ? 'Edit Parameter' : 'Add Parameter';
+            
+            // Clear form fields
+            parameterForm.reset();
+            
+            // Set parameter index (for editing)
+            parameterIndexInput.value = paramIndex;
+            
+            // If editing, populate form with parameter data
+            if (paramIndex >= 0 && paramIndex < tempParameters.length) {
+                const param = tempParameters[paramIndex];
+                parameterNameInput.value = param.parameter_name;
+                parameterResultInput.value = param.result;
+                parameterRangeInput.value = param.reference_range;
+                parameterStatusInput.value = param.status;
+            }
+            
+            // Show the form modal
+            parameterFormModal.classList.remove('hidden');
+        }
+        
+        /**
+         * Close the parameter form
+         */
+        function closeParameterForm() {
+            parameterFormModal.classList.add('hidden');
+        }
+        
+        /**
+         * Save the parameter from the form
+         */
+        function saveParameter() {
+            // Get form values
+            const paramIndex = parseInt(parameterIndexInput.value);
+            const paramName = parameterNameInput.value.trim();
+            const paramResult = parameterResultInput.value.trim();
+            const paramRange = parameterRangeInput.value.trim();
+            const paramStatus = parameterStatusInput.value;
+            
+            // Validate required fields
+            if (!paramName || !paramResult || !paramRange) {
+                showNotification({
+                    color: "bg-red-500",
+                    title: "Validation Error",
+                    message: "All fields are required."
+                });
+                return;
+            }
+            
+            // Create parameter object
+            const paramObject = {
+                parameter_name: paramName,
+                result: paramResult,
+                reference_range: paramRange,
+                status: paramStatus
+            };
+            
+            // Add or update parameter
+            if (paramIndex >= 0) {
+                // Update existing parameter
+                tempParameters[paramIndex] = paramObject;
+            } else {
+                // Add new parameter
+                tempParameters.push(paramObject);
+            }
+            
+            // Update parameters table
+            updateParametersTable(tempParameters);
+            
+            // Close the form
+            closeParameterForm();
+            
+            // Show success notification
+            showNotification({
+                color: "bg-green-500",
+                title: "Success ✅",
+                message: paramIndex >= 0 ? "Parameter updated successfully, Now Hit Save To Update." : "Parameter added successfully, Now Hit Save To Update."
+            });
+        }
+        
+        /**
+         * Edit a parameter
+         * @param {number} index - The index of the parameter to edit
+         */
+        function editParameter(index) {
+            if (index >= 0 && index < tempParameters.length) {
+                openParameterForm(index);
+            }
+        }
+        
+        /**
+         * Delete a parameter
+         * @param {number} index - The index of the parameter to delete
+         */
+        function deleteParameter(index) {
+            if (index >= 0 && index < tempParameters.length) {
+                if (confirm('Are you sure you want to delete this parameter?')) {
+                    tempParameters.splice(index, 1);
+                    updateParametersTable(tempParameters);
+                    
+                    showNotification({
+                        color: "bg-green-500",
+                        title: "Success ✅",
+                        message: "Parameter deleted successfully."
+                    });
+                }
+            }
+        }
+        
+        /**
+         * Save changes to the report
+         */
+        function saveChanges() {
+            if (!currentReport) {
+                return;
+            }
+            
+            // Get values from form
+            const reportType = document.getElementById('report-type-input').value.trim();
+            const reportDate = document.getElementById('report-date-input').value;
+            const reportStatus = document.getElementById('report-status-select').value;
+            const reportDescription = document.getElementById('report-description-input').value.trim();
+            
+            // Basic validation
+            if (!reportType) {
+                showNotification({
+                    color: "bg-red-500",
+                    title: "Validation Error",
+                    message: "Report type is required."
+                });
+                return;
+            }
+            
+            if (!reportDate) {
+                showNotification({
+                    color: "bg-red-500",
+                    title: "Validation Error",
+                    message: "Report date is required."
+                });
+                return;
+            }
+            
+            if (!reportDescription) {
+                showNotification({
+                    color: "bg-red-500",
+                    title: "Validation Error",
+                    message: "Report description is required."
+                });
+                return;
+            }
+            
+            // Show loading state
+            saveEditBtn.disabled = true;
+            saveSpinner.classList.remove('hidden');
+            
+            // Prepare the data to send
+            const updatedData = {
+                report_type: reportType,
+                report_date: reportDate,
+                status: reportStatus,
+                report_description: reportDescription,
+                parameters: tempParameters
+            };
+            
+            // In a real application, you would send this data to the server
+            // For example:
+            fetch('/m/edit-labreport-mng/' + currentReport.uuid + '/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}' 
+                },
+                body: JSON.stringify(updatedData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Update the current report with the returned data
+                Object.assign(currentReport, data);
+                
+                // Update the UI with the returned data
+                populateModalData(currentReport);
+                toggleEditMode(false);
+                
+                // Show success message
+                showNotification({
+                    color: "bg-green-500",
+                    title: "Success ✅",
+                    message: "Lab report updated successfully."
+                });
+            })
+            .catch(error => {
+                console.error('Error saving lab report:', error);
+                showNotification({
+                    color: "bg-red-500",
+                    title: "Update Failed",
+                    message: "Failed to save changes. Please try again."
+                });
+            })
+            .finally(() => {
+                // Reset button state
+                saveEditBtn.disabled = false;
+                saveSpinner.classList.add('hidden');
+            });
+            
+        }
+        
+        /**
+         * Format a date string to a more readable format
+         * @param {string} dateStr - ISO date string
+         * @returns {string} Formatted date string
+         */
+        function formatDate(dateStr) {
+            if (!dateStr) return 'N/A';
+            
+            const date = new Date(dateStr);
+            if (isNaN(date)) return dateStr;
+            
+            return new Intl.DateTimeFormat('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }).format(date);
+        }
+        
+        /**
+         * Format a datetime string to a more readable format
+         * @param {string} dateTimeStr - ISO datetime string
+         * @returns {string} Formatted datetime string
+         */
+        function formatDateTime(dateTimeStr) {
+            if (!dateTimeStr) return 'N/A';
+            
+            const date = new Date(dateTimeStr);
+            if (isNaN(date)) return dateTimeStr;
+            
+            return new Intl.DateTimeFormat('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            }).format(date);
+        }
+    });
+</script>
+
+
+
+<script>
+    dashboard_nav_all = document.querySelectorAll('.labReport-nav a');
+    console.log(dashboard_nav_all);
+    
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
+
+{% endblock scripts %}

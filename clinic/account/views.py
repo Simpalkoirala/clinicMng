@@ -6,13 +6,20 @@ from functools import wraps
 from datetime import datetime
 from django.urls import reverse
 
+from home.send_email import send_custom_email
+from account.models import Profile
+import uuid
+from datetime import timedelta
+
+from django.conf import settings
+DOMAIN_NAME = settings.DOMAIN_NAME
 
 app_name = 'account'
 
 
 
 
-def login_required_with_message(function=None, login_url=None, message=None):
+def login_required_with_message(function=None, login_url=None, message=None, only=None):
     """
     Custom decorator for views that checks if the user is logged in.
     Adds a message if the user is redirected to the login page.
@@ -21,24 +28,19 @@ def login_required_with_message(function=None, login_url=None, message=None):
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
             if not request.user.is_authenticated:
-                print("User is not authenticated.")
                 if message:
                     messages.warning(request, message)
                 return redirect(login_url or 'account:login')
+            
+            if only and request.user.profile.role not in only:
+                messages.error(request, "You do not have permission to access this page.")
+                return redirect(f'{request.user.profile.role}:dashboard')
             return view_func(request, *args, **kwargs)
         return _wrapped_view
 
     if function:
         return decorator(function)
     return decorator
-
-
-
-
-
-
-
-
 
 
 def login_page(request):
@@ -83,17 +85,29 @@ def PostRegister(request):
             first_name=full_name,  # Saving full name as the first_name field
         )
         # The user’s Profile will be created automatically via signals
+        profile: Profile = user.profile
+        # send a welcome email
+                    # Generate a unique token and set its expiry time
+        token = uuid.uuid4().hex
+        expiry_time = datetime.now() + timedelta(hours=1)  # Token valid for 1 hour
+
+        profile.token = token
+        profile.token_expiry = expiry_time
+        profile.save()
+
+        send_custom_email(
+            subject="Welcome to NCMS",
+            message=f"Hello {full_name},\n\nThank you for registering with NCMS. Your username is {username}.\n\n Please verify your email by clicking the link below:\n\n {DOMAIN_NAME}/account/verify-user/{token}/ \n\nIf you did not register, please ignore this email. \n\nBest regards,\nNCMS Team",
+            recipient_list=[email]
+        )
 
         messages.success(request, "Registration successful.")
-        
         
         # Automatically log the user in after registration
         login(request, user)
         return redirect('patient:profile')
     
     return redirect('account:register')
-
-
 
 def Postlogin(request):
     """Custom login view that uses email and password."""
@@ -133,7 +147,65 @@ def Postlogin(request):
     return redirect('account:login')
 
 
-@login_required_with_message(login_url='account:login', message="You need to log in to access Profile page.")
+def verify_user(request, token):
+    """View to verify user email using a token."""
+    try:
+        profile = Profile.objects.get(token=token, token_expiry__gt=datetime.now())
+        profile.is_verified = True
+        profile.token = None  # Clear the token after verification
+        profile.token_expiry = None  # Clear the expiry time
+        profile.save()
+
+        messages.success(request, "Email verified successfully. You can now Use Service.")
+        return redirect(f'{profile.role}:dashboard')
+
+    except Profile.DoesNotExist:
+        messages.error(request, "Invalid or expired verification token.")
+        return redirect('home')
+    
+def resend_verification(request):
+    """View to resend verification email."""
+    if request.method == 'POST':
+        try:
+            user = request.user
+            profile: Profile = user.profile
+            email = user.email
+
+            if profile.is_verified:
+                messages.info(request, "This email is already verified.")
+                return redirect(f'{profile.role}:dashboard')
+
+            # Generate a new token and set its expiry time
+            token = uuid.uuid4().hex
+            expiry_time = datetime.now() + timedelta(hours=1)  # Token valid for 1 hour
+
+            profile.token = token
+            profile.token_expiry = expiry_time
+            profile.save()
+
+            send_custom_email(
+                subject="Resend Verification Email",
+                message=f"Click the link below to verify your email:\n\n {DOMAIN_NAME}/account/verify-user/{token}/",
+                recipient_list=[email]
+            )
+
+            messages.success(request, "Verification email has been resent.")
+        except User.DoesNotExist:
+            messages.error(request, "No user found with this email.")
+        return redirect(f'{profile.role}:dashboard')
+
+def not_verified_user(request):
+    """View for users who are not verified."""
+    if request.user.is_authenticated and not request.user.profile.is_verified:
+        # If the user is authenticated but not verified, show a warning message
+        messages.warning(request, "Your email is not verified. Please check your email for the verification link.")
+        return render(request, 'pages/unverified_page.html')
+    else:
+        # If the user is not authenticated, show a general warning message
+        messages.warning(request, "You are Already Verified.")
+        return redirect('home')
+
+
 def logout_page(request):
     """Custom logout view."""
     logout(request)
@@ -141,7 +213,6 @@ def logout_page(request):
     return redirect('account:login')
 
 
-@login_required_with_message(login_url='account:login', message="You need to log in to access Profile page.")
 def change_password(request):
     """Change password view."""
 
@@ -181,4 +252,87 @@ def change_password(request):
     return redirect(profile_path + '#security')
 
 
-    
+def forget_password(request):
+    """View for handling password reset requests."""
+    if request.method == 'POST':
+        email = request.POST.get('email')
+
+        if not email:
+            messages.error(request, "Email is required.")
+            return redirect('account:forget-password')
+
+        try:
+            user = User.objects.get(email=email)
+            profile: Profile = user.profile
+
+            # Generate a unique token and set its expiry time
+            token = uuid.uuid4().hex
+            expiry_time = datetime.now() + timedelta(hours=1)  # Token valid for 1 hour
+
+            profile.token = token
+            profile.token_expiry = expiry_time
+            profile.save()
+
+            # send_custom_email(
+            #     subject="Password Reset Request",
+            #     message="Click the link below to reset your password:\n\n"
+            #             f"{DOMAIN_NAME}/account/reset-password/{token}/",  # Replace with your actual reset URL
+            #     recipient_list=[email]
+            # )
+
+
+            # Here you would typically send a password reset email
+            messages.success(request, "Password reset link has been sent to your email.")
+        except User.DoesNotExist:
+            messages.error(request, "No user found with this email.")
+
+        return redirect('account:login')
+
+    return render(request, 'pages/forget_password.html') 
+
+
+def reset_password(request, token):
+    """View for resetting the password using a token."""
+    try:
+        profile = Profile.objects.get(token=token,token_expiry__gt=datetime.now())
+        return render(request, 'pages/reset_password.html', {'token': token})
+    except Profile.DoesNotExist:
+        messages.error(request, "Invalid or expired password reset token.")
+        return redirect('account:login')
+
+
+
+def PostResetPassword(request):
+    """Handle the form submission for resetting the password."""
+    if request.method == 'POST':
+        token = request.POST.get('token')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if not token or not new_password or not confirm_password:
+            messages.error(request, "All fields are required.")
+            return redirect(f'account:reset-password/{token}')
+
+        if new_password != confirm_password:
+            messages.error(request, "New passwords do not match.")
+            return redirect(f'account:reset-password/{token}')
+
+        try:
+            profile = Profile.objects.get(token=token, token_expiry__gt=datetime.now())
+            user = profile.user
+            user.set_password(new_password)
+            user.save()
+
+            # Clear the reset token and expiry
+            profile.token = None
+            profile.token_expiry = None
+            profile.save()
+
+            messages.success(request, "Password has been reset successfully. You can now log in.")
+            return redirect('account:login')
+
+        except Profile.DoesNotExist:
+            messages.error(request, "Invalid or expired password reset token.")
+            return redirect('account:login')
+
+    return redirect('account:login')

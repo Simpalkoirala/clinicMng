@@ -1,6 +1,8 @@
 from django.utils.timezone import now
 from account.models import ActivityLog, Profile  # adjust import to your app
 from django.urls import resolve
+from django.shortcuts import redirect
+from account.models import Profile
 
 class ActivityLoggerMiddleware:
     def __init__(self, get_response):

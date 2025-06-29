@@ -24,6 +24,9 @@ def role_to_wants(role, wants):
         elif role == "doctor":
             urls = reverse(f"{role}:SessionMng")
             text = "Todays Appointment"
+        elif role == "management":
+            urls = reverse(f"{role}:management_dashboard")
+            text = "Management Dashboard"
         else:
             urls = reverse(f"patient:bookAppointment")
             text = "Start Appointment"

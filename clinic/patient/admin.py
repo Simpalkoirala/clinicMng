@@ -55,6 +55,7 @@ class PrescriptionAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': (
+                'uuid',
                 'profile',
                 'prescribing_doctor',
                 'medicine',

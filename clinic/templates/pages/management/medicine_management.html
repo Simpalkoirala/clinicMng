@@ -1,0 +1,1143 @@
+{% extends "pages/management/M_base.html" %}
+{% load static %}
+
+{% block titles %}Medicine Mng || Nepal's Care {% endblock titles %}
+
+{% block styles %}{% endblock styles %}
+
+{% block pageof %} Medicine Mng {% endblock pageof %}
+{% block linkPageof %} {% url 'management:medicineMng' %} {% endblock linkPageof %}
+
+{% block content %}
+
+{% load static %}
+
+<!-- Main Container -->
+<div id="medicineManagementApp" class="relative">
+    <!-- Header Section with Gradient -->
+    <div class="bg-gradient-to-r from-indigo-800 via-blue-700 to-indigo-700 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <i class="fas fa-pills text-3xl mr-3"></i>
+                    <h1 class="text-3xl font-bold tracking-tight">Medicine Management</h1>
+                </div>
+                <button id="openAddDialogBtn" 
+                        class="bg-white text-indigo-700 px-5 py-3 rounded-md shadow-md hover:bg-blue-50 transition duration-300 flex items-center transform hover:scale-105">
+                    <i class="fas fa-plus-circle mr-2"></i> Add New Medicine
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Search and Filter Bar -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div class="relative w-full lg:w-1/3">
+                    <input type="text" id="searchInput" 
+                           class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300"
+                           placeholder="Search medicines...">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <!-- Filter Tabs -->
+                <div class="flex flex-wrap gap-2">
+                    <button data-filter="all" class="filter-btn bg-indigo-100 text-indigo-800 border-indigo-300 px-4 py-2 rounded-full border flex items-center transition-all duration-200">
+                        <i class="fas fa-pills mr-2"></i>
+                        <span>All Medicines</span>
+                    </button>
+                    <button data-filter="recent" class="filter-btn bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200 px-4 py-2 rounded-full border flex items-center transition-all duration-200">
+                        <i class="fas fa-clock mr-2"></i>
+                        <span>Recently Added</span>
+                    </button>
+                    <button data-filter="brand" class="filter-btn bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200 px-4 py-2 rounded-full border flex items-center transition-all duration-200">
+                        <i class="fas fa-trademark mr-2"></i>
+                        <span>By Brand</span>
+                    </button>
+                    <button data-filter="generic" class="filter-btn bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200 px-4 py-2 rounded-full border flex items-center transition-all duration-200">
+                        <i class="fas fa-prescription mr-2"></i>
+                        <span>Generics</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Medicine List with Card View Toggle -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-800">Medicine List</h2>
+                <div class="flex space-x-2">
+                    <span class="text-gray-500 text-sm" id="resultCount"></span>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th data-sort="name" class="sort-header px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-200">
+                                <div class="flex items-center">
+                                    Name
+                                    <span class="sort-icon ml-1 hidden sort-asc"><i class="fas fa-sort-up"></i></span>
+                                    <span class="sort-icon ml-1 hidden sort-desc"><i class="fas fa-sort-down"></i></span>
+                                </div>
+                            </th>
+                            <th data-sort="generic_name" class="sort-header px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-200">
+                                <div class="flex items-center">
+                                    Generic Name
+                                    <span class="sort-icon ml-1 hidden sort-asc"><i class="fas fa-sort-up"></i></span>
+                                    <span class="sort-icon ml-1 hidden sort-desc"><i class="fas fa-sort-down"></i></span>
+                                </div>
+                            </th>
+                            <th data-sort="brand_name" class="sort-header px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-200">
+                                <div class="flex items-center">
+                                    Brand Name
+                                    <span class="sort-icon ml-1 hidden sort-asc"><i class="fas fa-sort-up"></i></span>
+                                    <span class="sort-icon ml-1 hidden sort-desc"><i class="fas fa-sort-down"></i></span>
+                                </div>
+                            </th>
+                            <th data-sort="manufacturer" class="sort-header px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-200">
+                                <div class="flex items-center">
+                                    Manufacturer
+                                    <span class="sort-icon ml-1 hidden sort-asc"><i class="fas fa-sort-up"></i></span>
+                                    <span class="sort-icon ml-1 hidden sort-desc"><i class="fas fa-sort-down"></i></span>
+                                </div>
+                            </th>
+                            <th data-sort="created_at" class="sort-header px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-200">
+                                <div class="flex items-center">
+                                    Created At
+                                    <span class="sort-icon ml-1 hidden sort-asc"><i class="fas fa-sort-up"></i></span>
+                                    <span class="sort-icon ml-1 hidden sort-desc"><i class="fas fa-sort-down"></i></span>
+                                </div>
+                            </th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="medicineTableBody" class="bg-white divide-y divide-gray-200">
+                        {% for medicine in medicines %}
+                            <tr class="medicine-row hover:bg-gray-50 transition duration-150" 
+                                data-medicine="{{ medicine.uuid }}"
+                                data-generic="{{ medicine.generic_name|yesno:"true,false" }}"
+                                data-brand="{{ medicine.brand_name|yesno:"true,false" }}"
+                                data-created="{{ medicine.created_at|date:'Y-m-d' }}">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                                            <svg class=" text-indigo-600 w-5 h-5" stroke="currentColor" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                                <g transform="matrix(0.83 0 0 0.83 12 12)" >
+                                                    <g style="" >
+                                                        <g transform="matrix(1 0 0 1 -0.05 0.05)" >
+                                                            <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-11.95, -12.05)" d="M 11.588 21.605 C 9.957338815003101 23.30221055738315 7.5365840129042185 23.985324200175295 5.259249120462884 23.390912420331112 C 2.98191422802155 22.796500640486926 1.2038174809302067 21.017436274356026 0.6106447503302537 18.73977833515161 C 0.01747201973030066 16.462120395947192 0.7019025488737878 14.041737593242228 2.4000000000000004 12.411999999999999 L 12.411 2.4 C 14.954471478823802 -0.12673254843908577 19.060528521176195 -0.12673254843908577 21.604 2.399999999999998 L 21.604 2.4 C 24.13182529803459 4.943020861557224 24.13182529803459 9.049979138442778 21.604 11.593000000000002 Z" stroke-linecap="round" />
+                                                        </g>
+                                                        <g transform="matrix(1 0 0 1 0 0)" >
+                                                            <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 7.404 7.404 L 16.595 16.596" stroke-linecap="round" />
+                                                        </g>
+                                                        <g transform="matrix(1 0 0 1 4.65 -8.07)" >
+                                                            <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-16.65, -3.93)" d="M 13.825 4.516 C 14.575192042841204 3.7655039740193823 15.592853268320088 3.3438541334375786 16.654 3.3438541334375786 C 17.715146731679912 3.3438541334375786 18.732807957158798 3.765503974019383 19.483 4.516000000000001" stroke-linecap="round" />
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">{{ medicine.name }}</div>
+                                            {% if medicine.default_dosage %}
+                                                <div class="text-xs text-gray-500">{{ medicine.default_dosage }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-500">{{ medicine.generic_name|default:"—" }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-500">{{ medicine.brand_name|default:"—" }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-500">{{ medicine.manufacturer|default:"—" }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-500">{{ medicine.created_at|date:"M d, Y" }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap flex justify-around items-center text-sm font-medium">
+                                    <button class="view-medicine-btn text-blue-600 hover:text-blue-900 bg-blue-100 hover:bg-blue-200 rounded-full p-2 transition duration-200 mr-2"
+                                            data-medicine-id="{{ medicine.id }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+                                    </button>
+                                    <a href="#" 
+                                       class="inline-block hidden text-indigo-600 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 rounded-full p-2 transition duration-200 mr-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                        </svg>
+                                    </a>
+                                    <a href="{% url 'management:deleteMedicine' medicine.uuid %}" 
+                                       class="inline-block text-red-600 hover:text-red-900 bg-red-100 hover:bg-red-200 rounded-full p-2 transition duration-200">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr id="noMedicinesRow">
+                                <td colspan="6" class="px-6 py-10 text-center text-gray-500">
+                                    <div class="flex flex-col items-center justify-center">
+                                        <i class="fas fa-prescription-bottle text-5xl text-gray-300 mb-3"></i>
+                                        <p class="text-lg">No medicines found</p>
+                                        <p class="text-sm" id="emptySearchMessage" style="display: none;">Try a different search term or filter</p>
+                                        <p class="text-sm" id="emptyDefaultMessage">Add a new medicine to get started</p>
+                                        <button id="emptyAddMedicineBtn" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200">
+                                            <i class="fas fa-plus mr-2"></i> Add New Medicine
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Pagination and Show Entries -->
+        <div class="bg-white border-t border-gray-200 rounded-b-lg">
+            <div class="flex flex-col lg:flex-row items-center justify-between py-4 px-4 md:px-6 space-y-4 lg:space-y-0">
+        
+            <!-- Show Entries Selector -->
+            <form method="get" class="flex items-center space-x-3 w-full lg:w-auto" id="perPageForm">
+                <span class="text-gray-600 text-sm whitespace-nowrap">Show entries</span>
+                <div class="relative">
+                <select name="per_page" onchange="document.getElementById('perPageForm').submit()"
+                        class="appearance-none pl-4 pr-10 py-2 border border-gray-300 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm hover:border-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 cursor-pointer">
+                    {% for n in per_page_options %}
+                    <option value="{{ n }}" {% if per_page == n %}selected{% endif %}>{{ n }}</option>
+                    {% endfor %}
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-indigo-500">
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                </div>
+                {# preserve current page when changing per_page #}
+                <input type="hidden" name="page" value="{{ appointments.number }}">
+            </form>
+        
+            <!-- Results Counter -->
+            <div class="hidden sm:block text-center lg:text-left text-sm text-gray-500">
+                Showing
+                <span class="font-semibold text-gray-700">
+                {{ appointments.start_index }}
+                </span>
+                to
+                <span class="font-semibold text-gray-700">
+                {{ appointments.end_index }}
+                </span>
+                of
+                <span class="font-semibold text-gray-700">
+                {{ paginator.count }}
+                </span>
+                results
+            </div>
+        
+            <!-- Pagination Navigation -->
+            <div class="w-full lg:w-auto flex justify-center lg:justify-end">
+                <nav class="relative z-0 inline-flex shadow-sm -space-x-px rounded-md" aria-label="Pagination">
+        
+                {# Previous #}
+                {% if appointments.has_previous %}
+                    <a href="?page={{ appointments.previous_page_number }}&per_page={{ per_page }}"
+                    class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-150">
+                    <span class="sr-only">Previous</span>
+                    <!-- ← -->
+                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 
+                                01-1.414 1.414l-4-4a1 1 0 
+                                010-1.414l4-4a1 1 0 011.414 0z"
+                            clip-rule="evenodd"/>
+                    </svg>
+                    </a>
+                {% else %}
+                    <span class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-400 cursor-not-allowed disabled:opacity-50">
+                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 
+                                01-1.414 1.414l-4-4a1 1 0 
+                                010-1.414l4-4a1 1 0 011.414 0z"
+                            clip-rule="evenodd"/>
+                    </svg>
+                    </span>
+                {% endif %}
+        
+                {# Page Numbers #}
+                {% for num in paginator.page_range %}
+                    {% if num >= appointments.number|add:-2 and num <= appointments.number|add:2 %}
+                    {% if num == appointments.number %}
+                        <span aria-current="page"
+                            class="relative inline-flex items-center px-4 py-2 border border-indigo-500 bg-indigo-50 text-sm font-medium text-indigo-600">
+                        {{ num }}
+                        </span>
+                    {% else %}
+                        <a href="?page={{ num }}&per_page={{ per_page }}"
+                        class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-150">
+                        {{ num }}
+                        </a>
+                    {% endif %}
+                    {% elif num == 1 or num == paginator.num_pages %}
+                    <!-- always show first and last -->
+                    <a href="?page={{ num }}&per_page={{ per_page }}"
+                        class="relative inline-flex hidden md:inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-150">
+                        {{ num }}
+                    </a>
+                    {% elif num == appointments.number|add:-3 or num == appointments.number|add:3 %}
+                    <span class="relative inline-flex hidden md:inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                        …
+                    </span>
+                    {% endif %}
+                {% endfor %}
+        
+                {# Next #}
+                {% if appointments.has_next %}
+                    <a href="?page={{ appointments.next_page_number }}&per_page={{ per_page }}"
+                    class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition duration-150">
+                    <span class="sr-only">Next</span>
+                    <!-- → -->
+                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 
+                                010-1.414L10.586 10 7.293 6.707a1 1 0 
+                                011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 
+                                01-1.414 0z"
+                            clip-rule="evenodd"/>
+                    </svg>
+                    </a>
+                {% else %}
+                    <span class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-400 cursor-not-allowed disabled:opacity-50">
+                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 
+                                010-1.414L10.586 10 7.293 6.707a1 1 0 
+                                011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 
+                                01-1.414 0z"
+                            clip-rule="evenodd"/>
+                    </svg>
+                    </span>
+                {% endif %}
+        
+                </nav>
+            </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div id="addMedicineDialog" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 hidden">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-[95vh] overflow-y-auto transform transition-all">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 text-white py-6 px-8 rounded-t-xl">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold">Add New Medicine</h2>
+                        <p class="text-blue-100 text-sm mt-1">Fill in the medicine details below</p>
+                    </div>
+                    <button id="closeAddDialogBtn" onclick="hideDialog()" class="text-white hover:text-red-200 transition-colors p-2 rounded-lg hover:bg-white hover:bg-opacity-10">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Form Content -->
+            <form method="POST" action="{% url 'management:medicineMng' %}" class="p-8">
+                {% csrf_token %}
+                
+                <!-- Main Fields Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Medicine Name -->
+                    <div class="space-y-2">
+                        <label for="name" class="flex items-center text-sm font-semibold text-gray-700">
+                            <svg class="w-4 h-4 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                            Medicine Name
+                            <span class="text-red-500 ml-1">*</span>
+                        </label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M21 6.5c0 .79-.15 1.56-.44 2.25-.15.36-.34.69-.56 1.01-.17.25-.36.46-.56.66-.78.78-1.85 1.08-2.91 1.08H8.5c-1.89 0-3.5-1.61-3.5-3.5s1.61-3.5 3.5-3.5h8.03c1.06 0 2.13.3 2.91 1.08.2.2.39.41.56.66.22.32.41.65.56 1.01.29.69.44 1.46.44 2.25zM8.5 5c-1.38 0-2.5 1.12-2.5 2.5S7.12 10 8.5 10h8.03c.69 0 1.34-.19 1.85-.54.26-.18.48-.41.66-.66.11-.16.2-.33.27-.51.14-.36.19-.74.19-1.13 0-.39-.05-.77-.19-1.13-.07-.18-.16-.35-.27-.51-.18-.25-.4-.48-.66-.66-.51-.35-1.16-.54-1.85-.54H8.5z"/>
+                                    <path d="M4.5 14c0-.79.15-1.56.44-2.25.15-.36.34-.69.56-1.01.17-.25.36-.46.56-.66.78-.78 1.85-1.08 2.91-1.08H16.5c1.89 0 3.5 1.61 3.5 3.5s-1.61 3.5-3.5 3.5H8.47c-1.06 0-2.13-.3-2.91-1.08-.2-.2-.39-.41-.56-.66-.22-.32-.41-.65-.56-1.01-.29-.69-.44-1.46-.44-2.25zM16.5 17c1.38 0 2.5-1.12 2.5-2.5S17.88 12 16.5 12H8.47c-.69 0-1.34.19-1.85.54-.26.18-.48.41-.66.66-.11.16-.2.33-.27.51-.14.36-.19.74-.19 1.13 0 .39.05.77.19 1.13.07.18.16.35.27.51.18.25.4.48.66.66.51.35 1.16.54 1.85.54H16.5z"/>
+                                </svg>
+                            </div>
+                            <input type="text" id="name" name="name" required
+                                   class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-400"
+                                   placeholder="Enter medicine name">
+                        </div>
+                    </div>
+
+                    <!-- Generic Name -->
+                    <div class="space-y-2">
+                        <label for="generic_name" class="flex items-center text-sm font-semibold text-gray-700">
+                            <svg class="w-4 h-4 mr-2 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Generic Name
+                        </label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400 group-focus-within:text-green-500 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                                </svg>
+                            </div>
+                            <input type="text" id="generic_name" name="generic_name"
+                                   class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 hover:border-gray-400"
+                                   placeholder="Enter generic name">
+                        </div>
+                    </div>
+
+                    <!-- Brand Name -->
+                    <div class="space-y-2">
+                        <label for="brand_name" class="flex items-center text-sm font-semibold text-gray-700">
+                            <svg class="w-4 h-4 mr-2 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            Brand Name
+                        </label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400 group-focus-within:text-purple-500 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                            </div>
+                            <input type="text" id="brand_name" name="brand_name"
+                                   class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 hover:border-gray-400"
+                                   placeholder="Enter brand name">
+                        </div>
+                    </div>
+
+                    <!-- Manufacturer -->
+                    <div class="space-y-2">
+                        <label for="manufacturer" class="flex items-center text-sm font-semibold text-gray-700">
+                            <svg class="w-4 h-4 mr-2 text-orange-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            Manufacturer
+                        </label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M3 3h18v18H3V3zm16 16V5H5v14h14zm-8-2h2v-2h-2v2zm0-3h2V8h-2v6z"/>
+                                </svg>
+                            </div>
+                            <input type="text" id="manufacturer" name="manufacturer"
+                                   class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 hover:border-gray-400"
+                                   placeholder="Enter manufacturer name">
+                        </div>
+                    </div>
+
+                    <!-- Default Dosage -->
+                    <div class="space-y-2">
+                        <label for="default_dosage" class="flex items-center text-sm font-semibold text-gray-700">
+                            <svg class="w-4 h-4 mr-2 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M21 6.5c0 .79-.15 1.56-.44 2.25-.15.36-.34.69-.56 1.01-.17.25-.36.46-.56.66-.78.78-1.85 1.08-2.91 1.08H8.5c-1.89 0-3.5-1.61-3.5-3.5s1.61-3.5 3.5-3.5h8.03c1.06 0 2.13.3 2.91 1.08.2.2.39.41.56.66.22.32.41.65.56 1.01.29.69.44 1.46.44 2.25z"/>
+                            </svg>
+                            Default Dosage
+                        </label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400 group-focus-within:text-red-500 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2H6z"/>
+                                </svg>
+                            </div>
+                            <input type="text" id="default_dosage" name="default_dosage"
+                                   class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200 hover:border-gray-400"
+                                   placeholder="e.g., 500mg, 10ml">
+                        </div>
+                    </div>
+
+                    <!-- Default Frequency -->
+                    <div class="space-y-2">
+                        <label for="default_frequency" class="flex items-center text-sm font-semibold text-gray-700">
+                            <svg class="w-4 h-4 mr-2 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                            </svg>
+                            Default Frequency
+                        </label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400 group-focus-within:text-indigo-500 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                                </svg>
+                            </div>
+                            <input type="text" id="default_frequency" name="default_frequency"
+                                   class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 hover:border-gray-400"
+                                   placeholder="e.g., Twice daily, Every 8 hours">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Areas Section -->
+                <div class="space-y-6">
+                    <!-- Description -->
+                    <div class="space-y-2">
+                        <label for="description" class="flex items-center text-sm font-semibold text-gray-700">
+                            <svg class="w-4 h-4 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                            </svg>
+                            Description
+                        </label>
+                        <div class="relative group">
+                            <div class="absolute top-4 left-4 flex items-start pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                                </svg>
+                            </div>
+                            <textarea id="description" name="description" rows="4"
+                                     class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-400 resize-none"
+                                     placeholder="Brief description of the medicine, its primary use, and therapeutic category..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Instructions -->
+                    <div class="space-y-2">
+                        <label for="instructions" class="flex items-center text-sm font-semibold text-gray-700">
+                            <svg class="w-4 h-4 mr-2 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M3 13h8L9 9l1.41-1.41L14 11.17l4.59-4.58L20 8l-6 6-4-4-7 7v-4z"/>
+                            </svg>
+                            Instructions
+                        </label>
+                        <div class="relative group">
+                            <div class="absolute top-4 left-4 flex items-start pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400 group-focus-within:text-green-500 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                                </svg>
+                            </div>
+                            <textarea id="instructions" name="instructions" rows="3"
+                                     class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 hover:border-gray-400 resize-none"
+                                     placeholder="Administration instructions (e.g., 'Take with food', 'Take on empty stomach', 'Avoid alcohol')..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Side Effects -->
+                    <div class="space-y-2">
+                        <label for="side_effects" class="flex items-center text-sm font-semibold text-gray-700">
+                            <svg class="w-4 h-4 mr-2 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+                            </svg>
+                            Side Effects
+                        </label>
+                        <div class="relative group">
+                            <div class="absolute top-4 left-4 flex items-start pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                            </div>
+                            <textarea id="side_effects" name="side_effects" rows="3"
+                                     class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 hover:border-gray-400 resize-none"
+                                     placeholder="Common side effects and warnings (e.g., 'May cause dizziness', 'Avoid driving', 'Contact doctor if...')..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-10 flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4">
+                    <button type="button" id="cancelAddMedicineBtn" onclick="hideDialog()"
+                            class="px-6 py-3 border-2 border-gray-300 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200 flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="px-6 py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 text-white rounded-lg text-sm font-semibold hover:from-blue-700 hover:via-indigo-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                        </svg>
+                        Add Medicine
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Medicine Details Dialog -->
+    <div id="medicineDetailsDialog" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 p-4 overflow-y-auto hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl transform transition-all">
+            <div class="bg-gradient-to-r from-indigo-600 to-blue-700 text-white py-5 px-6 rounded-t-lg flex justify-between items-center">
+                <div class="flex items-center">
+                    <i class="fas fa-prescription-bottle text-2xl mr-3"></i>
+                    <h2 class="text-xl font-semibold" id="detailMedicineName">Medicine Details</h2>
+                </div>
+                <button id="closeDetailsDialogBtn" class="text-white hover:text-gray-200 transition duration-200">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <!-- Medicine Details Tabs -->
+                <div class="details-tabs">
+                    <div class="border-b border-gray-200 mb-6">
+                        <nav class="-mb-px flex space-x-6">
+                            <button id="tabBasic" data-tab="basic"
+                                    class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 border-indigo-500 text-indigo-600 font-medium text-sm transition duration-200">
+                                <i class="fas fa-info-circle mr-2"></i> Basic Information
+                            </button>
+                            <button id="tabUsage" data-tab="usage"
+                                    class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm transition duration-200">
+                                <i class="fas fa-pills mr-2"></i> Usage Instructions
+                            </button>
+                            <button id="tabEffects" data-tab="effects"
+                                    class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm transition duration-200">
+                                <i class="fas fa-exclamation-triangle mr-2"></i> Side Effects
+                            </button>
+                        </nav>
+                    </div>
+                    
+                    <!-- Tab Contents -->
+                    <div id="tabContents">
+                        <!-- Basic Information Tab Content -->
+                        <div id="tabContentBasic" class="tab-content grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="col-span-1 bg-gray-50 p-4 rounded-lg">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                    <i class="fas fa-pills text-indigo-500 mr-2"></i> Medicine Information
+                                </h3>
+                                <div class="space-y-4">
+                                    <div class="flex border-b border-gray-200 pb-3">
+                                        <span class="text-sm font-medium text-gray-500 w-1/3">Medicine Name</span>
+                                        <span id="detail-name" class="text-sm text-gray-900 w-2/3 font-semibold"></span>
+                                    </div>
+                                    <div class="flex border-b border-gray-200 pb-3">
+                                        <span class="text-sm font-medium text-gray-500 w-1/3">Generic Name</span>
+                                        <span id="detail-generic-name" class="text-sm text-gray-900 w-2/3"></span>
+                                    </div>
+                                    <div class="flex border-b border-gray-200 pb-3">
+                                        <span class="text-sm font-medium text-gray-500 w-1/3">Brand Name</span>
+                                        <span id="detail-brand-name" class="text-sm text-gray-900 w-2/3"></span>
+                                    </div>
+                                    <div class="flex border-b border-gray-200 pb-3">
+                                        <span class="text-sm font-medium text-gray-500 w-1/3">Manufacturer</span>
+                                        <span id="detail-manufacturer" class="text-sm text-gray-900 w-2/3"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-span-1 bg-gray-50 p-4 rounded-lg">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                    <i class="fas fa-clock text-indigo-500 mr-2"></i> Details
+                                </h3>
+                                <div class="space-y-4">
+                                    <div class="flex border-b border-gray-200 pb-3">
+                                        <span class="text-sm font-medium text-gray-500 w-1/3">UUID</span>
+                                        <span id="detail-uuid" class="text-sm text-gray-900 w-2/3 font-mono"></span>
+                                    </div>
+                                    <div class="flex border-b border-gray-200 pb-3">
+                                        <span class="text-sm font-medium text-gray-500 w-1/3">Created</span>
+                                        <span id="detail-created-at" class="text-sm text-gray-900 w-2/3"></span>
+                                    </div>
+                                    <div class="flex border-b border-gray-200 pb-3">
+                                        <span class="text-sm font-medium text-gray-500 w-1/3">Last Updated</span>
+                                        <span id="detail-updated-at" class="text-sm text-gray-900 w-2/3"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-span-2 bg-gray-50 p-4 rounded-lg">
+                                <h3 class="text-lg font-medium text-gray-900 mb-3 flex items-center">
+                                    <i class="fas fa-align-left text-indigo-500 mr-2"></i> Description
+                                </h3>
+                                <div class="bg-white p-4 rounded border border-gray-200">
+                                    <p id="detail-description" class="text-gray-700"></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Usage Instructions Tab Content -->
+                        <div id="tabContentUsage" class="tab-content space-y-6 hidden">
+                            <div class="bg-blue-50 p-5 rounded-lg border border-blue-100">
+                                <h3 class="text-lg font-medium text-blue-800 mb-3 flex items-center">
+                                    <i class="fas fa-prescription-bottle-alt text-blue-600 mr-2"></i> Dosage Information
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-white p-4 rounded-lg border border-blue-200">
+                                        <div class="flex items-center">
+                                            <div class="rounded-full bg-blue-100 p-3 mr-3">
+                                                <i class="fas fa-pills text-blue-600"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm text-gray-500">Default Dosage</p>
+                                                <p id="detail-dosage" class="font-medium"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-white p-4 rounded-lg border border-blue-200">
+                                        <div class="flex items-center">
+                                            <div class="rounded-full bg-blue-100 p-3 mr-3">
+                                                <i class="fas fa-clock text-blue-600"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm text-gray-500">Default Frequency</p>
+                                                <p id="detail-frequency" class="font-medium"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-indigo-50 p-5 rounded-lg border border-indigo-100">
+                                <h3 class="text-lg font-medium text-indigo-800 mb-3 flex items-center">
+                                    <i class="fas fa-list-ul text-indigo-600 mr-2"></i> Usage Instructions
+                                </h3>
+                                <div class="bg-white p-4 rounded-lg border border-indigo-200">
+                                    <p id="detail-instructions" class="text-gray-700"></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Side Effects Tab Content -->
+                        <div id="tabContentEffects" class="tab-content space-y-6 hidden">
+                            <div class="bg-amber-50 p-5 rounded-lg border border-amber-100">
+                                <h3 class="text-lg font-medium text-amber-800 mb-3 flex items-center">
+                                    <i class="fas fa-exclamation-triangle text-amber-600 mr-2"></i> Side Effects
+                                </h3>
+                                <div class="bg-white p-4 rounded-lg border border-amber-200">
+                                    <div id="detail-side-effects-content">
+                                        <p id="detail-side-effects" class="text-gray-700"></p>
+                                    </div>
+                                    <div id="detail-side-effects-empty" class="flex flex-col items-center justify-center py-4 hidden">
+                                        <i class="fas fa-check-circle text-green-500 text-3xl mb-2"></i>
+                                        <p class="text-gray-700">No side effects listed.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                                <h3 class="text-lg font-medium text-gray-800 mb-3">Important Notice</h3>
+                                <p class="text-gray-700">Always consult with a healthcare professional before starting any medication regimen. The information provided here is for reference only.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 flex justify-end space-x-3">
+                    <button type="button" id="closeDetailsBtnBottom"
+                            class="inline-flex px-5 py-2.5 border border-gray-300 rounded-md text-sm font-medium text-white bg-red-500 hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg> Close
+                    </button>
+                    <a id="editMedicineBtn"
+                       class="hidden inline-flex justify-center items-center px-5 py-2.5 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-indigo-600 to-blue-700 hover:from-indigo-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-md transition duration-200">
+                         Edit Medicine
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for the medicine management app -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Medicine data from Django template
+        const medicines = [
+            {% for medicine in medicines %}
+            {
+                id: "{{ medicine.id }}",
+                uuid: "{{ medicine.uuid }}",
+                name: "{{ medicine.name|escapejs }}",
+                generic_name: "{{ medicine.generic_name|escapejs }}",
+                brand_name: "{{ medicine.brand_name|escapejs }}",
+                manufacturer: "{{ medicine.manufacturer|escapejs }}",
+                description: "{{ medicine.description|escapejs }}",
+                default_dosage: "{{ medicine.default_dosage|escapejs }}",
+                default_frequency: "{{ medicine.default_frequency|escapejs }}",
+                instructions: "{{ medicine.instructions|escapejs }}",
+                side_effects: "{{ medicine.side_effects|escapejs }}",
+                created_at: "{{ medicine.created_at|date:'Y-m-d H:i:s' }}",
+                updated_at: "{{ medicine.updated_at|date:'Y-m-d H:i:s' }}"
+            },
+            {% endfor %}
+        ]; 
+
+        
+        // Initialize dialog functionality
+        initializeDialogs();
+        
+        // Initialize search and filtering
+        initializeSearchAndFiltering();
+        
+        // Initialize sorting
+        initializeSorting();
+        
+        // Initialize tabs in details view
+        initializeTabs();
+        
+        // Initialize dialog functionality
+        function initializeDialogs() {
+            // Add Medicine Dialog
+            const addMedicineDialog = document.getElementById('addMedicineDialog');
+            const openAddDialogBtn = document.getElementById('openAddDialogBtn');
+            const closeAddDialogBtn = document.getElementById('closeAddDialogBtn');
+            const cancelAddMedicineBtn = document.getElementById('cancelAddMedicineBtn');
+            const emptyAddMedicineBtn = document.getElementById('emptyAddMedicineBtn');
+            
+            // Open add dialog
+            openAddDialogBtn.addEventListener('click', () => {
+                addMedicineDialog.classList.remove('hidden');
+            });
+            
+            // Close add dialog
+            [closeAddDialogBtn, cancelAddMedicineBtn].forEach(btn => {
+                btn.addEventListener('click', () => {
+                    addMedicineDialog.classList.add('hidden');
+                });
+            });
+            
+            // Empty state add button
+            if (emptyAddMedicineBtn) {
+                emptyAddMedicineBtn.addEventListener('click', () => {
+                    addMedicineDialog.classList.remove('hidden');
+                });
+            }
+            
+            // Medicine Details Dialog
+            const medicineDetailsDialog = document.getElementById('medicineDetailsDialog');
+            const closeDetailsDialogBtn = document.getElementById('closeDetailsDialogBtn');
+            const closeDetailsBtnBottom = document.getElementById('closeDetailsBtnBottom');
+            const viewMedicineBtns = document.querySelectorAll('.view-medicine-btn');
+            
+            // Close details dialog
+            [closeDetailsDialogBtn, closeDetailsBtnBottom].forEach(btn => {
+                btn.addEventListener('click', () => {
+                    medicineDetailsDialog.classList.add('hidden');
+                });
+            });
+            
+            // View medicine details
+            viewMedicineBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const medicineId = btn.getAttribute('data-medicine-id');
+                    const medicine = medicines.find(m => m.id === medicineId);
+                    if (medicine) {
+                        displayMedicineDetails(medicine);
+                        medicineDetailsDialog.classList.remove('hidden');
+                    }
+                });
+            });
+            
+            // Close dialogs when clicking outside
+            window.addEventListener('click', (event) => {
+                if (event.target === addMedicineDialog) {
+                    addMedicineDialog.classList.add('hidden');
+                }
+                if (event.target === medicineDetailsDialog) {
+                    medicineDetailsDialog.classList.add('hidden');
+                }
+            });
+        }
+        
+        // Display medicine details in the dialog
+        function displayMedicineDetails(medicine) {
+            // Update medicine name in title
+            document.getElementById('detailMedicineName').textContent = medicine.name;
+            
+            // Basic information tab
+            document.getElementById('detail-name').textContent = medicine.name;
+            document.getElementById('detail-generic-name').textContent = medicine.generic_name || '—';
+            document.getElementById('detail-brand-name').textContent = medicine.brand_name || '—';
+            document.getElementById('detail-manufacturer').textContent = medicine.manufacturer || '—';
+            document.getElementById('detail-uuid').textContent = medicine.uuid;
+            document.getElementById('detail-created-at').textContent = formatDate(medicine.created_at);
+            document.getElementById('detail-updated-at').textContent = formatDate(medicine.updated_at);
+            document.getElementById('detail-description').textContent = medicine.description || 'No description available.';
+            
+            // Usage tab
+            document.getElementById('detail-dosage').textContent = medicine.default_dosage || 'Not specified';
+            document.getElementById('detail-frequency').textContent = medicine.default_frequency || 'Not specified';
+            document.getElementById('detail-instructions').textContent = medicine.instructions || 'No specific instructions provided.';
+            
+            // Side effects tab
+            const sideEffectsElem = document.getElementById('detail-side-effects');
+            const sideEffectsContent = document.getElementById('detail-side-effects-content');
+            const sideEffectsEmpty = document.getElementById('detail-side-effects-empty');
+            
+            if (medicine.side_effects && medicine.side_effects.trim() !== '') {
+                sideEffectsElem.textContent = medicine.side_effects;
+                sideEffectsContent.classList.remove('hidden');
+                sideEffectsEmpty.classList.add('hidden');
+            } else {
+                sideEffectsContent.classList.add('hidden');
+                sideEffectsEmpty.classList.remove('hidden');
+            }
+            
+            // Set edit URL
+            const editBtn = document.getElementById('editMedicineBtn');
+            editBtn.setAttribute('href', `/edit-medicine/${medicine.uuid}/`);
+        }
+        
+        // Initialize search and filtering
+        function initializeSearchAndFiltering() {
+            const searchInput = document.getElementById('searchInput');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const medicineRows = document.querySelectorAll('.medicine-row');
+            const noMedicinesRow = document.getElementById('noMedicinesRow');
+            const emptySearchMessage = document.getElementById('emptySearchMessage');
+            const emptyDefaultMessage = document.getElementById('emptyDefaultMessage');
+            const resultCount = document.getElementById('resultCount');
+            const currentCount = document.getElementById('currentCount');
+            
+            let activeFilter = 'all';
+            let searchTerm = '';
+            
+            // Search input event
+            searchInput.addEventListener('input', () => {
+                searchTerm = searchInput.value.toLowerCase();
+                filterMedicines();
+            });
+            
+            // Filter button clicks
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(b => {
+                        b.classList.remove('bg-indigo-100', 'text-indigo-800', 'border-indigo-300');
+                        b.classList.add('bg-gray-100', 'text-gray-700', 'border-gray-200', 'hover:bg-gray-200');
+                    });
+                    
+                    // Add active class to clicked button
+                    btn.classList.remove('bg-gray-100', 'text-gray-700', 'border-gray-200', 'hover:bg-gray-200');
+                    btn.classList.add('bg-indigo-100', 'text-indigo-800', 'border-indigo-300');
+                    
+                    // Set active filter
+                    activeFilter = btn.getAttribute('data-filter');
+                    filterMedicines();
+                });
+            });
+            
+            // Filter medicines based on search term and active filter
+            function filterMedicines() {
+                let visibleCount = 0;
+                
+                medicineRows.forEach(row => {
+                    const name = row.querySelector('td:first-child .text-sm.font-medium').textContent.toLowerCase();
+                    const genericName = row.querySelector('td:nth-child(2) .text-sm').textContent.toLowerCase();
+                    const brandName = row.querySelector('td:nth-child(3) .text-sm').textContent.toLowerCase();
+                    const manufacturer = row.querySelector('td:nth-child(4) .text-sm').textContent.toLowerCase();
+                    
+                    const hasGeneric = row.getAttribute('data-generic') === 'true';
+                    const hasBrand = row.getAttribute('data-brand') === 'true';
+                    const createdDate = row.getAttribute('data-created');
+                    
+                    // Check if matches search term
+                    const matchesSearch = searchTerm === '' || 
+                        name.includes(searchTerm) || 
+                        genericName.includes(searchTerm) || 
+                        brandName.includes(searchTerm) || 
+                        manufacturer.includes(searchTerm);
+                    
+                    // Check if matches active filter
+                    let matchesFilter = true;
+                    if (activeFilter === 'generic') {
+                        matchesFilter = hasGeneric;
+                    } else if (activeFilter === 'brand') {
+                        matchesFilter = hasBrand;
+                    } else if (activeFilter === 'recent') {
+                        const oneWeekAgo = new Date();
+                        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                        const createdDateTime = new Date(createdDate);
+                        matchesFilter = createdDateTime >= oneWeekAgo;
+                    }
+                    
+                    // Show or hide row
+                    if (matchesSearch && matchesFilter) {
+                        row.classList.remove('hidden');
+                        visibleCount++;
+                    } else {
+                        row.classList.add('hidden');
+                    }
+                });
+                
+                // Update result count
+                resultCount.textContent = `${visibleCount} results`;
+                currentCount.textContent = visibleCount;
+                
+                // Show/hide empty state
+                if (visibleCount === 0) {
+                    if (noMedicinesRow) {
+                        noMedicinesRow.classList.remove('hidden');
+                        
+                        if (searchTerm || activeFilter !== 'all') {
+                            emptySearchMessage.style.display = 'block';
+                            emptyDefaultMessage.style.display = 'none';
+                        } else {
+                            emptySearchMessage.style.display = 'none';
+                            emptyDefaultMessage.style.display = 'block';
+                        }
+                    }
+                } else if (noMedicinesRow) {
+                    noMedicinesRow.classList.add('hidden');
+                }
+            }
+        }
+        
+        // Initialize sorting
+        function initializeSorting() {
+            const sortHeaders = document.querySelectorAll('.sort-header');
+            let currentSort = 'name';
+            let currentDirection = 'asc';
+            
+            // Set initial sort
+            updateSortIndicator('name', 'asc');
+            
+            sortHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const column = header.getAttribute('data-sort');
+                    
+                    if (currentSort === column) {
+                        // Toggle direction
+                        currentDirection = currentDirection === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        // New column
+                        currentSort = column;
+                        currentDirection = 'asc';
+                    }
+                    
+                    sortMedicines(column, currentDirection);
+                    updateSortIndicator(column, currentDirection);
+                });
+            });
+            
+            function sortMedicines(column, direction) {
+                const tbody = document.getElementById('medicineTableBody');
+                const rows = Array.from(tbody.querySelectorAll('tr.medicine-row'));
+                
+                // Sort rows
+                rows.sort((a, b) => {
+                    let aValue, bValue;
+                    
+                    if (column === 'name') {
+                        aValue = a.querySelector('td:first-child .text-sm.font-medium').textContent.toLowerCase();
+                        bValue = b.querySelector('td:first-child .text-sm.font-medium').textContent.toLowerCase();
+                    } else if (column === 'generic_name') {
+                        aValue = a.querySelector('td:nth-child(2) .text-sm').textContent.toLowerCase();
+                        bValue = b.querySelector('td:nth-child(2) .text-sm').textContent.toLowerCase();
+                    } else if (column === 'brand_name') {
+                        aValue = a.querySelector('td:nth-child(3) .text-sm').textContent.toLowerCase();
+                        bValue = b.querySelector('td:nth-child(3) .text-sm').textContent.toLowerCase();
+                    } else if (column === 'manufacturer') {
+                        aValue = a.querySelector('td:nth-child(4) .text-sm').textContent.toLowerCase();
+                        bValue = b.querySelector('td:nth-child(4) .text-sm').textContent.toLowerCase();
+                    } else if (column === 'created_at') {
+                        aValue = a.getAttribute('data-created');
+                        bValue = b.getAttribute('data-created');
+                    }
+                    
+                    if (direction === 'asc') {
+                        return aValue > bValue ? 1 : -1;
+                    } else {
+                        return aValue < bValue ? 1 : -1;
+                    }
+                });
+                
+                // Reorder rows
+                rows.forEach(row => {
+                    tbody.appendChild(row);
+                });
+                
+                // Ensure "No medicines found" row is at the end
+                const noMedicinesRow = document.getElementById('noMedicinesRow');
+                if (noMedicinesRow) {
+                    tbody.appendChild(noMedicinesRow);
+                }
+            }
+            
+            function updateSortIndicator(column, direction) {
+                // Hide all indicators
+                document.querySelectorAll('.sort-icon').forEach(icon => {
+                    icon.classList.add('hidden');
+                });
+                
+                // Show the active indicator
+                const header = document.querySelector(`[data-sort="${column}"]`);
+                if (header) {
+                    const indicator = header.querySelector(`.sort-${direction}`);
+                    if (indicator) {
+                        indicator.classList.remove('hidden');
+                    }
+                }
+            }
+        }
+        
+        // Initialize tabs in details view
+        function initializeTabs() {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tab = button.getAttribute('data-tab');
+                    
+                    // Update tab buttons
+                    tabButtons.forEach(btn => {
+                        if (btn.getAttribute('data-tab') === tab) {
+                            btn.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                            btn.classList.add('border-indigo-500', 'text-indigo-600');
+                        } else {
+                            btn.classList.remove('border-indigo-500', 'text-indigo-600');
+                            btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                        }
+                    });
+                    
+                    // Update tab contents
+                    tabContents.forEach(content => {
+                        if (content.id === `tabContent${tab.charAt(0).toUpperCase() + tab.slice(1)}`) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+        }
+        
+        // Helper function to format dates
+        function formatDate(dateString) {
+            if (!dateString) return '—';
+            const date = new Date(dateString);
+            return date.toLocaleString();
+        }
+    });
+</script>
+
+{% endblock content %}
+
+
+
+{% block scripts %}
+
+<script>
+
+    dashboard_nav_all = document.querySelectorAll('.medicine-nav a');
+    console.log(dashboard_nav_all);
+    
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
+{% endblock scripts %}

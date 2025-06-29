@@ -1,0 +1,885 @@
+{% extends "pages/management/M_base.html" %}
+{% load static %}
+
+{% block titles %}View Appoinments || Nepal's Care {% endblock titles %}
+
+{% block styles %}
+
+{% endblock styles %}
+
+
+{% block pageof %} View Appointments {% endblock pageof %}
+{% block linkPageof %} {% url 'patient:viewAppointment' %} {% endblock linkPageof %}
+
+{% block content %}
+
+
+
+
+<!-- Fluid Column Container -->
+<div class="flex flex-col min-h-screen pt-7 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <div class="flex flex-col flex-1 w-full max-w-7xl mx-auto">
+        <!-- Inner Container -->
+        <div class="bg-white rounded-xl shadow-md p-6 flex-1 transition-all duration-300 hover:shadow-lg">
+
+            <!-- Inner Content Area -->
+            <div class="flex flex-col space-y-6">
+
+                <!-- Header Section -->
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <!-- Search Bar -->
+                    <div class="relative w-full max-w-xs">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </span>
+                        <input id="searchInput" name="search"
+                            class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 placeholder-gray-400 transition-all duration-200"
+                            type="search" placeholder="Search Doctor & Reason ..." aria-label="Search" wire:model.live="search">
+                    </div>
+
+                    <!-- Right Side Actions -->
+                    <div class="flex items-center gap-3 flex-wrap justify-start lg:justify-end">
+                        <!-- Book Appointment Button -->
+                        <a href="{% url 'patient:bookAppointment' %}"
+                            class="flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-sm hover:shadow-md">
+                            <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Book Appointment
+                        </a>
+
+                        <!-- Filter Dropdown -->
+                        <div class="relative group/filter-dropdown">
+                            <button
+                                class="flex items-center px-4 py-2 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-lg hover:from-teal-700 hover:to-teal-800 transition-all duration-200 shadow-sm hover:shadow-md"
+                                type="button" id="appointmentFilterBtn">
+                                <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                                Filter
+                            </button>
+                            <div class="hidden group-hover/filter-dropdown:block absolute -right-44 md:right-0 w-72 bg-white rounded-xl shadow-xl z-10 border border-gray-100 "
+                                id="filterDropdown">
+                                <div class="p-4 border-b border-gray-100">
+                                    <h3 class="text-lg font-semibold text-gray-900">Filter Options</h3>
+                                </div>
+                                <div class="p-4 space-y-4 ">
+                                    <div>
+                                        <label for="appointmentType"
+                                            class="block text-sm font-medium text-gray-700 mb-1">Consultation
+                                            Type</label>
+                                        <select
+                                            class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-gray-50"
+                                            id="appointmentType" name="type">
+                                            <option value="0">All</option>
+                                            <option value="general_consultation">General Consultation</option>
+                                            <option value="follow_up_visit">Follow-up Visit</option>
+                                            <option value="online_consultation">Online Consultation</option>
+                                            <option value="offline_consultation">Offline Consultation</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="appointmentStatus"
+                                            class="block text-sm font-medium text-gray-700 mb-1">Appointment
+                                            Status</label>
+                                        <select
+                                            class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-gray-50"
+                                            id="appointmentStatus" name="status">
+                                            <option value="0">All</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="completed">Completed</option>
+                                            <option value="cancelled">Cancelled</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="appointmentTimeRange"
+                                            class="block text-sm font-medium text-gray-700 mb-1">Time
+                                            Range</label>
+                                        <select
+                                            class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-gray-50"
+                                            id="appointmentTimeRange" name="timerange">
+                                            <option value="0">All</option>
+                                            <option value="1">Today</option>
+                                            <option value="2">Last 7 Days</option>
+                                            <option value="3">Last 30 Days</option>
+                                            <option value="4">Last Month</option>
+                                        </select>
+                                    </div>
+                                    <button type="reset" id="appointmentResetFilter"
+                                        class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-200">Reset
+                                        Filters</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions Dropdown -->
+                        <div class="relative group/action-dropdown">
+                            <button
+                                class="flex items-center px-4 py-2 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-lg hover:from-indigo-700 hover:to-indigo-800 transition-all duration-200 shadow-sm hover:shadow-md"
+                                id="dropdownMenuButton">
+                                Actions
+                                <svg class="w-4 h-4 ml-2" viewBox="0 0 20 20" fill="currentColor"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <ul class=" hidden group-hover/action-dropdown:block absolute right-0 w-48 bg-white rounded-xl shadow-xl z-10 border border-gray-100 "
+                                aria-labelledby="dropdownMenuButton">
+
+                                <li><a href="{% url 'patient:export_appointments_excel' %}"
+                                        class="block px-4 py-2 text-gray-700 hover:bg-indigo-50 hover:text-indigo-900 transition-all duration-200 rounded-b-xl">Export
+                                        to Excel</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Table Section -->
+                <div class="flex flex-col space-y-4">
+                    <!-- Table -->
+                    <div class="overflow-x-auto  custom-scrollbar">
+                        <div class="w-full align-middle">
+                            <div class=" rounded-lg border border-gray-200">
+                                <table id="view-list-table" class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
+                                        <tr>
+                                            <th class=" px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer group"
+                                                wire:click="sortBy('doctor.doctorUser.first_name')">
+                                                <div class="flex items-center">
+                                                    Patient
+                                                    <svg class="w-4 h-4 ml-1 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"
+                                                        viewBox="0 0 20 20" fill="currentColor"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                                    </svg>
+                                                </div>
+                                            </th>
+                                            <th class=" px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer group"
+                                                wire:click="sortBy('doctor.doctorUser.first_name')">
+                                                <div class="flex items-center">
+                                                    Doctor & Specialization
+                                                    <svg class="w-4 h-4 ml-1 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"
+                                                        viewBox="0 0 20 20" fill="currentColor"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                                    </svg>
+                                                </div>
+                                            </th>
+                                            <th class=" px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer group"
+                                                wire:click="sortBy('appointment.title')">
+                                                <div class="flex items-center">
+                                                    Appointment Type & Date Time
+                                                    <svg class="w-4 h-4 ml-1 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"
+                                                        viewBox="0 0 20 20" fill="currentColor"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                                    </svg>
+                                                </div>
+                                            </th>
+                                            <th class=" px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer group"
+                                                wire:click="sortBy('appointment.title')">
+                                                <div class="flex items-center">
+                                                    Reason For Appointment
+                                                    <svg class="w-4 h-4 ml-1 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"
+                                                        viewBox="0 0 20 20" fill="currentColor"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                                    </svg>
+                                                </div>
+                                            </th>
+                                         
+                                            <th
+                                                class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                                Status</th>
+                                            <th
+                                                class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                                Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        {% for apot in appointments %}
+                                        <tr class="hover:bg-gray-50 transition-all duration-200"  id="{{ apot.uuid }}">
+                                            
+                                            <!-- Patient Info -->
+                                            <td class="table-cell px-4 py-4 whitespace-nowrap doctor-details"
+                                                title="View Profile" data-patient="{{ apot.profile.user.first_name }}" >
+                                                <a href="{% url 'ViewPatientsRecords' apot.profile.user.username %}" target="_blank_" class="bg-indigo-600 hover:bg-indigo-800">
+                                                    <div class="flex items-center">
+                                                        <div class="flex-shrink-0 h-10 w-10">
+                                                            <img class="h-10 w-10 rounded-full object-cover shadow-sm border border-gray-200 transition-transform duration-200 hover:scale-110"
+                                                                src="{{ apot.profile.profile_pic.url }}"
+                                                                alt="{{ apot.profile.user.first_name}}">
+                                                        </div>
+                                                        <div class="ml-4">
+                                                            <p class="text-sm font-medium text-gray-900" data-doctor="{{ apot.profile.user.first_name }}"  >{{ apot.profile.user.first_name }}
+                                                            </p>
+                                                            <div class="text-sm text-gray-500" data-specialization='{{ apot.profile.user.username }}' >{{ apot.profile.user.username }}</div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </td>
+
+                                            <!-- Doctor & Specialization -->
+                                            <td class="table-cell px-4 py-4 whitespace-nowrap doctor-details">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10">
+                                                        <img class="h-10 w-10 rounded-full object-cover shadow-sm border border-gray-200 transition-transform duration-200 hover:scale-110"
+                                                            src="{{ apot.doctor.profile.profile_pic.url }}"
+                                                            alt="{{ apot.doctor.profile.user.first_name}}">
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <p class="text-sm font-medium text-gray-900" data-doctor="{{ apot.doctor.profile.user.first_name }}"  >{{ apot.doctor.profile.user.first_name }}
+                                                        </p>
+                                                        <div class="text-sm text-gray-500" data-specialization='{{ apot.doctor.specialization }}' >{{ apot.doctor.specialization| capfirst }}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <!-- Appointment Type & Date Time -->
+                                            <td class="table-cell px-4 py-4 whitespace-nowrap">
+                                                <p data-apotype="{{ apot.appointment_type }}" class="px-3 pb-1 text-indigo-600 hover:text-indigo-800 transition-colors duration-200">
+                                                    {{ apot.appointment_type }}
+                                                </p>
+                                                <span data-date="{{ apot.appointment_date|date:"d M Y" }}" data-time="{{ apot.appointment_time_str }}"
+                                                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100 shadow-sm">
+                                                    <svg class="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 9H9v2H7v-2H5V9h2V7h2v2h2v2z"
+                                                            fill="currentColor" />
+                                                    </svg>
+                                                    {{ apot.appointment_date|date:"d M Y" }}; 
+                                                    {{ apot.appointment_time_str }}
+                                                </span>
+                                            </td>
+
+                                            <!-- Reason For Appointment -->
+                                             <td class="table-cell px-4 py-4 whitespace-nowrap">
+                                                <p class="text-gray-600 text-xs font-medium " title="{{ apot.reason }}" data-reason="{{ apot.reason }}" >
+                                                    {{ apot.reason|slice:":70" }}{% if apot.reason|length > 60 %}…{% endif %}
+                                                </p>
+                                         
+                                            </td>
+
+                                            <!-- Status -->
+                                            <td class="px-4 py-4 whitespace-nowrap">
+
+                                                {% if apot.status == 'pending' %}
+
+                                                <span data-status="{{ apot.status}}" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-orange-50 text-orange-700 border border-orange-100 shadow-sm">
+
+                                                        <svg class="h-3 w-3 mr-1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="currentColor"  viewBox="0 0 237.54 237.54" style="enable-background:new 0 0 237.54 237.54" >
+                                                            <g>
+                                                                <path d="M118.77,0c32.8,0,62.49,13.29,83.98,34.79c21.49,21.49,34.79,51.19,34.79,83.98s-13.29,62.49-34.79,83.98 c-21.49,21.49-51.19,34.79-83.98,34.79c-32.8,0-62.49-13.29-83.98-34.79C13.29,181.26,0,151.56,0,118.77s13.29-62.49,34.79-83.98 C56.28,13.29,85.97,0,118.77,0L118.77,0z M109.06,60.2c0-3.59,2.91-6.5,6.5-6.5s6.5,2.91,6.5,6.5v60l45.14,26.76 c3.08,1.82,4.11,5.8,2.29,8.89c-1.82,3.08-5.8,4.11-8.89,2.29l-47.99-28.45c-2.11-1.08-3.55-3.27-3.55-5.79V60.2L109.06,60.2z M193.56,43.98C174.42,24.84,147.98,13,118.77,13c-29.21,0-55.65,11.84-74.79,30.98C24.84,63.12,13,89.56,13,118.77 c0,29.21,11.84,55.65,30.98,74.79c19.14,19.14,45.58,30.98,74.79,30.98c29.21,0,55.65-11.84,74.79-30.98 c19.14-19.14,30.98-45.58,30.98-74.79C224.54,89.56,212.7,63.12,193.56,43.98L193.56,43.98z"/>
+                                                            </g>
+                                                        </svg>
+                                                    {{ apot.status|capfirst }}
+                                                </span>
+
+                                                {% elif apot.status == 'confirmed' %}
+                                                
+                                                <span data-status="{{ apot.status}}" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-100 shadow-sm">
+                                                    <svg class="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd"
+                                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    {{ apot.status|capfirst }}
+                                                </span>
+
+                                               {% elif apot.status == 'cancelled' %}
+
+                                                <span data-status="{{ apot.status}}" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100 shadow-sm">
+                                                    <svg class="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm3 11L7 7m0 6l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    </svg>
+                                                    {{ apot.status|capfirst }}
+                                                </span>
+
+                                                    
+                                                {% elif apot.status == 'completed' %}
+                                                <span data-status="{{ apot.status}}" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100 shadow-sm">
+                                                        <svg xmlns="http://www.w3.org/2000/svg"  class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 122.881 122.88" >
+                                                            <g>
+                                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M61.44,0c33.933,0,61.441,27.507,61.441,61.439 c0,33.933-27.508,61.44-61.441,61.44C27.508,122.88,0,95.372,0,61.439C0,27.507,27.508,0,61.44,0L61.44,0z M34.106,67.678 l-0.015-0.014c-0.785-0.718-1.207-1.685-1.256-2.669c-0.049-0.982,0.275-1.985,0.984-2.777c0.01-0.011,0.019-0.021,0.029-0.031 c0.717-0.784,1.684-1.207,2.668-1.256c0.989-0.049,1.998,0.28,2.792,0.998l12.956,11.748l31.089-32.559v0 c0.74-0.776,1.723-1.18,2.719-1.204c0.992-0.025,1.994,0.329,2.771,1.067v0.001c0.777,0.739,1.18,1.724,1.205,2.718 c0.025,0.993-0.33,1.997-1.068,2.773L55.279,81.769c-0.023,0.024-0.048,0.047-0.073,0.067c-0.715,0.715-1.649,1.095-2.598,1.13 c-0.974,0.037-1.963-0.293-2.744-1L34.118,67.688L34.106,67.678L34.106,67.678L34.106,67.678z"/>
+                                                            </g>
+                                                        </svg>
+                                                        {{ apot.status|capfirst }}
+                                                    </span>
+                                                {% endif %}
+
+                                            </td>
+
+                                            <!-- Actions Btns -->
+                                            <td class="px-4 py-4 whitespace-nowrap">
+                                                {% if apot.status != 'completed' and apot.status != 'cancelled' %}
+                                                    <div class="flex space-x-2">
+                                                        
+                                                        <!-- Cancel Button -->
+                                                        <button title="Cancel" data-id="{{ apot.uuid }}" data-doctor="{{ apot.doctor.profile.user.first_name }}" data-date="{{ apot.appointment_date|date:"d M Y" }}  {{ apot.appointment_time_str }}"
+                                                            class="cancel-appointment p-2 rounded-full text-gray-500 hover:bg-red-50 hover:text-red-600  transition-all duration-200"
+                                                            >
+                                                            <svg version="1.1" class="h-5 w-5" id="Layer_1"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                                viewBox="0 0 122.88 120.11"
+                                                                style="enable-background:new 0 0 122.88 120.11"
+                                                                xml:space="preserve">
+                                                                <style type="text/css">
+                                                                    <![CDATA[
+                                                                    .st0 {
+                                                                        fill: #393939;
+                                                                    }
+
+                                                                    .st1 {
+                                                                        fill-rule: evenodd;
+                                                                        clip-rule: evenodd;
+                                                                        fill: #FF4141;
+                                                                    }
+                                                                    ]]>
+                                                                </style>
+                                                                <g>
+                                                                    <path class="st1"
+                                                                        d="M91.09,56.53c8.77,0,16.73,3.56,22.48,9.31c5.75,5.76,9.31,13.71,9.31,22.48c0,8.78-3.56,16.73-9.31,22.48 c-5.76,5.75-13.71,9.31-22.48,9.31c-8.78,0-16.73-3.56-22.48-9.31c-5.75-5.76-9.31-13.71-9.31-22.48c0-8.77,3.56-16.73,9.31-22.48 C74.36,60.09,82.32,56.53,91.09,56.53L91.09,56.53z M97.31,76.78c1.42-1.44,3.74-1.45,5.17-0.01c1.43,1.44,1.44,3.77,0.01,5.22 l-6.24,6.33l6.25,6.34c1.41,1.43,1.39,3.75-0.04,5.19c-1.43,1.43-3.74,1.43-5.15-0.01l-6.21-6.29l-6.22,6.31 c-1.42,1.45-3.74,1.45-5.17,0.01c-1.43-1.44-1.44-3.77-0.01-5.22l6.24-6.33l-6.25-6.34c-1.41-1.43-1.39-3.75,0.04-5.19 c1.43-1.43,3.74-1.43,5.15,0.01l6.21,6.29L97.31,76.78L97.31,76.78L97.31,76.78z" />
+                                                                    <path class="st0"
+                                                                        d="M69.43,4.04c0-2.22,2.19-4.04,4.92-4.04s4.92,1.8,4.92,4.04V21.7c0,2.22-2.19,4.04-4.92,4.04 s-4.92-1.8-4.92-4.04V4.04L69.43,4.04L69.43,4.04z M13.41,57.17c-0.28,0-0.53-1.23-0.53-2.73c0-1.51,0.22-2.72,0.53-2.72h13.44 c0.28,0,0.53,1.23,0.53,2.72c0,1.5-0.22,2.73-0.53,2.73H13.41L13.41,57.17L13.41,57.17z M34.82,57.17c-0.28,0-0.53-1.23-0.53-2.73 c0-1.51,0.22-2.72,0.53-2.72h13.44c0.28,0,0.53,1.23,0.53,2.72c0,1.5-0.22,2.73-0.53,2.73H34.82L34.82,57.17L34.82,57.17z M56.24,57.17c-0.28,0-0.53-1.23-0.53-2.73c0-1.51,0.22-2.72,0.53-2.72h13.44c0.28,0,0.53,1.22,0.53,2.71 c-1.35,0.84-2.64,1.75-3.88,2.74H56.24L56.24,57.17L56.24,57.17z M13.44,72.8c-0.28,0-0.53-1.23-0.53-2.73 c0-1.51,0.22-2.73,0.53-2.73h13.44c0.28,0,0.53,1.22,0.53,2.73c0,1.5-0.22,2.73-0.53,2.73H13.44L13.44,72.8L13.44,72.8z M34.85,72.8c-0.28,0-0.53-1.23-0.53-2.73c0-1.51,0.22-2.73,0.53-2.73h13.44c0.28,0,0.53,1.22,0.53,2.73c0,1.5-0.22,2.73-0.53,2.73 H34.85L34.85,72.8L34.85,72.8z M13.47,88.43c-0.28,0-0.53-1.22-0.53-2.73c0-1.5,0.22-2.73,0.53-2.73H26.9 c0.28,0,0.53,1.23,0.53,2.73c0,1.51-0.22,2.73-0.53,2.73H13.47L13.47,88.43L13.47,88.43z M34.88,88.43c-0.28,0-0.53-1.22-0.53-2.73 c0-1.5,0.22-2.73,0.53-2.73h13.44c0.28,0,0.53,1.23,0.53,2.73c0,1.51-0.22,2.73-0.53,2.73H34.88L34.88,88.43L34.88,88.43z M25.21,4.04C25.21,1.81,27.4,0,30.13,0s4.92,1.8,4.92,4.04V21.7c0,2.22-2.2,4.04-4.92,4.04c-2.73,0-4.92-1.8-4.92-4.04V4.04 L25.21,4.04L25.21,4.04z M5.42,38.61h93.77V18.28c0-0.7-0.28-1.31-0.73-1.75s-1.09-0.73-1.75-0.73h-8.99 c-1.5,0-2.73-1.23-2.73-2.73c0-1.5,1.23-2.73,2.73-2.73h8.99c2.2,0,4.18,0.89,5.62,2.33c1.45,1.44,2.33,3.42,2.33,5.62v32.28 c-1.79-0.62-3.64-1.12-5.53-1.49v-5.04h0.06H5.42V96.7c0,0.7,0.28,1.3,0.73,1.75s1.09,0.73,1.75,0.73h44.56 c0.51,1.89,1.15,3.74,1.91,5.51H7.95c-2.19,0-4.18-0.89-5.62-2.33C0.89,100.92,0,98.95,0,96.75V18.3c0-2.19,0.89-4.18,2.33-5.62 c1.44-1.45,3.42-2.33,5.62-2.33h9.6c1.51,0,2.73,1.23,2.73,2.73c0,1.5-1.23,2.73-2.73,2.73h-9.6c-0.7,0-1.31,0.28-1.75,0.73 c-0.45,0.45-0.73,1.09-0.73,1.75v20.33H5.42V38.61L5.42,38.61z M42.93,15.8c-1.5,0-2.73-1.23-2.73-2.73c0-1.5,1.23-2.73,2.73-2.73 h18.3c1.5,0,2.73,1.23,2.73,2.73c0,1.51-1.23,2.73-2.73,2.73H42.93L42.93,15.8L42.93,15.8z" />
+                                                                </g>
+                                                            </svg>
+                                                        </button>
+
+
+                                                        <!-- Join the Call Page -->
+                                                        {% if apot.appointment_date == today %}
+                                                            <button title="Join Call" data-id="{{ apot.uuid }}" data-doctor="{{ apot.doctor.profile.user.first_name }}" data-date="{{ apot.appointment_date|date:"d M Y" }}  {{ apot.appointment_time_str }}"
+                                                                class="join-call p-2 rounded-full text-gray-500 hover:bg-green-50 hover:text-green-600  transition-all duration-200"
+                                                                >
+                                                                <svg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' class="h-8 w-8 hover:bg-green-100 rounded-lg p-1" fill='currentColor'>
+                                                                    <g transform="matrix(0.91 0 0 0.91 12 12)" >
+                                                                    <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 3 5 C 1.9069372 5 1 5.9069372 1 7 L 1 17 C 1 18.093063 1.9069372 19 3 19 L 16 19 C 17.093063 19 18 18.093063 18 17 L 18 14.080078 L 23 18.080078 L 23 5.9199219 L 18 9.9199219 L 18 7 C 18 5.9069372 17.093063 5 16 5 L 3 5 z M 3 7 L 16 7 L 16 17 L 3 17 L 3 7 z M 21 10.082031 L 21 13.917969 L 18.601562 12 L 21 10.082031 z" stroke-linecap="round" />
+                                                                    </g>
+                                                                </svg>
+                                                             </button>
+                                                        {% endif %}
+
+
+                                                        <!-- Edit Time Button -->
+                                                        <button title="Postpone Time" data-id="{{ apot.uuid }}" data-doctor="{{ apot.doctor.profile.user.first_name }}" data-date="{{ apot.appointment_date|date:"d M Y" }}  {{ apot.appointment_time_str }}"
+                                                            class="hidden edit-appointment p-2 rounded-full text-gray-500 hover:bg-blue-50 hover:text-blue-600  transition-all duration-200"
+                                                            >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88" class="h-5 w-5" fill='currentColor' ><style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;}</style>
+                                                                <g>
+                                                                    <path class="st0" d="M79.7,31.87c-0.7-0.65-1.5-1-2.4-0.95c-0.9,0-1.7,0.35-2.35,1.05l-5.29,5.49L84.49,51.8l5.34-5.59 c0.65-0.65,0.9-1.5,0.9-2.4c0-0.9-0.35-1.75-1-2.35L79.7,31.87L79.7,31.87L79.7,31.87z M12.51,0h97.85c3.44,0,6.57,1.41,8.84,3.67 c2.27,2.27,3.67,5.4,3.67,8.84v97.85c0,3.44-1.41,6.57-3.67,8.84c-2.27,2.27-5.4,3.67-8.84,3.67H12.51c-3.44,0-6.57-1.41-8.84-3.67 c-2.27-2.27-3.67-5.4-3.67-8.84V12.51c0-3.44,1.41-6.57,3.67-8.84C5.94,1.41,9.07,0,12.51,0L12.51,0z M110.37,5.39H12.51 c-1.96,0-3.74,0.8-5.03,2.1c-1.29,1.29-2.1,3.08-2.1,5.03v97.85c0,1.96,0.8,3.74,2.1,5.03c1.29,1.29,3.08,2.1,5.03,2.1h97.85 c1.96,0,3.74-0.8,5.03-2.1c1.29-1.29,2.1-3.08,2.1-5.03V12.51c0-1.96-0.8-3.74-2.1-5.03C114.1,6.19,112.32,5.39,110.37,5.39 L110.37,5.39z M51.93,85.61c-1.95,0.65-3.95,1.25-5.89,1.9c-1.95,0.65-3.9,1.3-5.89,1.95c-4.64,1.5-7.19,2.35-7.74,2.5 c-0.55,0.15-0.2-2,0.95-6.49l3.7-14.13l0.3-0.32L51.93,85.61L51.93,85.61L51.93,85.61L51.93,85.61z M42.74,65.41l22.9-23.78 l14.83,14.28L57.33,79.99L42.74,65.41L42.74,65.41z"/>
+                                                                </g>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                 {% else %}
+                                                    <div class="flex space-x-2">
+                                                        <!-- No action button For paticular status write here-->
+                                                             <p>
+                                                                <span class="text-gray-500 text-xs font-medium">No action available</span>
+                                                             </p>
+                                                    </div>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                            <tr class="col-span-full text-gray-500">
+                                                <td>
+                                                    No Appointment Booked yet.
+                                                </td>
+
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination and Show Entries -->
+            <div class="bg-white border-t border-gray-200 rounded-b-lg">
+                <div class="flex flex-col lg:flex-row items-center justify-between py-4 px-4 md:px-6 space-y-4 lg:space-y-0">
+            
+                <!-- Show Entries Selector -->
+                <form method="get" class="flex items-center space-x-3 w-full lg:w-auto" id="perPageForm">
+                    <span class="text-gray-600 text-sm whitespace-nowrap">Show entries</span>
+                    <div class="relative">
+                    <select name="per_page" onchange="document.getElementById('perPageForm').submit()"
+                            class="appearance-none pl-4 pr-10 py-2 border border-gray-300 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm hover:border-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 cursor-pointer">
+                        {% for n in per_page_options %}
+                        <option value="{{ n }}" {% if per_page == n %}selected{% endif %}>{{ n }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-indigo-500">
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    </div>
+                    {# preserve current page when changing per_page #}
+                    <input type="hidden" name="page" value="{{ appointments.number }}">
+                </form>
+            
+                <!-- Results Counter -->
+                <div class="hidden sm:block text-center lg:text-left text-sm text-gray-500">
+                    Showing
+                    <span class="font-semibold text-gray-700">
+                    {{ appointments.start_index }}
+                    </span>
+                    to
+                    <span class="font-semibold text-gray-700">
+                    {{ appointments.end_index }}
+                    </span>
+                    of
+                    <span class="font-semibold text-gray-700">
+                    {{ paginator.count }}
+                    </span>
+                    results
+                </div>
+            
+                <!-- Pagination Navigation -->
+                <div class="w-full lg:w-auto flex justify-center lg:justify-end">
+                    <nav class="relative z-0 inline-flex shadow-sm -space-x-px rounded-md" aria-label="Pagination">
+            
+                    {# Previous #}
+                    {% if appointments.has_previous %}
+                        <a href="?page={{ appointments.previous_page_number }}&per_page={{ per_page }}"
+                        class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-150">
+                        <span class="sr-only">Previous</span>
+                        <!-- ← -->
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 
+                                    01-1.414 1.414l-4-4a1 1 0 
+                                    010-1.414l4-4a1 1 0 011.414 0z"
+                                clip-rule="evenodd"/>
+                        </svg>
+                        </a>
+                    {% else %}
+                        <span class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-400 cursor-not-allowed disabled:opacity-50">
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 
+                                    01-1.414 1.414l-4-4a1 1 0 
+                                    010-1.414l4-4a1 1 0 011.414 0z"
+                                clip-rule="evenodd"/>
+                        </svg>
+                        </span>
+                    {% endif %}
+            
+                    {# Page Numbers #}
+                    {% for num in paginator.page_range %}
+                        {% if num >= appointments.number|add:-2 and num <= appointments.number|add:2 %}
+                        {% if num == appointments.number %}
+                            <span aria-current="page"
+                                class="relative inline-flex items-center px-4 py-2 border border-indigo-500 bg-indigo-50 text-sm font-medium text-indigo-600">
+                            {{ num }}
+                            </span>
+                        {% else %}
+                            <a href="?page={{ num }}&per_page={{ per_page }}"
+                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-150">
+                            {{ num }}
+                            </a>
+                        {% endif %}
+                        {% elif num == 1 or num == paginator.num_pages %}
+                        <!-- always show first and last -->
+                        <a href="?page={{ num }}&per_page={{ per_page }}"
+                            class="relative inline-flex hidden md:inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-150">
+                            {{ num }}
+                        </a>
+                        {% elif num == appointments.number|add:-3 or num == appointments.number|add:3 %}
+                        <span class="relative inline-flex hidden md:inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                            …
+                        </span>
+                        {% endif %}
+                    {% endfor %}
+            
+                    {# Next #}
+                    {% if appointments.has_next %}
+                        <a href="?page={{ appointments.next_page_number }}&per_page={{ per_page }}"
+                        class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition duration-150">
+                        <span class="sr-only">Next</span>
+                        <!-- → -->
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M7.293 14.707a1 1 0 
+                                    010-1.414L10.586 10 7.293 6.707a1 1 0 
+                                    011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 
+                                    01-1.414 0z"
+                                clip-rule="evenodd"/>
+                        </svg>
+                        </a>
+                    {% else %}
+                        <span class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-400 cursor-not-allowed disabled:opacity-50">
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M7.293 14.707a1 1 0 
+                                    010-1.414L10.586 10 7.293 6.707a1 1 0 
+                                    011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 
+                                    01-1.414 0z"
+                                clip-rule="evenodd"/>
+                        </svg>
+                        </span>
+                    {% endif %}
+            
+                    </nav>
+                </div>
+                </div>
+            </div>
+  
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Dialog Box-->
+<div id="dialogBOX" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40">
+    <div class="m-5 bg-white rounded-xl shadow-lg w-full max-w-md p-6 text-center">
+        <!-- Warning Icon -->
+        <div class="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full bg-yellow-100">
+            <svg id='Help_Question_Circle_24' class="w-12 h-12 text-yellow-500" fill="none" stroke="currentColor" stroke-width="3" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' >
+                <g transform="matrix(0.42 0 0 0.42 12 12)" >
+                    <g style="" >
+                        <g transform="matrix(1 0 0 1 0 0)" >
+                            <path style=" stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-24, -24)" d="M 24 3 C 12.402 3 3 12.402 3 24 C 3 35.598 12.402 45 24 45 C 35.598 45 45 35.598 45 24 C 45 12.402 35.598 3 24 3 Z" stroke-linecap="round" />
+                        </g>
+                        <g transform="matrix(1 0 0 1 -1 10.42)" >
+                            <circle style=" stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" cx="0" cy="0" r="4.083" />
+                        </g>
+                        <g transform="matrix(1 0 0 1 1.33 -3.58)" >
+                            <path style=" stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-25.33, -20.42)" d="M 25.9938 10.5 C 21.3586 10.5 17.4322 13.2533 16.6607 16.3333 C 15.9536 19.1559 17.6466 21.5867 20.4316 21.4352 C 21.0524 21.4014 21.628 21.1308 22.1624 20.8133 C 23.1135 20.2482 24.7274 19.3081 25.9938 18.6667 C 23.6208 19.9795 19.3799 21.9295 19.3799 24.8111 L 19.3757 27.8293 C 19.3737 29.2114 20.4936 30.3328 21.8757 30.3328 L 23.9964 30.3328 C 25.3771 30.3328 26.4964 29.2135 26.4964 27.8328 L 26.4964 27.4167 C 30.7899 25.112 34.1604 23.1484 34.1604 18.6667 C 34.1604 14.5833 31.6967 10.5 25.9938 10.5 Z" stroke-linecap="round" />
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
+
+        <!-- Title -->
+        <h2 id="title_field" class="text-xl font-semibold text-gray-800 mb-2"></h2>
+
+        <!-- Message -->
+        <p id="message_field" class="text-gray-600 mb-6"></p>
+
+
+        <form  method="POST" id="diloagBox-form">
+            {% csrf_token %}
+
+            <div class="mb-4" id="cancellation_section">
+                <label for="common_reason" class="block text-sm font-medium text-gray-700">Reason <span class="text-red-600">*</span></label>
+                <div class="mt-1 flex space-x-2">
+                    <select id="common_reason" name="common_reason" class="block w-1/2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                         <option value="">Select a reason</option>
+                        <option value="date_not_suitable">Not suitable Date</option>
+                        <option value="doctor_not_suitable">Not suitable Doctor</option>
+                        <option value="busy_day">Busy on that day</option>
+                        <option value="scheduling_conflict">Scheduling conflict</option>
+                        <option value="found_alternative_slot">Found an alternative slot</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <button type="button" id="btn_add_custom" class="px-3 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300 focus:outline-none">Custom</button>
+                </div>
+                <div class="mt-2" id="custom_reason_field" hidden>
+                    <input type="text" name="custom_reason" id="reason" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter custom reason">
+                </div>
+            </div>
+
+
+            <!-- Divider -->
+            <div class="border-t border-gray-200 mb-4"></div>
+
+            <!-- Buttons -->
+            <div class="flex justify-center gap-4">
+                <button class="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition"
+                    onclick="document.getElementById('dialogBOX').classList.add('hidden')"
+                    id="confirm-no-button"
+                        >No</button>
+
+                <button class="bg-green-500 text-gray-800 px-5 py-2 rounded-lg hover:bg-green-300 transition"
+                    id="confirm-yes-button">    
+                        Yes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+
+{% block scripts %}
+
+
+<script>
+    // filter code:
+    document.addEventListener('DOMContentLoaded', () => {
+    const searchInput   = document.getElementById('searchInput');
+    const typeFilter   = document.getElementById('appointmentType');
+    const statusFilter = document.getElementById('appointmentStatus');
+    const timeFilter   = document.getElementById('appointmentTimeRange');
+    const resetBtn     = document.getElementById('appointmentResetFilter');
+    const rows         = document.querySelectorAll('#view-list-table tbody tr');
+
+
+    function filterRows() {
+        const searchText = searchInput.value.toLowerCase();
+        const typeVal   = typeFilter.value;
+        const statusVal = statusFilter.value;
+        const timeVal   = timeFilter.value;
+        const today     = new Date();
+        const firstOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+
+        rows.forEach(row => {
+        let keep = true;
+
+        // search filter
+        if (searchText) {
+            const doctor_name = row.querySelector('[data-doctor]').dataset.doctor.toLowerCase();
+            const reason_of_book = row.querySelector('[data-reason]').dataset.reason.toLowerCase();
+            
+            if (!doctor_name.includes(searchText) && !reason_of_book.includes(searchText)) {
+            keep = false;
+            }
+        }
+
+
+
+        // —–– 1) filter by appointment type
+        if (typeVal !== '0') {
+            if (row.querySelector('[data-apotype]').dataset.apotype !== typeVal) {
+            keep = false;
+            }
+        }
+
+        // —–– 2) filter by status
+        if (keep && statusVal !== '0') {
+            const st = row.querySelector('[data-status]').dataset.status;
+            if (st !== statusVal) {
+            keep = false;
+            }
+        }
+
+        // —–– 3) filter by time range
+        if (keep && timeVal !== '0') {
+            // use ISO date for parsing
+            const iso = row.querySelector('[data-date]').dataset.date;       // e.g. "2025-04-19"
+            const rowDate = new Date(iso + 'T00:00:00');                            // midnight local
+            const diffDays = (today - rowDate) / (1000 * 60 * 60 * 24);             // fractional days
+
+            switch (timeVal) {
+            case '1': // Today
+                if (rowDate.toDateString() !== today.toDateString()) keep = false;
+                break;
+            case '2': // Last 7 Days
+                if (diffDays > 7 || diffDays < 0) keep = false;
+                break;
+            case '3': // Last 30 Days
+                if (diffDays > 30 || diffDays < 0) keep = false;
+                break;
+            case '4': // Last Calendar Month
+                if (rowDate < firstOfLastMonth || rowDate >= firstOfThisMonth) {
+                keep = false;
+                }
+                break;
+            }
+        }
+
+        row.style.display = keep ? '' : 'none';
+        });
+    }
+
+    // wire up events
+    [ typeFilter, statusFilter, timeFilter, searchInput ].forEach(el => 
+        el.addEventListener('change', filterRows)
+    );
+
+    resetBtn.addEventListener('click', () => {
+        // reset selects
+        typeFilter.value = statusFilter.value = timeFilter.value = '0';
+        // show all rows again
+        rows.forEach(r => r.style.display = '');
+    });
+    });
+
+    // Toggle custom reason field when clicking the Custom button
+    document.getElementById('btn_add_custom').addEventListener('click', function() {
+        var customField = document.getElementById('custom_reason_field');
+        customField.hidden = !customField.hidden;
+        if (!customField.hidden) {
+        document.getElementById('common_reason').value = 'other';
+        document.getElementById('reason').required = true;
+        }
+    });
+
+    // Populate or hide custom field based on select change
+    document.getElementById('common_reason').addEventListener('change', function(e) {
+        var customField = document.getElementById('custom_reason_field');
+        var customInput = document.getElementById('reason');
+
+        if (e.target.value === 'other') {
+        customField.hidden = false;
+        customInput.required = true;
+        customInput.value = '';
+        } else if (e.target.value === '') {
+        customField.hidden = true;
+        customInput.required = false;
+        customInput.value = '';
+        } else {
+        customField.hidden = true;
+        customInput.required = false;
+        // Store selected reason in a hidden input or use this value directly
+        customInput.value = e.target.options[e.target.selectedIndex].text;
+        }
+    });
+
+
+    // Helper to validate reason
+        function isValidReasonSelected() {
+            const selectReason = document.getElementById('common_reason').value;
+            const customReasonField = document.getElementById('custom_reason_field');
+            const customReason = document.getElementById('reason').value.trim();
+
+            if (selectReason === '') {
+                showNotification({
+                    color: "bg-red-500",
+                    title: "Please describe the reason.",
+                    message: "You must either describe select a reason or Set custom one."
+                });
+                return false;
+            }
+
+            if (selectReason === 'other' && customReason === '') {
+                showNotification({
+                    color: "bg-red-500",
+                    title: "Please describe the reason.",
+                    message: "You must either describe select a reason or Set custom one."
+                });
+                return false;
+            }
+
+            return true;
+        }
+
+    // Function to show dialog box with title, message, and confirm action
+
+    function showDialog({ title, message, onConfirm, from_box = false }) {
+        // Set title and message
+        document.getElementById('title_field').textContent = title;
+        document.getElementById('message_field').textContent = message;
+
+        // Set form to add reason with required if from_box is true
+        const cancellation_section = document.getElementById('cancellation_section');
+        if (from_box) {
+            cancellation_section.classList.remove('hidden');
+        }else {
+            cancellation_section.classList.add('hidden');
+        }
+
+
+        // Show dialog box
+        const dialog = document.getElementById('dialogBOX');
+        dialog.classList.remove('hidden');
+
+        // Remove previous event listeners by cloning button
+        const yesButton = document.getElementById('confirm-yes-button');
+        const newYesButton = yesButton.cloneNode(true);
+        yesButton.parentNode.replaceChild(newYesButton, yesButton);
+
+        // Attach new event handler
+
+        newYesButton.addEventListener('click', () => {
+            if (from_box) {
+                if (isValidReasonSelected()) {
+                    onConfirm();
+                    dialog.classList.add('hidden');
+                }
+            }else {
+                dialog.classList.add('hidden');
+            }
+        });
+    }
+
+    // Hide dialog when clicking outside
+    document.getElementById('dialogBOX').addEventListener('click', function (event) {
+        no_buton = document.getElementById('confirm-no-button');
+        if (event.target === this && event.target !== no_buton) {
+            this.classList.add('hidden');
+        }
+    });
+</script>
+
+
+<script>
+    // Add event listeners to cancel buttons
+    document.querySelectorAll('.cancel-appointment').forEach(button => {
+        button.addEventListener('click', () => {
+            const id = button.getAttribute('data-id');
+            const doctor = button.getAttribute('data-doctor');
+            const date = button.getAttribute('data-date');
+            const diloagBox_form = document.getElementById('diloagBox-form');
+            diloagBox_form.setAttribute('action', `/p/appointment/${id}/cancel/`);
+            showDialog({
+                title: 'Cancel Appointment',
+                message: `Do you want to cancel appointment with Dr.${doctor} on ${date}?`,
+                from_box: true,
+                onConfirm: () => {
+                    diloagBox_form.submit();
+                }
+            });
+        });
+    });
+
+    // Add event listeners to edit buttons
+    document.querySelectorAll('.edit-appointment').forEach(button => {
+        button.addEventListener('click', () => {
+            const id = button.getAttribute('data-id');
+            const doctor = button.getAttribute('data-doctor');
+            const date = button.getAttribute('data-date');
+            showDialog({
+                title: 'Edit Appointment',
+                message: `Are you sure you want to edit appointment with Dr.${doctor} on ${date}?`,
+                onConfirm: () => {
+                    alert(`Editing appointment ${id}`);
+                }
+            });
+        });
+    });
+</script>
+
+
+<script>
+    dashboard_nav_all = document.querySelectorAll('.appointment-nav a');
+    console.log(dashboard_nav_all);
+    
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
+
+{% endblock scripts %}

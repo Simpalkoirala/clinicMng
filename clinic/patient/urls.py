@@ -6,8 +6,8 @@ app_name = 'patient'
 
 
 urlpatterns = [
-    path('', patientDashboard, name='patientDashboard'),
-    path('dashboard/', patientDashboard, name='patient_dashboard2'),
+    path('', patientDashboard, name='dashboard'),
+    path('dashboard/', patientDashboard, name='patientDashboard'),
     path('view-appointment/', viewAppointment, name='viewAppointment'),
     path('appointment/<uuid:apot_id>/<str:status>/', appoinemtCancle_Edit, name='appoinemtCancle_Edit'),
 

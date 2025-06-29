@@ -14,7 +14,7 @@ urlpatterns = [
 
 
 
-    path('', doctorDashboard, name='doctor_dashboard'),
+    path('', doctorDashboard, name='dashboard'),
     path('dashboard/', doctorDashboard, name='doctor_dashboard'),
 
 
@@ -30,7 +30,7 @@ urlpatterns = [
 
 
     path('view-patients/', ViewPatients, name='ViewPatients_d'),
-    path('view-patients-records/<str:patient_id>/', ViewPatientsRecords, name='ViewPatientsRecords'),
+    # path('view-patients-records/<str:patient_id>/', ViewPatientsRecords, name='ViewPatientsRecords'),
  
     path('actions-appointment/', Action_Appointment, name='Action_Appointment_from_Doc'),
 

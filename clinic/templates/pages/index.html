@@ -1,559 +1,556 @@
 {% extends "base.html" %} {% load static %}
-
+{% load url_resolver %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="container mx-auto px-6 py-12 md:py-16 bg-transparent overflow-x-hidden min-h-screen">
-    <!-- Doctor Images - Keeping original positioning -->
-    <img id="bumpImage2" src="{% static 'doc-2.png' %}"
-        class=" drop-shadow-down animate-doc cursor-pointer absolute block left-4 top-[294px] w-28 h-28 sm:left-8 sm:top-56 sm:w-40 sm:h-40 md:top-64 md:-left-8 md:w-64 md:h-64 lg:-left-2 xl:w-96 xl:h-96"
-        alt="Girl Doctor Homepage" />
+    <!-- Hero Section -->
+    <section class="container mx-auto px-6 py-12 md:py-16 bg-transparent overflow-x-hidden min-h-screen">
+        <!-- Doctor Images - Keeping original positioning -->
+        <img id="bumpImage2" src="{% static 'doc-2.png' %}"
+            class=" drop-shadow-down animate-doc cursor-pointer absolute block left-4 top-[294px] w-28 h-28 sm:left-8 sm:top-56 sm:w-40 sm:h-40 md:top-64 md:-left-8 md:w-64 md:h-64 lg:-left-2 xl:w-96 xl:h-96"
+            alt="Girl Doctor Homepage" />
 
-    <img id="bumpImage" src="{% static 'doc-1.png' %}"
-        class=" drop-shadow-down animate-doc cursor-pointer absolute block right-3 top-[280px] w-32 h-32 sm:right-8 sm:top-48 sm:w-48 sm:h-48 md:top-52 md:-right-10 md:w-72 md:h-72 lg:right-0 xl:w-[26rem] xl:h-[26rem]"
-        alt="Boy Doctor HomePage" />
+        <img id="bumpImage" src="{% static 'doc-1.png' %}"
+            class=" drop-shadow-down animate-doc cursor-pointer absolute block right-3 top-[280px] w-32 h-32 sm:right-8 sm:top-48 sm:w-48 sm:h-48 md:top-52 md:-right-10 md:w-72 md:h-72 lg:right-0 xl:w-[26rem] xl:h-[26rem]"
+            alt="Boy Doctor HomePage" />
 
-    <!-- Text Area - Keeping your original text and styling -->
-    <div class="relative container mx-auto px-6 ">
-        <div class="text-center space-y-6">
-            <!-- Main Heading - Same as original -->
-             
-            <h1
-                class="inline-block text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-800 mb-2 tracking-tight animate-fade-in">
-                Nepal's <span class="block sm:inline">Care</span>
-            </h1>
-
-            <!-- Tagline - Same as original -->
-            <p class="text-lg md:text-2xl text-gray-700 max-w-2xl mx-auto leading-relaxed font-light animate-slide-up">
-                <span class="block">Clinic For Powering Healthcare,</span>
-                <span class="block mt-1 text-indigo-600 font-medium">Optimizing Experiences</span>
-            </p>
-
-            <!-- Call-to-action Button - Same as original -->
-            <div class="mt-10 animate-fade-in-delay">
-                <button  onclick="location.href='{% url 'patient:bookAppointment' %}'"
-                    class="group relative bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-2 rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 transform">
-                    <span class="relative z-10">Get Started</span>
-                    <span
-                        class="absolute inset-0 rounded-full bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
-                    <span
-                        class="absolute -inset-1 rounded-full opacity-0 group-hover:opacity-100 animate-pulse bg-blue-400/30 blur-sm transition-opacity duration-300"></span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Feature Cards - Maintaining your 2+1 layout while enhancing the design -->
-    <div
-        class="grid grid-cols-2 mx-auto md:flex sm:flex-row relative items-center justify-center gap-4 px-4 py-6 w-full">
-        <!-- Appointment Booking -->
-        <div
-            class="group bg-gradient-to-br from-white to-purple-50 rounded-2xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-1 cursor-pointer text-center flex flex-col items-center justify-center w-full md:w-48 h-52 md:h-56 relative overflow-hidden">
-            <!-- Making the top bar always visible instead of only on hover -->
-            <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-purple-500 to-indigo-500">
-            </div>
-            <div class="bg-indigo-50 rounded-full p-3 mb-3 pt-4">
-                <svg class="w-10 h-10 sm:w-12 sm:h-12 text-indigo-500 transform group-hover:scale-110 transition-transform duration-300"
-                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-            </div>
-            <h3 class="text-gray-800 font-semibold text-base sm:text-lg mb-1 sm:mb-2">Appointment Booking</h3>
-            <p class="text-gray-600 text-xs sm:text-sm">Schedule your visit with ease</p>
-        </div>
-
-        <!-- Video Consulting -->
-        <div
-            class="group bg-gradient-to-br from-white to-purple-50 rounded-2xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-1 cursor-pointer text-center flex flex-col items-center justify-center w-full md:w-48 h-52 md:h-56 relative overflow-hidden">
-            <!-- Making the top bar always visible instead of only on hover -->
-            <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-purple-500 to-indigo-500">
-            </div>
-            <div class="bg-indigo-50 rounded-full p-3 mb-3 pt-4">
-                <svg class="w-10 h-10 sm:w-12 sm:h-12 text-indigo-500 transform group-hover:scale-110 transition-transform duration-300"
-                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-            </div>
-            <h3 class="text-gray-800 font-semibold text-base sm:text-lg mb-1 sm:mb-2">Video Consulting</h3>
-            <p class="text-gray-600 text-xs sm:text-sm">Connect with experts anywhere</p>
-        </div>
-
-        <!-- Invoice Management - Keeping the col-span-2 for small screens -->
-        <div
-            class="group bg-gradient-to-br from-white to-purple-50 rounded-2xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-1 cursor-pointer text-center flex flex-col items-center justify-center col-span-2 w-full md:w-48 h-52 md:h-56 relative overflow-hidden">
-            <!-- Making the top bar always visible instead of only on hover -->
-            <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-purple-500 to-indigo-500">
-            </div>
-            <div class="bg-indigo-50 rounded-full p-3 mb-3 pt-4">
-                {% comment %} <svg 
-                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg> {% endcomment %}
-
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="currentColor" stroke-width="2"
-                 class="w-10 h-10 sm:w-12 sm:h-12 text-indigo-500 transform group-hover:scale-110 transition-transform duration-300" 
-                 shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" 
-                  viewBox="0 0 387 511.39">
-                    <path fill-rule="nonzero" 
-                        d="M63.38 0h198.16c3.35 0 6.38 1.45 8.47 3.77l113.47 109.17c2.32 2.23 3.49 5.22 3.49 8.2l.03 326.88c0 34.72-28.65 63.37-63.37 63.37H63.38C28.62 511.39 0 482.78 0 448.02V63.38C0 28.57 28.58 0 63.38 0zm212.2 40.69v30.37c2.4 31.65 23.82 43.6 53.52 44.11l23.84-.04-77.36-74.44zm88.61 95.97c-1.57.81-3.35 1.27-5.24 1.27l-30.04-.05c-41.78-.67-72.7-21.39-76.03-65.17l-.12-1.65V22.81H63.38c-22.36 0-40.57 18.21-40.57 40.57v186.57l341.38-.12V136.66zM22.81 272.53v175.49c0 22.32 18.26 40.56 40.57 40.56h260.25c22.16 0 40.56-18.4 40.56-40.56V272.65l-341.38-.12zm41.01-129.58H94.1c1.13 0 1.88.75 1.88 1.88v87.61c0 1.12-.75 1.88-1.88 1.88H63.82c-1.14 0-1.9-.76-1.9-1.88v-87.61c-.36-1.13.76-1.88 1.9-1.88zm57.3-35.96h30.27c1.14 0 1.88.74 1.88 1.88v123.57c0 1.12-.74 1.88-1.88 1.88h-30.27c-1.12 0-1.88-.76-1.88-1.88V108.87c0-1.14.76-1.88 1.88-1.88zm171.87 79.12h30.28c1.14 0 1.89.76 1.89 1.89v44.06c0 1.12-.75 1.86-1.89 1.86h-30.28c-1.11 0-1.85-.74-1.85-1.86V188c0-.76.74-1.89 1.85-1.89zm-114.58-21.4h30.28c1.14 0 1.88.75 1.88 1.88v65.47c0 1.12-.74 1.86-1.88 1.86h-30.28c-1.11 0-1.85-.74-1.85-1.86v-65.47c0-.75.74-1.88 1.85-1.88zm57.28-15.25h30.28c1.13 0 1.89.79 1.89 1.89v81.09c0 1.12-.76 1.88-1.89 1.88h-30.28c-1.13 0-1.88-.76-1.88-1.88v-81.09c0-1.1.75-1.89 1.88-1.89zm-33.6 243.69 60.31 1.07c0 21.64-10.64 41.51-28.38 53.57l-31.93-54.64zm-4.03-93.33c14.18 1.09 23.75 2.83 36.55 9.22 24.49 12.78 41.53 38.32 42.94 67.43l.35 4.61h-4.61l-69.9-2.14h-3.92l-1.41-79.12zm9.23 70.61 61.39 1.78c-3.66-35.41-28.36-56.77-62.1-63.53l.71 61.75zm-25.44 16.44 34.42 59.62c-10.64 6.03-22.34 9.24-34.42 9.24-37.97 0-68.84-30.88-68.84-68.86 0-36.9 29.1-67.42 66-68.85l2.84 68.85z"/>
-                </svg>
-            </div>
-            <h3 class="text-gray-800 font-semibold text-base sm:text-lg mb-1 sm:mb-2">Reports Management</h3>
-            <p class="text-gray-600 text-xs sm:text-sm">Track and manage all payments</p>
-        </div>
-    </div>
-
-    <!-- Keeping your original animations -->
-    <style>
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInDelay {
-            0% {
-                opacity: 0;
-            }
-
-            30% {
-                opacity: 0;
-            }
-
-            100% {
-                opacity: 1;
-            }
-        }
-
-        .animate-fade-in {
-            animation: fadeIn 1s ease-out forwards;
-        }
-
-        .animate-slide-up {
-            animation: slideUp 1.2s ease-out forwards;
-        }
-
-        .animate-fade-in-delay {
-            animation: fadeInDelay 1.5s ease-out forwards;
-        }
-    </style>
-</section>
-
-
-<!-- work flow  -->
-<section class="py-12 overflow-hidden bg-sky-50 ">
-    <div class="container mx-auto px-4">
-        <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
-            <span
-                class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mb-4 inline-block">Workflow</span>
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">Look at a glance how our system works</h1>
-        </div>
-
-        <div class=" relative mb-6">
-            <div class="workflow-cards-container grid md:grid-cols-3 gap-8 md:gap-6">
-                <!-- Card 1 -->
-                <div class="workflow-card bg-white rounded-xl p-8 text-center shadow-sm transform transition-all"
-                    data-speed="0.95">
-                    <div class="workflow-img bg-gray-100 mb-6">
-                        <img src="https://doxe.originlabsoft.com/assets/front/img/plan.svg" alt="Create Account"
-                            class="w-20 h-20 mx-auto">
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Create Account and Set Up Prescription Settings
-                    </h3>
-                    <p class="text-gray-600">Sign up quickly, configure your prescription preferences, and start
-                        managing digital prescriptions seamlessly.</p>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="workflow-card bg-white rounded-xl p-8 text-center shadow-sm transform transition-all"
-                    data-speed="1">
-                    <div class="workflow-img bg-gray-100 mb-6">
-                        <img src="https://doxe.originlabsoft.com/assets/front/img/work.svg" alt="Accept Bookings"
-                            class="w-20 h-20 mx-auto">
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Accept Bookings and Manage Your Schedule</h3>
-                    <p class="text-gray-600">Share your profile link for easy patient bookings, manage appointments,
-                        and
-                        offer video consultations.</p>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="workflow-card bg-white rounded-xl p-8 text-center shadow-sm transform transition-all"
-                    data-speed="1.05">
-                    <div class="workflow-img bg-gray-100 mb-6">
-                        <img src="https://doxe.originlabsoft.com/assets/front/img/payment.svg" alt="Automate Payments"
-                            class="w-20 h-20 mx-auto">
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Automate Payments and Manage Your Practice</h3>
-                    <p class="text-gray-600">Accept online and offline payments, track transactions, and use
-                        analytics
-                        to optimize your practice and grow your chamber.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-
-<!--Department  -->
-<section class="py-16" id="department-list">
-    <div class="container mx-auto px-4">
-        <div class="flex justify-center">
-            <div class="lg:w-2/3 text-center">
-                <h4 class="text-green-500 font-semibold text-lg">Our Department</h4>
-                <h1 class="text-4xl font-bold mt-3">We have all <span class="text-blue-500">Department</span>
+        <!-- Text Area - Keeping your original text and styling -->
+        <div class="relative container mx-auto px-6 ">
+            <div class="text-center space-y-6">
+                <!-- Main Heading - Same as original -->
+                
+                <h1
+                    class="inline-block text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-800 mb-2 tracking-tight animate-fade-in">
+                    Nepal's <span class="block sm:inline">Care</span>
                 </h1>
-                <p class="text-gray-600 mt-3 max-w-2xl mx-auto">
-                    Dermatologists Have problems with your skin, hair, nails? ·
-                    Endocrinologists These are experts on hormones and metabolism.
+
+                <!-- Tagline - Same as original -->
+                <p class="text-lg md:text-2xl text-gray-700 max-w-2xl mx-auto leading-relaxed font-light animate-slide-up">
+                    <span class="block">Clinic For Powering Healthcare,</span>
+                    <span class="block mt-1 text-indigo-600 font-medium">Optimizing Experiences</span>
                 </p>
+
+                <!-- Call-to-action Button - Same as original -->
+                <div class="mt-10 animate-fade-in-delay">
+                    <button  onclick="location.href='{% role_to_wants user.profile.role 'url' %}'" title="{% role_to_wants user.profile.role 'text' %}"
+                        class="group relative bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-2 rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 transform">
+                        <span class="relative z-10">Get Started</span>
+                        <span
+                            class="absolute inset-0 rounded-full bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+                        <span
+                            class="absolute -inset-1 rounded-full opacity-0 group-hover:opacity-100 animate-pulse bg-blue-400/30 blur-sm transition-opacity duration-300"></span>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 m-0 mt-12 lg:m-12">
-            <!-- Video Call -->
-            <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 0.1s">
-                <a class="block cursor-pointer">
-                    <div
-                        class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
-                        <span class="mdi mdi-human-wheelchair text-blue-500 text-3xl">
-                            <svg id='Video_Call_24' width='24' height='24' viewBox='0 0 24 24'
-                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                                <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
-                                <g transform="matrix(0.4 0 0 0.4 12 12)" fill="currentColor">
-                                    <path
-                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
-                                        transform=" translate(-25, -25)"
-                                        d="M 5 9 C 2.199219 9 0 11.199219 0 14 L 0 36 C 0 38.800781 2.199219 41 5 41 L 32 41 C 34.800781 41 37 38.800781 37 36 L 37 14 C 37 11.199219 34.800781 9 32 9 Z M 50 12.3125 L 39 18.1875 L 39 31.8125 L 50 37.6875 Z"
-                                        stroke-linecap="round" />
-                                </g>
-                            </svg>
-                        </span>
-                    </div>
-                    <h5 class="mt-4 font-medium text-gray-800">Video Call & Msg</h5>
-                </a>
+        <!-- Feature Cards - Maintaining your 2+1 layout while enhancing the design -->
+        <div
+            class="grid grid-cols-2 mx-auto md:flex sm:flex-row relative items-center justify-center gap-4 px-4 py-6 w-full">
+            <!-- Appointment Booking -->
+            <div
+                class="group bg-gradient-to-br from-white to-purple-50 rounded-2xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-1 cursor-pointer text-center flex flex-col items-center justify-center w-full md:w-48 h-52 md:h-56 relative overflow-hidden">
+                <!-- Making the top bar always visible instead of only on hover -->
+                <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-purple-500 to-indigo-500">
+                </div>
+                <div class="bg-indigo-50 rounded-full p-3 mb-3 pt-4">
+                    <svg class="w-10 h-10 sm:w-12 sm:h-12 text-indigo-500 transform group-hover:scale-110 transition-transform duration-300"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <h3 class="text-gray-800 font-semibold text-base sm:text-lg mb-1 sm:mb-2">Appointment Booking</h3>
+                <p class="text-gray-600 text-xs sm:text-sm">Schedule your visit with ease</p>
             </div>
 
-            <!-- Invoice & Bill Mng -->
-            <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 0.3s">
-                <a class="block cursor-pointer">
-                    <div
-                        class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
-                        <span class="mdi mdi-heart-pulse text-blue-500 text-3xl">
-                            <svg id='Invoice_24' width='24' height='24' viewBox='0 0 24 24'
-                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                                <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
-                                <g transform="matrix(0.91 0 0 0.91 12 12)" fill="currentColor">
-                                    <path
-                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
-                                        transform=" translate(-14, -13)"
-                                        d="M 6 2 C 4.897 2 4 2.897 4 4 L 4 20 C 4 21.103 4.897 22 6 22 L 10.501953 22 C 10.178953 21.23 10 20.386 10 19.5 C 10 18.451 10.270844 17.472703 10.714844 16.595703 C 10.065844 16.198703 9.4121094 15.422469 9.4121094 13.855469 L 11.302734 13.855469 C 11.302734 14.574469 11.459391 14.966359 11.650391 15.193359 C 12.081391 14.710359 12.587531 14.298938 13.144531 13.960938 C 12.757531 12.229938 9.7265625 12.895578 9.7265625 9.7675781 C 9.7265625 7.4775781 11.623891 7.121125 11.962891 7.078125 L 11.962891 5.6503906 L 12.970703 5.6503906 L 12.970703 7.1054688 C 13.291703 7.1664687 15.087891 7.576125 15.087891 10.203125 L 13.197266 10.203125 C 13.197266 8.830125 12.614141 8.6152344 12.369141 8.6152344 C 12.235141 8.6152344 11.615234 8.6503437 11.615234 9.7773438 C 11.616234 11.481344 14.151125 11.256906 14.828125 13.253906 C 15.042125 13.196906 15.250656 13.124844 15.472656 13.089844 C 16.581656 11.808844 18.198031 11.016906 19.957031 11.003906 L 19.957031 3.7167969 C 19.980031 3.3877969 19.863141 3.0518594 19.619141 2.7558594 C 19.317141 2.3908594 18.733 2 18 2 L 6 2 z M 20 13 C 18.527063 13 17.234653 13.80695 16.541016 15.003906 C 16.52703 15.003776 16.514014 15 16.5 15 C 14.026563 15 12 17.026563 12 19.5 C 12 21.973437 14.026563 24 16.5 24 C 18.473506 24 20.143947 22.701711 20.746094 20.923828 C 22.590297 20.570424 24 18.94205 24 17 C 24 14.802666 22.197334 13 20 13 z M 20 15 C 21.116666 15 22 15.883334 22 17 C 22 17.778944 21.564801 18.436339 20.925781 18.767578 C 20.695228 17.383162 19.828471 16.221374 18.636719 15.568359 C 18.993793 15.227238 19.460746 15 20 15 z M 16.5 17 C 17.892557 17 19 18.107443 19 19.5 C 19 20.892557 17.892557 22 16.5 22 C 15.107443 22 14 20.892557 14 19.5 C 14 18.107443 15.107443 17 16.5 17 z"
-                                        stroke-linecap="round" />
-                                </g>
-                            </svg>
-                        </span>
-                    </div>
-                    <h5 class="mt-4 font-medium text-gray-800">Invoice Management</h5>
-                </a>
+            <!-- Video Consulting -->
+            <div
+                class="group bg-gradient-to-br from-white to-purple-50 rounded-2xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-1 cursor-pointer text-center flex flex-col items-center justify-center w-full md:w-48 h-52 md:h-56 relative overflow-hidden">
+                <!-- Making the top bar always visible instead of only on hover -->
+                <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-purple-500 to-indigo-500">
+                </div>
+                <div class="bg-indigo-50 rounded-full p-3 mb-3 pt-4">
+                    <svg class="w-10 h-10 sm:w-12 sm:h-12 text-indigo-500 transform group-hover:scale-110 transition-transform duration-300"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <h3 class="text-gray-800 font-semibold text-base sm:text-lg mb-1 sm:mb-2">Video Consulting</h3>
+                <p class="text-gray-600 text-xs sm:text-sm">Connect with experts anywhere</p>
             </div>
 
-            <!-- X-ray -->
-            <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 0.2s">
-                <a class="block cursor-pointer">
-                    <div
-                        class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
-                        <span class="mdi mdi-radiology-box text-blue-500 text-3xl">
-                            <svg id='Radiology_Scanning_24' width='24' height='24' viewBox='0 0 24 24'
-                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                                <g transform="matrix(0.83 0 0 0.83 12 12)" fill="currentColor">
-                                    <g>
-                                        <g transform="matrix(1 0 0 1 0 2)">
-                                            <path
-                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                                transform=" translate(-12, -14)"
-                                                d="M 18.5 8.5 L 5.5 8.5 C 4.67157287525381 8.5 4 9.17157287525381 4 10 L 4 18 C 4 18.82842712474619 4.67157287525381 19.5 5.5 19.5 L 18.5 19.5 C 19.32842712474619 19.5 20 18.82842712474619 20 18 L 20 10 C 20 9.17157287525381 19.32842712474619 8.5 18.5 8.5 Z M 17.72 12 C 17.620280357730522 12.314075799014503 17.329520911856463 12.52810705778291 17 12.53 C 16.926991536970377 12.539761930602499 16.853008463029624 12.539761930602499 16.78 12.53 L 15.16 12 C 14.456901111719159 11.777987891499484 13.733261885994786 11.627229719473574 12.999999999999998 11.55 C 12.929250043969093 11.542700244470234 12.859103051977378 11.568543873098761 12.81 11.620000000000001 C 12.757689942442505 11.664967415735944 12.728324744244853 11.73103911168066 12.73 11.8 L 12.73 13.06 C 12.73334159317254 13.185525386531486 12.825918160011447 13.290726030666608 12.950000000000001 13.31 C 13.703029732875615 13.391577671834206 14.442433559360547 13.569706775487397 15.150000000000002 13.840000000000002 L 16.46 14.35 C 16.79744153186371 14.479797918208689 16.99425339338762 14.831860784362588 16.928068978889137 15.187295602965563 C 16.86188456439065 15.542730421568535 16.55154413120713 15.800358032845878 16.19 15.799999999999999 C 16.097902943340276 15.797901751061897 16.006741187137578 15.781019944357693 15.920000000000002 15.749999999999998 L 14.610000000000001 15.239999999999998 C 14.090323382048288 15.043653998764485 13.550290599502237 14.906130122463937 12.999999999999998 14.829999999999998 C 12.927573007854894 14.816842182779165 12.853223736256464 14.839146964258696 12.8 14.89 C 12.73972155443543 14.933973729970367 12.705839481655625 15.005502550283289 12.71 15.08 L 12.71 16.25 C 12.71 16.388071187457697 12.821928812542302 16.5 12.96 16.5 L 13.96 16.5 C 14.374213562373097 16.488954305003386 14.718954305003384 16.815786437626905 14.73 17.23 C 14.741045694996616 17.644213562373096 14.414213562373096 17.988954305003386 14 18 L 10 18 C 9.585786437626904 18 9.25 17.664213562373096 9.25 17.25 C 9.25 16.835786437626904 9.585786437626904 16.5 10 16.5 L 11 16.5 C 11.1380711874577 16.5 11.25 16.388071187457697 11.25 16.25 L 11.25 15.08 C 11.254160518344376 15.005502550283289 11.22027844556457 14.933973729970367 11.16 14.89 C 11.106776263743537 14.839146964258696 11.032426992145107 14.816842182779165 10.96 14.83 C 10.416495986628709 14.907583315736945 9.88324923915662 15.045087194015911 9.370000000000001 15.240000000000002 L 8.06 15.75 C 7.673400675118445 15.899116882454313 7.239116882454315 15.706599324881555 7.09 15.32 C 6.940883117545686 14.933400675118445 7.133400675118445 14.499116882454313 7.5200000000000005 14.35 L 8.83 13.84 C 9.537566440639456 13.569706775487393 10.276970267124383 13.391577671834206 11.029999999999998 13.31 C 11.154081839988555 13.290726030666608 11.246658406827464 13.185525386531486 11.250000000000002 13.06 L 11.250000000000002 11.8 C 11.249513404399957 11.728578349688076 11.220747441886148 11.660259188717779 11.170000000000002 11.610000000000001 C 11.117146884307209 11.565563231501901 11.048788024729786 11.543976223214294 10.980000000000002 11.55 C 10.253490403893824 11.628546254738279 9.536615553782283 11.77929096621033 8.839999999999996 12 L 7.22 12.5 C 6.822767534951025 12.617327331259824 6.404734296463299 12.394969225681248 6.279999999999999 12 C 6.220853469655203 11.809044328294064 6.240388029828328 11.602377833826653 6.334266447648938 11.425886408323905 C 6.428144865469549 11.249394982821157 6.588597765499255 11.117685052107245 6.7799999999999985 11.06 L 8.399999999999999 10.57 C 10.745999999999999 9.850000000000001 13.253999999999994 9.850000000000001 15.599999999999994 10.57 L 17.22 11.06 C 17.41140223450074 11.117685052107245 17.57185513453045 11.249394982821155 17.66573355235106 11.425886408323903 C 17.75961197017167 11.602377833826651 17.779146530344796 11.809044328294064 17.72 12 Z"
-                                                stroke-linecap="round" />
-                                        </g>
-                                        <g transform="matrix(1 0 0 1 0 10.5)">
-                                            <path
-                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                                transform=" translate(-12, -22.5)"
-                                                d="M 14.08 21 L 9.92 21 C 9.78486641921067 21.00033104179977 9.655388290709483 21.054280262008596 9.56 21.15 C 9.46117317037705 21.246731278384864 9.409961490900319 21.38207643128765 9.42 21.52 L 9.5 23.52 C 9.510740588209979 23.788301959000165 9.731483230955462 24.000214896035832 10 24 L 14 24 C 14.268516769044536 24.000214896035832 14.489259411790021 23.788301959000165 14.5 23.52 L 14.58 21.52 C 14.590038509099681 21.38207643128765 14.53882682962295 21.246731278384864 14.44 21.15 C 14.344611709290515 21.054280262008596 14.21513358078933 21.00033104179977 14.08 21 Z"
-                                                stroke-linecap="round" />
-                                        </g>
-                                        <g transform="matrix(1 0 0 1 0 -8.5)">
-                                            <circle
-                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                                cx="0" cy="0" r="3.5" />
+            <!-- Invoice Management - Keeping the col-span-2 for small screens -->
+            <div
+                class="group bg-gradient-to-br from-white to-purple-50 rounded-2xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-1 cursor-pointer text-center flex flex-col items-center justify-center col-span-2 w-full md:w-48 h-52 md:h-56 relative overflow-hidden">
+                <!-- Making the top bar always visible instead of only on hover -->
+                <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-purple-500 to-indigo-500">
+                </div>
+                <div class="bg-indigo-50 rounded-full p-3 mb-3 pt-4">
+                    {% comment %} <svg 
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg> {% endcomment %}
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="currentColor" stroke-width="2"
+                    class="w-10 h-10 sm:w-12 sm:h-12 text-indigo-500 transform group-hover:scale-110 transition-transform duration-300" 
+                    shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" 
+                    viewBox="0 0 387 511.39">
+                        <path fill-rule="nonzero" 
+                            d="M63.38 0h198.16c3.35 0 6.38 1.45 8.47 3.77l113.47 109.17c2.32 2.23 3.49 5.22 3.49 8.2l.03 326.88c0 34.72-28.65 63.37-63.37 63.37H63.38C28.62 511.39 0 482.78 0 448.02V63.38C0 28.57 28.58 0 63.38 0zm212.2 40.69v30.37c2.4 31.65 23.82 43.6 53.52 44.11l23.84-.04-77.36-74.44zm88.61 95.97c-1.57.81-3.35 1.27-5.24 1.27l-30.04-.05c-41.78-.67-72.7-21.39-76.03-65.17l-.12-1.65V22.81H63.38c-22.36 0-40.57 18.21-40.57 40.57v186.57l341.38-.12V136.66zM22.81 272.53v175.49c0 22.32 18.26 40.56 40.57 40.56h260.25c22.16 0 40.56-18.4 40.56-40.56V272.65l-341.38-.12zm41.01-129.58H94.1c1.13 0 1.88.75 1.88 1.88v87.61c0 1.12-.75 1.88-1.88 1.88H63.82c-1.14 0-1.9-.76-1.9-1.88v-87.61c-.36-1.13.76-1.88 1.9-1.88zm57.3-35.96h30.27c1.14 0 1.88.74 1.88 1.88v123.57c0 1.12-.74 1.88-1.88 1.88h-30.27c-1.12 0-1.88-.76-1.88-1.88V108.87c0-1.14.76-1.88 1.88-1.88zm171.87 79.12h30.28c1.14 0 1.89.76 1.89 1.89v44.06c0 1.12-.75 1.86-1.89 1.86h-30.28c-1.11 0-1.85-.74-1.85-1.86V188c0-.76.74-1.89 1.85-1.89zm-114.58-21.4h30.28c1.14 0 1.88.75 1.88 1.88v65.47c0 1.12-.74 1.86-1.88 1.86h-30.28c-1.11 0-1.85-.74-1.85-1.86v-65.47c0-.75.74-1.88 1.85-1.88zm57.28-15.25h30.28c1.13 0 1.89.79 1.89 1.89v81.09c0 1.12-.76 1.88-1.89 1.88h-30.28c-1.13 0-1.88-.76-1.88-1.88v-81.09c0-1.1.75-1.89 1.88-1.89zm-33.6 243.69 60.31 1.07c0 21.64-10.64 41.51-28.38 53.57l-31.93-54.64zm-4.03-93.33c14.18 1.09 23.75 2.83 36.55 9.22 24.49 12.78 41.53 38.32 42.94 67.43l.35 4.61h-4.61l-69.9-2.14h-3.92l-1.41-79.12zm9.23 70.61 61.39 1.78c-3.66-35.41-28.36-56.77-62.1-63.53l.71 61.75zm-25.44 16.44 34.42 59.62c-10.64 6.03-22.34 9.24-34.42 9.24-37.97 0-68.84-30.88-68.84-68.86 0-36.9 29.1-67.42 66-68.85l2.84 68.85z"/>
+                    </svg>
+                </div>
+                <h3 class="text-gray-800 font-semibold text-base sm:text-lg mb-1 sm:mb-2">Reports Management</h3>
+                <p class="text-gray-600 text-xs sm:text-sm">Track and manage all payments</p>
+            </div>
+        </div>
+
+        <!-- Keeping your original animations -->
+        <style>
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
+
+            @keyframes slideUp {
+                from {
+                    transform: translateY(20px);
+                    opacity: 0;
+                }
+
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes fadeInDelay {
+                0% {
+                    opacity: 0;
+                }
+
+                30% {
+                    opacity: 0;
+                }
+
+                100% {
+                    opacity: 1;
+                }
+            }
+
+            .animate-fade-in {
+                animation: fadeIn 1s ease-out forwards;
+            }
+
+            .animate-slide-up {
+                animation: slideUp 1.2s ease-out forwards;
+            }
+
+            .animate-fade-in-delay {
+                animation: fadeInDelay 1.5s ease-out forwards;
+            }
+        </style>
+    </section>
+
+
+    <!-- work flow  -->
+    <section class="py-12 overflow-hidden bg-sky-50 ">
+        <div class="container mx-auto px-4">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <span
+                    class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mb-4 inline-block">Workflow</span>
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">Look at a glance how our system works</h1>
+            </div>
+
+            <div class=" relative mb-6">
+                <div class="workflow-cards-container grid md:grid-cols-3 gap-8 md:gap-6">
+                    <!-- Card 1 -->
+                    <div class="workflow-card bg-white rounded-xl p-8 text-center shadow-sm transform transition-all"
+                        data-speed="0.95">
+                        <div class="workflow-img bg-gray-100 mb-6">
+                            <img src="https://doxe.originlabsoft.com/assets/front/img/plan.svg" alt="Create Account"
+                                class="w-20 h-20 mx-auto">
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Create Account and Set Up Prescription Settings
+                        </h3>
+                        <p class="text-gray-600">Sign up quickly, configure your prescription preferences, and start
+                            managing digital prescriptions seamlessly.</p>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="workflow-card bg-white rounded-xl p-8 text-center shadow-sm transform transition-all"
+                        data-speed="1">
+                        <div class="workflow-img bg-gray-100 mb-6">
+                            <img src="https://doxe.originlabsoft.com/assets/front/img/work.svg" alt="Accept Bookings"
+                                class="w-20 h-20 mx-auto">
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Accept Bookings and Manage Your Schedule</h3>
+                        <p class="text-gray-600">Share your profile link for easy patient bookings, manage appointments,
+                            and
+                            offer video consultations.</p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="workflow-card bg-white rounded-xl p-8 text-center shadow-sm transform transition-all"
+                        data-speed="1.05">
+                        <div class="workflow-img bg-gray-100 mb-6">
+                            <img src="https://doxe.originlabsoft.com/assets/front/img/payment.svg" alt="Automate Payments"
+                                class="w-20 h-20 mx-auto">
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Automate Payments and Manage Your Practice</h3>
+                        <p class="text-gray-600">Accept online and offline payments, track transactions, and use
+                            analytics
+                            to optimize your practice and grow your chamber.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!--Department  -->
+    <section class="py-16" id="department-list">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-center">
+                <div class="lg:w-2/3 text-center">
+                    <h4 class="text-green-500 font-semibold text-lg">Our Department</h4>
+                    <h1 class="text-4xl font-bold mt-3">We have all <span class="text-blue-500">Department</span>
+                    </h1>
+                    <p class="text-gray-600 mt-3 max-w-2xl mx-auto">
+                        Dermatologists Have problems with your skin, hair, nails? ·
+                        Endocrinologists These are experts on hormones and metabolism.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 m-0 mt-12 lg:m-12">
+                <!-- Video Call -->
+                <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 0.1s">
+                    <a class="block cursor-pointer">
+                        <div
+                            class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
+                            <span class="mdi mdi-human-wheelchair text-blue-500 text-3xl">
+                                <svg id='Video_Call_24' width='24' height='24' viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
+                                    <g transform="matrix(0.4 0 0 0.4 12 12)" fill="currentColor">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-25, -25)"
+                                            d="M 5 9 C 2.199219 9 0 11.199219 0 14 L 0 36 C 0 38.800781 2.199219 41 5 41 L 32 41 C 34.800781 41 37 38.800781 37 36 L 37 14 C 37 11.199219 34.800781 9 32 9 Z M 50 12.3125 L 39 18.1875 L 39 31.8125 L 50 37.6875 Z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+                            </span>
+                        </div>
+                        <h5 class="mt-4 font-medium text-gray-800">Video Call & Msg</h5>
+                    </a>
+                </div>
+
+                <!-- Invoice & Bill Mng -->
+                <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 0.3s">
+                    <a class="block cursor-pointer">
+                        <div
+                            class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
+                            <span class="mdi mdi-heart-pulse text-blue-500 text-3xl">
+                                <svg id='Invoice_24' width='24' height='24' viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
+                                    <g transform="matrix(0.91 0 0 0.91 12 12)" fill="currentColor">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-14, -13)"
+                                            d="M 6 2 C 4.897 2 4 2.897 4 4 L 4 20 C 4 21.103 4.897 22 6 22 L 10.501953 22 C 10.178953 21.23 10 20.386 10 19.5 C 10 18.451 10.270844 17.472703 10.714844 16.595703 C 10.065844 16.198703 9.4121094 15.422469 9.4121094 13.855469 L 11.302734 13.855469 C 11.302734 14.574469 11.459391 14.966359 11.650391 15.193359 C 12.081391 14.710359 12.587531 14.298938 13.144531 13.960938 C 12.757531 12.229938 9.7265625 12.895578 9.7265625 9.7675781 C 9.7265625 7.4775781 11.623891 7.121125 11.962891 7.078125 L 11.962891 5.6503906 L 12.970703 5.6503906 L 12.970703 7.1054688 C 13.291703 7.1664687 15.087891 7.576125 15.087891 10.203125 L 13.197266 10.203125 C 13.197266 8.830125 12.614141 8.6152344 12.369141 8.6152344 C 12.235141 8.6152344 11.615234 8.6503437 11.615234 9.7773438 C 11.616234 11.481344 14.151125 11.256906 14.828125 13.253906 C 15.042125 13.196906 15.250656 13.124844 15.472656 13.089844 C 16.581656 11.808844 18.198031 11.016906 19.957031 11.003906 L 19.957031 3.7167969 C 19.980031 3.3877969 19.863141 3.0518594 19.619141 2.7558594 C 19.317141 2.3908594 18.733 2 18 2 L 6 2 z M 20 13 C 18.527063 13 17.234653 13.80695 16.541016 15.003906 C 16.52703 15.003776 16.514014 15 16.5 15 C 14.026563 15 12 17.026563 12 19.5 C 12 21.973437 14.026563 24 16.5 24 C 18.473506 24 20.143947 22.701711 20.746094 20.923828 C 22.590297 20.570424 24 18.94205 24 17 C 24 14.802666 22.197334 13 20 13 z M 20 15 C 21.116666 15 22 15.883334 22 17 C 22 17.778944 21.564801 18.436339 20.925781 18.767578 C 20.695228 17.383162 19.828471 16.221374 18.636719 15.568359 C 18.993793 15.227238 19.460746 15 20 15 z M 16.5 17 C 17.892557 17 19 18.107443 19 19.5 C 19 20.892557 17.892557 22 16.5 22 C 15.107443 22 14 20.892557 14 19.5 C 14 18.107443 15.107443 17 16.5 17 z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+                            </span>
+                        </div>
+                        <h5 class="mt-4 font-medium text-gray-800">Invoice Management</h5>
+                    </a>
+                </div>
+
+                <!-- X-ray -->
+                <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 0.2s">
+                    <a class="block cursor-pointer">
+                        <div
+                            class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
+                            <span class="mdi mdi-radiology-box text-blue-500 text-3xl">
+                                <svg id='Radiology_Scanning_24' width='24' height='24' viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(0.83 0 0 0.83 12 12)" fill="currentColor">
+                                        <g>
+                                            <g transform="matrix(1 0 0 1 0 2)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-12, -14)"
+                                                    d="M 18.5 8.5 L 5.5 8.5 C 4.67157287525381 8.5 4 9.17157287525381 4 10 L 4 18 C 4 18.82842712474619 4.67157287525381 19.5 5.5 19.5 L 18.5 19.5 C 19.32842712474619 19.5 20 18.82842712474619 20 18 L 20 10 C 20 9.17157287525381 19.32842712474619 8.5 18.5 8.5 Z M 17.72 12 C 17.620280357730522 12.314075799014503 17.329520911856463 12.52810705778291 17 12.53 C 16.926991536970377 12.539761930602499 16.853008463029624 12.539761930602499 16.78 12.53 L 15.16 12 C 14.456901111719159 11.777987891499484 13.733261885994786 11.627229719473574 12.999999999999998 11.55 C 12.929250043969093 11.542700244470234 12.859103051977378 11.568543873098761 12.81 11.620000000000001 C 12.757689942442505 11.664967415735944 12.728324744244853 11.73103911168066 12.73 11.8 L 12.73 13.06 C 12.73334159317254 13.185525386531486 12.825918160011447 13.290726030666608 12.950000000000001 13.31 C 13.703029732875615 13.391577671834206 14.442433559360547 13.569706775487397 15.150000000000002 13.840000000000002 L 16.46 14.35 C 16.79744153186371 14.479797918208689 16.99425339338762 14.831860784362588 16.928068978889137 15.187295602965563 C 16.86188456439065 15.542730421568535 16.55154413120713 15.800358032845878 16.19 15.799999999999999 C 16.097902943340276 15.797901751061897 16.006741187137578 15.781019944357693 15.920000000000002 15.749999999999998 L 14.610000000000001 15.239999999999998 C 14.090323382048288 15.043653998764485 13.550290599502237 14.906130122463937 12.999999999999998 14.829999999999998 C 12.927573007854894 14.816842182779165 12.853223736256464 14.839146964258696 12.8 14.89 C 12.73972155443543 14.933973729970367 12.705839481655625 15.005502550283289 12.71 15.08 L 12.71 16.25 C 12.71 16.388071187457697 12.821928812542302 16.5 12.96 16.5 L 13.96 16.5 C 14.374213562373097 16.488954305003386 14.718954305003384 16.815786437626905 14.73 17.23 C 14.741045694996616 17.644213562373096 14.414213562373096 17.988954305003386 14 18 L 10 18 C 9.585786437626904 18 9.25 17.664213562373096 9.25 17.25 C 9.25 16.835786437626904 9.585786437626904 16.5 10 16.5 L 11 16.5 C 11.1380711874577 16.5 11.25 16.388071187457697 11.25 16.25 L 11.25 15.08 C 11.254160518344376 15.005502550283289 11.22027844556457 14.933973729970367 11.16 14.89 C 11.106776263743537 14.839146964258696 11.032426992145107 14.816842182779165 10.96 14.83 C 10.416495986628709 14.907583315736945 9.88324923915662 15.045087194015911 9.370000000000001 15.240000000000002 L 8.06 15.75 C 7.673400675118445 15.899116882454313 7.239116882454315 15.706599324881555 7.09 15.32 C 6.940883117545686 14.933400675118445 7.133400675118445 14.499116882454313 7.5200000000000005 14.35 L 8.83 13.84 C 9.537566440639456 13.569706775487393 10.276970267124383 13.391577671834206 11.029999999999998 13.31 C 11.154081839988555 13.290726030666608 11.246658406827464 13.185525386531486 11.250000000000002 13.06 L 11.250000000000002 11.8 C 11.249513404399957 11.728578349688076 11.220747441886148 11.660259188717779 11.170000000000002 11.610000000000001 C 11.117146884307209 11.565563231501901 11.048788024729786 11.543976223214294 10.980000000000002 11.55 C 10.253490403893824 11.628546254738279 9.536615553782283 11.77929096621033 8.839999999999996 12 L 7.22 12.5 C 6.822767534951025 12.617327331259824 6.404734296463299 12.394969225681248 6.279999999999999 12 C 6.220853469655203 11.809044328294064 6.240388029828328 11.602377833826653 6.334266447648938 11.425886408323905 C 6.428144865469549 11.249394982821157 6.588597765499255 11.117685052107245 6.7799999999999985 11.06 L 8.399999999999999 10.57 C 10.745999999999999 9.850000000000001 13.253999999999994 9.850000000000001 15.599999999999994 10.57 L 17.22 11.06 C 17.41140223450074 11.117685052107245 17.57185513453045 11.249394982821155 17.66573355235106 11.425886408323903 C 17.75961197017167 11.602377833826651 17.779146530344796 11.809044328294064 17.72 12 Z"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                            <g transform="matrix(1 0 0 1 0 10.5)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-12, -22.5)"
+                                                    d="M 14.08 21 L 9.92 21 C 9.78486641921067 21.00033104179977 9.655388290709483 21.054280262008596 9.56 21.15 C 9.46117317037705 21.246731278384864 9.409961490900319 21.38207643128765 9.42 21.52 L 9.5 23.52 C 9.510740588209979 23.788301959000165 9.731483230955462 24.000214896035832 10 24 L 14 24 C 14.268516769044536 24.000214896035832 14.489259411790021 23.788301959000165 14.5 23.52 L 14.58 21.52 C 14.590038509099681 21.38207643128765 14.53882682962295 21.246731278384864 14.44 21.15 C 14.344611709290515 21.054280262008596 14.21513358078933 21.00033104179977 14.08 21 Z"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                            <g transform="matrix(1 0 0 1 0 -8.5)">
+                                                <circle
+                                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                                    cx="0" cy="0" r="3.5" />
+                                            </g>
                                         </g>
                                     </g>
-                                </g>
-                            </svg>
-                        </span>
-                    </div>
-                    <h5 class="mt-4 font-medium text-gray-800">X-ray</h5>
-                </a>
-            </div>
+                                </svg>
+                            </span>
+                        </div>
+                        <h5 class="mt-4 font-medium text-gray-800">X-ray</h5>
+                    </a>
+                </div>
 
 
 
-            <!-- Cardiology -->
-            <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 0.4s">
-                <a class="block cursor-pointer">
-                    <div
-                        class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
-                        <span class="mdi mdi-lungs text-blue-500 text-3xl">
-                            <svg id='Monitor_Heart_Beat_24' width='24' height='24' viewBox='0 0 24 24'
-                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                                <g transform="matrix(0.83 0 0 0.83 12 12)" fill="currentColor">
-                                    <g style="">
-                                        <g transform="matrix(1 0 0 1 0 -4.41)">
-                                            <path
-                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                                transform=" translate(-12, -7.59)"
-                                                d="M 3.76 12.39 C 3.929996042625269 12.389716802047467 4.088202245492149 12.30308007190608 4.18 12.16 L 5.18 10.55 C 5.476297391231922 10.039940336376967 6.030619855704563 9.735832873228784 6.619999999999998 9.760000000000002 C 7.201215299772636 9.786412927111385 7.725559960519686 10.11697803932148 8 10.63 L 8.92 12.270000000000001 C 8.958151773561823 12.3575071418043 9.04453766348622 12.414083369533746 9.14 12.414083369533746 C 9.235462336513779 12.414083369533746 9.321848226438176 12.3575071418043 9.36 12.270000000000001 L 11 8.42 C 11.283167907564348 7.747399225183958 11.974542421678363 7.340708334528654 12.7 7.42 C 13.415915731068196 7.51542347308848 13.99338497865708 8.052790689594802 14.139999999999999 8.759999999999998 L 15.469999999999999 14.32 C 15.50007271942205 14.420773698439126 15.585922181794057 14.494916415942223 15.69 14.51 C 15.801394252756099 14.515484742085926 15.904697123667304 14.451913744602107 15.95 14.35 L 16.3 13.5 C 16.549775841548396 12.87061623146856 17.152984175631282 12.452707189554928 17.830000000000002 12.44 L 21.6 12.44 C 21.802693281750162 12.441758765805941 21.985546070736795 12.318531886271472 22.060000000000002 12.129999999999999 C 22.65993282467834 10.746538725257427 22.97943378100125 9.25780022664641 23 7.749999999999998 C 23 3.14 20.32 0.87 17.67 0.67 C 15.321178952412007 0.5541056038212725 13.14936940292842 1.9154788692144744 12.23 4.079999999999998 C 12.185013075212767 4.165340557446603 12.096471934504855 4.21875644347018 12 4.21875644347018 C 11.903528065495145 4.21875644347018 11.814986924787233 4.165340557446603 11.77 4.08 C 10.85296976931459 1.9134846841271935 8.67959640287791 0.5511311584747887 6.3299999999999965 0.6699999999999995 C 3.68 0.87 1 3.14 1 7.75 C 1.0271268037835912 9.240920320148655 1.3464913135615366 10.712035561998128 1.9399999999999995 12.079999999999998 C 2.014453929263207 12.268531886271472 2.19730671824984 12.391758765805942 2.4 12.39 Z"
-                                                stroke-linecap="round" />
-                                        </g>
-                                        <g transform="matrix(1 0 0 1 0.01 5.04)">
-                                            <path
-                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                                transform=" translate(-12.01, -17.04)"
-                                                d="M 18.39 14.39 C 18.188149057144294 14.391007572586947 18.00670179916032 14.51328724644571 17.93 14.700000000000001 L 17.07 16.76 C 16.820224158451605 17.389383768531438 16.217015824368723 17.807292810445073 15.540000000000001 17.82 L 15.370000000000001 17.82 C 14.654215179087979 17.720060119076123 14.075983873889355 17.185694637030497 13.920000000000002 16.48 L 12.590000000000002 10.920000000000002 C 12.574910042323753 10.810338294252357 12.480690237632201 10.72896664474602 12.370000000000001 10.730000000000002 C 12.262365543308594 10.717855857796106 12.159936089439578 10.779313530117516 12.120000000000001 10.880000000000003 L 10.75 14.160000000000002 C 10.498930987190064 14.726669083946224 9.957813362432931 15.110440449022205 9.34 15.160000000000002 C 8.698412452516763 15.206495294791663 8.090098493617424 14.86897916275719 7.79 14.300000000000002 L 6.79 12.460000000000003 C 6.747786507804646 12.382700506916386 6.668012447706214 12.33331656495069 6.58 12.330000000000002 C 6.491420625763751 12.331484658627934 6.409205234069862 12.376329417733691 6.36 12.450000000000001 L 5.64 13.6 C 5.346501845128877 14.088088288689658 4.819530978089217 14.387589716719393 4.25 14.39 L 4 14.39 C 3.817357115310375 14.391623633143526 3.6495271467616055 14.49079588728598 3.5599999999999996 14.65 C 3.46455952774704 14.806604582729607 3.46455952774704 15.003395417270394 3.56 15.16 C 5.641118098677165 18.3344947040842 8.325206592423026 21.069546903407517 11.459999999999988 23.209999999999994 C 11.802892285846399 23.396732674885058 12.217107714153602 23.396732674885058 12.56 23.21 C 15.689998248703784 21.084222715374906 18.373760370531016 18.36648892111948 20.459999999999994 15.21000000000001 C 20.55544047225296 15.053395417270394 20.55544047225296 14.856604582729608 20.46 14.700000000000001 C 20.370472853238393 14.54079588728598 20.202642884689624 14.441623633143527 20.02 14.440000000000001 Z"
-                                                stroke-linecap="round" />
+                <!-- Cardiology -->
+                <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 0.4s">
+                    <a class="block cursor-pointer">
+                        <div
+                            class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
+                            <span class="mdi mdi-lungs text-blue-500 text-3xl">
+                                <svg id='Monitor_Heart_Beat_24' width='24' height='24' viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(0.83 0 0 0.83 12 12)" fill="currentColor">
+                                        <g style="">
+                                            <g transform="matrix(1 0 0 1 0 -4.41)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-12, -7.59)"
+                                                    d="M 3.76 12.39 C 3.929996042625269 12.389716802047467 4.088202245492149 12.30308007190608 4.18 12.16 L 5.18 10.55 C 5.476297391231922 10.039940336376967 6.030619855704563 9.735832873228784 6.619999999999998 9.760000000000002 C 7.201215299772636 9.786412927111385 7.725559960519686 10.11697803932148 8 10.63 L 8.92 12.270000000000001 C 8.958151773561823 12.3575071418043 9.04453766348622 12.414083369533746 9.14 12.414083369533746 C 9.235462336513779 12.414083369533746 9.321848226438176 12.3575071418043 9.36 12.270000000000001 L 11 8.42 C 11.283167907564348 7.747399225183958 11.974542421678363 7.340708334528654 12.7 7.42 C 13.415915731068196 7.51542347308848 13.99338497865708 8.052790689594802 14.139999999999999 8.759999999999998 L 15.469999999999999 14.32 C 15.50007271942205 14.420773698439126 15.585922181794057 14.494916415942223 15.69 14.51 C 15.801394252756099 14.515484742085926 15.904697123667304 14.451913744602107 15.95 14.35 L 16.3 13.5 C 16.549775841548396 12.87061623146856 17.152984175631282 12.452707189554928 17.830000000000002 12.44 L 21.6 12.44 C 21.802693281750162 12.441758765805941 21.985546070736795 12.318531886271472 22.060000000000002 12.129999999999999 C 22.65993282467834 10.746538725257427 22.97943378100125 9.25780022664641 23 7.749999999999998 C 23 3.14 20.32 0.87 17.67 0.67 C 15.321178952412007 0.5541056038212725 13.14936940292842 1.9154788692144744 12.23 4.079999999999998 C 12.185013075212767 4.165340557446603 12.096471934504855 4.21875644347018 12 4.21875644347018 C 11.903528065495145 4.21875644347018 11.814986924787233 4.165340557446603 11.77 4.08 C 10.85296976931459 1.9134846841271935 8.67959640287791 0.5511311584747887 6.3299999999999965 0.6699999999999995 C 3.68 0.87 1 3.14 1 7.75 C 1.0271268037835912 9.240920320148655 1.3464913135615366 10.712035561998128 1.9399999999999995 12.079999999999998 C 2.014453929263207 12.268531886271472 2.19730671824984 12.391758765805942 2.4 12.39 Z"
+                                                    stroke-linecap="round" />
+                                            </g>
+                                            <g transform="matrix(1 0 0 1 0.01 5.04)">
+                                                <path
+                                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                                    transform=" translate(-12.01, -17.04)"
+                                                    d="M 18.39 14.39 C 18.188149057144294 14.391007572586947 18.00670179916032 14.51328724644571 17.93 14.700000000000001 L 17.07 16.76 C 16.820224158451605 17.389383768531438 16.217015824368723 17.807292810445073 15.540000000000001 17.82 L 15.370000000000001 17.82 C 14.654215179087979 17.720060119076123 14.075983873889355 17.185694637030497 13.920000000000002 16.48 L 12.590000000000002 10.920000000000002 C 12.574910042323753 10.810338294252357 12.480690237632201 10.72896664474602 12.370000000000001 10.730000000000002 C 12.262365543308594 10.717855857796106 12.159936089439578 10.779313530117516 12.120000000000001 10.880000000000003 L 10.75 14.160000000000002 C 10.498930987190064 14.726669083946224 9.957813362432931 15.110440449022205 9.34 15.160000000000002 C 8.698412452516763 15.206495294791663 8.090098493617424 14.86897916275719 7.79 14.300000000000002 L 6.79 12.460000000000003 C 6.747786507804646 12.382700506916386 6.668012447706214 12.33331656495069 6.58 12.330000000000002 C 6.491420625763751 12.331484658627934 6.409205234069862 12.376329417733691 6.36 12.450000000000001 L 5.64 13.6 C 5.346501845128877 14.088088288689658 4.819530978089217 14.387589716719393 4.25 14.39 L 4 14.39 C 3.817357115310375 14.391623633143526 3.6495271467616055 14.49079588728598 3.5599999999999996 14.65 C 3.46455952774704 14.806604582729607 3.46455952774704 15.003395417270394 3.56 15.16 C 5.641118098677165 18.3344947040842 8.325206592423026 21.069546903407517 11.459999999999988 23.209999999999994 C 11.802892285846399 23.396732674885058 12.217107714153602 23.396732674885058 12.56 23.21 C 15.689998248703784 21.084222715374906 18.373760370531016 18.36648892111948 20.459999999999994 15.21000000000001 C 20.55544047225296 15.053395417270394 20.55544047225296 14.856604582729608 20.46 14.700000000000001 C 20.370472853238393 14.54079588728598 20.202642884689624 14.441623633143527 20.02 14.440000000000001 Z"
+                                                    stroke-linecap="round" />
+                                            </g>
                                         </g>
                                     </g>
-                                </g>
-                            </svg>
-                        </span>
-                    </div>
-                    <h5 class="mt-4 font-medium text-gray-800">Cardiology</h5>
-                </a>
+                                </svg>
+                            </span>
+                        </div>
+                        <h5 class="mt-4 font-medium text-gray-800">Cardiology</h5>
+                    </a>
+                </div>
+
+                <!-- Dental Care -->
+                <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 0.5s">
+                    <a class="block cursor-pointer">
+                        <div
+                            class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
+                            <span class="mdi mdi-tooth text-blue-500 text-3xl">
+                                <svg id='Dental_Braces_24' width='24' height='24' viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                    <g transform="matrix(0.83 0 0 0.83 12 12)" fill="currentColor">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-13, -13)"
+                                            d="M 10.28125 1 C 7.82025 1 5.718 1.7845 4.25 3.1875 C 2.782 4.5905 2 6.58575 2 8.84375 C 2 8.89675 2.0068125 8.947 2.0078125 9 L 10 9 L 10 7 L 16 7 L 16 9 L 23.992188 9 C 23.994187 8.947 24 8.89675 24 8.84375 C 24.05 4.30475 20.5935 1 16.0625 1 C 14.7465 1 13.1915 1.4875 12.9375 1.5625 C 12.1255 1.2415 11.23825 1 10.28125 1 z M 12 9 L 12 11 L 14 11 L 14 9 L 12 9 z M 2.3652344 11 C 2.6152344 11.741 2.9615 12.40725 3.3125 13.03125 C 3.9725 14.20325 4.636 15.2545 5 16.5625 C 5.438 18.1755 5.742 20.10575 6.25 21.71875 C 6.504 22.52375 6.80925 23.256047 7.28125 23.873047 C 7.75325 24.490047 8.504 25 9.375 25 C 10.211 25 11.04275 24.56625 11.46875 23.90625 C 11.89475 23.24625 12 22.465 12 21.625 C 12 20.594 11.99975 18.98375 12.21875 17.71875 C 12.32775 17.08575 12.5155 16.55925 12.6875 16.28125 C 12.8595 16.00325 12.867 16 13 16 C 13.133 16 13.1405 16.00025 13.3125 16.28125 C 13.4845 16.56225 13.67125 17.08575 13.78125 17.71875 C 14.00325 18.98375 14 20.594 14 21.625 C 14 22.465 14.10525 23.24625 14.53125 23.90625 C 14.95725 24.56625 15.789 25 16.625 25 C 17.5 25 18.24975 24.496 18.71875 23.875 C 19.18775 23.254 19.496 22.4965 19.75 21.6875 C 20.258 20.0705 20.566 18.1485 21 16.5625 C 21.363 15.2535 22.0265 14.20325 22.6875 13.03125 C 23.0385 12.40725 23.384766 11.741 23.634766 11 L 16 11 L 16 13 L 10 13 L 10 11 L 2.3652344 11 z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+                            </span>
+                        </div>
+                        <h5 class="mt-4 font-medium text-gray-800">Dental Care</h5>
+                    </a>
+                </div>
+
+
+
+                <!-- Medical -->
+                <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 0.7s">
+                    <a class="block cursor-pointer">
+                        <div
+                            class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
+                            <span class="mdi mdi-needle text-blue-500 text-3xl"><svg id='Medical_Bag_24' width='24'
+                                    height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+                                    xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                                    <g transform="matrix(0.83 0 0 0.83 12 12)" fill="currentColor">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-12, -12)"
+                                            d="M 12 0 C 8.742188 0 6.625 0.234375 5.125 1.03125 C 4.375 1.429688 3.78125 2.019531 3.4375 2.71875 C 3.09375 3.417969 3 4.183594 3 5 L 5 5 C 5 4.367188 5.09375 3.914063 5.25 3.59375 C 5.40625 3.273438 5.613281 3.019531 6.0625 2.78125 C 6.960938 2.304688 8.855469 2 12 2 C 15.148438 2 17.042969 2.285156 17.9375 2.75 C 18.382813 2.984375 18.59375 3.207031 18.75 3.53125 C 18.90625 3.855469 19 4.339844 19 5 L 21 5 C 21 4.160156 20.90625 3.394531 20.5625 2.6875 C 20.21875 1.980469 19.628906 1.390625 18.875 1 C 17.367188 0.214844 15.253906 0 12 0 Z M 3 6 C 2.398438 6 0 10 0 15 C 0 20 0.398438 24 1 24 L 23 24 C 23.601563 24 24 20 24 15 C 24 10 21.601563 6 21 6 Z M 12 10 C 14.800781 10 17 12.199219 17 15 C 17 17.800781 14.800781 20 12 20 C 9.199219 20 7 17.800781 7 15 C 7 12.199219 9.199219 10 12 10 Z M 11 12 L 11 14 L 9 14 L 9 16 L 11 16 L 11 18 L 13 18 L 13 16 L 15 16 L 15 14 L 13 14 L 13 12 Z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg></span>
+                        </div>
+                        <h5 class="mt-4 font-medium text-gray-800">Medical</h5>
+                    </a>
+                </div>
+
+                <!-- Beds -->
+                <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 0.8s">
+                    <a class="block cursor-pointer">
+                        <div
+                            class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
+                            <span class="mdi mdi-bone text-blue-500 text-3xl">
+                                <svg id='Nurse_Call_24' width='24' height='24' viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                                    <g transform="matrix(0.77 0 0 0.77 12 12)" fill="currentColor">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-13, -13)"
+                                            d="M 20 0 L 20 1 L 16 1 C 15.398438 1 15 1.398438 15 2 L 15 10 C 15 10.601563 15.398438 11 16 11 L 20 11 C 20.601563 11 21 10.601563 21 10 L 21 0 Z M 16 3 L 20 3 L 20 5 L 16 5 Z M 4.5 5 C 3.121094 5 2 6.121094 2 7.5 C 2 8.878906 3.121094 10 4.5 10 C 5.878906 10 7 8.878906 7 7.5 C 7 6.121094 5.878906 5 4.5 5 Z M 0 10 L 0 26 L 2 26 L 2 24 C 2 23.398438 2.398438 23 3 23 L 23 23 C 23.601563 23 24 23.398438 24 24 L 24 26 L 26 26 L 26 19 L 2 19 L 2 10 Z M 4.40625 10.90625 C 3.707031 10.90625 3.207031 11.585938 3.40625 12.1875 L 4.59375 16.5 C 4.792969 17.398438 5.601563 18 6.5 18 L 9 18 L 7.3125 11.59375 C 7.113281 11.195313 6.710938 10.90625 6.3125 10.90625 Z M 9 13 L 10.40625 18 L 24 18 L 24 15 C 24 13.898438 23.101563 13 22 13 Z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+                            </span>
+                        </div>
+                        <h5 class="mt-4 font-medium text-gray-800">Beds</h5>
+                    </a>
+                </div>
+
+
+                <!-- Ambulance -->
+                <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 1.1s">
+                    <a class="block cursor-pointer">
+                        <div
+                            class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
+                            <span class="mdi mdi-mother-nurse text-blue-500 text-3xl">
+                                <svg id='Ambulance_24' width='24' height='24' viewBox='0 0 24 24'
+                                    xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+                                    <g transform="matrix(0.77 0 0 0.77 12 12)" fill="currentColor">
+                                        <path
+                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                                            transform=" translate(-13, -14)"
+                                            d="M 13 2.1875 C 12 2.1875 11.1875 3 11.1875 4 C 11.1875 4.355469 11.1875 5.679688 11.1875 6 L 14.8125 6 C 14.8125 5.671875 14.8125 4.355469 14.8125 4 C 14.8125 3 14 2.1875 13 2.1875 Z M 1 7 C 0.449219 7 0 7.449219 0 8 L 0 22 C 0 22.550781 0.449219 23 1 23 L 3 23 C 3.246094 21.277344 4.710938 19.9375 6.5 19.9375 C 8.289063 19.9375 9.753906 21.277344 10 23 L 17.03125 23 C 17.273438 21.289063 18.722656 19.96875 20.5 19.96875 C 22.277344 19.96875 23.722656 21.289063 23.96875 23 L 25 23 C 25.550781 23 26 22.550781 26 22 L 26 18 C 26 17.054688 25.21875 15.96875 25.21875 15.96875 L 19 8 C 18.542969 7.449219 18.234375 7 17.5 7 Z M 8 8.78125 C 10.328125 8.78125 12.21875 10.675781 12.21875 13 C 12.21875 15.324219 10.328125 17.21875 8 17.21875 C 5.671875 17.21875 3.78125 15.324219 3.78125 13 C 3.78125 10.675781 5.671875 8.78125 8 8.78125 Z M 7 10 L 7 12 L 5 12 L 5 14 L 7 14 L 7 16 L 9 16 L 9 14 L 11 14 L 11 12 L 9 12 L 9 10 Z M 16 10 L 18.53125 10 C 18.691406 10 18.90625 10.25 18.90625 10.25 L 22.6875 15.15625 C 22.875 15.429688 23.09375 15.75 23.09375 16 L 16 16 Z M 6.5 21.1875 C 5.222656 21.1875 4.1875 22.222656 4.1875 23.5 C 4.1875 24.777344 5.222656 25.8125 6.5 25.8125 C 7.777344 25.8125 8.8125 24.777344 8.8125 23.5 C 8.8125 22.222656 7.777344 21.1875 6.5 21.1875 Z M 20.5 21.1875 C 19.222656 21.1875 18.1875 22.222656 18.1875 23.5 C 18.1875 24.777344 19.222656 25.8125 20.5 25.8125 C 21.777344 25.8125 22.8125 24.777344 22.8125 23.5 C 22.8125 22.222656 21.777344 21.1875 20.5 21.1875 Z"
+                                            stroke-linecap="round" />
+                                    </g>
+                                </svg>
+                            </span>
+                        </div>
+                        <h5 class="mt-4 font-medium text-gray-800">Ambulance</h5>
+                    </a>
+                </div>
+
+
             </div>
-
-            <!-- Dental Care -->
-            <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 0.5s">
-                <a class="block cursor-pointer">
-                    <div
-                        class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
-                        <span class="mdi mdi-tooth text-blue-500 text-3xl">
-                            <svg id='Dental_Braces_24' width='24' height='24' viewBox='0 0 24 24'
-                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                                <g transform="matrix(0.83 0 0 0.83 12 12)" fill="currentColor">
-                                    <path
-                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                        transform=" translate(-13, -13)"
-                                        d="M 10.28125 1 C 7.82025 1 5.718 1.7845 4.25 3.1875 C 2.782 4.5905 2 6.58575 2 8.84375 C 2 8.89675 2.0068125 8.947 2.0078125 9 L 10 9 L 10 7 L 16 7 L 16 9 L 23.992188 9 C 23.994187 8.947 24 8.89675 24 8.84375 C 24.05 4.30475 20.5935 1 16.0625 1 C 14.7465 1 13.1915 1.4875 12.9375 1.5625 C 12.1255 1.2415 11.23825 1 10.28125 1 z M 12 9 L 12 11 L 14 11 L 14 9 L 12 9 z M 2.3652344 11 C 2.6152344 11.741 2.9615 12.40725 3.3125 13.03125 C 3.9725 14.20325 4.636 15.2545 5 16.5625 C 5.438 18.1755 5.742 20.10575 6.25 21.71875 C 6.504 22.52375 6.80925 23.256047 7.28125 23.873047 C 7.75325 24.490047 8.504 25 9.375 25 C 10.211 25 11.04275 24.56625 11.46875 23.90625 C 11.89475 23.24625 12 22.465 12 21.625 C 12 20.594 11.99975 18.98375 12.21875 17.71875 C 12.32775 17.08575 12.5155 16.55925 12.6875 16.28125 C 12.8595 16.00325 12.867 16 13 16 C 13.133 16 13.1405 16.00025 13.3125 16.28125 C 13.4845 16.56225 13.67125 17.08575 13.78125 17.71875 C 14.00325 18.98375 14 20.594 14 21.625 C 14 22.465 14.10525 23.24625 14.53125 23.90625 C 14.95725 24.56625 15.789 25 16.625 25 C 17.5 25 18.24975 24.496 18.71875 23.875 C 19.18775 23.254 19.496 22.4965 19.75 21.6875 C 20.258 20.0705 20.566 18.1485 21 16.5625 C 21.363 15.2535 22.0265 14.20325 22.6875 13.03125 C 23.0385 12.40725 23.384766 11.741 23.634766 11 L 16 11 L 16 13 L 10 13 L 10 11 L 2.3652344 11 z"
-                                        stroke-linecap="round" />
-                                </g>
-                            </svg>
-                        </span>
-                    </div>
-                    <h5 class="mt-4 font-medium text-gray-800">Dental Care</h5>
-                </a>
-            </div>
-
-
-
-            <!-- Medical -->
-            <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 0.7s">
-                <a class="block cursor-pointer">
-                    <div
-                        class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
-                        <span class="mdi mdi-needle text-blue-500 text-3xl"><svg id='Medical_Bag_24' width='24'
-                                height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
-                                xmlns:xlink='http://www.w3.org/1999/xlink'>
-
-                                <g transform="matrix(0.83 0 0 0.83 12 12)" fill="currentColor">
-                                    <path
-                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                        transform=" translate(-12, -12)"
-                                        d="M 12 0 C 8.742188 0 6.625 0.234375 5.125 1.03125 C 4.375 1.429688 3.78125 2.019531 3.4375 2.71875 C 3.09375 3.417969 3 4.183594 3 5 L 5 5 C 5 4.367188 5.09375 3.914063 5.25 3.59375 C 5.40625 3.273438 5.613281 3.019531 6.0625 2.78125 C 6.960938 2.304688 8.855469 2 12 2 C 15.148438 2 17.042969 2.285156 17.9375 2.75 C 18.382813 2.984375 18.59375 3.207031 18.75 3.53125 C 18.90625 3.855469 19 4.339844 19 5 L 21 5 C 21 4.160156 20.90625 3.394531 20.5625 2.6875 C 20.21875 1.980469 19.628906 1.390625 18.875 1 C 17.367188 0.214844 15.253906 0 12 0 Z M 3 6 C 2.398438 6 0 10 0 15 C 0 20 0.398438 24 1 24 L 23 24 C 23.601563 24 24 20 24 15 C 24 10 21.601563 6 21 6 Z M 12 10 C 14.800781 10 17 12.199219 17 15 C 17 17.800781 14.800781 20 12 20 C 9.199219 20 7 17.800781 7 15 C 7 12.199219 9.199219 10 12 10 Z M 11 12 L 11 14 L 9 14 L 9 16 L 11 16 L 11 18 L 13 18 L 13 16 L 15 16 L 15 14 L 13 14 L 13 12 Z"
-                                        stroke-linecap="round" />
-                                </g>
-                            </svg></span>
-                    </div>
-                    <h5 class="mt-4 font-medium text-gray-800">Medical</h5>
-                </a>
-            </div>
-
-            <!-- Beds -->
-            <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 0.8s">
-                <a class="block cursor-pointer">
-                    <div
-                        class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
-                        <span class="mdi mdi-bone text-blue-500 text-3xl">
-                            <svg id='Nurse_Call_24' width='24' height='24' viewBox='0 0 24 24'
-                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-
-                                <g transform="matrix(0.77 0 0 0.77 12 12)" fill="currentColor">
-                                    <path
-                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                        transform=" translate(-13, -13)"
-                                        d="M 20 0 L 20 1 L 16 1 C 15.398438 1 15 1.398438 15 2 L 15 10 C 15 10.601563 15.398438 11 16 11 L 20 11 C 20.601563 11 21 10.601563 21 10 L 21 0 Z M 16 3 L 20 3 L 20 5 L 16 5 Z M 4.5 5 C 3.121094 5 2 6.121094 2 7.5 C 2 8.878906 3.121094 10 4.5 10 C 5.878906 10 7 8.878906 7 7.5 C 7 6.121094 5.878906 5 4.5 5 Z M 0 10 L 0 26 L 2 26 L 2 24 C 2 23.398438 2.398438 23 3 23 L 23 23 C 23.601563 23 24 23.398438 24 24 L 24 26 L 26 26 L 26 19 L 2 19 L 2 10 Z M 4.40625 10.90625 C 3.707031 10.90625 3.207031 11.585938 3.40625 12.1875 L 4.59375 16.5 C 4.792969 17.398438 5.601563 18 6.5 18 L 9 18 L 7.3125 11.59375 C 7.113281 11.195313 6.710938 10.90625 6.3125 10.90625 Z M 9 13 L 10.40625 18 L 24 18 L 24 15 C 24 13.898438 23.101563 13 22 13 Z"
-                                        stroke-linecap="round" />
-                                </g>
-                            </svg>
-                        </span>
-                    </div>
-                    <h5 class="mt-4 font-medium text-gray-800">Beds</h5>
-                </a>
-            </div>
-
-
-            <!-- Ambulance -->
-            <div class="department-card bg-white rounded-lg shadow p-6 text-center " style="animation-delay: 1.1s">
-                <a class="block cursor-pointer">
-                    <div
-                        class="icon-container bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
-                        <span class="mdi mdi-mother-nurse text-blue-500 text-3xl">
-                            <svg id='Ambulance_24' width='24' height='24' viewBox='0 0 24 24'
-                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-
-                                <g transform="matrix(0.77 0 0 0.77 12 12)" fill="currentColor">
-                                    <path
-                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                        transform=" translate(-13, -14)"
-                                        d="M 13 2.1875 C 12 2.1875 11.1875 3 11.1875 4 C 11.1875 4.355469 11.1875 5.679688 11.1875 6 L 14.8125 6 C 14.8125 5.671875 14.8125 4.355469 14.8125 4 C 14.8125 3 14 2.1875 13 2.1875 Z M 1 7 C 0.449219 7 0 7.449219 0 8 L 0 22 C 0 22.550781 0.449219 23 1 23 L 3 23 C 3.246094 21.277344 4.710938 19.9375 6.5 19.9375 C 8.289063 19.9375 9.753906 21.277344 10 23 L 17.03125 23 C 17.273438 21.289063 18.722656 19.96875 20.5 19.96875 C 22.277344 19.96875 23.722656 21.289063 23.96875 23 L 25 23 C 25.550781 23 26 22.550781 26 22 L 26 18 C 26 17.054688 25.21875 15.96875 25.21875 15.96875 L 19 8 C 18.542969 7.449219 18.234375 7 17.5 7 Z M 8 8.78125 C 10.328125 8.78125 12.21875 10.675781 12.21875 13 C 12.21875 15.324219 10.328125 17.21875 8 17.21875 C 5.671875 17.21875 3.78125 15.324219 3.78125 13 C 3.78125 10.675781 5.671875 8.78125 8 8.78125 Z M 7 10 L 7 12 L 5 12 L 5 14 L 7 14 L 7 16 L 9 16 L 9 14 L 11 14 L 11 12 L 9 12 L 9 10 Z M 16 10 L 18.53125 10 C 18.691406 10 18.90625 10.25 18.90625 10.25 L 22.6875 15.15625 C 22.875 15.429688 23.09375 15.75 23.09375 16 L 16 16 Z M 6.5 21.1875 C 5.222656 21.1875 4.1875 22.222656 4.1875 23.5 C 4.1875 24.777344 5.222656 25.8125 6.5 25.8125 C 7.777344 25.8125 8.8125 24.777344 8.8125 23.5 C 8.8125 22.222656 7.777344 21.1875 6.5 21.1875 Z M 20.5 21.1875 C 19.222656 21.1875 18.1875 22.222656 18.1875 23.5 C 18.1875 24.777344 19.222656 25.8125 20.5 25.8125 C 21.777344 25.8125 22.8125 24.777344 22.8125 23.5 C 22.8125 22.222656 21.777344 21.1875 20.5 21.1875 Z"
-                                        stroke-linecap="round" />
-                                </g>
-                            </svg>
-                        </span>
-                    </div>
-                    <h5 class="mt-4 font-medium text-gray-800">Ambulance</h5>
-                </a>
-            </div>
-
-
         </div>
-    </div>
-</section>
+    </section>
 
 
+    <!-- Doctor Cards -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <!-- Header Section -->
+            <div class="flex justify-center">
+                <div class="lg:w-2/3 text-center">
+                    <h4 class="text-green-500 font-semibold text-lg">Our Doctor</h4>
+                    <h1 class="text-4xl font-bold mt-3 text-gray-700">We Have Best <span class="text-blue-500">Doctor</span>
+                    </h1>
+                    <p class="text-gray-600 mt-3 max-w-2xl mx-auto">
+                        TeamDoctor provides organisations with an essential video-based online training course
+                        for all employees which gives a baseline of knowledge.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Carousel Section -->
+            <div class="mt-12">
+                <div class="relative">
+                    <!-- Doctor Cards Container -->
+                    <div id="doctorCarousel" class="flex overflow-hidden">
+                        <!-- Doctor cards will be dynamically loaded here -->
+                    </div>
+
+                    <!-- Navigation Arrows -->
+                    <button id="prevBtn"
+                        class="absolute top-1/2 -left-4 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md text-blue-500 hover:text-blue-700 focus:outline-none ">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <button id="nextBtn"
+                        class="absolute top-1/2 -right-4 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md text-blue-500 hover:text-blue-700 focus:outline-none ">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Pagination Dots -->
+                <div class="flex justify-center space-x-2 mt-8" id="paginationDots">
+                    <!-- Pagination dots will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </section>
 
 
-
-<!-- Doctor Cards -->
-<section class="py-16">
-    <div class="container mx-auto px-4">
-        <!-- Header Section -->
-        <div class="flex justify-center">
-            <div class="lg:w-2/3 text-center">
-                <h4 class="text-green-500 font-semibold text-lg">Our Doctor</h4>
-                <h1 class="text-4xl font-bold mt-3 text-gray-700">We Have Best <span class="text-blue-500">Doctor</span>
-                </h1>
-                <p class="text-gray-600 mt-3 max-w-2xl mx-auto">
-                    TeamDoctor provides organisations with an essential video-based online training course
-                    for all employees which gives a baseline of knowledge.
+    <!-- Testimonials / Feedback Section -->
+    <section class="py-16 overflow-hidden bg-gray-50">
+        <div class="container mx-auto px-4">
+            <!-- Header Section -->
+            <div class="text-center max-w-2xl mx-auto mb-12 animate-fade-in">
+                <h4 class="text-green-500 font-medium text-lg">Testimonial</h4>
+                <h1 class="text-4xl font-bold mt-3">Patient's <span class="text-blue-500">Feedback</span></h1>
+                <p class="text-gray-600 mt-3">
+                    This review shows that incorporating patient feedback of their experience into
+                    research on quality patient-centred care
                 </p>
             </div>
-        </div>
 
-        <!-- Carousel Section -->
-        <div class="mt-12">
-            <div class="relative">
-                <!-- Doctor Cards Container -->
-                <div id="doctorCarousel" class="flex overflow-hidden">
-                    <!-- Doctor cards will be dynamically loaded here -->
+            <!-- Testimonial Slider -->
+            <div class="relative" id="testimonial-container">
+                <div class="overflow-hidden">
+                    <div class="flex transition-transform duration-500 ease-in-out" id="testimonial-wrapper">
+                        <!-- Testimonials will be dynamically inserted here -->
+                    </div>
                 </div>
 
                 <!-- Navigation Arrows -->
-                <button id="prevBtn"
-                    class="absolute top-1/2 -left-4 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md text-blue-500 hover:text-blue-700 focus:outline-none ">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg>
+                <button
+                    class="absolute top-1/2 -left-2 transform -translate-y-1/2 bg-white p-2 md:p-3 rounded-full shadow-md focus:outline-none hover:bg-gray-100 transition-all z-10"
+                    id="prev-btn" aria-label="Previous testimonial">
+                    <span class="fas fa-chevron-left text-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 rotate-180" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                            </path>
+                        </svg>
+                    </span>
                 </button>
-                <button id="nextBtn"
-                    class="absolute top-1/2 -right-4 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md text-blue-500 hover:text-blue-700 focus:outline-none ">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
+                <button
+                    class="absolute top-1/2 -right-2 transform -translate-y-1/2 bg-white p-2 md:p-3 rounded-full shadow-md focus:outline-none hover:bg-gray-100 transition-all z-10"
+                    id="next-btn" aria-label="Next testimonial">
+                    <span class="fas fa-chevron-right text-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                            </path>
+                        </svg>
+                    </span>
                 </button>
-            </div>
 
-            <!-- Pagination Dots -->
-            <div class="flex justify-center space-x-2 mt-8" id="paginationDots">
-                <!-- Pagination dots will be dynamically added here -->
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<!-- Testimonials / Feedback Section -->
-<section class="py-16 overflow-hidden bg-gray-50">
-    <div class="container mx-auto px-4">
-        <!-- Header Section -->
-        <div class="text-center max-w-2xl mx-auto mb-12 animate-fade-in">
-            <h4 class="text-green-500 font-medium text-lg">Testimonial</h4>
-            <h1 class="text-4xl font-bold mt-3">Patient's <span class="text-blue-500">Feedback</span></h1>
-            <p class="text-gray-600 mt-3">
-                This review shows that incorporating patient feedback of their experience into
-                research on quality patient-centred care
-            </p>
-        </div>
-
-        <!-- Testimonial Slider -->
-        <div class="relative" id="testimonial-container">
-            <div class="overflow-hidden">
-                <div class="flex transition-transform duration-500 ease-in-out" id="testimonial-wrapper">
-                    <!-- Testimonials will be dynamically inserted here -->
+                <!-- Pagination Dots -->
+                <div class="flex justify-center mt-8" id="pagination-dots">
+                    <!-- Dots will be dynamically inserted here -->
                 </div>
             </div>
-
-            <!-- Navigation Arrows -->
-            <button
-                class="absolute top-1/2 -left-2 transform -translate-y-1/2 bg-white p-2 md:p-3 rounded-full shadow-md focus:outline-none hover:bg-gray-100 transition-all z-10"
-                id="prev-btn" aria-label="Previous testimonial">
-                <span class="fas fa-chevron-left text-blue-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 rotate-180" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                        </path>
-                    </svg>
-                </span>
-            </button>
-            <button
-                class="absolute top-1/2 -right-2 transform -translate-y-1/2 bg-white p-2 md:p-3 rounded-full shadow-md focus:outline-none hover:bg-gray-100 transition-all z-10"
-                id="next-btn" aria-label="Next testimonial">
-                <span class="fas fa-chevron-right text-blue-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                        </path>
-                    </svg>
-                </span>
-            </button>
-
-            <!-- Pagination Dots -->
-            <div class="flex justify-center mt-8" id="pagination-dots">
-                <!-- Dots will be dynamically inserted here -->
-            </div>
         </div>
-    </div>
-</section>
+    </section>
 
 
 
@@ -569,88 +566,29 @@
 
 
 <script>
-
-{% comment %} {% for each_doc in all_doc_profiles%}
-{
-    name: "{{ each_doc.profile.user.first_name }}",
-    specialty: "{{ each_doc.specialization }}",
-    image: "{{ each_doc.profile.profile_pic.url  }}" // Using placeholder as we can't load external images
-},
-{% endfor %} {% endcomment %}
-
-
     const Data = {
         "Doctors": [
-        {
-            name: "Dr. Morak jhon",
-            specialty: "Anesthesiologists",
-            image: "{% static 'Doctors/h_doc1.png' %}" // Using placeholder as we can't load external images
-        },
-        {
-            name: "Dr. Aenna backer",
-            specialty: "Cardiologist",
-            image: "{% static 'Doctors/h_doc2.png' %}"
-        },
-        {
-            name: "Dr. Morish Jemsh",
-            specialty: "Dermatologists",
-            image: "{% static 'Doctors/h_doc4.png' %}"
-        },
-        {
-            name: "Dr. Olivia Nebar",
-            specialty: "Endocrinologists",
-            image: "{% static 'Doctors/h_doc5.png' %}"
-        },
-        {
-            name: "Dr. Hory Mant",
-            specialty: "Anesthesiologists",
-            image: "{% static 'Doctors/h_doc3.png' %}"
-        },
-        {
-            name: "Dr. Vrutki vahut",
-            specialty: "Cardiologist",
-            image: "{% static 'Doctors/h_doc4.png' %}"
-        },
-        {
-            name: "Dr. Krish Bardan",
-            specialty: "Dermatologists",
-            image: "{% static 'Doctors/h_doc3.png' %}"
-        },
+            {% for each_doc in all_doc_profiles%}
+                {
+                    name: "{{ each_doc.profile.user.first_name }}",
+                    specialty: "{{ each_doc.specialization }}",
+                    image: "{{ each_doc.profile.profile_pic.url  }}" // Using placeholder as we can't load external images
+                },
+            {% endfor %}
         ],
 
-        "Testimonials": [{
-            "name": "Jeky Jodh",
-            "image": "{% static 'Doctors/h_doc1.png' %}",
-            "rating": 1.5,
-            "feedback": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit, error!"
-            },
-            {
-                "name": "Nesri Mratin",
-                "image": "{% static 'Doctors/h_doc1.png' %}",
-                "rating": 4,
-                "feedback": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit, error!"
-            },
-            {
-                "name": "Jhon Gaurg",
-                "image": "{% static 'Doctors/h_doc1.png' %}",
-                "rating": 2,
-                "feedback": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit, error!"
-            },
-            {
-                "name": "Rujal Baniya",
-                "image": "{% static 'Doctors/h_doc1.png' %}",
-                "rating": 3,
-                "feedback": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit, error!"
-            },
-            {
-                "name": "Sujal Sujal",
-                "image": "{% static 'Doctors/h_doc1.png' %}",
-                "rating": 4.5,
-                "feedback": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit, error!"
-            }]
+        "Testimonials": [
+            {% for each_review in all_reviews%}
+                {
+                    "name": "{{ each_review.profile.user.first_name }}",
+                    "image": "{{ each_review.profile.profile_pic.url }}",
+                    "rating": {{ each_review.rating }},
+                    "feedback": `Review to: Dr. {{ each_review.doctor.profile.user.first_name}}
+                                Message: {{ each_review.comment }}`
+                },
+            {% endfor %}
+            ]
     };
-
-
 
 </script>
 
