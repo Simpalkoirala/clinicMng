@@ -335,7 +335,7 @@
 
 
                                                         <!-- Join the Call Page -->
-                                                        {% if apot.appointment_type == 'online_consultation' %}
+                                                        {% if apot.appointment_type == 'online_consultation' and apot.status == 'confirmed' %}
                                                             <a title="Join Call"  href="/p/join-v-call/{{ apot.appointments_Calls.first.uuid }}/" target="_blank"
                                                                 class="join-call p-2 rounded-full text-gray-500 hover:bg-green-50 hover:text-green-600  transition-all duration-200"
                                                                 >
@@ -836,6 +836,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 from_box: true,
                 onConfirm: () => {
                     diloagBox_form.submit();
+                    // Hide the dialog after confirmation
+                    document.getElementById('dialogBOX').classList.add('hidden');
+                    showNotification({
+                        color: "bg-yellow-500",
+                        title: "Sending Request",
+                        message: `Cancelling appointment with Dr.${doctor} on ${date}...`
+                    });
+                    showLoadingOverlay();
                 }
             });
         });

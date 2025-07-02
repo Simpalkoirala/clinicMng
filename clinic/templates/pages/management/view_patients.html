@@ -1545,6 +1545,14 @@
               
               const formData = new FormData(basicInfoForm);
               const username = formData.get('username');
+
+              showNotification({
+                color: "bg-yellow-500",
+                title: "Updating Profile...",
+                message: "Please wait while we update the profile information."
+              });
+
+              showLoadingOverlay();
               
               fetch(`/m/update-profile/${username}/`, {
                 method: 'POST',
@@ -1562,6 +1570,8 @@
                 return response.json();
               })
               .then(data => {
+
+                hideLoadingOverlay()
                 // Update the current patient data with new values
                 if (currentPatient) {
                   currentPatient.phone = formData.get('ph_number') || '';
@@ -1598,6 +1608,7 @@
               });
               })
               .catch(error => {
+                hideLoadingSpinner();
                 console.error('Error updating profile:', error);
                 showNotification({
                   color: "bg-red-500",
@@ -1612,6 +1623,14 @@
               
               const formData = new FormData(medicalInfoForm);
               const username = formData.get('username');
+
+              showNotification({
+                color: "bg-yellow-500",
+                title: "Updating Medical Info...",
+                message: "Please wait while we update the medical information."
+              });
+
+              showLoadingOverlay();
               
               fetch(`/m/update-medical-info/${username}/`, {
                 method: 'POST',
@@ -1629,6 +1648,7 @@
                 return response.json();
               })
               .then(data => {
+                hideLoadingOverlay();
                 // Update the current patient data with new values
                 if (currentPatient) {
                   currentPatient.bloodGroup = formData.get('blood_group') || '';
@@ -1656,6 +1676,7 @@
                 });
               })
               .catch(error => {
+                hideLoadingSpinner();
                 console.error('Error updating medical info:', error);
                 showNotification({
                   color: "bg-red-500",

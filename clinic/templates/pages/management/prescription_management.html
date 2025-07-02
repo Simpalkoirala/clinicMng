@@ -875,6 +875,14 @@
                 
                 // Show spinner
                 submitSpinner.classList.remove('hidden');
+
+                showNotification({
+                    color: "bg-yellow-500",
+                    title: "Adding New Prescription...",
+                    message: "Please wait while we add the new prescription."
+                });
+
+                showLoadingOverlay();
                 
                 // Submit the form programmatically
                 this.submit();
@@ -1855,6 +1863,16 @@
                 prescription_schedule: tempScheduleItems,
                 time_schedule_changed: time_schedule_changed
             };
+
+            showNotification({
+                color: "bg-yellow-500",
+                title: "Editing the changes 📝",
+                message: 'Please wait while we save your changes.',
+                time: 5000
+            });
+
+            showLoadingOverlay();
+
             
             fetch('/m/edit-pres-mng/' + currentPrescription.uuid + '/', {
                 method: 'POST',
@@ -1871,6 +1889,7 @@
                 return response.json();
             })
             .then(data => {
+                hideLoadingOverlay();
                 // Update the current prescription with the returned data
                 Object.assign(currentPrescription, data);
                 
@@ -1889,6 +1908,7 @@
 
             })
             .catch(error => {
+                hideLoadingOverlay();
                 console.error('Error saving prescription:', error);
                 showNotification({
                     color: "bg-red-500",

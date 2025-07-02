@@ -299,6 +299,8 @@
         </div>
     </div>
 
+ 
+
     
 </div>
 
@@ -836,6 +838,16 @@
             formData.append('appointment_reason', reason_text.value.trim());
             formData.append('appointment_file', fileInput.files[0]); // Append the file if selected    
 
+            // Show confirmation dialog
+            confirmationDialog.classList.add('hidden');
+            showLoadingOverlay();
+            showNotification({
+                color: "bg-yellow-500",
+                title: "Booking in Progress",
+                message: "Please wait while we process your appointment booking.",
+                time: 5000
+            });
+
             fetch("{% url 'patient:bookAppointment' %}", {
                 method: 'POST',
                 body: formData,
@@ -856,6 +868,7 @@
                         redirect_url = data.redirect_url || "{% url 'patient:viewAppointment' %}";
                         window.location.href = redirect_url;
                     } else {
+                        hideLoadingOverlay();
                         showNotification({
                             color: "bg-red-500",
                             title: "Booking Failed !!",
@@ -864,6 +877,7 @@
                     }
                 })
                 .catch(error => {
+                    hideLoadingOverlay();
                     console.error('Error:', error);
                     showNotification({
                         color: "bg-red-500",

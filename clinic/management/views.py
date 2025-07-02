@@ -4,7 +4,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 from patient.models import *
-from account.models import Profile
+from account.models import Profile, Conversation, Message 
 
 from django.http import JsonResponse
 from django.core.serializers.json import DjangoJSONEncoder
@@ -192,7 +192,7 @@ def update_profile(request, username):
         # Save the profile
         profile.save()
         
-        #Send email notification to the user
+        #Send email notification to the user 
         send_custom_email(
             subject='Profile Updated',
             message=f'Dear {user.first_name},\n\nYour profile has been updated successfully.\n\nThank you!',
@@ -1550,4 +1550,47 @@ def delete_lab_report(request, labReport_uuid):
     # Add a success message here if you're using Django messages framework
     messages.success(request, 'Lab report deleted successfully.')
     return redirect('management:labreportMng')
+
+@login_required_with_message(login_url='account:login', message="You need to log in to view your Messages.", only=['management'])
+def message(request):
+    profile : Profile = request.user.profile
+
+    conversations = Conversation.objects.filter(
+        participants=profile
+    )
+
+    connected_paritcipants = []
+    
+    # Add additional data to each conversation
+    for conversation in conversations:
+        # Get the other participant (not the current user)
+        conversation.other_participant = conversation.participants.exclude(
+            id=profile.id
+        ).first()
+
+        if conversation.other_participant:
+            connected_paritcipants.append(conversation.other_participant)
+        
+        # Get the last message
+        conversation.last_message = conversation.messages.last()
+        # Check if there are unread messages
+        conversation.has_unread = conversation.messages.filter(
+            read=False
+        ).exclude(sender=profile).exists()
+
+
+    # Get all other not connected participants excluding the current user
+    connected_ids = [p.id for p in connected_paritcipants]
+    connected_ids.append(profile.id)
+    not_connected_usr = Profile.objects.exclude(id__in=connected_ids).order_by('-created_at')
+
+    context = {
+        'profile': profile,
+        'conversations': conversations,
+        'not_connected_usr': not_connected_usr,
+    }
+
+    return render(request, 'pages/management/message.html', context)
+
+
 

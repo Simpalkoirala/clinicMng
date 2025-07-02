@@ -33,7 +33,7 @@
 
 
 {% block pageof %} Dashboard of Management {% endblock pageof %}
-{% block linkPageof %} /management/ {% endblock linkPageof %}
+{% block linkPageof %} /m/ {% endblock linkPageof %}
 
 {% block content %}
 
@@ -352,11 +352,10 @@
                     </tbody>
                 </table>
             </div>
-            <div class="px-6 py-4 border-t flex justify-between items-center">
-                <p class="text-sm text-gray-500">Showing 5 of 24 appointments</p>
-                <button
+            <div class="px-6 py-4 border-t flex justify-end items-center">
+                <a href="{% url 'management:viewAppointment' %}" 
                     class="px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors">View
-                    All</button>
+                    All</a>
             </div>
         </div>
     </div>

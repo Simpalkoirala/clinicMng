@@ -21,6 +21,7 @@ from django.utils.translation import gettext as _
 from home.send_email import send_custom_email
 import uuid
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 DOMAIN_NAME = settings.DOMAIN_NAME
 
 
@@ -99,19 +100,18 @@ def doctorDashboard(request):
 
 @login_required_with_message(login_url='account:login', message="You need to log in to Manage the session.", only=['doctor'])
 def SessionMng(request):
-    if request.method == 'GET':    
+    if request.method == 'GET':     
         profile: Profile = request.user.profile
         doctor: DoctorProfile = DoctorProfile.objects.get(profile=profile)
     
     
         today = timezone.localdate()
-        all_appointment = Appointment.objects.filter(doctor=doctor, appointment_date__gte=today).order_by('-appointment_date')
+        all_appointment = Appointment.objects.filter(doctor=doctor).order_by('-appointment_date')
         context = {
-            'all_appointment': all_appointment,
             'doctor': doctor,
-            'todays_appointments': all_appointment.filter(appointment_date=date.today()),
+            'todays_appointments': all_appointment.filter(appointment_date=date.today(), status='confirmed'),
         }
-        return render(request, 'pages/doctor/session_mng.html', context)
+        return render(request, 'pages/doctor/schedule_mng.html', context)
     
     elif request.method == 'POST':
         app_id = request.POST.get('appoint_Id')
@@ -144,6 +144,30 @@ def SessionMng(request):
         new_slot.status = 'booked'
         new_slot.save()
 
+        # Check if a conversation already exists between the patient and doctor
+        existing_conversation: Conversation = Conversation.objects.filter(
+            participants=appointment.doctor.profile
+        ).filter(
+            participants=appointment.profile
+        ).distinct().first()
+        
+        # Only create new conversation if one doesn't exist
+        if not existing_conversation:
+            conversation = Conversation.objects.create(
+                uuid=uuid.uuid4(),
+                status='initiated',
+            )
+            conversation.participants.add(appointment.profile, appointment.doctor.profile)
+            conversation.save()
+            existing_conversation = conversation
+
+        Message.objects.create(
+            conversation=existing_conversation,
+            sender=appointment.profile,
+            content=f"Appointment with Dr. {appointment.doctor.profile.user.get_full_name()} has been rescheduled to {appointment.appointment_date} at {time_str}.",
+            message_type = "appoinment"  # This is a normal message, not a call request
+        )
+
         # send email notification to patient
         send_custom_email(
             subject=f"Appointment Rescheduled: {appointment.appointment_type}",
@@ -154,6 +178,53 @@ def SessionMng(request):
         messages.success(request, "Appointment slot updated successfully.")
         return redirect('doctor:SessionMng')
 
+
+def reschedule_appointment(request):
+    """
+    Reschedule an appointment to a new time slot.
+    """
+    try:
+        data = json.loads(request.body)
+        app_id = data.get('appoint_Id')
+        new_slot_id = data.get('new_slot_id')
+    except (json.JSONDecodeError, AttributeError):
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+
+    print(f"Rescheduling appointment {app_id} to new slot {new_slot_id}")
+
+
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+    try:
+        appointment = Appointment.objects.get(uuid=app_id)
+    except Appointment.DoesNotExist:
+        return JsonResponse({'error': 'Appointment not found'}, status=404)
+
+    if not new_slot_id:
+        return JsonResponse({'error': 'New slot ID is required'}, status=400)
+
+    try:
+        new_slot = AppointmentTimeSlot.objects.get(unique_id=new_slot_id)
+    except AppointmentTimeSlot.DoesNotExist:
+        return JsonResponse({'error': 'New slot not found'}, status=404)
+
+    # Update the appointment with the new slot
+    appointment.time_slot = new_slot
+    appointment.appointment_date = new_slot.appointment_date_slot.date
+    time_str = f"{new_slot.from_time.strftime('%H:%M')} -- {new_slot.to_time.strftime('%H:%M')}"
+    appointment.appointment_time_str = time_str
+    appointment.appointment_type = new_slot.appointment_type[0] if new_slot.appointment_type else 'general_consultation'
+    appointment.status = 'pending'  # Reset status to pending or as needed
+    appointment.save()
+
+    # Optionally, update new_slot status if needed
+    new_slot.status = 'booked'
+    new_slot.save()
+
+    messages.success(request, "Appointment rescheduled successfully.")
+    
+    return JsonResponse({'success': True, 'message': 'Appointment rescheduled successfully.'})
 
 @login_required_with_message(login_url='account:login', message="You need to log in to Doctor Data.", only=['doctor'])
 def get_doctor_availability_json(request, app_uuid):
@@ -187,8 +258,6 @@ def get_doctor_availability_json(request, app_uuid):
     return JsonResponse({'availability': date_json})
 
 
-
- 
 @login_required_with_message(login_url='account:login', message="You need to log in to Edit Date Schedules.", only=['doctor'])
 def d_edit_schedules(request):
     profile: Profile = request.user.profile
@@ -373,7 +442,7 @@ def ViewPatients(request):
         "patientData": patientData
     }
 
-    return render(request, 'pages/doctor/view_patients.html', context)
+    return render(request, 'pages/doctor/view_appointments.html', context)
 
 
 @login_required_with_message(login_url='account:login', message="You need to log in to Change the Status.", only=['doctor'])
@@ -411,7 +480,83 @@ def Action_Appointment(request):
         appointment.completed_by = doctor.profile
         appointment.save()
 
-    print(action, appointment.status)
+    # Prepare email details
+    appointment_date = appointment.appointment_date.strftime("%Y-%m-%d")
+    appointment_time = appointment.appointment_time_str
+    patient_name = appointment.profile.user.get_full_name()
+    doctor_name = doctor.profile.user.get_full_name()
+    status_display = appointment.status.capitalize()
+
+    if action in ['confirm', 'confirmed']:
+        subject = f"Appointment Confirmed"
+        message = (
+            f"Dear {patient_name},\n\n"
+            f"Your appointment has been confirmed by Dr. {doctor_name}.\n"
+            f"Date: {appointment_date}\n"
+            f"Time: {appointment_time}\n"
+            f"Type: {appointment.appointment_type}\n"
+            f"Status: {status_display}\n\n"
+            f"Thank you for choosing our clinic."
+        )
+    elif action in ['cancel', 'cancelled']:
+        subject = f"Appointment Cancelled"
+        message = (
+            f"Dear {patient_name},\n\n"
+            f"Your appointment scheduled on {appointment_date} at {appointment_time} has been cancelled by Dr. {doctor_name}.\n"
+            f"Reason: {getattr(appointment, 'cancel_reason', '')}\n"
+            f"Status: {status_display}\n\n"
+            f"If you have any questions, please contact us."
+        )
+    elif action in ['complete', 'completed']:
+        subject = f"Appointment Completed"
+        message = (
+            f"Dear {patient_name},\n\n"
+            f"Your appointment with Dr. {doctor_name} on {appointment_date} at {appointment_time} has been marked as completed.\n"
+            f"Status: {status_display}\n\n"
+            f"Thank you for visiting our clinic."
+        )
+    else:
+        subject = f"Appointment Status Updated"
+        message = (
+            f"Dear {patient_name},\n\n"
+            f"Your appointment status has been updated to {status_display} by Dr. {doctor_name}.\n"
+            f"Date: {appointment_date}\n"
+            f"Time: {appointment_time}\n"
+            f"Type: {appointment.appointment_type}\n\n"
+            f"Thank you."
+        )
+
+
+    # Check if a conversation already exists between the patient and doctor
+    existing_conversation: Conversation = Conversation.objects.filter(
+        participants=appointment.doctor.profile
+    ).filter(
+        participants=appointment.profile
+    ).distinct().first()
+    
+    # Only create new conversation if one doesn't exist
+    if not existing_conversation:
+        conversation = Conversation.objects.create(
+            uuid=uuid.uuid4(),
+            status='initiated',
+        )
+        conversation.participants.add(appointment.profile, appointment.doctor.profile)
+        conversation.save()
+        existing_conversation = conversation
+
+    Message.objects.create(
+        conversation=existing_conversation,
+        sender=appointment.profile,
+        content=message,
+        message_type = "appoinment"  # This is a normal message, not a call request
+    )
+
+
+    send_custom_email(
+        subject=subject,
+        message=message,
+        recipient_list=[appointment.profile.user.email, doctor.profile.user.email]
+    )
     return JsonResponse({'success': True, 'message': f'Appointment {action}ed successfully'})
 
 
@@ -525,11 +670,12 @@ def send_req_calls(request: HttpRequest, convo_uuid: uuid):
             status='requested',
             receiver=conversation.participants.exclude(id=profile.id).first()
         )
-
+ 
         Message.objects.create(
             conversation=conversation,
             sender=profile,
             content=f"Call Request from {profile.user.first_name}",
+            message_type = "call"  # Mark this message as a call request
         )
 
         if call.receiver.role == "patient":
@@ -548,11 +694,11 @@ def send_req_calls(request: HttpRequest, convo_uuid: uuid):
             )
 
         messages.success(request, _("Video call request sent successfully."))
-        return redirect('patient:join_v_call', calls_uuid=call.uuid)
+        return redirect('doctor:join_v_call', calls_uuid=call.uuid)
     except Exception as e:
         print(f"Error: {e}")
         messages.error(request, _("An error occurred while sending the video call request."))
-        return redirect('patient:view_v_call')
+        return redirect('doctor:view_v_call')
 
 @login_required_with_message(login_url='account:login', message="You need to log in to Join your Video Calls.", only=['doctor'])
 def join_v_call(request: HttpRequest, calls_uuid: uuid):
@@ -578,10 +724,25 @@ def join_v_call(request: HttpRequest, calls_uuid: uuid):
 
     is_caller = calls.caller == profile
 
-    send_custom_email(
-        subject=f"Call Request, From: {calls.caller.user.first_name}",
-        message=f"Hi, The Call was Requested. \n\nFrom: {calls.caller.user.first_name}  \nTo: Dr.{calls.receiver.user.first_name} \n\nPlz Get Free And Join a Call      \n\n\n#{DOMAIN_NAME}/d/join-v-call/{calls.uuid}/ ",
-        recipient_list=[calls.receiver.user.email]
+    # Check if the user is joining for the first time or rejoining
+    last_call_message = conversation.messages.filter(message_type="call").order_by('-timestamp').first()
+    if not last_call_message or (timezone.now() - last_call_message.timestamp).total_seconds() > 60000000:
+        # Send email notification if it's been more than 6 minutes since the last call-related message
+        send_custom_email(
+            subject=f"Call Request, From: {calls.caller.user.first_name}",
+            message=f"Hi, The Call was Requested. \n\nFrom: {calls.caller.user.first_name}  \nTo: Dr.{calls.receiver.user.first_name} \n\nPlz Get Free And Join a Call      \n\n\n#{DOMAIN_NAME}/d/join-v-call/{calls.uuid}/ ",
+            recipient_list=[calls.receiver.user.email]
+        )
+        message_content = f"{profile.user.first_name} has joined the call."
+    else:
+        message_content = f"{profile.user.first_name} has rejoined the call."
+
+    # Create a message indicating the user has joined or rejoined
+    Message.objects.create(
+        conversation=conversation,
+        sender=profile,
+        content=message_content,
+        message_type="call"  # Mark this message as a call-related message
     )
 
     return render(request, 'pages/doctor/join-v-call.html', {'conversation': conversation,
@@ -609,4 +770,73 @@ def waiting_room(request: HttpRequest, calls_uuid: uuid):
                                                                 'call_obj': calls,})
 
 
+@csrf_exempt
+def submit_notes(request: HttpRequest):
+    """Submit notes for an appointment via AJAX request."""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'message': 'Only POST requests are allowed.'}, status=405)
 
+    try:
+        call_uuid = request.POST.get('call_uuid', None)
+        quick_notes = request.POST.get('quick_notes', '').strip()
+        lab_report_notes = request.POST.get('lab_report_notes', '').strip()
+        prescription_notes = request.POST.get('prescription_notes', '').strip()
+
+        if not call_uuid:
+            return JsonResponse({'success': False, 'message': 'Call UUID is required.'}, status=400)
+
+        call: Calls = get_object_or_404(Calls, uuid=call_uuid)
+        call.quick_notes = quick_notes
+        call.lab_report_notes = lab_report_notes
+        call.prescription_notes = prescription_notes
+        call.save()
+
+        # Prepare the content for the message
+        patient:Profile = call.connection.participants.exclude(id=request.user.profile.id).first()
+        Content_msg = f"Notes have been submitted for the call with Dr.{ request.user.first_name }  &  { patient.user.first_name }\n CallID: {call_uuid}\n\n➡️Notes submitted:\n{quick_notes} \n\n ➡️Lab Reports: \n{lab_report_notes} \n\n ➡️Prescription: \n{prescription_notes} \n\n Dorctor username: {request.user.username}\n Patient username: {patient.user.username} \nPlz check Above Notes and Work on it."
+
+        # Create a message indicating the notes have been submitted
+        Message.objects.create(
+            conversation=call.connection,
+            sender=request.user.profile,
+            content=Content_msg,
+            message_type="notes"  # Mark this message as notes-related
+        )
+
+        # Also need to send a message to management profile user
+        management_email = [profile.user.email for profile in Profile.objects.filter(role='management')] 
+        management_profile = Profile.objects.filter(role='management')
+        for management_profile in management_profile:
+            if management_profile:
+                # Find or create a conversation between the doctor and management
+                existing_conversation: Conversation = Conversation.objects.filter(
+                    participants=request.user.profile
+                    ).filter(
+                    participants=management_profile
+                ).distinct().first()
+                if not existing_conversation:
+                    conversation = Conversation.objects.create(
+                                uuid=uuid.uuid4(),
+                                status='initiated',
+                            )
+                    conversation.participants.add(request.user.profile, management_profile)
+                    conversation.save()
+                    existing_conversation = conversation
+
+                Message.objects.create(
+                    conversation=existing_conversation,
+                    sender=request.user.profile,
+                    content=Content_msg,
+                    message_type="notes"  # Mark this message as notes-related
+                )
+
+        # Send email notification to the doctor
+        send_custom_email(
+            subject=f"Notes Submitted for Call {call_uuid}",
+            message=Content_msg,
+            recipient_list=management_email
+        )
+
+        return JsonResponse({'success': True, 'message': 'Notes submitted successfully.'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': f"An error occurred: {str(e)}"}, status=500)

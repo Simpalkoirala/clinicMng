@@ -15,7 +15,7 @@ from openpyxl.styles import PatternFill, Font
 from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 
-
+ 
 from account.views import login_required_with_message
 from django.contrib import messages
 from datetime import datetime
@@ -35,6 +35,9 @@ from django.views.decorators.csrf import csrf_exempt
 from home.send_email import send_custom_email
 import uuid
 from django.conf import settings
+import qrcode
+from io import BytesIO
+from django.core.files.base import ContentFile
 DOMAIN_NAME = settings.DOMAIN_NAME
 
 # Constants
@@ -212,14 +215,12 @@ def export_appointments_excel(request):
 
 @login_required_with_message(login_url='account:login', message="You need to log in to Delete, Edit Appointments.")
 def appoinemtCancle_Edit(request: HttpRequest, apot_id: uuid, status: str):
-    try:
+    try: 
         appointment = get_object_or_404(Appointment, uuid=apot_id)
         profile: Profile = Profile.objects.get(user=request.user)
 
         common_reason = request.POST.get('common_reason', '').strip()
         custom_reason = request.POST.get('custom_reason', '').strip()
-
-        print(f"Common reason: {common_reason}, Custom reason: {custom_reason}")
 
         if common_reason or custom_reason:
             appointment.cancel_reason = common_reason if common_reason != 'other' else f"Custom Reason: {custom_reason}"
@@ -235,6 +236,31 @@ def appoinemtCancle_Edit(request: HttpRequest, apot_id: uuid, status: str):
                     appointment.status = 'cancelled'
                     appointment.save()
 
+                    # Check if a conversation already exists between the patient and doctor
+                    existing_conversation: Conversation = Conversation.objects.filter(
+                        participants=profile
+                    ).filter(
+                        participants=appointment.doctor.profile
+                    ).distinct().first()
+                    
+                    # Only create new conversation if one doesn't exist
+                    if not existing_conversation:
+                        conversation = Conversation.objects.create(
+                            uuid=uuid.uuid4(),
+                            status='initiated',
+                        )
+                        conversation.participants.add(profile, appointment.doctor.profile)
+                        conversation.save()
+                        existing_conversation = conversation
+
+                    Message.objects.create(
+                        conversation=existing_conversation,
+                        sender=profile,
+                        content=f"Appointment with Dr. {appointment.doctor.profile.user.get_full_name()} on {appointment.appointment_date} at {appointment.appointment_time_str} has been cancelled.",
+                        message_type= "appoinment"  # This is a normal message, not a call request
+                    )
+                        
+
                     # send email notification to doctor
                     send_custom_email(
                         subject="Appointment Cancelled",
@@ -245,7 +271,18 @@ def appoinemtCancle_Edit(request: HttpRequest, apot_id: uuid, status: str):
                             f"Thank you for your understanding.\n\n"
                             f"Best regards,\nNCMS Team"
                         ),
-                        recipient_list=[appointment.doctor.profile.user.email]
+                        recipient_list=[appointment.doctor.profile.user.email, ]
+                    )
+                    send_custom_email(
+                        subject="Appointment Cancelled",
+                        message=(
+                            f"Dear {appointment.profile.user.get_full_name()},\n\n"
+                            f"Your appointment with {appointment.doctor.profile.user.get_full_name()} on {appointment.appointment_date} at {appointment.appointment_time_str} has been cancelled.\n"
+                            f"Reason: {appointment.cancel_reason}\n\n"
+                            f"Thank you for your understanding.\n\n"
+                            f"Best regards,\nNCMS Team"
+                        ),
+                        recipient_list=[appointment.profile.user.email, ]
                     )
 
                     # Log the action
@@ -376,6 +413,14 @@ def BookAppointment(request: HttpRequest):
                 conversation.save()
                 existing_conversation = conversation
 
+            Message.objects.create(
+                    conversation=existing_conversation,
+                    sender=profile,
+                    content=f"Appointment booked with Dr. {doctor.profile.user.get_full_name()} on {appointment_date} at {appointment_time}.",
+                    message_type= "appoinment"  # This is a normal message, not a call request
+                )
+
+
             if appointment.appointment_type == 'online_consultation':
                 # Create a new call record for the appointment
                 call = Calls.objects.create(
@@ -396,7 +441,7 @@ def BookAppointment(request: HttpRequest):
                     return JsonResponse({'error': error_msg})
                 appointment.file = appointment_file
                 appointment.save()
-            
+
             # Send Email with appointment details
             send_custom_email(
                 subject="Appointment Booked!",
@@ -411,10 +456,15 @@ def BookAppointment(request: HttpRequest):
                     f"Time: {appointment_time}\n"
                     f"Type: {appointment_type.replace('_', ' ').title()}\n"
                     f"Reason: {appointment_reason or 'N/A'}\n\n"
+                    f"Payment Details:\n"
+                    f"Amount to Pay: Rs: {doctor.fees}\n"
+                    f"Payment Status: Successful\n\n"
+                    f"If you have any questions or need to reschedule, please contact us.\n\n"
                     f"Thank you for using NCMS.\n\n"
                     f"Best regards,\nNCMS Team"
                 ),
-                recipient_list=[profile.user.email, doctor.profile.user.email]
+                recipient_list=[profile.user.email, doctor.profile.user.email],
+                image_path = f"https://i.postimg.cc/LXh8Pv4T/qr.jpg"
             )
 
             # Log the action
@@ -572,6 +622,7 @@ def send_req_calls(request: HttpRequest, convo_uuid: uuid):
             conversation=conversation,
             sender=profile,
             content=f"Call Request from {profile.user.first_name}",
+            message_type = "call"
         )
 
         if call.receiver.role == "patient":
@@ -619,10 +670,26 @@ def join_v_call(request: HttpRequest, calls_uuid: uuid):
 
     is_caller = calls.caller == profile
 
-    send_custom_email(
-        subject=f"Call Request, From: {calls.caller.user.first_name}",
-        message=f"Hi, The Call was Requested. \n\nFrom: {calls.caller.user.first_name}  \nTo: {calls.receiver.user.first_name} \n\nPlz Get Free And Join a Call      \n\n\n#{DOMAIN_NAME}/p/join-v-call/{calls.uuid}/ ",
-        recipient_list=[calls.receiver.user.email]
+    
+    # Check if the user is joining for the first time or rejoining
+    last_call_message = conversation.messages.filter(message_type="call").order_by('-timestamp').first()
+    if not last_call_message or (timezone.now() - last_call_message.timestamp).total_seconds() > 60000000:
+        # Send email notification if it's been more than 6 minutes since the last call-related message
+        send_custom_email(
+            subject=f"Call Request, From: {calls.caller.user.first_name}",
+            message=f"Hi, The Call was Requested. \n\nFrom: {calls.caller.user.first_name}  \nTo: Dr.{calls.receiver.user.first_name} \n\nPlz Get Free And Join a Call      \n\n\n#{DOMAIN_NAME}/d/join-v-call/{calls.uuid}/ ",
+            recipient_list=[calls.receiver.user.email]
+        )
+        message_content = f"{profile.user.first_name} has joined the call."
+    else:
+        message_content = f"{profile.user.first_name} has rejoined the call."
+
+    # Create a message indicating the user has joined or rejoined
+    Message.objects.create(
+        conversation=conversation,
+        sender=profile,
+        content=message_content,
+        message_type="call"  # Mark this message as a call-related message
     )
 
     return render(request, 'pages/patient/join-v-call.html', {'conversation': conversation,
@@ -726,8 +793,6 @@ def req_conv(request: HttpRequest):
     if other_profile == profile:
         return JsonResponse({'error': 'You cannot start a conversation with yourself.'}, status=400)
 
-    print(f"Profile: {profile}, Other Profile: {other_profile}")
-
     # Check if a conversation already exists between the two users
     # Find if a conversation exists with exactly these two participants (no more, no less)
     conversation = (
@@ -736,6 +801,7 @@ def req_conv(request: HttpRequest):
         .filter(participants=other_profile)
         .distinct()
     )
+
     # Check if any conversation has exactly these two participants (and no more)
     for conv in conversation:
         if conv.participants.count() == 2:
@@ -744,6 +810,25 @@ def req_conv(request: HttpRequest):
     else:
         conversation = Conversation.objects.create(status='requested')
         conversation.participants.add(profile, other_profile)
+        Message.objects.create(
+            conversation=conversation,
+            sender=profile,
+            content=f"Conversation started with {other_profile.user.get_full_name()}",
+            message_type="started"  # This is a conversation request message
+            )
+
+        send_custom_email(
+            subject=f"New Conversation Request from {profile.user.get_full_name()}",
+            message=(
+                f"Hi {other_profile.user.get_full_name()},\n\n"
+                f"You have a new conversation request from {profile.user.get_full_name()}.\n"
+                f"Please check your messages to respond.\n\n"
+                f"Best regards,\nNCMS Team"
+            ),
+            recipient_list=[other_profile.user.email]
+        )
+
+
 
     # Add both profiles to the conversation
     # conversation.participants.add(profile, other_profile)
@@ -789,6 +874,7 @@ def get_msg_list(request: HttpRequest, conversation_id: int):
             'content': message.content,
             'timestamp': timestamp,
             'read': message.read,
+            'msg_type': message.message_type, 
         })
 
     payload = {

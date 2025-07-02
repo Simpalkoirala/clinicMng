@@ -20,861 +20,920 @@
 
 {% block content %}
 
-<div class="container mx-auto px-4 py-8">
-    <div class="relative bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-        <!-- Header -->
-        <div class=" text-black px-6 py-4 flex justify-between items-center bg-violet-50">
-            <h1 class="text-2xl font-semibold tracking-tight">Video Consultation</h1>
-            <div class="flex items-center space-x-4">
-                <span id="current-time" class="text-sm font-medium opacity-90"></span>
+    <div class="container mx-auto px-4 py-8">
+        <div class="relative bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+            <!-- Header -->
+            <div class=" text-black px-6 py-4 flex justify-between items-center bg-violet-50">
+                <h1 class="text-2xl font-semibold tracking-tight">Video Consultation</h1>
+                <div class="flex items-center space-x-4">
+                    <span id="current-time" class="text-sm font-medium opacity-90"></span>
+                </div>
             </div>
-        </div>
 
-        <div id="settings-btn" class="absolute top-12 right-4 bg-white rounded-full p-2 shadow-md cursor-pointer hover:bg-gray-50">
-            <svg class="w-5 h-5" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                <g transform="matrix(0.77 0 0 0.77 12 12)" >
-                <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" translate(-15, -15)" d="M 15 2 C 14.448 2 14 2.448 14 3 L 14 3.171875 C 14 3.649875 13.663406 4.0763437 13.191406 4.1523438 C 12.962406 4.1893437 12.735719 4.2322031 12.511719 4.2832031 C 12.047719 4.3892031 11.578484 4.1265 11.396484 3.6875 L 11.330078 3.53125 C 11.119078 3.02125 10.534437 2.7782344 10.023438 2.9902344 C 9.5134375 3.2012344 9.2704219 3.785875 9.4824219 4.296875 L 9.5488281 4.4570312 C 9.7328281 4.8970313 9.5856875 5.4179219 9.1796875 5.6699219 C 8.9836875 5.7919219 8.7924688 5.9197344 8.6054688 6.0527344 C 8.2174688 6.3297344 7.68075 6.2666875 7.34375 5.9296875 L 7.2226562 5.8085938 C 6.8316562 5.4175937 6.1985937 5.4175938 5.8085938 5.8085938 C 5.4185938 6.1995938 5.4185938 6.8326563 5.8085938 7.2226562 L 5.9296875 7.34375 C 6.2666875 7.68075 6.3297344 8.2164688 6.0527344 8.6054688 C 5.9197344 8.7924687 5.7919219 8.9836875 5.6699219 9.1796875 C 5.4179219 9.5856875 4.8960781 9.7337812 4.4550781 9.5507812 L 4.296875 9.484375 C 3.786875 9.273375 3.2002813 9.5153906 2.9882812 10.025391 C 2.7772813 10.535391 3.0192969 11.120031 3.5292969 11.332031 L 3.6855469 11.396484 C 4.1245469 11.578484 4.3892031 12.047719 4.2832031 12.511719 C 4.2322031 12.735719 4.1873906 12.962406 4.1503906 13.191406 C 4.0753906 13.662406 3.649875 14 3.171875 14 L 3 14 C 2.448 14 2 14.448 2 15 C 2 15.552 2.448 16 3 16 L 3.171875 16 C 3.649875 16 4.0763437 16.336594 4.1523438 16.808594 C 4.1893437 17.037594 4.2322031 17.264281 4.2832031 17.488281 C 4.3892031 17.952281 4.1265 18.421516 3.6875 18.603516 L 3.53125 18.669922 C 3.02125 18.880922 2.7782344 19.465563 2.9902344 19.976562 C 3.2012344 20.486563 3.785875 20.729578 4.296875 20.517578 L 4.4570312 20.451172 C 4.8980312 20.268172 5.418875 20.415312 5.671875 20.820312 C 5.793875 21.016313 5.9206875 21.208484 6.0546875 21.396484 C 6.3316875 21.784484 6.2686406 22.321203 5.9316406 22.658203 L 5.8085938 22.779297 C 5.4175937 23.170297 5.4175938 23.803359 5.8085938 24.193359 C 6.1995938 24.583359 6.8326562 24.584359 7.2226562 24.193359 L 7.3457031 24.072266 C 7.6827031 23.735266 8.2174688 23.670266 8.6054688 23.947266 C 8.7934688 24.081266 8.9856406 24.210031 9.1816406 24.332031 C 9.5866406 24.584031 9.7357344 25.105875 9.5527344 25.546875 L 9.4863281 25.705078 C 9.2753281 26.215078 9.5173438 26.801672 10.027344 27.013672 C 10.537344 27.224672 11.121984 26.982656 11.333984 26.472656 L 11.398438 26.316406 C 11.580438 25.877406 12.049672 25.61275 12.513672 25.71875 C 12.737672 25.76975 12.964359 25.814562 13.193359 25.851562 C 13.662359 25.924562 14 26.350125 14 26.828125 L 14 27 C 14 27.552 14.448 28 15 28 C 15.552 28 16 27.552 16 27 L 16 26.828125 C 16 26.350125 16.336594 25.923656 16.808594 25.847656 C 17.037594 25.810656 17.264281 25.767797 17.488281 25.716797 C 17.952281 25.610797 18.421516 25.8735 18.603516 26.3125 L 18.669922 26.46875 C 18.880922 26.97875 19.465563 27.221766 19.976562 27.009766 C 20.486563 26.798766 20.729578 26.214125 20.517578 25.703125 L 20.451172 25.542969 C 20.268172 25.101969 20.415312 24.581125 20.820312 24.328125 C 21.016313 24.206125 21.208484 24.079312 21.396484 23.945312 C 21.784484 23.668312 22.321203 23.731359 22.658203 24.068359 L 22.779297 24.191406 C 23.170297 24.582406 23.803359 24.582406 24.193359 24.191406 C 24.583359 23.800406 24.584359 23.167344 24.193359 22.777344 L 24.072266 22.654297 C 23.735266 22.317297 23.670266 21.782531 23.947266 21.394531 C 24.081266 21.206531 24.210031 21.014359 24.332031 20.818359 C 24.584031 20.413359 25.105875 20.264266 25.546875 20.447266 L 25.705078 20.513672 C 26.215078 20.724672 26.801672 20.482656 27.013672 19.972656 C 27.224672 19.462656 26.982656 18.878016 26.472656 18.666016 L 26.316406 18.601562 C 25.877406 18.419563 25.61275 17.950328 25.71875 17.486328 C 25.76975 17.262328 25.814562 17.035641 25.851562 16.806641 C 25.924562 16.337641 26.350125 16 26.828125 16 L 27 16 C 27.552 16 28 15.552 28 15 C 28 14.448 27.552 14 27 14 L 26.828125 14 C 26.350125 14 25.923656 13.663406 25.847656 13.191406 C 25.810656 12.962406 25.767797 12.735719 25.716797 12.511719 C 25.610797 12.047719 25.8735 11.578484 26.3125 11.396484 L 26.46875 11.330078 C 26.97875 11.119078 27.221766 10.534437 27.009766 10.023438 C 26.798766 9.5134375 26.214125 9.2704219 25.703125 9.4824219 L 25.542969 9.5488281 C 25.101969 9.7318281 24.581125 9.5846875 24.328125 9.1796875 C 24.206125 8.9836875 24.079312 8.7915156 23.945312 8.6035156 C 23.668312 8.2155156 23.731359 7.6787969 24.068359 7.3417969 L 24.191406 7.2207031 C 24.582406 6.8297031 24.582406 6.1966406 24.191406 5.8066406 C 23.800406 5.4156406 23.167344 5.4156406 22.777344 5.8066406 L 22.65625 5.9296875 C 22.31925 6.2666875 21.782531 6.3316875 21.394531 6.0546875 C 21.206531 5.9206875 21.014359 5.7919219 20.818359 5.6699219 C 20.413359 5.4179219 20.266219 4.8960781 20.449219 4.4550781 L 20.515625 4.296875 C 20.726625 3.786875 20.484609 3.2002812 19.974609 2.9882812 C 19.464609 2.7772813 18.879969 3.0192969 18.667969 3.5292969 L 18.601562 3.6855469 C 18.419563 4.1245469 17.950328 4.3892031 17.486328 4.2832031 C 17.262328 4.2322031 17.035641 4.1873906 16.806641 4.1503906 C 16.336641 4.0753906 16 3.649875 16 3.171875 L 16 3 C 16 2.448 15.552 2 15 2 z M 15 7 C 19.078645 7 22.438586 10.054876 22.931641 14 L 16.728516 14 C 16.371882561019348 13.382290188647442 15.713267993125498 13.001261278360323 15 13 C 14.999349000038798 12.99999968214923 14.998697999961202 12.999999682149232 14.998047 13 L 11.896484 7.625 C 12.850999 7.222729 13.899211 7 15 7 z M 10.169922 8.6328125 L 13.269531 14 C 13.093441452828493 14.303885130574361 13.000480819308068 14.648782873395877 13 15 C 13.001165131717404 15.349891851522527 13.094102315133348 15.693355760228842 13.269531 15.996094 L 10.167969 21.365234 C 8.2464258 19.903996 7 17.600071 7 15 C 7 12.398945 8.2471371 10.093961 10.169922 8.6328125 z M 16.730469 16 L 22.931641 16 C 22.438586 19.945124 19.078645 23 15 23 C 13.899211 23 12.850999 22.777271 11.896484 22.375 L 14.998047 17 C 14.998697999961202 17.00000031785077 14.999349000038798 17.00000031785077 15 17 C 15.713965989941084 16.999435192436863 16.373486116732096 16.618313007184767 16.730469 16 z" stroke-linecap="round" />
-                </g>
-            </svg>
-        </div>
+            <div id="settings-btn" class="absolute top-12 right-4 bg-white rounded-full p-2 shadow-md cursor-pointer hover:bg-gray-50">
+                <svg class="w-5 h-5" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                    <g transform="matrix(0.77 0 0 0.77 12 12)" >
+                    <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" translate(-15, -15)" d="M 15 2 C 14.448 2 14 2.448 14 3 L 14 3.171875 C 14 3.649875 13.663406 4.0763437 13.191406 4.1523438 C 12.962406 4.1893437 12.735719 4.2322031 12.511719 4.2832031 C 12.047719 4.3892031 11.578484 4.1265 11.396484 3.6875 L 11.330078 3.53125 C 11.119078 3.02125 10.534437 2.7782344 10.023438 2.9902344 C 9.5134375 3.2012344 9.2704219 3.785875 9.4824219 4.296875 L 9.5488281 4.4570312 C 9.7328281 4.8970313 9.5856875 5.4179219 9.1796875 5.6699219 C 8.9836875 5.7919219 8.7924688 5.9197344 8.6054688 6.0527344 C 8.2174688 6.3297344 7.68075 6.2666875 7.34375 5.9296875 L 7.2226562 5.8085938 C 6.8316562 5.4175937 6.1985937 5.4175938 5.8085938 5.8085938 C 5.4185938 6.1995938 5.4185938 6.8326563 5.8085938 7.2226562 L 5.9296875 7.34375 C 6.2666875 7.68075 6.3297344 8.2164688 6.0527344 8.6054688 C 5.9197344 8.7924687 5.7919219 8.9836875 5.6699219 9.1796875 C 5.4179219 9.5856875 4.8960781 9.7337812 4.4550781 9.5507812 L 4.296875 9.484375 C 3.786875 9.273375 3.2002813 9.5153906 2.9882812 10.025391 C 2.7772813 10.535391 3.0192969 11.120031 3.5292969 11.332031 L 3.6855469 11.396484 C 4.1245469 11.578484 4.3892031 12.047719 4.2832031 12.511719 C 4.2322031 12.735719 4.1873906 12.962406 4.1503906 13.191406 C 4.0753906 13.662406 3.649875 14 3.171875 14 L 3 14 C 2.448 14 2 14.448 2 15 C 2 15.552 2.448 16 3 16 L 3.171875 16 C 3.649875 16 4.0763437 16.336594 4.1523438 16.808594 C 4.1893437 17.037594 4.2322031 17.264281 4.2832031 17.488281 C 4.3892031 17.952281 4.1265 18.421516 3.6875 18.603516 L 3.53125 18.669922 C 3.02125 18.880922 2.7782344 19.465563 2.9902344 19.976562 C 3.2012344 20.486563 3.785875 20.729578 4.296875 20.517578 L 4.4570312 20.451172 C 4.8980312 20.268172 5.418875 20.415312 5.671875 20.820312 C 5.793875 21.016313 5.9206875 21.208484 6.0546875 21.396484 C 6.3316875 21.784484 6.2686406 22.321203 5.9316406 22.658203 L 5.8085938 22.779297 C 5.4175937 23.170297 5.4175938 23.803359 5.8085938 24.193359 C 6.1995938 24.583359 6.8326562 24.584359 7.2226562 24.193359 L 7.3457031 24.072266 C 7.6827031 23.735266 8.2174688 23.670266 8.6054688 23.947266 C 8.7934688 24.081266 8.9856406 24.210031 9.1816406 24.332031 C 9.5866406 24.584031 9.7357344 25.105875 9.5527344 25.546875 L 9.4863281 25.705078 C 9.2753281 26.215078 9.5173438 26.801672 10.027344 27.013672 C 10.537344 27.224672 11.121984 26.982656 11.333984 26.472656 L 11.398438 26.316406 C 11.580438 25.877406 12.049672 25.61275 12.513672 25.71875 C 12.737672 25.76975 12.964359 25.814562 13.193359 25.851562 C 13.662359 25.924562 14 26.350125 14 26.828125 L 14 27 C 14 27.552 14.448 28 15 28 C 15.552 28 16 27.552 16 27 L 16 26.828125 C 16 26.350125 16.336594 25.923656 16.808594 25.847656 C 17.037594 25.810656 17.264281 25.767797 17.488281 25.716797 C 17.952281 25.610797 18.421516 25.8735 18.603516 26.3125 L 18.669922 26.46875 C 18.880922 26.97875 19.465563 27.221766 19.976562 27.009766 C 20.486563 26.798766 20.729578 26.214125 20.517578 25.703125 L 20.451172 25.542969 C 20.268172 25.101969 20.415312 24.581125 20.820312 24.328125 C 21.016313 24.206125 21.208484 24.079312 21.396484 23.945312 C 21.784484 23.668312 22.321203 23.731359 22.658203 24.068359 L 22.779297 24.191406 C 23.170297 24.582406 23.803359 24.582406 24.193359 24.191406 C 24.583359 23.800406 24.584359 23.167344 24.193359 22.777344 L 24.072266 22.654297 C 23.735266 22.317297 23.670266 21.782531 23.947266 21.394531 C 24.081266 21.206531 24.210031 21.014359 24.332031 20.818359 C 24.584031 20.413359 25.105875 20.264266 25.546875 20.447266 L 25.705078 20.513672 C 26.215078 20.724672 26.801672 20.482656 27.013672 19.972656 C 27.224672 19.462656 26.982656 18.878016 26.472656 18.666016 L 26.316406 18.601562 C 25.877406 18.419563 25.61275 17.950328 25.71875 17.486328 C 25.76975 17.262328 25.814562 17.035641 25.851562 16.806641 C 25.924562 16.337641 26.350125 16 26.828125 16 L 27 16 C 27.552 16 28 15.552 28 15 C 28 14.448 27.552 14 27 14 L 26.828125 14 C 26.350125 14 25.923656 13.663406 25.847656 13.191406 C 25.810656 12.962406 25.767797 12.735719 25.716797 12.511719 C 25.610797 12.047719 25.8735 11.578484 26.3125 11.396484 L 26.46875 11.330078 C 26.97875 11.119078 27.221766 10.534437 27.009766 10.023438 C 26.798766 9.5134375 26.214125 9.2704219 25.703125 9.4824219 L 25.542969 9.5488281 C 25.101969 9.7318281 24.581125 9.5846875 24.328125 9.1796875 C 24.206125 8.9836875 24.079312 8.7915156 23.945312 8.6035156 C 23.668312 8.2155156 23.731359 7.6787969 24.068359 7.3417969 L 24.191406 7.2207031 C 24.582406 6.8297031 24.582406 6.1966406 24.191406 5.8066406 C 23.800406 5.4156406 23.167344 5.4156406 22.777344 5.8066406 L 22.65625 5.9296875 C 22.31925 6.2666875 21.782531 6.3316875 21.394531 6.0546875 C 21.206531 5.9206875 21.014359 5.7919219 20.818359 5.6699219 C 20.413359 5.4179219 20.266219 4.8960781 20.449219 4.4550781 L 20.515625 4.296875 C 20.726625 3.786875 20.484609 3.2002812 19.974609 2.9882812 C 19.464609 2.7772813 18.879969 3.0192969 18.667969 3.5292969 L 18.601562 3.6855469 C 18.419563 4.1245469 17.950328 4.3892031 17.486328 4.2832031 C 17.262328 4.2322031 17.035641 4.1873906 16.806641 4.1503906 C 16.336641 4.0753906 16 3.649875 16 3.171875 L 16 3 C 16 2.448 15.552 2 15 2 z M 15 7 C 19.078645 7 22.438586 10.054876 22.931641 14 L 16.728516 14 C 16.371882561019348 13.382290188647442 15.713267993125498 13.001261278360323 15 13 C 14.999349000038798 12.99999968214923 14.998697999961202 12.999999682149232 14.998047 13 L 11.896484 7.625 C 12.850999 7.222729 13.899211 7 15 7 z M 10.169922 8.6328125 L 13.269531 14 C 13.093441452828493 14.303885130574361 13.000480819308068 14.648782873395877 13 15 C 13.001165131717404 15.349891851522527 13.094102315133348 15.693355760228842 13.269531 15.996094 L 10.167969 21.365234 C 8.2464258 19.903996 7 17.600071 7 15 C 7 12.398945 8.2471371 10.093961 10.169922 8.6328125 z M 16.730469 16 L 22.931641 16 C 22.438586 19.945124 19.078645 23 15 23 C 13.899211 23 12.850999 22.777271 11.896484 22.375 L 14.998047 17 C 14.998697999961202 17.00000031785077 14.999349000038798 17.00000031785077 15 17 C 15.713965989941084 16.999435192436863 16.373486116732096 16.618313007184767 16.730469 16 z" stroke-linecap="round" />
+                    </g>
+                </svg>
+            </div>
 
-        <!-- video call section -->
-        <div class="grid grid-cols-12 gap-6 p-6 ">
-            <!-- Video Consultation Area -->
-            <div class="col-span-12 lg:col-span-8">
-                <div class="bg-gray-100 rounded-xl overflow-hidden aspect-video relative shadow-inner">
-                    <!-- Local Video -->
-                    <div
-                        class="absolute bottom-4 right-4 w-[30%] rounded-lg overflow-hidden shadow-lg border-2 border-white/20">
-                        <video id="local-video" class="w-full h-full object-cover" playsinline autoplay muted></video>
-                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 p-2">
-                            <span class="text-sm font-medium text-white">You</span>
-                        </div>
-                    </div>
-
-                    <!-- Remote Video -->
-                    <div class="w-full h-full bg-black">
-                        
-                        <div id="connection-template" class="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
-                            <!-- Small connection indicator -->
-                            <div class="flex items-center justify-center space-x-1 mb-2">
-                                <div class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                                <div class="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style="animation-delay: 0.2s;"></div>
-                                <div class="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style="animation-delay: 0.4s;"></div>
+            <!-- video call section -->
+            <div class="grid grid-cols-12 gap-6 p-6 ">
+                <!-- Video Consultation Area -->
+                <div class="col-span-12 lg:col-span-8">
+                    <div class="bg-gray-100 rounded-xl overflow-hidden aspect-video relative shadow-inner">
+                        <!-- Local Video -->
+                        <div
+                            class="absolute bottom-4 right-4 w-[30%] rounded-lg overflow-hidden shadow-lg border-2 border-white/20">
+                            <video id="local-video" class="w-full h-full object-cover" playsinline autoplay muted></video>
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 p-2">
+                                <span class="text-sm font-medium text-white">You</span>
                             </div>
+                        </div>
+
+                        <!-- Remote Video -->
+                        <div class="w-full h-full bg-black">
                             
-                            <!-- Clean status text -->
-                            <p class="text-sm text-white bg-black/30 px-3 py-1 rounded-full">
-                                <span class="connecting-dots">.. connecting ..</span>
-                            </p>
-                            <p class="text-xs text-white mt-1 bg-black/30 px-2 py-0.5 rounded-full">
-                                .. waiting for the other participant to join ..
-                            </p>
-                        </div>
-
-
-                        <video id="remote-video" class="w-full h-full object-cover" playsinline autoplay></video>
-                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 p-4">
-                            <span class="text-lg font-semibold text-white">{{ conversation.other_participant.user.first_name }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Call Controls -->
-                <div class="mt-6 flex justify-center space-x-4">
-                    <button id="mute-audio"
-                        class="bg-white hover:bg-gray-50 text-gray-700 shadow-md rounded-full p-4 smooth-transition hover:shadow-lg hover:-translate-y-0.5 border border-gray-100">
-                        <svg id="mic_on" class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 352 512">
-                            <path
-                                d="M176 352c53.02 0 96-42.98 96-96V96c0-53.02-42.98-96-96-96S80 42.98 80 96v160c0 53.02 42.98 96 96 96zm160-160h-16c-8.84 0-16 7.16-16 16v48c0 74.8-64.49 134.82-140.79 127.38C96.71 376.89 48 317.11 48 250.3V208c0-8.84-7.16-16-16-16H16c-8.84 0-16 7.16-16 16v40.16c0 89.64 63.97 169.55 152 181.69V464H96c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h160c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16h-56v-33.77C285.71 418.47 352 344.9 352 256v-48c0-8.84-7.16-16-16-16z" />
-                        </svg>
-                        <svg id='mic_off' class="w-6 h-6 fill-current hidden" viewBox='0 0 24 24'
-                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                            <g transform="matrix(0.44 0 0 0.44 12 12)">
-                                <path
-                                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
-                                    transform=" translate(-24, -24.51)"
-                                    d="M 24 2 C 19.04 2 15 6.04 15 11 L 15 26 C 15 26.21 15.009531 26.419141 15.019531 26.619141 L 16.5 25.140625 L 16.5 25.138672 L 17.75 23.890625 L 30 11.640625 L 30 11.638672 L 31.449219 10.189453 L 32.75 8.890625 C 31.8 4.940625 28.23 2 24 2 z M 42.470703 3.9863281 C 42.08114430440711 3.9976814130264517 41.71129431177108 4.160191258275617 41.439453 4.4394531 L 4.4394531 41.439453 C 4.047605120321112 41.81568084296037 3.8897630292485115 42.374350062606034 4.026800011395891 42.900004982226285 C 4.163836993543271 43.425659901846544 4.574339972165357 43.83616291917535 5.09999487886426 43.97319995088724 C 5.625649785563164 44.11023698259913 6.184319020091907 43.952394944203995 6.5605469 43.560547 L 13.466797 36.654297 C 15.840795 39.006844 18.995617 40.563363 22.5 40.914062 L 22.5 45.5 C 22.492349565681767 46.040953874866354 22.776562944253993 46.54412204685742 23.243809274571493 46.81683158222979 C 23.711055604888994 47.08954111760215 24.28894439511101 47.08954111760215 24.756190725428507 46.81683158222978 C 25.223437055746007 46.54412204685742 25.507650434318233 46.040953874866354 25.5 45.5 L 25.5 40.923828 C 33.068393 40.168472 39 33.76368 39 26 L 39 22.5 C 39 21.67 38.33 21 37.5 21 C 36.67 21 36 21.67 36 22.5 L 36 26 C 36 32.560034 30.71517 37.893986 24.177734 37.990234 C 24.1608415053972 37.98799272552868 24.143912048260187 37.986039442029615 24.126953 37.984375 C 24.076952273637417 37.97990694096038 24.02675878780815 37.97795148063713 23.976562 37.978516 C 23.92630005712189 37.97924929685335 23.876106735529145 37.98250840839901 23.826172 37.988281 C 23.823565923942468 37.9889250082718 23.820961581227102 37.98957601061701 23.818359 37.990234 C 23.817703 37.990224 23.817062 37.990244 23.816406 37.990234 C 20.609982 37.941414 17.70768 36.633843 15.585938 34.535156 L 17.712891 32.408203 C 19.337761 34.002776 21.549803 35 24 35 C 28.96 35 33 30.96 33 26 L 33 17.121094 L 43.560547 6.5605469 C 44.00344840446228 6.129198831143676 44.1363672525846 5.47031658654525 43.89533460846605 4.9009958728434135 C 43.65430196434751 4.331675159141576 43.08868846012146 3.96852973886156 42.470703 3.9863281000000006 z M 10.5 21 C 9.67 21 9 21.67 9 22.5 L 9 26 C 9 27.97 9.3803125 29.850313 10.070312 31.570312 L 12.439453 29.199219 C 12.149453 28.179219 12 27.11 12 26 L 12 22.5 C 12 21.67 11.33 21 10.5 21 z"
-                                    stroke-linecap="round" />
-                            </g>
-                        </svg>
-                    </button>
-                    <button id="stop-video"
-                        class="bg-white hover:bg-gray-50 text-gray-700 shadow-md rounded-full p-4 smooth-transition hover:shadow-lg hover:-translate-y-0.5 border border-gray-100">
-                        <svg id="video_on" class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 576 512">
-                            <path
-                                d="M336.2 64H47.8C21.4 64 0 85.4 0 111.8v288.4C0 426.6 21.4 448 47.8 448h288.4c26.4 0 47.8-21.4 47.8-47.8V111.8c0-26.4-21.4-47.8-47.8-47.8zm189.4 37.7L416 177.3v157.4l109.6 75.5c21.2 14.6 50.4-.3 50.4-25.8V127.5c0-25.4-29.1-40.4-50.4-25.8z" />
-                        </svg>
-
-                        <svg id="video_off" class="w-6 h-6 fill-current hidden" viewBox='0 0 24 24'
-                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                            <g transform="matrix(0.83 0 0 0.83 12 12)">
-                                <g style="">
-                                    <g transform="matrix(1 0 0 1 -3.67 0.32)">
-                                        <path
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
-                                            transform=" translate(-8.33, -12.32)"
-                                            d="M 3.17 6.43 C 3.083958662330266 6.377823903483072 2.9760413376697334 6.377823903483072 2.8899999999999997 6.43 C 2.365049886773978 6.663280729100022 2.0194343296487363 7.17587908348802 2 7.749999999999999 L 2 16.75 C 2 17.57842712474619 2.6715728752538097 18.25 3.5 18.25 L 14.38 18.25 C 14.479721612614107 18.250347254196022 14.570111717719584 18.19139718564897 14.610000000000001 18.1 C 14.66454796933058 18.014636704947264 14.66454796933058 17.905363295052737 14.610000000000001 17.82 Z"
-                                            stroke-linecap="round" />
-                                    </g>
-                                    <g transform="matrix(1 0 0 1 9 0.25)">
-                                        <path
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
-                                            transform=" translate(-21, -12.25)"
-                                            d="M 21.74 7.45 L 18.74 9.16 C 18.285848998389287 9.412612912055163 18.003040631139445 9.890329748625847 18 10.41 L 18 14.09 C 18.003040631139445 14.609670251374151 18.285848998389287 15.087387087944835 18.74 15.34 L 21.74 17.05 C 22.19718754717847 17.318972913093837 22.762437906791607 17.326482547622348 23.226609709958623 17.069750355605194 C 23.69078151312564 16.81301816358804 23.984846012125423 16.330223762127602 24 15.8 L 24 8.7 C 23.984846012125423 8.169776237872396 23.690781513125636 7.6869818364119595 23.226609709958623 7.430249644394806 C 22.762437906791607 7.173517452377652 22.197187547178466 7.1810270869061625 21.739999999999995 7.450000000000001 Z"
-                                            stroke-linecap="round" />
-                                    </g>
-                                    <g transform="matrix(1 0 0 1 0 0)">
-                                        <path
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
-                                            transform=" translate(-12, -12)"
-                                            d="M 17.07 15.66 C 17.026786005208926 15.609760232041317 17.002081965034968 15.54623555730828 17 15.48 L 17 7.75 C 17 6.92157287525381 16.32842712474619 6.25 15.5 6.25 L 7.77 6.25 C 7.703764442691719 6.247918034965032 7.6402397679586835 6.223213994791074 7.59 6.18 L 1.71 0.29 C 1.3704533264228007 -0.0498766096865903 0.8371976576818188 -0.100262972087313 0.4399999999999993 0.17000000000000054 L 0.29 0.29 C 0.10068734917690358 0.47776659990555614 -0.0057983243416699914 0.7333624636294416 -0.0057983243416699914 1 C -0.0057983243416699914 1.2666375363705582 0.10068734917690356 1.522233400094444 0.29 1.71 L 22.29 23.71 C 22.682122172379863 24.102122172379865 23.317877827620137 24.102122172379865 23.71 23.71 C 24.102122172379865 23.317877827620137 24.102122172379865 22.682122172379863 23.71 22.29 Z"
-                                            stroke-linecap="round" />
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-                    </button>
-                    <button id="end-call"
-                        class="bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-full shadow-md smooth-transition hover:shadow-lg hover:-translate-y-0.5 font-semibold">
-                        End Call
-                    </button>
-                </div>
-            </div>
-
-            <!-- Sidebar -->
-            <div class="col-span-12 lg:col-span-4 space-y-6 mt-6 lg:mt-0">
-                <!-- Consultation Details -->
-                <div>
-                    <h2 class="text-lg font-semibold mb-3 text-gray-700">Call with:</h2>
-                    <div class="relative flex items-center border border-gray-800 bg-white p-1 md:p-3 rounded-lg shadow-sm mb-6 md:mb-8">
-                        <span id="active_usr" class="bg-green-50 text-green-800 text-sm px-2 py-1 rounded-2xl absolute -top-4 -right-2 border border-green-900 hidden">
-                            Active ⭐
-                        </span>
-                        <span id="n_active_usr" class="bg-rose-50 text-rose-800 text-sm px-2 py-1 rounded-2xl absolute -top-4 -right-2 border border-rose-900 ">
-                            Not Active 🚫
-                        </span>
-    
-                        <div class="mr-3 md:mr-4">
-                            <img src="{{ conversation.other_participant.profile_pic.url }}" alt="{{ conversation.other_participant.user.first_name }}" class="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover border-2 md:border-3 border-primary">
-                        </div>
-                        <div>
-                            <h3 class="text-lg md:text-xl font-medium text-gray-800 mb-0.5 md:mb-1">{{ conversation.other_participant.user.first_name }}</h3>
-                            {% if conversation.other_participant.role == 'doctor'%}
-                                <p class="text-sm text-gray-500 truncate mb-1 md:mb-2">{{conversation.other_participant.doctor_profile.specialization }}</p>
-                                <div class="flex items-center">
-                                    <span class="ml-1.5 md:ml-2 font-semibold text-xs md:text-sm">{{conversation.other_participant.doctor_profile.star_rating }} ⭐</span>
+                            <div id="connection-template" class="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
+                                <!-- Small connection indicator -->
+                                <div class="flex items-center justify-center space-x-1 mb-2">
+                                    <div class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                                    <div class="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style="animation-delay: 0.2s;"></div>
+                                    <div class="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style="animation-delay: 0.4s;"></div>
                                 </div>
-                            {% else %}
-                                <p class="text-sm text-gray-500 truncate mb-1 md:mb-2">Patient</p>
-                            {% endif %}
-                            
+                                
+                                <!-- Clean status text -->
+                                <p class="text-sm text-white bg-black/30 px-3 py-1 rounded-full">
+                                    <span class="connecting-dots">.. connecting ..</span>
+                                </p>
+                                <p class="text-xs text-white mt-1 bg-black/30 px-2 py-0.5 rounded-full">
+                                    .. waiting for the other participant to join ..
+                                </p>
+                            </div>
+
+
+                            <video id="remote-video" class="w-full h-full object-cover" playsinline autoplay></video>
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 p-4">
+                                <span class="text-lg font-semibold text-white">{{ conversation.other_participant.user.first_name }}</span>
+                            </div>
                         </div>
                     </div>
-                    {% if call_obj.appointment %}
-                        <h2 class="text-lg font-semibold mb-3 text-gray-700">Appointment Details: </h2>
-                        <div class="mb-4 md:mb-6 p-3 md:p-4 bg-white rounded-lg shadow-sm border">
-                            <div class="flex items-center mb-2 font-medium text-sm md:text-base">
-                                <svg class="w-6 h-6 text-primary mr-2" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                                    <g transform="matrix(0.83 0 0 0.83 12 12)" >
-                                        <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: currentColor; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 12 0 C 5.371094 0 0 5.371094 0 12 C 0 18.628906 5.371094 24 12 24 C 18.628906 24 24 18.628906 24 12 C 24 5.371094 18.628906 0 12 0 Z M 12 2 C 17.523438 2 22 6.476563 22 12 C 22 17.523438 17.523438 22 12 22 C 6.476563 22 2 17.523438 2 12 C 2 6.476563 6.476563 2 12 2 Z M 10.9375 3.875 L 10.5 12.0625 L 10.59375 12.9375 L 16.75 18.375 L 17.71875 17.375 L 12.625 11.96875 L 12.1875 3.875 Z" stroke-linecap="round" />
-                                    </g>
-                                </svg>
-                                <span>{{ call_obj.appointment.appointment_date|date:"M d, Y" }} {{ call_obj.appointment.appointment_time_str }}</span>
-                            </div>
-                            <div class="mt-1 md:mt-2">
-                                <span class="bg-blue-500 text-white px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-medium">{{ call_obj.appointment.appointment_type }}</span>
-                            </div>
-                            <div class="mt-1 md:mt-2 text-sm">
-                                <span class="font-medium text-gray-600">Reason:</span>
-                                <span class="ml-1 text-gray-900">{{ call_obj.appointment.reason|truncatechars:100|default:'Null' }}</span>
-                            </div>
-                            <div class="mt-1 md:mt-2 text-sm">
-                                <span class="font-medium text-gray-600">Appointment Status:</span>
-                                <span class="
-                                    {% if call_obj.appointment.status == 'pending' %}text-yellow-600
-                                    {% elif call_obj.appointment.status == 'confirmed' %}text-green-600
-                                    {% elif call_obj.appointment.status == 'cancelled' %}text-red-600
-                                    {% elif call_obj.appointment.status == 'completed' %}text-blue-600
-                                    {% endif %}
-                                ">
-                                    {{ call_obj.appointment.get_status_display }}
-                                </span>
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
 
-                <!-- Chat Section -->
-                <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 shadow-sm hidden">
-                    <h3 class="font-semibold mb-3 text-gray-700">Chat</h3>
-                    <div id="chat-messages" class="h-48 overflow-y-auto space-y-2 pr-2 mb-3 custom-scrollbar">
-                        <!-- Chat messages will be dynamically added here -->
-                    </div>
-                    <div class="flex gap-2 flex-wrap items-center">
-                        <input type="text" id="chat-input" placeholder="Type a message..."
-                            class="flex-grow min-w-0 px-2 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent smooth-transition">
-
-                        <button id="send-chat"
-                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg smooth-transition focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-between flex-shrink-0">
-                            <span class="hidden sm:inline pr-1">Send</span>
-                            <svg class="w-5 h-5" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
-                                xmlns:xlink='http://www.w3.org/1999/xlink'>
-                                <g transform="matrix(0.83 0 0 0.83 12 12)">
-                                    <path style="stroke: none; fill: currentColor;" transform=" translate(-15, -15)"
-                                        d="M 26 3 C 25.904026142042714 3.0006583581949826 25.80864687942315 3.0151297178191654 25.716797 3.0429688 C 25.68976046237127 3.050306917202327 25.663044228078622 3.0587779232018644 25.636719 3.0683594000000003 L 3.6503906 10.060547 L 3.6503906 10.064453 C 3.2597585643776337 10.210219758159939 3.0005624088856773 10.583057535461814 3 11 C 3.0007408225869683 11.349224834461092 3.1836114229399137 11.672765252777186 3.4824218999999994 11.853516 L 10.164062 17.154297 L 23.373047 6.6269531 L 12.845703 19.835938 L 18.142578 26.513672 C 18.323084316844625 26.815171933439384 18.648596100047126 26.99980154931267 19 27 C 19.416942566116045 26.999437528711955 19.789780373159353 26.740241193134263 19.935547 26.349609 L 19.939453 26.349609 L 26.9375 4.34375 C 26.94465083777267 4.323779951047257 26.951164466503297 4.303587435180673 26.957031 4.2832031 C 26.984870159411347 4.191353198395892 26.999341586528 4.095973901208165 27 4 C 27 3.4477152501692068 26.552284749830793 3 26 3 z"
+                    <!-- Call Controls -->
+                    <div class="mt-6 flex justify-center space-x-4">
+                        <button id="mute-audio"
+                            class="bg-white hover:bg-gray-50 text-gray-700 shadow-md rounded-full p-4 smooth-transition hover:shadow-lg hover:-translate-y-0.5 border border-gray-100">
+                            <svg id="mic_on" class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 352 512">
+                                <path
+                                    d="M176 352c53.02 0 96-42.98 96-96V96c0-53.02-42.98-96-96-96S80 42.98 80 96v160c0 53.02 42.98 96 96 96zm160-160h-16c-8.84 0-16 7.16-16 16v48c0 74.8-64.49 134.82-140.79 127.38C96.71 376.89 48 317.11 48 250.3V208c0-8.84-7.16-16-16-16H16c-8.84 0-16 7.16-16 16v40.16c0 89.64 63.97 169.55 152 181.69V464H96c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h160c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16h-56v-33.77C285.71 418.47 352 344.9 352 256v-48c0-8.84-7.16-16-16-16z" />
+                            </svg>
+                            <svg id='mic_off' class="w-6 h-6 fill-current hidden" viewBox='0 0 24 24'
+                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                <g transform="matrix(0.44 0 0 0.44 12 12)">
+                                    <path
+                                        style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                        transform=" translate(-24, -24.51)"
+                                        d="M 24 2 C 19.04 2 15 6.04 15 11 L 15 26 C 15 26.21 15.009531 26.419141 15.019531 26.619141 L 16.5 25.140625 L 16.5 25.138672 L 17.75 23.890625 L 30 11.640625 L 30 11.638672 L 31.449219 10.189453 L 32.75 8.890625 C 31.8 4.940625 28.23 2 24 2 z M 42.470703 3.9863281 C 42.08114430440711 3.9976814130264517 41.71129431177108 4.160191258275617 41.439453 4.4394531 L 4.4394531 41.439453 C 4.047605120321112 41.81568084296037 3.8897630292485115 42.374350062606034 4.026800011395891 42.900004982226285 C 4.163836993543271 43.425659901846544 4.574339972165357 43.83616291917535 5.09999487886426 43.97319995088724 C 5.625649785563164 44.11023698259913 6.184319020091907 43.952394944203995 6.5605469 43.560547 L 13.466797 36.654297 C 15.840795 39.006844 18.995617 40.563363 22.5 40.914062 L 22.5 45.5 C 22.492349565681767 46.040953874866354 22.776562944253993 46.54412204685742 23.243809274571493 46.81683158222979 C 23.711055604888994 47.08954111760215 24.28894439511101 47.08954111760215 24.756190725428507 46.81683158222978 C 25.223437055746007 46.54412204685742 25.507650434318233 46.040953874866354 25.5 45.5 L 25.5 40.923828 C 33.068393 40.168472 39 33.76368 39 26 L 39 22.5 C 39 21.67 38.33 21 37.5 21 C 36.67 21 36 21.67 36 22.5 L 36 26 C 36 32.560034 30.71517 37.893986 24.177734 37.990234 C 24.1608415053972 37.98799272552868 24.143912048260187 37.986039442029615 24.126953 37.984375 C 24.076952273637417 37.97990694096038 24.02675878780815 37.97795148063713 23.976562 37.978516 C 23.92630005712189 37.97924929685335 23.876106735529145 37.98250840839901 23.826172 37.988281 C 23.823565923942468 37.9889250082718 23.820961581227102 37.98957601061701 23.818359 37.990234 C 23.817703 37.990224 23.817062 37.990244 23.816406 37.990234 C 20.609982 37.941414 17.70768 36.633843 15.585938 34.535156 L 17.712891 32.408203 C 19.337761 34.002776 21.549803 35 24 35 C 28.96 35 33 30.96 33 26 L 33 17.121094 L 43.560547 6.5605469 C 44.00344840446228 6.129198831143676 44.1363672525846 5.47031658654525 43.89533460846605 4.9009958728434135 C 43.65430196434751 4.331675159141576 43.08868846012146 3.96852973886156 42.470703 3.9863281000000006 z M 10.5 21 C 9.67 21 9 21.67 9 22.5 L 9 26 C 9 27.97 9.3803125 29.850313 10.070312 31.570312 L 12.439453 29.199219 C 12.149453 28.179219 12 27.11 12 26 L 12 22.5 C 12 21.67 11.33 21 10.5 21 z"
                                         stroke-linecap="round" />
                                 </g>
                             </svg>
                         </button>
+                        <button id="stop-video"
+                            class="bg-white hover:bg-gray-50 text-gray-700 shadow-md rounded-full p-4 smooth-transition hover:shadow-lg hover:-translate-y-0.5 border border-gray-100">
+                            <svg id="video_on" class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 576 512">
+                                <path
+                                    d="M336.2 64H47.8C21.4 64 0 85.4 0 111.8v288.4C0 426.6 21.4 448 47.8 448h288.4c26.4 0 47.8-21.4 47.8-47.8V111.8c0-26.4-21.4-47.8-47.8-47.8zm189.4 37.7L416 177.3v157.4l109.6 75.5c21.2 14.6 50.4-.3 50.4-25.8V127.5c0-25.4-29.1-40.4-50.4-25.8z" />
+                            </svg>
+
+                            <svg id="video_off" class="w-6 h-6 fill-current hidden" viewBox='0 0 24 24'
+                                xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                <g transform="matrix(0.83 0 0 0.83 12 12)">
+                                    <g style="">
+                                        <g transform="matrix(1 0 0 1 -3.67 0.32)">
+                                            <path
+                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-8.33, -12.32)"
+                                                d="M 3.17 6.43 C 3.083958662330266 6.377823903483072 2.9760413376697334 6.377823903483072 2.8899999999999997 6.43 C 2.365049886773978 6.663280729100022 2.0194343296487363 7.17587908348802 2 7.749999999999999 L 2 16.75 C 2 17.57842712474619 2.6715728752538097 18.25 3.5 18.25 L 14.38 18.25 C 14.479721612614107 18.250347254196022 14.570111717719584 18.19139718564897 14.610000000000001 18.1 C 14.66454796933058 18.014636704947264 14.66454796933058 17.905363295052737 14.610000000000001 17.82 Z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 9 0.25)">
+                                            <path
+                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-21, -12.25)"
+                                                d="M 21.74 7.45 L 18.74 9.16 C 18.285848998389287 9.412612912055163 18.003040631139445 9.890329748625847 18 10.41 L 18 14.09 C 18.003040631139445 14.609670251374151 18.285848998389287 15.087387087944835 18.74 15.34 L 21.74 17.05 C 22.19718754717847 17.318972913093837 22.762437906791607 17.326482547622348 23.226609709958623 17.069750355605194 C 23.69078151312564 16.81301816358804 23.984846012125423 16.330223762127602 24 15.8 L 24 8.7 C 23.984846012125423 8.169776237872396 23.690781513125636 7.6869818364119595 23.226609709958623 7.430249644394806 C 22.762437906791607 7.173517452377652 22.197187547178466 7.1810270869061625 21.739999999999995 7.450000000000001 Z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                        <g transform="matrix(1 0 0 1 0 0)">
+                                            <path
+                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                                                transform=" translate(-12, -12)"
+                                                d="M 17.07 15.66 C 17.026786005208926 15.609760232041317 17.002081965034968 15.54623555730828 17 15.48 L 17 7.75 C 17 6.92157287525381 16.32842712474619 6.25 15.5 6.25 L 7.77 6.25 C 7.703764442691719 6.247918034965032 7.6402397679586835 6.223213994791074 7.59 6.18 L 1.71 0.29 C 1.3704533264228007 -0.0498766096865903 0.8371976576818188 -0.100262972087313 0.4399999999999993 0.17000000000000054 L 0.29 0.29 C 0.10068734917690358 0.47776659990555614 -0.0057983243416699914 0.7333624636294416 -0.0057983243416699914 1 C -0.0057983243416699914 1.2666375363705582 0.10068734917690356 1.522233400094444 0.29 1.71 L 22.29 23.71 C 22.682122172379863 24.102122172379865 23.317877827620137 24.102122172379865 23.71 23.71 C 24.102122172379865 23.317877827620137 24.102122172379865 22.682122172379863 23.71 22.29 Z"
+                                                stroke-linecap="round" />
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                        <button id="end-call"
+                            class="bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-full shadow-md smooth-transition hover:shadow-lg hover:-translate-y-0.5 font-semibold">
+                            End Call
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-span-12 lg:col-span-4 space-y-6 mt-6 lg:mt-0">
+                    <!-- Consultation Details -->
+                    <div>
+                        <h2 class="text-lg font-semibold mb-3 text-gray-700">Call with:</h2>
+                        <div class="relative flex items-center border border-gray-800 bg-white p-1 md:p-3 rounded-lg shadow-sm mb-6 md:mb-8">
+                            <span id="active_usr" class="bg-green-50 text-green-800 text-sm px-2 py-1 rounded-2xl absolute -top-4 -right-2 border border-green-900 hidden">
+                                Active ⭐
+                            </span>
+                            <span id="n_active_usr" class="bg-rose-50 text-rose-800 text-sm px-2 py-1 rounded-2xl absolute -top-4 -right-2 border border-rose-900 ">
+                                Not Active 🚫
+                            </span>
+        
+                            <div class="mr-3 md:mr-4">
+                                <img src="{{ conversation.other_participant.profile_pic.url }}" alt="{{ conversation.other_participant.user.first_name }}" class="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover border-2 md:border-3 border-primary">
+                            </div>
+                            <div>
+                                <h3 class="text-lg md:text-xl font-medium text-gray-800 mb-0.5 md:mb-1">{{ conversation.other_participant.user.first_name }}</h3>
+                                {% if conversation.other_participant.role == 'doctor'%}
+                                    <p class="text-sm text-gray-500 truncate mb-1 md:mb-2">{{conversation.other_participant.doctor_profile.specialization }}</p>
+                                    <div class="flex items-center">
+                                        <span class="ml-1.5 md:ml-2 font-semibold text-xs md:text-sm">{{conversation.other_participant.doctor_profile.star_rating }} ⭐</span>
+                                    </div>
+                                {% else %}
+                                    <p class="text-sm text-gray-500 truncate mb-1 md:mb-2">Patient</p>
+                                {% endif %}
+                                
+                            </div>
+                        </div>
+                        {% if call_obj.appointment %}
+                            <h2 class="text-lg font-semibold mb-3 text-gray-700">Appointment Details: </h2>
+                            <div class="mb-4 md:mb-6 p-3 md:p-4 bg-white rounded-lg shadow-sm border">
+                                <div class="flex items-center mb-2 font-medium text-sm md:text-base">
+                                    <svg class="w-6 h-6 text-primary mr-2" viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+                                        <g transform="matrix(0.83 0 0 0.83 12 12)" >
+                                            <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: currentColor; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 12 0 C 5.371094 0 0 5.371094 0 12 C 0 18.628906 5.371094 24 12 24 C 18.628906 24 24 18.628906 24 12 C 24 5.371094 18.628906 0 12 0 Z M 12 2 C 17.523438 2 22 6.476563 22 12 C 22 17.523438 17.523438 22 12 22 C 6.476563 22 2 17.523438 2 12 C 2 6.476563 6.476563 2 12 2 Z M 10.9375 3.875 L 10.5 12.0625 L 10.59375 12.9375 L 16.75 18.375 L 17.71875 17.375 L 12.625 11.96875 L 12.1875 3.875 Z" stroke-linecap="round" />
+                                        </g>
+                                    </svg>
+                                    <span>{{ call_obj.appointment.appointment_date|date:"M d, Y" }} {{ call_obj.appointment.appointment_time_str }}</span>
+                                </div>
+                                <div class="mt-1 md:mt-2">
+                                    <span class="bg-blue-500 text-white px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-medium">{{ call_obj.appointment.appointment_type }}</span>
+                                </div>
+                                <div class="mt-1 md:mt-2 text-sm">
+                                    <span class="font-medium text-gray-600">Reason:</span>
+                                    <span class="ml-1 text-gray-900">{{ call_obj.appointment.reason|truncatechars:100|default:'Null' }}</span>
+                                </div>
+                                <div class="mt-1 md:mt-2 text-sm">
+                                    <span class="font-medium text-gray-600">Appointment Status:</span>
+                                    <span class="
+                                        {% if call_obj.appointment.status == 'pending' %}text-yellow-600
+                                        {% elif call_obj.appointment.status == 'confirmed' %}text-green-600
+                                        {% elif call_obj.appointment.status == 'cancelled' %}text-red-600
+                                        {% elif call_obj.appointment.status == 'completed' %}text-blue-600
+                                        {% endif %}
+                                    ">
+                                        {{ call_obj.appointment.get_status_display }}
+                                    </span>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
 
-                </div>
 
-                <!-- Medical Notes -->
-                <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 shadow-sm ">
-                    <h3 class="font-semibold mb-3 text-gray-700">Quick Notes</h3>
-                    <textarea id="medical-notes"
-                        class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent smooth-transition"
-                        placeholder="Write quick consultation notes..." rows="4"></textarea>
+                    <!-- Notes Section -->
+                    <form id='Note-Form' action="/d/subbit-notes/" method="post" class="bg-gray-50 p-5 rounded-xl border border-gray-100 shadow-sm mb-6">
+                        {% csrf_token %}
+                        <input type="hidden" name="call_uuid" value="{{ call_obj.uuid }}">
+                        <h3 class="font-semibold mb-3 text-gray-700">Quick Notes</h3>
+                        <textarea name="quick_notes"
+                            class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent smooth-transition"
+                            placeholder="Write any additional notes..." rows="4">{{ call_obj.quick_notes|default:'' }}</textarea>
+
+                        <h3 class="font-semibold mb-3 text-gray-700">Prescription / Medicine</h3>
+                        <textarea name="prescription_notes"
+                            class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent smooth-transition"
+                            placeholder="Write prescribed medicines..." rows="4">{{ call_obj.prescription_notes|default:'' }}</textarea>
+
+                        <h3 class="font-semibold mb-3 text-gray-700">Lab Reports / Tests</h3>
+                        <textarea name="lab_report_notes"
+                            class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent smooth-transition"
+                            placeholder="Write recommended lab tests or reports..." rows="4">{{ call_obj.lab_report_notes|default:'' }}</textarea>
+
+                        <!-- Submit Button -->
+                        <div class="text-right">
+                            <button type="submit"
+                                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                    <script>
+                        async function noteFormSubmit(form) {
+                            
+                            const url = form.action;
+                            const formData = new FormData(form);
+
+                            // Show notification on sending request 
+                            showNotification({
+                                color: "bg-yellow-500",
+                                title: "Saving Notes",
+                                message: "Your notes are being saved... & Being sent to Management Team.",
+                            });
+
+                            // Get CSRF token from form
+                            const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                            try {
+                                const response = await fetch(url, {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRFToken': csrfToken,
+                                    },
+                                    body: formData,
+                                });
+                                if (response.ok) {
+                                    // Optionally show a success message
+                                    showNotification({
+                                        color: "bg-green-500",
+                                        title: "Notes Saved",
+                                        message: "Your notes have been saved successfully.",
+                                    });
+                                } else {
+                                    showNotification({
+                                        color: "bg-red-500",
+                                        title: "Error",
+                                        message: "Failed to save notes.",
+                                    });
+                                }
+                            } catch (err) {
+                                showNotification({
+                                    color: "bg-red-500",
+                                    title: "Error",
+                                    message: "Network error while saving notes.",
+                                });
+                            }
+                        }
+
+                        document.getElementById('Note-Form').addEventListener('submit', async function(e) {
+                            e.preventDefault();
+                            const form = e.target;
+                            await noteFormSubmit(form);
+                        });
+                    </script>
+                    </script>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 
-<div id="endcall_overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <!-- Dialog box -->
-    <div class="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-100">
-        
-        <!-- Call ended icon -->
-        <div class="flex justify-center mb-6">
-            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                </svg>
-            </div>
-        </div>
-        
-        <!-- Title -->
-        <h2 class="text-2xl font-bold text-gray-900 text-center mb-2">Call Ended</h2>
-        
-        <!-- Message -->
-        <p class="text-gray-600 text-center mb-6">Your call has been Ended.</p>
-        
-        <!-- Timer -->
-        <div class="text-center mb-6">
-            <p class="text-sm text-gray-500 mb-2">Redirecting to video call page in:</p>
-            <div class="text-3xl font-bold text-blue-600" id="timer">5</div>
-        </div>
-        
-        <!-- Action buttons -->
-        <div class="flex flex-col sm:flex-row gap-3">
-            <button 
-                onclick="goToDashboard()" 
-                class="flex-1 px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium">
-                Return to Dashboard
-            </button>
-            <button 
-                onclick="goToVideoCall()" 
-                class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
-                Video Call Page
-            </button>
-        </div>
-    </div>
-</div>
-
-
-<div id="setting_overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <!-- Settings dialog box -->
-    <div class="bg-white rounded-lg shadow-2xl p-6 md:p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-100">
-        <!-- Header with close button -->
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl md:text-2xl font-semibold text-gray-800">Device Settings</h2>
-            <button id="close-settings" class="text-gray-500 hover:text-gray-700 transition-colors">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-        </div>
-        
-        <!-- Microphone selection -->
-        <div class="mb-6">
-            <label for="audio-select" class="block text-sm font-medium text-gray-700 mb-2">Microphone</label>
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 14C13.66 14 15 12.66 15 11V5C15 3.34 13.66 2 12 2C10.34 2 9 3.34 9 5V11C9 12.66 10.34 14 12 14Z" fill="currentColor" opacity="0.4"/>
-                        <path d="M17.92 11C17.72 11 17.53 11.08 17.38 11.22C17.24 11.36 17.15 11.55 17.15 11.75C17.15 14.61 14.86 16.9 12 16.9C9.14 16.9 6.85 14.61 6.85 11.75C6.85 11.35 6.53 11.03 6.13 11.03C5.73 11.03 5.4 11.35 5.4 11.75C5.4 15.17 8.1 17.97 11.5 18.21V20.75C11.5 21.15 11.82 21.47 12.22 21.47C12.62 21.47 12.95 21.15 12.95 20.75V18.21C16.35 17.96 19.05 15.16 19.05 11.75C19.05 11.55 18.97 11.36 18.83 11.22C18.68 11.08 18.49 11 18.29 11H17.92Z" fill="currentColor"/>
+    <div id="endcall_overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <!-- Dialog box -->
+        <div class="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-100">
+            
+            <!-- Call ended icon -->
+            <div class="flex justify-center mb-6">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                    <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                     </svg>
                 </div>
-                <select id="audio-select" class="appearance-none block w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                    <option value="default">Default Microphone</option>
-                </select>
             </div>
-
-            <div class="my-4 md:my-6">
-                <div class="flex justify-between items-center mb-1 md:mb-2">
-                    <div class="text-xs md:text-sm text-gray-600">Audio level</div>
-                    <div id="mic-status" class="text-xs text-primary font-medium">Active</div>
-                </div>
-                <div class="h-2 md:h-2.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                    <div class="h-full w-[2%] bg-primary rounded-full transition-all" id="audio-level"></div>
-                </div>
+            
+            <!-- Title -->
+            <h2 class="text-2xl font-bold text-gray-900 text-center mb-2">Call Ended</h2>
+            
+            <!-- Message -->
+            <p class="text-gray-600 text-center mb-6">Your call has been Ended.</p>
+            
+            <!-- Timer -->
+            <div class="text-center mb-6">
+                <p class="text-sm text-gray-500 mb-2">Redirecting to video call page in:</p>
+                <div class="text-3xl font-bold text-blue-600" id="timer">5</div>
             </div>
-        </div>
-        
-        <!-- Camera selection -->
-        <div class="mb-6">
-            <label for="video-select" class="block text-sm font-medium text-gray-700 mb-2">Camera</label>
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M15 10L19.5528 7.72361C19.8343 7.58284 20 7.30341 20 7V17C20 17.3034 19.8343 17.5828 19.5528 17.7236L15 15V10Z" fill="currentColor"/>
-                        <path d="M14 6H5C3.89543 6 3 6.89543 3 8V16C3 17.1046 3.89543 18 5 18H14C15.1046 18 16 17.1046 16 16V8C16 6.89543 15.1046 6 14 6Z" fill="currentColor" opacity="0.4"/>
-                    </svg>
-                </div>
-                <select id="video-select" class="appearance-none block w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                    <option value="default">Default Camera</option>
-                </select>
+            
+            <!-- Action buttons -->
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button 
+                    onclick="goToDashboard()" 
+                    class="flex-1 px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium">
+                    Return to Dashboard
+                </button>
+                <button 
+                    onclick="goToVideoCall()" 
+                    class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
+                    Video Call Page
+                </button>
             </div>
-        </div>
-        
-        <!-- Video preview -->
-        <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Preview</label>
-            <div class="bg-gray-100 rounded-lg overflow-hidden aspect-video shadow-inner">
-                <video id="settings-preview" class="w-full h-full object-cover" autoplay muted playsinline></video>
-            </div>
-        </div>
-        
-        <!-- Control buttons -->
-        <div class="flex justify-end space-x-3">
-            <button id="reset-settings" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                Reset
-            </button>
-            <button id="save-settings" class="px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                Apply
-            </button>
         </div>
     </div>
-</div>
+
+
+    <div id="setting_overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <!-- Settings dialog box -->
+        <div class="bg-white rounded-lg shadow-2xl p-6 md:p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-100">
+            <!-- Header with close button -->
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl md:text-2xl font-semibold text-gray-800">Device Settings</h2>
+                <button id="close-settings" class="text-gray-500 hover:text-gray-700 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Microphone selection -->
+            <div class="mb-6">
+                <label for="audio-select" class="block text-sm font-medium text-gray-700 mb-2">Microphone</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 14C13.66 14 15 12.66 15 11V5C15 3.34 13.66 2 12 2C10.34 2 9 3.34 9 5V11C9 12.66 10.34 14 12 14Z" fill="currentColor" opacity="0.4"/>
+                            <path d="M17.92 11C17.72 11 17.53 11.08 17.38 11.22C17.24 11.36 17.15 11.55 17.15 11.75C17.15 14.61 14.86 16.9 12 16.9C9.14 16.9 6.85 14.61 6.85 11.75C6.85 11.35 6.53 11.03 6.13 11.03C5.73 11.03 5.4 11.35 5.4 11.75C5.4 15.17 8.1 17.97 11.5 18.21V20.75C11.5 21.15 11.82 21.47 12.22 21.47C12.62 21.47 12.95 21.15 12.95 20.75V18.21C16.35 17.96 19.05 15.16 19.05 11.75C19.05 11.55 18.97 11.36 18.83 11.22C18.68 11.08 18.49 11 18.29 11H17.92Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <select id="audio-select" class="appearance-none block w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                        <option value="default">Default Microphone</option>
+                    </select>
+                </div>
+
+                <div class="my-4 md:my-6">
+                    <div class="flex justify-between items-center mb-1 md:mb-2">
+                        <div class="text-xs md:text-sm text-gray-600">Audio level</div>
+                        <div id="mic-status" class="text-xs text-primary font-medium">Active</div>
+                    </div>
+                    <div class="h-2 md:h-2.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                        <div class="h-full w-[2%] bg-primary rounded-full transition-all" id="audio-level"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Camera selection -->
+            <div class="mb-6">
+                <label for="video-select" class="block text-sm font-medium text-gray-700 mb-2">Camera</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 10L19.5528 7.72361C19.8343 7.58284 20 7.30341 20 7V17C20 17.3034 19.8343 17.5828 19.5528 17.7236L15 15V10Z" fill="currentColor"/>
+                            <path d="M14 6H5C3.89543 6 3 6.89543 3 8V16C3 17.1046 3.89543 18 5 18H14C15.1046 18 16 17.1046 16 16V8C16 6.89543 15.1046 6 14 6Z" fill="currentColor" opacity="0.4"/>
+                        </svg>
+                    </div>
+                    <select id="video-select" class="appearance-none block w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                        <option value="default">Default Camera</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Video preview -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Preview</label>
+                <div class="bg-gray-100 rounded-lg overflow-hidden aspect-video shadow-inner">
+                    <video id="settings-preview" class="w-full h-full object-cover" autoplay muted playsinline></video>
+                </div>
+            </div>
+            
+            <!-- Control buttons -->
+            <div class="flex justify-end space-x-3">
+                <button id="reset-settings" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                    Reset
+                </button>
+                <button id="save-settings" class="px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                    Apply
+                </button>
+            </div>
+        </div>
+    </div>
 
 
 
 
-<!-- Call Controls -->
-<script>
-    // Display current time
-    function updateCurrentTime() {
-        const now = new Date();
-        const formatted = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        document.getElementById('current-time').textContent = formatted;
-    }
-    updateCurrentTime();
-    setInterval(updateCurrentTime, 1000);
+    <!-- Call Controls -->
+    <script>
+        // Display current time
+        function updateCurrentTime() {
+            const now = new Date();
+            const formatted = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('current-time').textContent = formatted;
+        }
+        updateCurrentTime();
+        setInterval(updateCurrentTime, 1000);
 
-    const localVideo = document.getElementById('local-video');
-    const remoteVideo = document.getElementById('remote-video');
-    const endCallBtn = document.getElementById('end-call');
+        const localVideo = document.getElementById('local-video');
+        const remoteVideo = document.getElementById('remote-video');
+        const endCallBtn = document.getElementById('end-call');
 
-    const roomName = "{{ call_obj.uuid }}";
-    const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+        const roomName = "{{ call_obj.uuid }}";
+        const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
 
-    const currentUsr = "{{ user.username }}";
-    const anotherUsr = "{{ conversation.other_participant.user.username }}";
-
-
-    let localStream, peerConnection, signalingSocket;
-
-    const iceConfig = {
-        iceServers: [
-            { urls: 'stun:stun.l.google.com:19302' },
-        ]
-    };
+        const currentUsr = "{{ user.username }}";
+        const anotherUsr = "{{ conversation.other_participant.user.username }}";
 
 
+        let localStream, peerConnection, signalingSocket;
+
+        const iceConfig = {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+            ]
+        };
 
 
-    // setting button functionality
-    document.getElementById('settings-btn').addEventListener('click', () => {
-        document.getElementById('setting_overlay').classList.remove('hidden');
-        initSettings();
-    });
 
-    // Close settings overlay
-    document.getElementById('close-settings').addEventListener('click', () => {
-        document.getElementById('setting_overlay').classList.add('hidden');
-    });
 
-    // setting to chage the video and audio tracks
-    async function initSettings() {
-        const audioSelect = document.getElementById('audio-select');
-        const videoSelect = document.getElementById('video-select');
-        const micStatus = document.getElementById('mic-status');
-        const audioLevel = document.getElementById('audio-level');
-        const settingsPreview = document.getElementById('settings-preview');
-        const applySettingsButton = document.getElementById('save-settings');
-        let audioContext, analyser, dataArray, localStream;
-    
-        // Initialize audio context and analyser
-        function initializeAudioAnalyser(stream) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const source = audioContext.createMediaStreamSource(stream);
-            analyser = audioContext.createAnalyser();
-            source.connect(analyser);
-            analyser.fftSize = 256;
-            const bufferLength = analyser.frequencyBinCount;
-            dataArray = new Uint8Array(bufferLength);
-    
-            function updateAudioLevel() {
-                analyser.getByteFrequencyData(dataArray);
-                let sum = 0;
-                for (let i = 0; i < dataArray.length; i++) {
-                    sum += dataArray[i];
+        // setting button functionality
+        document.getElementById('settings-btn').addEventListener('click', () => {
+            document.getElementById('setting_overlay').classList.remove('hidden');
+            initSettings();
+        });
+
+        // Close settings overlay
+        document.getElementById('close-settings').addEventListener('click', () => {
+            document.getElementById('setting_overlay').classList.add('hidden');
+        });
+
+        // setting to chage the video and audio tracks
+        async function initSettings() {
+            const audioSelect = document.getElementById('audio-select');
+            const videoSelect = document.getElementById('video-select');
+            const micStatus = document.getElementById('mic-status');
+            const audioLevel = document.getElementById('audio-level');
+            const settingsPreview = document.getElementById('settings-preview');
+            const applySettingsButton = document.getElementById('save-settings');
+            let audioContext, analyser, dataArray, localStream;
+        
+            // Initialize audio context and analyser
+            function initializeAudioAnalyser(stream) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const source = audioContext.createMediaStreamSource(stream);
+                analyser = audioContext.createAnalyser();
+                source.connect(analyser);
+                analyser.fftSize = 256;
+                const bufferLength = analyser.frequencyBinCount;
+                dataArray = new Uint8Array(bufferLength);
+        
+                function updateAudioLevel() {
+                    analyser.getByteFrequencyData(dataArray);
+                    let sum = 0;
+                    for (let i = 0; i < dataArray.length; i++) {
+                        sum += dataArray[i];
+                    }
+                    const avgLevel = sum / dataArray.length / 255;
+                    const levelPercentage = Math.min(100, Math.max(2, avgLevel * 300));
+                    audioLevel.style.width = `${levelPercentage}%`;
+                    requestAnimationFrame(updateAudioLevel);
                 }
-                const avgLevel = sum / dataArray.length / 255;
-                const levelPercentage = Math.min(100, Math.max(2, avgLevel * 300));
-                audioLevel.style.width = `${levelPercentage}%`;
-                requestAnimationFrame(updateAudioLevel);
+                updateAudioLevel();
             }
-            updateAudioLevel();
-        }
-    
-        async function updateVideoPreview(deviceId) {
-            if (localStream) {
-                localStream.getTracks().forEach(track => track.stop());
-            }
-            localStream = await navigator.mediaDevices.getUserMedia({
-                video: { deviceId },
-                audio: false
-            });
-            settingsPreview.srcObject = localStream;
-        }
-    
-        async function updateAudioStream(deviceId) {
-            if (localStream) {
-                localStream.getTracks().forEach(track => track.stop());
-            }
-            const audioStream = await navigator.mediaDevices.getUserMedia({
-                audio: { deviceId },
-                video: false
-            });
-            initializeAudioAnalyser(audioStream);
-        }
-    
-        const devices = await navigator.mediaDevices.enumerateDevices();
-    
-        while (audioSelect.firstChild) {
-            audioSelect.removeChild(audioSelect.firstChild);
-        }
-        while (videoSelect.firstChild) {
-            videoSelect.removeChild(videoSelect.firstChild);
-        }
-    
-        const defaultAudioOption = document.createElement('option');
-        defaultAudioOption.value = '';
-        defaultAudioOption.text = 'Default Microphone';
-        audioSelect.appendChild(defaultAudioOption);
-    
-        const defaultVideoOption = document.createElement('option');
-        defaultVideoOption.value = '';
-        defaultVideoOption.text = 'Default Camera';
-        videoSelect.appendChild(defaultVideoOption);
-    
-        const audioDevices = devices.filter(device => device.kind === 'audioinput');
-        audioDevices.forEach(device => {
-            const option = document.createElement('option');
-            option.value = device.deviceId;
-            option.text = device.label || `Microphone ${audioSelect.length}`;
-            audioSelect.appendChild(option);
-        });
-    
-        const videoDevices = devices.filter(device => device.kind === 'videoinput');
-        videoDevices.forEach(device => {
-            const option = document.createElement('option');
-            option.value = device.deviceId;
-            option.text = device.label || `Camera ${videoSelect.length}`;
-            videoSelect.appendChild(option);
-        });
-    
-        audioSelect.addEventListener('change', (e) => {
-            const deviceId = e.target.value;
-            updateAudioStream(deviceId);
-        });
-    
-        videoSelect.addEventListener('change', (e) => {
-            const deviceId = e.target.value;
-            updateVideoPreview(deviceId);
-        });
-    
-        if (audioDevices.length > 0) {
-            updateAudioStream(audioDevices[0].deviceId);
-        } else {
-            micStatus.textContent = 'No Microphone Found';
-            audioLevel.style.width = '0%';
-    
-            showNotification({
-                color: "bg-orange-500",
-                title: "Microphone Error",
-                message: "No microphone found. Please connect a microphone.",
-            });
-        }
-        if (videoDevices.length > 0) {
-            updateVideoPreview(videoDevices[0].deviceId);
-        } else {
-            settingsPreview.srcObject = null;
-            settingsPreview.classList.add('hidden');
-    
-            showNotification({
-                color: "bg-orange-500",
-                title: "Camera Error",
-                message: "No camera found. Please connect a camera.",
-            });
-        }
-    
-        // Apply settings to actual video and audio streams
-        applySettingsButton.addEventListener('click', async () => {
-            const selectedAudioDeviceId = audioSelect.value;
-            const selectedVideoDeviceId = videoSelect.value;
-    
-            try {
-                // Stop the current tracks
+        
+            async function updateVideoPreview(deviceId) {
                 if (localStream) {
                     localStream.getTracks().forEach(track => track.stop());
                 }
-    
-                // Get new stream with selected devices
                 localStream = await navigator.mediaDevices.getUserMedia({
-                    audio: { deviceId: selectedAudioDeviceId || undefined },
-                    video: { deviceId: selectedVideoDeviceId || undefined },
+                    video: { deviceId },
+                    audio: false
                 });
-    
-                // Update video element
-                localVideo.srcObject = localStream;
-    
-                // Reinitialize audio analyser for selected microphone
-                initializeAudioAnalyser(localStream);
-    
-                showNotification({
-                    color: "bg-green-500",
-                    title: "Settings Applied",
-                    message: "Your video and audio settings have been updated successfully.",
-                });
-
-                document.getElementById('setting_overlay').classList.add('hidden');
-
-            } catch (error) {
-                console.error('Error applying settings:', error);
-                showNotification({
-                    color: "bg-red-500",
-                    title: "Settings Error",
-                    message: "An error occurred while applying your settings. Please try again.",
-                });
+                settingsPreview.srcObject = localStream;
             }
-        });
-    }
-
-    
-
-    // Initialize devices and start video connections
-    async function initializeDevices(){
-        try{
-            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            localVideo.srcObject = localStream;
-
-            localVideo.play().catch(error => {
-                console.error('Error playing local video:', error);
-                showNotification({
-                    color: "bg-red-500",
-                    title: "Video Playback Error",
-                    message: "Unable to play local video. Please check your browser settings.",
+        
+            async function updateAudioStream(deviceId) {
+                if (localStream) {
+                    localStream.getTracks().forEach(track => track.stop());
+                }
+                const audioStream = await navigator.mediaDevices.getUserMedia({
+                    audio: { deviceId },
+                    video: false
                 });
+                initializeAudioAnalyser(audioStream);
+            }
+        
+            const devices = await navigator.mediaDevices.enumerateDevices();
+        
+            while (audioSelect.firstChild) {
+                audioSelect.removeChild(audioSelect.firstChild);
+            }
+            while (videoSelect.firstChild) {
+                videoSelect.removeChild(videoSelect.firstChild);
+            }
+        
+            const defaultAudioOption = document.createElement('option');
+            defaultAudioOption.value = '';
+            defaultAudioOption.text = 'Default Microphone';
+            audioSelect.appendChild(defaultAudioOption);
+        
+            const defaultVideoOption = document.createElement('option');
+            defaultVideoOption.value = '';
+            defaultVideoOption.text = 'Default Camera';
+            videoSelect.appendChild(defaultVideoOption);
+        
+            const audioDevices = devices.filter(device => device.kind === 'audioinput');
+            audioDevices.forEach(device => {
+                const option = document.createElement('option');
+                option.value = device.deviceId;
+                option.text = device.label || `Microphone ${audioSelect.length}`;
+                audioSelect.appendChild(option);
             });
-        } catch (error) {
-            console.error('Error accessing media devices:', error);
-            showNotification({
-                color: "bg-red-500",
-                title: "Media Device Error",
-                message: "Unable to access camera or microphone. Please check your device settings.",
+        
+            const videoDevices = devices.filter(device => device.kind === 'videoinput');
+            videoDevices.forEach(device => {
+                const option = document.createElement('option');
+                option.value = device.deviceId;
+                option.text = device.label || `Camera ${videoSelect.length}`;
+                videoSelect.appendChild(option);
             });
-        }
-
-        // Initialize video connections
-        await initVideoConnections();
-
-
-        // Toggle Mic
-        const micButton = document.getElementById('mute-audio');
-        const micOnIcon = document.getElementById('mic_on');
-        const micOffIcon = document.getElementById('mic_off');
-        let micMuted = false;
-
-        micButton.addEventListener('click', () => {
-            micMuted = !micMuted;
-            micOnIcon.classList.toggle('hidden', micMuted);
-            micOffIcon.classList.toggle('hidden', !micMuted);
-
-            // Example: Mute/unmute local media stream
-            if (localStream) {
-                localStream.getAudioTracks().forEach(track => {
-                    track.enabled = !micMuted;
-                    console.log('Audio track enabled:', track.enabled); // Debug log
-                });
+        
+            audioSelect.addEventListener('change', (e) => {
+                const deviceId = e.target.value;
+                updateAudioStream(deviceId);
+            });
+        
+            videoSelect.addEventListener('change', (e) => {
+                const deviceId = e.target.value;
+                updateVideoPreview(deviceId);
+            });
+        
+            if (audioDevices.length > 0) {
+                updateAudioStream(audioDevices[0].deviceId);
             } else {
-                console.warn('No local stream available'); // Debug warning
+                micStatus.textContent = 'No Microphone Found';
+                audioLevel.style.width = '0%';
+        
+                showNotification({
+                    color: "bg-orange-500",
+                    title: "Microphone Error",
+                    message: "No microphone found. Please connect a microphone.",
+                });
             }
-
-        });
-
-        // Toggle Video
-        const videoButton = document.getElementById('stop-video');
-        const videoOnIcon = document.getElementById('video_on');
-        const videoOffIcon = document.getElementById('video_off');
-        let videoStopped = false;
-
-        videoButton.addEventListener('click', () => {
-            videoStopped = !videoStopped;
-            videoOnIcon.classList.toggle('hidden', videoStopped);
-            videoOffIcon.classList.toggle('hidden', !videoStopped);
-
-            // Example: Stop/resume video in local media stream
-            if (localStream) {
-                localStream.getVideoTracks().forEach(track => track.enabled = !videoStopped);
+            if (videoDevices.length > 0) {
+                updateVideoPreview(videoDevices[0].deviceId);
+            } else {
+                settingsPreview.srcObject = null;
+                settingsPreview.classList.add('hidden');
+        
+                showNotification({
+                    color: "bg-orange-500",
+                    title: "Camera Error",
+                    message: "No camera found. Please connect a camera.",
+                });
             }
-        });
-    }
+        
+            // Apply settings to actual video and audio streams
+            applySettingsButton.addEventListener('click', async () => {
+                const selectedAudioDeviceId = audioSelect.value;
+                const selectedVideoDeviceId = videoSelect.value;
+        
+                try {
+                    // Stop the current tracks
+                    if (localStream) {
+                        localStream.getTracks().forEach(track => track.stop());
+                    }
+        
+                    // Get new stream with selected devices
+                    localStream = await navigator.mediaDevices.getUserMedia({
+                        audio: { deviceId: selectedAudioDeviceId || undefined },
+                        video: { deviceId: selectedVideoDeviceId || undefined },
+                    });
+        
+                    // Update video element
+                    localVideo.srcObject = localStream;
+        
+                    // Reinitialize audio analyser for selected microphone
+                    initializeAudioAnalyser(localStream);
+        
+                    showNotification({
+                        color: "bg-green-500",
+                        title: "Settings Applied",
+                        message: "Your video and audio settings have been updated successfully.",
+                    });
 
-    
-    // Initialize WebSocket connection 
-    async function initVideoConnections() {
-        // Check if the browser supports WebRTC
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            console.error('WebRTC is not supported by this browser.');
-            return;
+                    document.getElementById('setting_overlay').classList.add('hidden');
+
+                } catch (error) {
+                    console.error('Error applying settings:', error);
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Settings Error",
+                        message: "An error occurred while applying your settings. Please try again.",
+                    });
+                }
+            });
         }
 
-        try {
-            signalingSocket = new WebSocket(`${wsScheme}://${window.location.host}/ws/webrtc/${roomName}/`);
-    
-            signalingSocket.onopen = () => {
-                console.log('WebSocket connection opened:', signalingSocket);
-            };
-    
-            signalingSocket.onmessage = async function(event) {
-                const data = JSON.parse(event.data);
-                const connected_users = data.connected_users || [];
-                const activeUsrElement = document.getElementById('active_usr');
-                const notactiveUsrElement = document.getElementById('n_active_usr');
-                const connection_template = document.getElementById('connection-template');
-    
-                if (data.request_type === 'user_joined') {
-                    if (connected_users.length > 1) {
-                        // The user who joins first becomes the caller
-                        if (connected_users[0] === currentUsr) {
-                            isCaller = true;
-                            showNotification({
-                                color: "bg-green-500",
-                                title: "User Joined",
-                                message: `${data.new_user} has joined the call.`,
-                            });
-                            activeUsrElement.classList.remove('hidden');
-                            notactiveUsrElement.classList.add('hidden');
-                            startCall();
-                        } else {
-                            isCaller = false;
-                            activeUsrElement.classList.remove('hidden');
-                            notactiveUsrElement.classList.add('hidden');
-                        }
-                        connection_template.classList.add('hidden');
+        
 
-                    } else {
-                        // Only one user in the call
-                        isCaller = true; // The first user is always a caller
-                        connection_template.classList.remove('hidden');
-                        activeUsrElement.classList.add('hidden');
-                        notactiveUsrElement.classList.remove('hidden');
-                    }
-                } else if (data.request_type === 'user_left') {
-                    if (connected_users.length > 1) {
-                        connection_template.classList.add('hidden');
-                        activeUsrElement.classList.remove('hidden');
-                        notactiveUsrElement.classList.add('hidden');
-                    } else {
+        // Initialize devices and start video connections
+        async function initializeDevices(){
+            try{
+                localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                localVideo.srcObject = localStream;
+
+                localVideo.play().catch(error => {
+                    console.error('Error playing local video:', error);
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Video Playback Error",
+                        message: "Unable to play local video. Please check your browser settings.",
+                    });
+                });
+            } catch (error) {
+                console.error('Error accessing media devices:', error);
+                showNotification({
+                    color: "bg-red-500",
+                    title: "Media Device Error",
+                    message: "Unable to access camera or microphone. Please check your device settings.",
+                });
+            }
+
+            // Initialize video connections
+            await initVideoConnections();
+
+
+            // Toggle Mic
+            const micButton = document.getElementById('mute-audio');
+            const micOnIcon = document.getElementById('mic_on');
+            const micOffIcon = document.getElementById('mic_off');
+            let micMuted = false;
+
+            micButton.addEventListener('click', () => {
+                micMuted = !micMuted;
+                micOnIcon.classList.toggle('hidden', micMuted);
+                micOffIcon.classList.toggle('hidden', !micMuted);
+
+                // Example: Mute/unmute local media stream
+                if (localStream) {
+                    localStream.getAudioTracks().forEach(track => {
+                        track.enabled = !micMuted;
+                        console.log('Audio track enabled:', track.enabled); // Debug log
+                    });
+                } else {
+                    console.warn('No local stream available'); // Debug warning
+                }
+
+            });
+
+            // Toggle Video
+            const videoButton = document.getElementById('stop-video');
+            const videoOnIcon = document.getElementById('video_on');
+            const videoOffIcon = document.getElementById('video_off');
+            let videoStopped = false;
+
+            videoButton.addEventListener('click', () => {
+                videoStopped = !videoStopped;
+                videoOnIcon.classList.toggle('hidden', videoStopped);
+                videoOffIcon.classList.toggle('hidden', !videoStopped);
+
+                // Example: Stop/resume video in local media stream
+                if (localStream) {
+                    localStream.getVideoTracks().forEach(track => track.enabled = !videoStopped);
+                }
+            });
+        }
+
+        
+        // Initialize WebSocket connection 
+        async function initVideoConnections() {
+            // Check if the browser supports WebRTC
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                console.error('WebRTC is not supported by this browser.');
+                return;
+            }
+
+            try {
+                signalingSocket = new WebSocket(`${wsScheme}://${window.location.host}/ws/webrtc/${roomName}/`);
+        
+                signalingSocket.onopen = () => {
+                    console.log('WebSocket connection opened:', signalingSocket);
+                };
+        
+                signalingSocket.onmessage = async function(event) {
+                    const data = JSON.parse(event.data);
+                    const connected_users = data.connected_users || [];
+                    const activeUsrElement = document.getElementById('active_usr');
+                    const notactiveUsrElement = document.getElementById('n_active_usr');
+                    const connection_template = document.getElementById('connection-template');
+        
+                    if (data.request_type === 'user_joined') {
+                        if (connected_users.length > 1) {
+                            // The user who joins first becomes the caller
+                            if (connected_users[0] === currentUsr) {
+                                isCaller = true;
+                                showNotification({
+                                    color: "bg-green-500",
+                                    title: "User Joined",
+                                    message: `${data.new_user} has joined the call.`,
+                                });
+                                activeUsrElement.classList.remove('hidden');
+                                notactiveUsrElement.classList.add('hidden');
+                                startCall();
+                            } else {
+                                isCaller = false;
+                                activeUsrElement.classList.remove('hidden');
+                                notactiveUsrElement.classList.add('hidden');
+                            }
+                            connection_template.classList.add('hidden');
+
+                        } else {
+                            // Only one user in the call
+                            isCaller = true; // The first user is always a caller
+                            connection_template.classList.remove('hidden');
+                            activeUsrElement.classList.add('hidden');
+                            notactiveUsrElement.classList.remove('hidden');
+                        }
+                    } else if (data.request_type === 'user_left') {
+                        if (connected_users.length > 1) {
+                            connection_template.classList.add('hidden');
+                            activeUsrElement.classList.remove('hidden');
+                            notactiveUsrElement.classList.add('hidden');
+                        } else {
+                            showNotification({
+                                color: "bg-red-500",
+                                title: "User Left",
+                                message: `${data.left_user} has left the call.`,
+                            });
+                            activeUsrElement.classList.add('hidden');
+                            notactiveUsrElement.classList.remove('hidden');
+                            connection_template.classList.remove('hidden');
+                            // Optionally: close peerConnection, remote video, etc.
+                            if (peerConnection) {
+                                peerConnection.close();
+                                peerConnection = null;
+                            }
+                            remoteVideo.srcObject = null;
+                        }
+                    } else if (data.request_type === 'call-ended') {
+                        // Handle call ended message
                         showNotification({
-                            color: "bg-red-500",
-                            title: "User Left",
-                            message: `${data.left_user} has left the call.`,
+                            color: "bg-gray-500",
+                            title: "Call Ended",
+                            message: `${data.username} has ended the call.`,
                         });
-                        activeUsrElement.classList.add('hidden');
-                        notactiveUsrElement.classList.remove('hidden');
-                        connection_template.classList.remove('hidden');
-                        // Optionally: close peerConnection, remote video, etc.
                         if (peerConnection) {
                             peerConnection.close();
                             peerConnection = null;
                         }
                         remoteVideo.srcObject = null;
+
+                        endCall();
                     }
-                } else if (data.request_type === 'call-ended') {
-                    // Handle call ended message
-                    showNotification({
-                        color: "bg-gray-500",
-                        title: "Call Ended",
-                        message: `${data.username} has ended the call.`,
-                    });
-                    if (peerConnection) {
-                        peerConnection.close();
-                        peerConnection = null;
+        
+                    // SDP/WebRTC messages
+                    if (data.type === 'offer') {
+                        await handleOffer(data.offer);
+                    } else if (data.type === 'answer') {
+                        await handleAnswer(data.answer);
+                    } else if (data.type === 'ice-candidate') {
+                        await handleIceCandidate(data.candidate);
                     }
-                    remoteVideo.srcObject = null;
-
-                    endCall();
-                }
-    
-                // SDP/WebRTC messages
-                if (data.type === 'offer') {
-                    await handleOffer(data.offer);
-                } else if (data.type === 'answer') {
-                    await handleAnswer(data.answer);
-                } else if (data.type === 'ice-candidate') {
-                    await handleIceCandidate(data.candidate);
-                }
-            };
-    
-            signalingSocket.onclose = () => {
-                console.log('WebSocket connection closed');
-            };
-    
-            signalingSocket.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
-    
-        } catch (err) {
-            console.error('Error accessing media devices:', err);
-        }
-    }
-
-    // Function to create a new RTCPeerConnection and set up event handlers
-    async function createPeerConnection() {
-        peerConnection = new RTCPeerConnection(iceConfig);
-
-        peerConnection.onicecandidate = (event) => {
-            if (event.candidate) {
-                signalingSocket.send(JSON.stringify({
-                    type: 'ice-candidate',
-                    candidate: event.candidate,
-                }));
+                };
+        
+                signalingSocket.onclose = () => {
+                    console.log('WebSocket connection closed');
+                };
+        
+                signalingSocket.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                };
+        
+            } catch (err) {
+                console.error('Error accessing media devices:', err);
             }
-        };
+        }
 
-        peerConnection.ontrack = (event) => {
-            console.log('Remote stream added:', event.streams[0]);
-            remoteVideo.srcObject = event.streams[0];
-        };
+        // Function to create a new RTCPeerConnection and set up event handlers
+        async function createPeerConnection() {
+            peerConnection = new RTCPeerConnection(iceConfig);
 
-        localStream.getTracks().forEach((track) => {
-            peerConnection.addTrack(track, localStream);
+            peerConnection.onicecandidate = (event) => {
+                if (event.candidate) {
+                    signalingSocket.send(JSON.stringify({
+                        type: 'ice-candidate',
+                        candidate: event.candidate,
+                    }));
+                }
+            };
+
+            peerConnection.ontrack = (event) => {
+                console.log('Remote stream added:', event.streams[0]);
+                remoteVideo.srcObject = event.streams[0];
+            };
+
+            localStream.getTracks().forEach((track) => {
+                peerConnection.addTrack(track, localStream);
+            });
+        }
+
+
+        async function handleOffer(offer) {
+            if (!peerConnection) {
+                await createPeerConnection();
+            }
+
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answer);
+
+            signalingSocket.send(JSON.stringify({
+                type: 'answer',
+                answer: answer,
+            }));
+            
+        }
+
+
+        async function handleAnswer(answer) {
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+        }
+
+        async function handleIceCandidate(candidate) {
+            try {
+                await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+            } catch (error) {
+                console.error('Error adding ICE candidate:', error);
+            }
+        }
+
+        async function startCall() {
+            if (!peerConnection) {
+                await createPeerConnection();
+            }
+
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+
+            signalingSocket.send(JSON.stringify({
+                type: 'offer',
+                offer: offer,
+            }));
+        }
+
+
+        endCallBtn.addEventListener('click', () => {
+            signalingSocket.send(JSON.stringify({
+                type: 'call-ended',
+                username: '{{ user.username }}',
+                roomName: roomName,
+            }));  
+            
+            endCall();
         });
-    }
-
-
-    async function handleOffer(offer) {
-        if (!peerConnection) {
-            await createPeerConnection();
-        }
-
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-        const answer = await peerConnection.createAnswer();
-        await peerConnection.setLocalDescription(answer);
-
-        signalingSocket.send(JSON.stringify({
-            type: 'answer',
-            answer: answer,
-        }));
-        
-    }
-
-
-    async function handleAnswer(answer) {
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-    }
-
-    async function handleIceCandidate(candidate) {
-        try {
-            await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-        } catch (error) {
-            console.error('Error adding ICE candidate:', error);
-        }
-    }
-
-    async function startCall() {
-        if (!peerConnection) {
-            await createPeerConnection();
-        }
-
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
-
-        signalingSocket.send(JSON.stringify({
-            type: 'offer',
-            offer: offer,
-        }));
-    }
-
-
-    endCallBtn.addEventListener('click', () => {
-        signalingSocket.send(JSON.stringify({
-            type: 'call-ended',
-            username: '{{ user.username }}',
-            roomName: roomName,
-        }));  
-        
-        endCall();
-    });
 
 
 
-    let countdown = 5;
-    let countdownInterval; // Declare countdownInterval in the outer scope
-    function endCall(){
-        const timerElement = document.getElementById('timer');
-        const endcall_overlay = document.getElementById('endcall_overlay');
-        // Show the end call overlay
-        endcall_overlay.classList.remove('hidden');
-
-        // Start countdown
-        const countdownInterval = setInterval(() => {
-            countdown--;
-            timerElement.textContent = countdown;
-            if (countdown <= 0) {
-                clearInterval(countdownInterval);
-                goToVideoCall();
+        let countdown = 5;
+        let countdownInterval; // Declare countdownInterval in the outer scope
+        function endCall(){
+            
+            // notes form
+            const noteForm = document.getElementById('Note-Form');
+            if (noteForm) {
+                noteFormSubmit(noteForm);
             }
-        }, 1000);
-    }
+                
+            
+            
+
+            const timerElement = document.getElementById('timer');
+            const endcall_overlay = document.getElementById('endcall_overlay');
+            // Show the end call overlay
+            endcall_overlay.classList.remove('hidden');
+
+            // Start countdown
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                timerElement.textContent = countdown;
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    goToVideoCall();
+                }
+            }, 1000);
+        }
 
 
-    function goToDashboard() {
-        clearInterval(countdownInterval);
-        window.location.href = '/';
-    }
-    
-    function goToVideoCall() {
-        clearInterval(countdownInterval);
-        window.location.href = '/d/view-v-call/';
-    }
-    
-    
+        function goToDashboard() {
+            clearInterval(countdownInterval);
+            window.location.href = '/';
+        }
+        
+        function goToVideoCall() {
+            clearInterval(countdownInterval);
+            window.location.href = '/d/view-v-call/';
+        }
+        
+        
 
 
-    
-    window.addEventListener('load', initializeDevices);
+        
+        window.addEventListener('load', initializeDevices);
 
-</script>
+    </script>
 
 {% endblock content %}
 

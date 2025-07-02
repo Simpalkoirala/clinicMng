@@ -190,7 +190,7 @@
                                                 <img class="aspect-square h-full w-full" src="{{ message.sender.profile_pic.url }}" alt="{{ message.sender.user.first_name.0 }}">
                                             </div>
                                         <div class="bg-muted rounded-lg p-3 max-w-[100%]">
-                                            <p class="text-sm break-words overflow-wrap-anywhere">{{ message.content }}</p>
+                                            <p class="text-sm break-words overflow-wrap-anywhere" whitespace-pre-line>{{ message.content }}</p>
                                             <p class="text-xs mt-1 opacity-70 text-right">
                                                 {{ message.timestamp|date:"j M, g:i A" }}
                                             </p>
@@ -199,7 +199,7 @@
                                     {% else %}
                                     <div class="flex justify-end">
                                         <div class="bg-primary text-primary-foreground rounded-lg p-3 max-w-[100%]">
-                                            <p class="text-sm break-words overflow-wrap-anywhere">{{ message.content }}</p>
+                                            <p class="text-sm break-words overflow-wrap-anywhere" whitespace-pre-line>{{ message.content }}</p>
                                             <p class="text-xs mt-1 opacity-70 text-right">
                                                 {{ message.timestamp|date:"j M, g:i A" }}
                                                 <span class="ml-1 hidden">
@@ -340,23 +340,23 @@
 
 
     <!-- Dialog Overlay -->
-    <div id="dialogOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-40 hidden">
-        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md mx-auto dialog-enter">
+    <div id="dialogOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white  rounded-2xl shadow-2xl w-full max-w-md mx-auto dialog-enter">
             
             <!-- Header -->
-            <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between p-6 border-b border-gray-200 ">
                 <div class="flex items-center space-x-3">
-                    <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div class="p-2 bg-blue-100  rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-600 " fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 14a4 4 0 10-8 0 4 4 0 008 0zM12 14v7m-6 0h12" />
                         </svg>
                     </div>
                     <div>
-                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Start New Conversation</h2>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Request Someone to Chat</p>
+                        <h2 class="text-xl font-semibold text-gray-900 ">Start New Conversation</h2>
+                        <p class="text-sm text-gray-500 ">Request Someone to Chat</p>
                     </div>
                 </div>
-                <button id="closeDialog" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                <button id="closeDialog" class="p-2 hover:bg-gray-100  rounded-lg transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <line x1="6" y1="6" x2="18" y2="18" stroke-width="2" stroke-linecap="round"/>
                         <line x1="18" y1="6" x2="6" y2="18" stroke-width="2" stroke-linecap="round"/>
@@ -365,7 +365,7 @@
             </div>
 
             <!-- Search -->
-            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="p-4 border-b border-gray-200 ">
                 <div class="relative">
                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <circle cx="11" cy="11" r="8"></circle>
@@ -375,7 +375,7 @@
                         type="text"
                         id="searchInput"
                         placeholder="Search users..."
-                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-800 border-0 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all text-gray-900 dark:text-white placeholder-gray-500 outline-none"
+                        class="w-full pl-10 pr-4 py-3 bg-gray-50  border-0 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all text-gray-900  placeholder-gray-500 outline-none"
                     />
                 </div>
             </div>
@@ -387,12 +387,12 @@
                                 <img
                                     src="{{each_profile.profile_pic.url}}"
                                     alt="{{each_profile.user.first_name}}"
-                                    class="w-10 h-10 rounded-full object-cover ring-2 ring-white/90 dark:ring-gray-800"
+                                    class="w-10 h-10 rounded-full object-cover ring-2 ring-white/90 "
                                 />
                             
                             <div class="flex-1 ml-4 min-w-0">
                                 <div class="flex items-center space-x-2">
-                                    <h3 class=" text-gray-900 dark:text-white truncate _name-user_">{{each_profile.user.first_name}}</h3>
+                                    <h3 class=" text-gray-900  truncate _name-user_">{{each_profile.user.first_name}}</h3>
 
                                     {% if each_profile.is_verified %}
                                         <div class="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
@@ -403,9 +403,9 @@
                                     {% endif %}
                                 </div>
                                 {% if each_profile.role == 'doctor'%}
-                                <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{each_profile.doctor_profile.specialization}}</p>
+                                <p class="text-sm text-gray-500  truncate">{{each_profile.doctor_profile.specialization}}</p>
                                 {% else %}
-                                <p class="text-sm text-gray-500 dark:text-gray-400 truncate">Patient</p>
+                                <p class="text-sm text-gray-500  truncate">Patient</p>
                                 {% endif %}
                             </div>
             
@@ -422,17 +422,17 @@
                         </div>
                     {% endfor %}
                     <div id="noResults" class="p-8 text-center {% if not not_connected_usr %}{% else %} hidden{% endif %}">
-                        <svg class="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" fill="none" viewBox="0 0 48 48" stroke="currentColor">
+                        <svg class="w-12 h-12 text-gray-300  mx-auto mb-3" fill="none" viewBox="0 0 48 48" stroke="currentColor">
                             <circle cx="24" cy="18" r="8" stroke-width="2" />
                             <path stroke-width="2" d="M8 40c0-5.5 7.16-10 16-10s16 4.5 16 10" />
                         </svg>
-                        <p class="text-gray-500 dark:text-gray-400">No users found</p>
+                        <p class="text-gray-500 ">No users found</p>
                     </div>
             </div>
 
             <!-- Footer -->
-            <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 rounded-b-2xl">
-                <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <div class="p-4 border-t border-gray-200  bg-gray-50 rounded-b-2xl">
+                <div class="flex items-center gap-2 text-sm text-gray-500 ">
                     <span id="userCount" class="text-blue-600">{{ not_connected_usr|length }} </span> users Related
                 </div>
             </div>
@@ -722,40 +722,98 @@
         messagesContainer.innerHTML = messages.map(message => `
             <div class="flex ${message.msg_by_me === true ? 'justify-end' : 'justify-start'}">
                 <div class="max-w-xs lg:max-w-md">
-                    ${message.msg_by_me != true ? `
+                    ${ message.msg_by_me !== true ? `
                         <div class="flex justify-start">
-                            <div class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full border-2 border-primary/10 mr-2 mt-1">
-                                <img class="aspect-square h-full w-full" src="${ payload.other_participant_pic }" alt="${ payload.other_participant_name }">
-                            </div>
-                            <div class="bg-muted rounded-lg p-3 max-w-[100%]">
-                                <p class="text-sm break-words overflow-wrap-anywhere">${message.content}</p>
-                                <p class="text-xs mt-1 opacity-70 text-right">
-                                    ${formatMessageDate(message.timestamp)}
-                                </p>
-                            </div>
+                            ${message.msg_type === "call" ? `
+                                <div class="bg-gray-100 rounded-lg p-3 flex items-center gap-2 max-w-[100%]">
+                                    <svg class="h-5 w-5 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path>
+                                    </svg>
+                                    <p class="text-sm whitespace-pre-line">${message.content}</p>
+                                    <p class="text-xs text-gray-500 ml-2">${formatMessageDate(message.timestamp)}</p>
+                                </div>
+                            ` : message.msg_type === "appoinment" ? `
+                                <div class="bg-yellow-100 rounded-lg p-3 flex items-center gap-2 max-w-[100%]">
+                                    <svg class="h-5 w-5 text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M8 7V3M16 7V3M3 11h18M5 21h14a2 2 0 002-2V7H3v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <p class="text-sm whitespace-pre-line">${message.content}</p>
+                                    <p class="text-xs text-gray-500 ml-2">${formatMessageDate(message.timestamp)}</p>
+                                </div>
+                            `
+                            : message.msg_type === "started" ? `
+                                <div class="bg-green-100 rounded-lg p-3 flex items-center gap-2 max-w-[100%]">
+                                    <svg class="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                                    </svg>
+                                    <p class="text-sm whitespace-pre-line">${message.content}</p>
+                                    <p class="text-xs text-gray-500 ml-2">${formatMessageDate(message.timestamp)}</p>
+                                </div>
+                            `
+                            : `
+                                <div class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full border-2 border-primary/10 mr-2 mt-1">
+                                    <img class="aspect-square h-full w-full" src="${payload.other_participant_pic}" alt="${payload.other_participant_name}">
+                                </div>
+                                <div class="bg-muted rounded-lg p-3 max-w-[100%]">
+                                    <p class="text-sm break-words overflow-wrap-anywhere whitespace-pre-line">${message.content}</p>
+                                    <p class="text-xs mt-1 opacity-70 text-right">
+                                        ${formatMessageDate(message.timestamp)}
+                                    </p>
+                                </div>
+                            `}
                         </div>
-                    ` : 
-                    `
+                    ` : `
                         <div class="flex justify-end">
-                            <div class="bg-primary text-primary-foreground rounded-lg p-3 max-w-[100%]">
-                                <p class="text-sm break-words overflow-wrap-anywhere">${message.content}</p>
-                                <p class="text-xs mt-1 opacity-70 text-right">
-                                    ${formatMessageDate(message.timestamp)}
-                                    <span class="ml-1 hidden">
-                                        ${message.read ? `
-                                            <svg id="Checkmark_24" class="h-4 w-4 inline" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                <g transform="matrix(1.15 0 0 1.15 12 12)">
-                                                    <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -11.84)" d="M 19.28125 5.28125 L 9 15.5625 L 4.71875 11.28125 L 3.28125 12.71875 L 8.28125 17.71875 L 9 18.40625 L 9.71875 17.71875 L 20.71875 6.71875 Z" stroke-linecap="round"></path>
-                                                </g>
-                                            </svg>` : `
-                                            <svg id="Checkmark_24" class="h-4 w-4 inline text-green-400" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                            <g transform="matrix(0.4 0 0 0.4 12 12)" >
-                                                                <path style=" stroke-width: 5; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;" transform=" translate(-25.01, -24.99)" d="M 37.90625 8.96875 C 37.863281 8.976563 37.820313 8.988281 37.78125 9 C 37.554688 9.054688 37.355469 9.1875 37.21875 9.375 L 12.9375 38.5 L 1.71875 27.28125 C 1.320313 26.882813 0.679688 26.882813 0.28125 27.28125 C -0.117188 27.679688 -0.117188 28.320313 0.28125 28.71875 L 12.28125 40.71875 C 12.484375 40.921875 12.765625 41.03125 13.050781 41.011719 C 13.339844 40.992188 13.605469 40.851563 13.78125 40.625 L 38.78125 10.625 C 39.058594 10.3125 39.113281 9.863281 38.917969 9.492188 C 38.722656 9.125 38.320313 8.914063 37.90625 8.96875 Z M 48.90625 8.96875 C 48.863281 8.976563 48.820313 8.988281 48.78125 9 C 48.554688 9.054688 48.355469 9.1875 48.21875 9.375 L 23.9375 38.5 L 21.375 35.96875 C 21.132813 35.671875 20.746094 35.535156 20.371094 35.621094 C 20 35.707031 19.707031 36 19.621094 36.371094 C 19.535156 36.746094 19.671875 37.132813 19.96875 37.375 L 23.28125 40.71875 C 23.484375 40.921875 23.765625 41.03125 24.050781 41.011719 C 24.339844 40.992188 24.605469 40.851563 24.78125 40.625 L 49.78125 10.625 C 50.058594 10.3125 50.113281 9.863281 49.917969 9.492188 C 49.722656 9.125 49.320313 8.914063 48.90625 8.96875 Z" stroke-linecap="round" />
-                                                            </g>
-                                            </svg>`}
-                                    </span>
-                                </p>
-                            </div>
+                            ${message.msg_type === "call" ? `
+                                <div class="bg-gray-100 rounded-lg p-3 flex items-center gap-2 max-w-[100%]">
+                                    <svg class="h-5 w-5 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path>
+                                    </svg>
+                                    <p class="text-sm whitespace-pre-line">${message.content}</p>
+                                    <p class="text-xs text-gray-500 ml-2">${formatMessageDate(message.timestamp)}</p>
+                                </div>
+                            ` 
+                            : message.msg_type === "started" ? `
+                                <div class="bg-green-100 rounded-lg p-3 flex items-center gap-2 max-w-[100%]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                                    </svg>
+                                    <p class="text-sm whitespace-pre-line">${message.content}</p>
+                                    <p class="text-xs text-gray-500 ml-2">${formatMessageDate(message.timestamp)}</p>
+                                </div>
+                            `
+                            
+                            : message.msg_type === "appoinment" ? `
+                                <div class="bg-yellow-100 rounded-lg p-3 flex items-center gap-2 max-w-[100%]">
+                                    <svg class="h-5 w-5 text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M8 7V3M16 7V3M3 11h18M5 21h14a2 2 0 002-2V7H3v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <p class="text-sm whitespace-pre-line">${message.content}</p>
+                                    <p class="text-xs text-gray-500 ml-2">${formatMessageDate(message.timestamp)}</p>
+                                </div>
+                            ` : `
+                                <div class="bg-primary text-primary-foreground rounded-lg p-3 max-w-[100%]">
+                                    <p class="text-sm break-words overflow-wrap-anywhere whitespace-pre-line">${message.content}</p>
+                                    <p class="text-xs mt-1 opacity-70 text-right">
+                                        ${formatMessageDate(message.timestamp)}
+                                        <span class="ml-1 hidden">
+                                            ${message.read ? `
+                                                <svg id="Checkmark_24" class="h-4 w-4 inline" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                    <g transform="matrix(1.15 0 0 1.15 12 12)">
+                                                        <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -11.84)" d="M 19.28125 5.28125 L 9 15.5625 L 4.71875 11.28125 L 3.28125 12.71875 L 8.28125 17.71875 L 9 18.40625 L 9.71875 17.71875 L 20.71875 6.71875 Z" stroke-linecap="round"></path>
+                                                    </g>
+                                                </svg>` : `
+                                                <svg id="Checkmark_24" class="h-4 w-4 inline text-green-400" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                    <g transform="matrix(0.4 0 0 0.4 12 12)">
+                                                        <path style="stroke-width: 5; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;" transform=" translate(-25.01, -24.99)" d="M 37.90625 8.96875 C 37.863281 8.976563 37.820313 8.988281 37.78125 9 C 37.554688 9.054688 37.355469 9.1875 37.21875 9.375 L 12.9375 38.5 L 1.71875 27.28125 C 1.320313 26.882813 0.679688 26.882813 0.28125 27.28125 C -0.117188 27.679688 -0.117188 28.320313 0.28125 28.71875 L 12.28125 40.71875 C 12.484375 40.921875 12.765625 41.03125 13.050781 41.011719 C 13.339844 40.992188 13.605469 40.851563 13.78125 40.625 L 38.78125 10.625 C 39.058594 10.3125 39.113281 9.863281 38.917969 9.492188 C 38.722656 9.125 38.320313 8.914063 37.90625 8.96875 Z M 48.90625 8.96875 C 48.863281 8.976563 48.820313 8.988281 48.78125 9 C 48.554688 9.054688 48.355469 9.1875 48.21875 9.375 L 23.9375 38.5 L 21.375 35.96875 C 21.132813 35.671875 20.746094 35.535156 20.371094 35.621094 C 20 35.707031 19.707031 36 19.621094 36.371094 C 19.535156 36.746094 19.671875 37.132813 19.96875 37.375 L 23.28125 40.71875 C 23.484375 40.921875 23.765625 41.03125 24.050781 41.011719 C 24.339844 40.992188 24.605469 40.851563 24.78125 40.625 L 49.78125 10.625 C 50.058594 10.3125 50.113281 9.863281 49.917969 9.492188 C 49.722656 9.125 49.320313 8.914063 48.90625 8.96875 Z" stroke-linecap="round" />
+                                                    </g>
+                                                </svg>`}
+                                        </span>
+                                    </p>
+                                </div>
+                            `}
                         </div>
                     `}
                 </div>
@@ -782,7 +840,7 @@
                             <img class="aspect-square h-full w-full" src="${message.sender_pic}" alt="${message.sender}">
                         </div>
                         <div class="bg-muted rounded-lg p-3 max-w-[100%]">
-                            <p class="text-sm break-words">${message.content}</p>
+                            <p class="text-sm break-words whitespace-pre-line">${message.content}</p>
                             <p class="text-xs mt-1 opacity-70 text-right">
                                 ${formatMessageDate(message.timestamp)}
                             </p>
@@ -796,7 +854,7 @@
                 <div class="max-w-xs lg:max-w-md">
                     <div class="flex justify-end">
                         <div class="bg-primary text-primary-foreground rounded-lg p-3 max-w-[100%]">
-                            <p class="text-sm break-words">${message.content}</p>
+                            <p class="text-sm break-words whitespace-pre-line">${message.content}</p>
                             <p class="text-xs mt-1 opacity-70 text-right">
                                 ${formatMessageDate(message.timestamp)}
                                 <span class="ml-1 hidden">
@@ -969,6 +1027,14 @@
     function sendRequest(user_name_, profileName) {
         console.log(`Sending request to ${profileName} (${user_name_})`);
 
+        showNotification({
+            color: "bg-yellow-500",
+            title: "Sending Request",
+            message: `Sending request to ${profileName}...`,
+            time: 5000
+        });
+        showLoadingOverlay();
+
         fetch(`/p/req-conv/`, {
             method: 'POST',
             headers: {
@@ -979,6 +1045,8 @@
         })
         .then(response => {
             if (response.ok) {
+                hideLoadingOverlay();
+
                 showNotification({
                     color: "bg-green-500",
                     title: "Request Sent Successfully",
@@ -993,9 +1061,9 @@
                     button.classList.add('bg-gray-300', 'text-gray-700'); // Change button style
                 }
                  dialogOverlay.classList.add('hidden'); // Close the dialog after sending the request
-
             } else {
                 response.json().then(data => {
+                    hideLoadingOverlay();
                     const error_message = data.error || 'Unknown error';
                     showNotification({
                         color: "bg-red-500",
@@ -1006,7 +1074,7 @@
             }
         })
         .catch(error => {
-
+            hideLoadingOverlay();
             showNotification({
                 color: "bg-red-500",
                 title: "Error",

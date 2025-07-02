@@ -1,0 +1,774 @@
+{% extends "pages/doctor/D_base.html" %}
+{% load static %}
+
+{% block titles %}View Appointment|| Nepal's Care {% endblock titles %}
+
+{% block pageof %} View Appointment{% endblock pageof %}
+{% block linkPageof %} /d/view-patients/ {% endblock linkPageof %}
+
+{% block styles %}
+
+
+
+
+{% endblock styles %}
+
+{% block content %}
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Main Content -->
+        <div class="flex-1 overflow-y-auto">
+            <div class="p-6 lg:p-10 w-full">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800">Patient & their Appointment Management</h2>
+                    <p class="text-gray-600">View and manage your patient appointments</p>
+                </div>
+
+                <!-- Search and Filters -->
+                <div class="bg-white rounded-lg shadow p-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="relative">
+                            <input type="text" id="searchInput" placeholder="Search patients..."
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent pl-10">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-3"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                        <div class="flex space-x-2 overflow-x-auto ">
+                            <button id="tabAll"
+                                class="px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300"> All</button>
+                            <button id="tabPending"
+                                class="px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 bg-blue-600 text-white">Pending</button>
+                            <button id="tabConfirmed"
+                                class="px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300">Confirmed</button>
+                            <button id="tabCompleted"
+                                class="px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300">Completed</button>
+                            <button id="tabCancelled"
+                                class="px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300">Cancelled</button>
+                        </div>
+                        <div class="text-right">
+                            <button
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors duration-200">
+                                + New Appointment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Patients List -->
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Patient</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Appointment</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Status</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Appointment Type</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patientTableBody" class="divide-y divide-gray-200"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Patient Detail Modal -->
+                <div id="modal"
+                    class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 transition-opacity duration-300">
+                    <div id="modalContent"
+                        class="bg-white rounded-lg shadow-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300">
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-semibold text-gray-900">Patient Details</h3>
+                                <button id="closeModal" class="text-gray-400 hover:text-gray-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-6" id="modalBody"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="reschedule-dialog" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden z-50 transition-opacity duration-300 ">
+        <div class="bg-white rounded-lg max-w-lg w-full p-6 relative shadow-xl transform transition-transform scale-95 duration-300">
+            <button onclick="closeRescheduleDialog()" class="absolute right-4 top-4 text-gray-600 hover:text-black transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            
+            <h2 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-lime-600">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                Reschedule Appointment
+            </h2>
+            
+            <div class="loader-container hidden flex justify-center py-8">
+                <div class="loader w-10 h-10 border-4 border-lime-200 border-t-lime-600 rounded-full animate-spin"></div>
+            </div>
+            
+            <div class="appointment-reschedule-content  ">
+                <div class="flex justify-center">
+                    <div id="calendar" class="flatpickr-custom "></div>
+                </div>
+                
+                <div id="selected-date-display" class="mt-5 font-medium text-gray-700 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-lime-600">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>Select a date to view available time slots</span>
+                </div>
+                
+                <div id="time-slots-container" class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-36 overflow-y-auto pr-2">
+                    <div class="w-max mx-auto bg-white rounded-xl shadow-lg p-6 overflow-visible">
+                        <!-- Calendar Header -->
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="skeleton h-6 w-16 rounded"></div>
+                            <div class="skeleton h-6 w-12 rounded"></div>
+                            <div class="skeleton h-6 w-6 rounded"></div>
+                        </div>
+                
+                        <!-- Calendar Days Header -->
+                        <div class="grid grid-cols-7 gap-2 mb-4">
+                            <div class="skeleton h-4 w-8 rounded mx-auto"></div>
+                            <div class="skeleton h-4 w-8 rounded mx-auto"></div>
+                            <div class="skeleton h-4 w-8 rounded mx-auto"></div>
+                            <div class="skeleton h-4 w-8 rounded mx-auto"></div>
+                        </div>
+                
+                        <!-- Calendar Days Grid -->
+                        <div class="grid grid-cols-7 gap-2 mb-6">
+                            <!-- Week 1 -->
+                            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
+                            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
+                            
+                            
+                            <!-- Week 2 -->
+                            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
+                            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
+                        
+                            
+                            <!-- Week 3 -->
+                            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
+                            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
+                            
+                            
+                            <!-- Week 4 -->
+                            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
+                            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
+                            
+                            
+                            <!-- Week 5 -->
+                            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
+                            <div class="skeleton h-8 w-8 rounded mx-auto bg-blue-200"></div>
+                            
+                            
+                            <!-- Week 6 partial -->
+                            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
+                            <div class="skeleton h-8 w-8 rounded mx-auto"></div>
+                            
+                        </div>
+                
+                        <!-- Available Time Slots Header -->
+                        <div class="mb-4">
+                            <div class="skeleton h-5 w-64 rounded mb-2"></div>
+                        </div>
+                
+                        <!-- Time Slots Grid -->
+                        <div class="grid grid-cols-3 gap-3">
+                            <!-- Row 1 -->
+                            <div class="skeleton h-10 w-full rounded-lg"></div>
+                            <div class="skeleton h-10 w-full rounded-lg"></div>
+                            
+                            <!-- Row 2 -->
+                            <div class="skeleton h-10 w-full rounded-lg"></div>
+                            <div class="skeleton h-10 w-full rounded-lg"></div>
+                            
+                            <!-- Row 3 -->
+                            <div class="skeleton h-10 w-full rounded-lg"></div>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-end">
+                    <button onclick="closeRescheduleDialog()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md mr-2 hover:bg-gray-50 transition-colors">
+                        Cancel
+                    </button>
+                    <button id="confirm-reschedule-btn" class="hidden px-4 py-2 bg-lime-600 text-white rounded-md hover:bg-lime-700 transition-colors flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Confirm Reschedule
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        
+        // Reschedule button click handler
+        let calendarInstance = null;
+        let doctorAvailability = {};
+        let selectedDate = null;
+
+        function rescheduleBtn(appoint_Id) {
+            // Show dialog
+            document.getElementById('reschedule-dialog').classList.remove('hidden');
+            // Clear previous calendar instance (if any)
+            if (calendarInstance) calendarInstance.destroy();
+
+            // Fetch doctor's availability via API
+            fetch(`/d/availability/${appoint_Id}/`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch availability');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    doctorAvailability = data.availability || {};
+                    initCalendar(doctorAvailability, appoint_Id);
+
+                    document.getElementById('selected-date-display').textContent = 'Select a date to view available time slots.';
+                    document.getElementById('time-slots-container').innerHTML = '';
+                    document.getElementById('confirm-reschedule-btn').classList.add('hidden');
+                })
+                .catch(error => {
+                    console.log('Error fetching availability:', error);
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Error",
+                        message: "Could not load availability. Please try again.",
+                    });
+                    document.getElementById('selected-date-display').textContent = 'Error loading availability.';
+                    document.getElementById('time-slots-container').innerHTML = '';
+                    document.getElementById('confirm-reschedule-btn').classList.add('hidden');
+                });
+
+        }
+
+        function closeRescheduleDialog() {
+            document.getElementById('reschedule-dialog').classList.add('hidden');
+            if (calendarInstance) calendarInstance.destroy();
+        }
+
+        function initCalendar(availability, appoint_Id) {
+            calendarInstance = flatpickr("#calendar", {
+                inline: true,
+                minDate: "today",
+                enable: Object.keys(availability),
+                onChange: function (selectedDates, dateStr) {
+                    let selectedDateObj = selectedDates[0];
+                    selectedDate = dateStr;
+                    document.getElementById('selected-date-display').textContent =
+                        `Available time slots for ${selectedDateObj.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+                    updateTimeSlots(availability, dateStr, appoint_Id);
+                }
+            });
+        }
+
+        function updateTimeSlots(availability, dateStr, appoint_Id) {
+            const container = document.getElementById('time-slots-container');
+            container.innerHTML = '';
+            if (!availability[dateStr] || Object.keys(availability[dateStr]).length === 0) {
+                container.innerHTML = '<p class="text-gray-500">No available slots for this date.</p>';
+                document.getElementById('confirm-reschedule-btn').classList.add('hidden');
+                return;
+            }
+            Object.entries(availability[dateStr]).forEach(([slot, [slotId, duration, types]]) => {
+                const btn = document.createElement('button');
+                btn.innerHTML = `<span data-slotID="${slotId}" class="font-medium text-xs text-gray-800 dark:text-gray-200">${slot}</span>`;
+                btn.className = 'px-3 py-1 m-1 rounded bg-gray-100 border border-gray-300 hover:bg-gray-50 transition-colors duration-200';
+                btn.onclick = function() {
+                    document.querySelectorAll('#time-slots-container button').forEach(b => b.classList.remove('hover:bg-lime-400','bg-lime-600', 'text-white'));
+                    btn.classList.add('bg-lime-600', 'text-white', 'hover:bg-lime-400');
+                    document.getElementById('confirm-reschedule-btn').classList.remove('hidden');
+                    // Save slotId etc. to submit later
+                    document.getElementById('confirm-reschedule-btn').onclick = function() { 
+                        rescheduleAppointment(appoint_Id, slotId, dateStr);
+                    }
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function rescheduleAppointment(appoint_Id, slotId, dateStr) {
+            showNotification({
+            color: "bg-yellow-500",
+            title: "Rescheduling Appointment",
+            message: "Sending reschedule request...",
+            });
+
+            showLoadingOverlay();
+
+            fetch('/d/reschedule-app/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                appoint_Id: appoint_Id,
+                new_slot_id: slotId
+            })
+            })
+            .then(response => response.json())
+            .then(data => {
+            hideLoadingOverlay();
+            if (data.success) {
+                hideLoadingOverlay();
+                showNotification({
+                    color: "bg-green-500",
+                    title: "Success",
+                    message: data.message || "Appointment rescheduled successfully.",
+                    duration: 3000
+                });
+                closeRescheduleDialog();
+                // Optionally, reload patient data
+                location.reload();
+            } else {
+                hideLoadingOverlay();
+                showNotification({
+                color: "bg-red-500",
+                title: "Error",
+                message: data.error || data.message || "Failed to reschedule appointment.",
+                duration: 5000
+                });
+            }
+            })
+            .catch(error => {
+            hideLoadingOverlay();
+            showNotification({
+                color: "bg-red-500",
+                title: "Error",
+                message: "Failed to reschedule appointment. Please try again.",
+                duration: 5000
+            });
+            });
+        }
+
+    </script>
+
+{% endblock content %}
+
+
+{% block scripts %}
+
+
+<script>
+    let patientData = {{ patientData|safe }}
+
+    let activeTab = 'pending';
+    let searchTerm = '';
+
+    // DOM Elements
+    const patientTableBody = document.getElementById('patientTableBody');
+    const searchInput = document.getElementById('searchInput');
+    const tabAll = document.getElementById('tabAll');
+    const tabpending = document.getElementById('tabPending');
+    const tabCompleted = document.getElementById('tabCompleted');
+    const tabConfirmed = document.getElementById('tabConfirmed');
+    const tabCancelled = document.getElementById('tabCancelled');
+    const modal = document.getElementById('modal');
+    const modalContent = document.getElementById('modalContent');
+    const modalBody = document.getElementById('modalBody');
+    const closeModal = document.getElementById('closeModal');
+
+    // Load patient data (using existing array instead of fetch)
+    function loadPatientData() {
+        renderPatients();
+    }
+
+    // Filter and render patients
+    function renderPatients() {
+        const filteredPatients = patientData.filter(patient => {
+            const matchesSearch = patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                patient.issue.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesTab = activeTab === 'all' || patient.status === activeTab;
+            return matchesSearch && matchesTab;
+        });
+
+        patientTableBody.innerHTML = '';
+        if (filteredPatients.length === 0) {
+            patientTableBody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No patients found matching your search criteria.</td></tr>`;
+            return;
+        }
+
+        filteredPatients.forEach(patient => {
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-gray-50 cursor-pointer';
+            // Using placeholder images since actual images aren't available
+            row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10">
+                                <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                                    <img src="${patient.image}" alt= "${patient.name} Profile picture"></img>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">${patient.name}</div>
+                                <div class="text-sm text-gray-500">${patient.age} yrs, ${patient.gender}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${patient.appointment}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            ${patient.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                            patient.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
+                            patient.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                                'bg-red-100 text-red-800'}">
+                            ${patient.status.charAt(0).toUpperCase() + patient.status.slice(1)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${patient.issue}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <div class="flex space-x-2">
+                            <button class="text-blue-600 hover:text-blue-900 view-btn" data-id="${patient.id}">View</button>
+                            ${patient.status === 'pending' ? `
+                                <button class="text-green-600 hover:text-green-900 confirm-btn" data-id="${patient.id}">Confirm</button>
+                                <button class="text-red-600 hover:text-red-900 cancel-btn" data-id="${patient.id}">Cancel</button>
+                            `
+                            : patient.status === 'confirmed' ? `
+                                <button class="text-green-600 hover:text-green-900 check-in-btn" data-id="${patient.id}">Check In</button>
+                                <button class="text-red-600 hover:text-red-900 cancel-btn" data-id="${patient.id}">Cancel</button>
+                            ` :
+                            ''}
+                        </div>
+                    </td>
+                `;
+            row.querySelector('.view-btn').addEventListener('click', () => showModal(patient));
+            if (patient.status === 'pending') {               
+                row.querySelector('.cancel-btn').addEventListener('click', () => cancelPatient(patient.id));
+                row.querySelector('.confirm-btn').addEventListener('click', () => confirmBTN(patient.id));
+
+            } else if (patient.status === 'confirmed') {
+                row.querySelector('.check-in-btn').addEventListener('click', () => checkInPatient(patient.id));
+                row.querySelector('.cancel-btn').addEventListener('click', () => cancelPatient(patient.id));
+            }
+            patientTableBody.appendChild(row);
+        });
+    }
+
+    // Basic check-in and cancel functionality
+    function checkInPatient(id) {
+        const patient = patientData.find(p => p.id === id);
+        if (patient) {
+            patient.status = 'completed';
+            renderPatients();
+        }
+    }
+
+    function confirmBTN(id) {
+        const patient = patientData.find(p => p.id === id);
+        if (patient) {
+            // Show a notification that the request is being sent
+            showNotification({
+                color: "bg-yellow-500",
+                title: "Processing",
+                message: "Sending confirmation request...",
+                time: 5000
+            });
+
+            showLoadingOverlay();
+            
+            fetch('/d/actions-appointment/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ app_id: patient.id, action: 'confirm' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                patient.status = 'confirmed';
+                renderPatients();
+                hideModal();
+
+                hideLoadingOverlay();
+
+                if (data.success) {
+                    showNotification({
+                        color: "bg-green-500",
+                        title: "Appointment Confirmed",
+                        message: data.message || "The appointment has been successfully confirmed",
+                        duration: 3000,
+                    });
+                } else {
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Error",
+                        message: data.message || "Failed to confirm appointment",
+                        duration: 5000
+                    });
+                }
+
+            })
+            .catch(error => {
+                showNotification({
+                    color: "bg-red-500",
+                    title: "Error",
+                    message: "Failed to confirm appointment| Please try again.",
+                    duration: 5000
+                });
+            });
+        }
+    }
+
+    function cancelPatient(id) {
+        const patient = patientData.find(p => p.id === id);
+        if (patient) {
+            showNotification({
+                color: "bg-yellow-500",
+                title: "Processing",
+                message: "Sending Cancellation request...",
+                time: 5000
+            });
+
+            showLoadingOverlay();
+
+            fetch('/d/actions-appointment/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ app_id: patient.id, action: 'cancel' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                patient.status = 'cancelled';
+                renderPatients();
+                hideModal();
+                hideLoadingOverlay();
+
+                if (data.success) {
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Appointment Cancelled",
+                        message: data.message || "The appointment has been successfully cancelled",
+                        duration: 3000,
+                    });
+                } else {
+                    showNotification({
+                        color: "bg-red-500",
+                        title: "Error",
+                        message: data.message || "Failed to cancel appointment",
+                        duration: 5000
+                    });
+                }
+
+            })
+            .catch(error => {
+                showNotification({
+                    color: "bg-red-500",
+                    title: "Error",
+                    message: "Failed to cancel appointment| Please try again.",
+                    duration: 5000
+                });
+            });
+        }
+    }
+
+    // Show modal with patient details
+    function showModal(patient) {
+        modalBody.innerHTML = `
+                <div class="flex flex-col md:flex-row mb-6">
+                    <div class="md:w-1/4 mb-4 md:mb-0">
+                        <div class="h-32 w-32 rounded-full bg-gray-200 flex items-center justify-center text-4xl text-gray-500 mx-auto">
+                                                                <img src="${patient.image}" alt= "${patient.name} Profile picture"></img>
+
+                        </div>
+                    </div>
+                    <div class="md:w-3/4 md:pl-6">
+                        <h2 class="text-2xl font-bold text-gray-800">${patient.name}</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Age</p>
+                                <p class="text-base text-gray-800">${patient.age} years</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Gender</p>
+                                <p class="text-base text-gray-800">${patient.gender}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Phone</p>
+                                <p class="text-base text-gray-800">${patient.phone}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Email</p>
+                                <p class="text-base text-gray-800">${patient.email}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-gray-200 pt-6">
+                    <h3 class="text-lg font-semibold mb-4">Appointment Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-500">Date & Time</p>
+                            <p class="text-base text-gray-800">${patient.appointment}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Status</p>
+                            <div>
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    ${patient.status === 'pending' ? 'bg-blue-100 text-blue-800' :
+                patient.status === 'completed' ? 'bg-green-100 text-green-800' :
+                    'bg-red-100 text-red-800'}">
+                                    ${patient.status.charAt(0).toUpperCase() + patient.status.slice(1)}
+                                </span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Issue</p>
+                            <p class="text-base text-gray-800">${patient.issue}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-gray-200 pt-6 mt-6">
+                    <h3 class="text-lg font-semibold mb-4">Patient Notes</h3>
+                    <p class="text-gray-700">${patient.notes}</p>
+                </div>
+                <div class="border-t border-gray-200 pt-6 mt-6 flex flex-wrap gap-3">
+                    ${['pending', 'confirmed'].includes(patient.status) ? `
+                        <button  onclick="rescheduleBtn('${patient.id}')"
+                            class="px-4 py-2 bg-lime-600 text-white rounded-lg hover:bg-lime-700 text-sm font-medium transition-colors">
+                            Reschedule
+                        </button> 
+                    ` : ''}
+
+                    ${patient.status === 'pending' ? `
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors duration-200 confirm-btn" data-id="${patient.id}">Confirm Appointment</button>
+                        <button class="bg-red-600 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-red-700 transition-colors duration-200 cancel-btn" data-id="${patient.id}">Cancel Appointment</button>
+                    ` 
+                    : patient.status === 'confirmed' ? `
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors duration-200 start-btn" data-id="${patient.id}">Start Appointment</button>
+                        <button class="bg-red-600 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-red-700 transition-colors duration-200 cancel-btn" data-id="${patient.id}">Cancel Appointment</button>`
+                    :''}
+                    <a href='/view-patients-records/${patient.patient_id}' target="_blank" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-300 transition-colors duration-200">View Medical Records</a>
+                    ${patient.file === '' ? ``:
+                    `<a href='${patient.file}' target="_blank"  class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-300 transition-colors duration-200">View Files</a>`}
+                </div>
+            `;
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.add('opacity-100');
+            modalContent.classList.remove('scale-95');
+            modalContent.classList.add('scale-100');
+        }, 10);
+
+        // Add event listeners for modal buttons
+        if (patient.status === 'pending') {
+            modalBody.querySelector('.cancel-btn').addEventListener('click', () => cancelPatient(patient.id));
+            modalBody.querySelector('.confirm-btn').addEventListener('click', () => confirmBTN(patient.id));
+        } 
+        else if (patient.status === 'confirmed') {
+            modalBody.querySelector('.start-btn').addEventListener('click', () => checkInPatient(patient.id));
+            modalBody.querySelector('.cancel-btn').addEventListener('click', () => cancelPatient(patient.id));
+        }
+    }
+
+    // Hide modal
+    function hideModal() {
+        modal.classList.remove('opacity-100');
+        modalContent.classList.remove('scale-100');
+        modalContent.classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+    // Event Listeners
+    searchInput.addEventListener('input', (e) => {
+        searchTerm = e.target.value;
+        renderPatients();
+    });
+
+    tabAll.addEventListener('click', () => setActiveTab('all'));
+    tabpending.addEventListener('click', () => setActiveTab('pending'));
+    tabConfirmed.addEventListener('click', () => setActiveTab('confirmed'));
+    tabCompleted.addEventListener('click', () => setActiveTab('completed'));
+    tabCancelled.addEventListener('click', () => setActiveTab('cancelled'));
+
+    function setActiveTab(tab) {
+        activeTab = tab;
+        [tabAll, tabpending, tabConfirmed, tabCompleted, tabCancelled].forEach(btn => {
+            btn.classList.remove('bg-blue-600', 'text-white');
+            btn.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+        });
+        const activeBtn = document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
+        activeBtn.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+        activeBtn.classList.add('bg-blue-600', 'text-white');
+        renderPatients();
+    }
+
+    closeModal.addEventListener('click', hideModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) hideModal();
+    });
+
+    // Initial load
+    document.addEventListener('DOMContentLoaded', () => {
+        loadPatientData();
+    });
+</script>
+
+
+
+
+
+
+
+<script>
+
+    dashboard_nav_all = document.querySelectorAll('.ViewPatients-nav a');
+    dashboard_nav_all.forEach((nav) => {
+        nav_innertab =
+            nav.classList.add('border-l-4', 'border-blue-500', 'bg-blue-50', 'rounded');
+    });
+</script>
+
+
+{% endblock scripts %}

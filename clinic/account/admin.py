@@ -146,7 +146,7 @@ class ActivityLogAdmin(admin.ModelAdmin):
 class MessageInline(admin.TabularInline):
     model = Message
     extra = 1
-    fields = ('sender', 'content', 'timestamp', 'read')
+    fields = ('sender', 'content', 'timestamp', 'read', 'message_type')
     readonly_fields = ['timestamp']
     verbose_name = "Message"
     verbose_name_plural = "Messages"

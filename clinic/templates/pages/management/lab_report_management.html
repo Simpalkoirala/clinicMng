@@ -940,6 +940,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 report_description: reportDescriptionInput.value,
                 parameters: newParameters
             };
+
+            showNotification({
+                color: "bg-yellow-500",
+                title: "Creating Lab Report",
+                message: "Please wait while we create the lab report..."
+            });
+
+            showLoadingOverlay()
             
             // Make API request
             fetch('/m/labreport-mng/create/', {
@@ -951,6 +959,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify(reportData)
             })
                 .then(response => {
+                    hideLoadingOverlay()
                     // Show success notification
                     showNotification({
                         color: "bg-green-500",
@@ -965,6 +974,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   
                 })
                 .catch(error => {
+                    hideLoadingOverlay()
                     // Show error notification
                     showNotification({
                         color: "bg-red-500",
@@ -1978,6 +1988,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 parameters: tempParameters
             };
             
+            showNotification({
+                color: "bg-yellow-500",
+                title: "Saving Changes...",
+                message: "Please wait while we save your changes.",
+                time: 5000
+            });
+            showLoadingOverlay();
+
             // In a real application, you would send this data to the server
             // For example:
             fetch('/m/edit-labreport-mng/' + currentReport.uuid + '/', {
@@ -1995,6 +2013,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(data => {
+                hideLoadingOverlay();
                 // Update the current report with the returned data
                 Object.assign(currentReport, data);
                 
@@ -2010,6 +2029,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             })
             .catch(error => {
+                hideLoadingOverlay();
                 console.error('Error saving lab report:', error);
                 showNotification({
                     color: "bg-red-500",
